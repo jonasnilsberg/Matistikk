@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.generic import TemplateView
 # Create your views here.
 
 
-def IndexView(request):
-
+class IndexView(TemplateView):
     template_name = 'maths/base.html'
-    return render(request, template_name)
+
+
