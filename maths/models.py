@@ -6,15 +6,14 @@ from django.core.urlresolvers import reverse
 
 
 class AssignmentBase(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, default="")
     description = models.TextField(max_length=1000, null=True)
 
-    def __str__(self):
-        return self.title
+    class Meta:
+        abstract = True
 
 
-class GeogebraAssignment(models.Model):
-    assignmentBase = models.ForeignKey(AssignmentBase)
+class GeogebraAssignment(AssignmentBase):
     solution = models.CharField(max_length=100, null=True)
 
     def __str__(self):
@@ -23,7 +22,7 @@ class GeogebraAssignment(models.Model):
 
 class Test(models.Model):
     title = models.CharField(max_length=100)
-    assignments = models.ManyToManyField(AssignmentBase)
+    geogebraAssignments = models.ManyToManyField(GeogebraAssignment)
 
     def __str__(self):
         return self.title
@@ -40,16 +39,15 @@ class TestView(models.Model):
 # Answers ------------------------------------------------------------------------------------------------------------
 
 class AnswerBase(models.Model):
-    user = models.ForeignKey(User)
-    assignment = models.ForeignKey(AssignmentBase)
-    testView = models.ForeignKey(TestView)
+    user = models.ForeignKey(User, default="")
+    testView = models.ForeignKey(TestView, default="")
 
-    def __str__(self):
-        return "Answer - " + self.assignment.title
+    class Meta:
+        abstract = True
 
 
-class GeogebraAnswer(models.Model):
-    answer_base = models.ForeignKey(AnswerBase)
+class GeogebraAnswer(AnswerBase):
+    assignment = models.ForeignKey(GeogebraAssignment, default="", on_delete=models.CASCADE)
     answer = models.CharField(max_length=100)
 
     def __str__(self):
