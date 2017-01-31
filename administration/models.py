@@ -23,7 +23,7 @@ class Grade(models.Model):
         return self.school.school_name + " - " + self.grade_name
 
 
-class Student(User):
+class Person(User):
     grade = models.ForeignKey(Grade, default="", blank=True, null=True, verbose_name="klasse")
     SEX = [
         ("M", "Gutt"),
@@ -34,7 +34,7 @@ class Student(User):
     def __str__(self):
         return self.username
 
-Student._meta.get_field('username').verbose_name = 'brukernavn'
-Student._meta.get_field('first_name').verbose_name = 'fornavn'
-Student._meta.get_field('last_name').verbose_name = 'etternavn'
-Student._meta.get_field('is_staff').verbose_name = 'lærer'
+Person._meta.get_field('username').verbose_name = 'brukernavn'
+Person._meta.get_field('first_name').verbose_name = 'fornavn'
+Person._meta.get_field('last_name').verbose_name = 'etternavn'
+Person._meta.get_field('is_staff').verbose_name = 'lærer'
