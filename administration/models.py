@@ -29,7 +29,7 @@ class Student(User):
         ("M", "Gutt"),
         ("F", "Jente")
     ]
-    sex = models.CharField(max_length=1, choices=SEX, )
+    sex = models.CharField(max_length=1, choices=SEX, verbose_name="kjønn")
 
     def __str__(self):
         return self.username
