@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, View, TemplateView, FormView
+from django.views import generic
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -8,7 +8,12 @@ from .models import Person
 # Create your views here.
 
 
-class PersonCreateView(StaffuserRequiredMixin, CreateView):
+class PersonListView(StaffuserRequiredMixin, generic.ListView):
+    login_url = '/'
+    model = Person
+    template_name = 'administration/person_list.html'
+
+class PersonCreateView(StaffuserRequiredMixin, generic.CreateView):
     login_url = '/'
     template_name = 'administration/student_create.html'
     model = Person
