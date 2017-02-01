@@ -34,14 +34,15 @@ LOGIN_REDIRECT_URL = '/administration'
 # Application definition
 
 INSTALLED_APPS = [
+    'administration',
+    'maths',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'maths',
-    'administration',
+
 ]
 
 MIDDLEWARE_CLASSES = [

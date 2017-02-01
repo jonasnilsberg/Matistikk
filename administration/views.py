@@ -13,7 +13,7 @@ class PersonCreateView(StaffuserRequiredMixin, CreateView):
     template_name = 'administration/student_create.html'
     model = Person
     fields = ['username', 'first_name', 'last_name', 'email', 'sex', 'grade']
-    success_url = 'administration'
+    success_url = '/maths'
 
     def form_valid(self, form):
         return super(PersonCreateView, self).form_valid(form)
