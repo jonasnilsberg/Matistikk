@@ -3,18 +3,20 @@
 
 {% block body %}
 {% if object_list %}
-    <h3>Here are all my albums</h3>
+    <h3>Brukeroversikt</h3>
     <ul>
         {% for person in object_list %}
             <li>
-                <a href="#">
-                    <img src="{{ album.album_logo.url }}" class="img-responsive">
+                <a href="{% url 'administration:personDetail' person.username %}">
                     <p>{{ person.username }}</p>
                 </a>
             </li>
         {% endfor %}
     </ul>
 {% else %}
-    <h3>You don't have any albums</h3>
+    <h3>Ingen brukere er lagt til</h3>
 {% endif %}
+    <a href="{% url 'administration:createPerson' %}">
+        <button type="button">Legg til bruker</button>
+    </a>
 {% endblock %}

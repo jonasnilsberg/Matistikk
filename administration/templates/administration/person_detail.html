@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'administration/base.html' %}
+
+{% block body %}
+    <a href="{% url 'administration:personList' %}">
+        <button type="button">Tilbake</button>
+    </a>
+    <h3>{{ person.username }}</h3>
+    <ul>
+        <li><lable>First name: </lable>{{ person.first_name }}</li>
+        <li><lable>Last name: </lable>{{ person.last_name }}</li>
+        <li><lable>Skole: </lable>{{ person.grade.school.school_name }}</li>
+        <li><lable>Klasse: </lable>{{ person.grade.grade_name }}</li>
+        <li><lable>Kjønn: </lable>{{ person.sex }}</li>
+        <li><lable>Sist innlogget: </lable>{{ person.last_login }}</li>
+
+
+
+    </ul>
+{% endblock %}
