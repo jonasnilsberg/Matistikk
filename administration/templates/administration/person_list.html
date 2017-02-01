@@ -1,0 +1,20 @@
+{% extends 'administration/base.html' %}
+
+
+{% block body %}
+{% if object_list %}
+    <h3>Here are all my albums</h3>
+    <ul>
+        {% for person in object_list %}
+            <li>
+                <a href="#">
+                    <img src="{{ album.album_logo.url }}" class="img-responsive">
+                    <p>{{ person.username }}</p>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <h3>You don't have any albums</h3>
+{% endif %}
+{% endblock %}
