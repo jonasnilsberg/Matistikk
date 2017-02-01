@@ -4,6 +4,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
+from django.core.urlresolvers import reverse
 
 
 class School(models.Model):
@@ -42,14 +43,17 @@ class Person(AbstractUser):
         ("M", "Gutt"),
         ("F", "Jente")
     ]
-    sex = models.CharField(max_length=1, choices=SEX, verbose_name="kjonn", null=True)
+    sex = models.CharField(max_length=1, choices=SEX, verbose_name="kjønn", null=True)
 
     def __str__(self):
         return self.username
+
+    def get_absolute_url(self):
+        return reverse('administration:personDetail', kwargs={'pk': self.pk})
 
 #This is in order to have different names shown by the django-forms than variable-names
 Person._meta.get_field('username').verbose_name = 'brukernavn'
 Person._meta.get_field('first_name').verbose_name = 'fornavn'
 Person._meta.get_field('last_name').verbose_name = 'etternavn'
-Person._meta.get_field('is_staff').verbose_name = 'laerer'
+Person._meta.get_field('is_staff').verbose_name = 'lærer'
 Person._meta.get_field('email').verbose_name = 'Epost'
