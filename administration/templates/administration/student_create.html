@@ -6,6 +6,9 @@
                     <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {% include 'matistikk/form-template.html' %}
+                        {% if request.user.is_superuser %}
+                            <input type="checkbox" name="staff" value="staff">Lærer
+                        {% endif %}
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button type="submit" class="btn btn-success">Submit </button>

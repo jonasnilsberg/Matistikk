@@ -4,6 +4,9 @@
     <form class="form-horizontal" action="" method="POST" >
         {% csrf_token %}
         {% include 'matistikk/form-template.html' %}
+        {% if form.non_field_errors %}
+            <p>Brukernavn og passord stemmer ikke</p>
+        {% endif %}
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-success">Send</button>
@@ -11,4 +14,6 @@
 
         </div>
     </form>
+
+
  {% endblock %}
