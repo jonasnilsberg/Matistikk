@@ -1,5 +1,5 @@
+from administration.models import Person
 from django.db import models
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 # Create your models here.
@@ -39,7 +39,7 @@ class TestView(models.Model):
 # Answers ------------------------------------------------------------------------------------------------------------
 
 class AnswerBase(models.Model):
-    user = models.ForeignKey(User, default="")
+    user = models.ForeignKey(Person, default="")
     testView = models.ForeignKey(TestView, default="")
 
     class Meta:
