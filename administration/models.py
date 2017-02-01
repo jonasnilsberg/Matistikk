@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from maths.models import Test
-from django.utils.translation import ugettext_lazy as _
-
+from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 
@@ -15,21 +13,21 @@ class School(models.Model):
 
 
 class Grade(models.Model):
-    school = models.ForeignKey(School)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
     grade_name = models.CharField(max_length=100)
-    tests = models.ManyToManyField(Test)
+    tests = models.ManyToManyField('maths.TestView')
 
     def __str__(self):
         return self.school.school_name + " - " + self.grade_name
 
 
-class Person(User):
+class Person(AbstractUser):
     grade = models.ForeignKey(Grade, default="", blank=True, null=True, verbose_name="klasse")
     SEX = [
         ("M", "Gutt"),
         ("F", "Jente")
     ]
-    sex = models.CharField(max_length=1, choices=SEX, verbose_name="kjønn")
+    sex = models.CharField(max_length=1, choices=SEX, verbose_name="kjonn", null=True)
 
     def __str__(self):
         return self.username
@@ -37,4 +35,5 @@ class Person(User):
 Person._meta.get_field('username').verbose_name = 'brukernavn'
 Person._meta.get_field('first_name').verbose_name = 'fornavn'
 Person._meta.get_field('last_name').verbose_name = 'etternavn'
-Person._meta.get_field('is_staff').verbose_name = 'lærer'
+Person._meta.get_field('is_staff').verbose_name = 'laerer'
+Person._meta.get_field('email').verbose_name = 'Epost'
