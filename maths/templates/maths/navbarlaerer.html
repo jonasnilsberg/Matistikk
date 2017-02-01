@@ -1,0 +1,29 @@
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="pull left" href="./"><img src="http://bildr.no/image/Tjl2U25M.jpeg" width="240" height="50"/></a>
+        </div>
+        <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="./"><span class="glyphicon glyphicon-home "></span></a></li>
+                <li><a href="mypageview">Min Side</a></li>
+                <li><a href="createtestview">Lag Øvingstest</a></li>
+                <li><a href="statisticview">Statistikk</a></li>
+                <li><a href="edittests">Rediger mine tester</a>
+                <li><a href="helpview">Hjelp</a></li>
+                <li><a href="aboutview">Om</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a>Logget inn som: {{ request.user.username }}</a></li>
+                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span>Logg ut</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

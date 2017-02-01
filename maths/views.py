@@ -7,6 +7,6 @@ from braces.views import LoginRequiredMixin
 
 class IndexView(LoginRequiredMixin, TemplateView):
     login_url = '/'
-    template_name = 'maths/base.html'
+    template_name = 'maths/index.html'
 
 
