@@ -45,11 +45,16 @@ class Person(AbstractUser):
     ]
     sex = models.CharField(max_length=1, choices=SEX, verbose_name="kjønn", null=True)
 
+    class Meta:
+        ordering = ['username']
+
     def __str__(self):
         return self.username
 
     def get_absolute_url(self):
-        return reverse('administration:personDetail', kwargs={'pk': self.pk})
+        return reverse('administration:personDetail', kwargs={'slug': self.username})
+
+
 
 #This is in order to have different names shown by the django-forms than variable-names
 Person._meta.get_field('username').verbose_name = 'brukernavn'
