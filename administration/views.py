@@ -16,6 +16,7 @@ class PersonListView(StaffuserRequiredMixin, generic.ListView):
        Class to list all the persons
        If the user is staff only students will show
     """
+
     login_url = '/'
     template_name = 'administration/person_list.html'
     paginate_by = 20
@@ -28,6 +29,11 @@ class PersonListView(StaffuserRequiredMixin, generic.ListView):
 
 
 class PersonDetailView(StaffuserRequiredMixin, generic.DetailView):
+    """
+       Class to list a specific Person based on username
+       returns the user to value set in template_name
+    """
+
     model = Person
     template_name = 'administration/person_detail.html'
     slug_field = "username"
