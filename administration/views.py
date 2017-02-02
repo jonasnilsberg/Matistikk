@@ -6,7 +6,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from braces.views import LoginRequiredMixin, StaffuserRequiredMixin, SuperuserRequiredMixin
 from django.core.paginator import Paginator
 
-from .models import Person
+
+from .models import Person, School, Grade
 # Create your views here.
 
 
@@ -57,6 +58,25 @@ class PersonUpdateView(StaffuserRequiredMixin, generic.UpdateView):
     model = Person
     slug_field = "username"
     fields = ['first_name', 'last_name', 'email', 'sex', 'grade']
+
+
+class SchoolListView(StaffuserRequiredMixin, generic.ListView):
+    login_url = '/'
+    model = School
+    template_name = 'administration/school_list.html'
+    paginate_by = 20
+
+
+class SchoolDetailView(StaffuserRequiredMixin, generic.DetailView):
+    model = School
+    template_name = 'administration/school_detail.html'
+    # slug_field = "username"
+
+    def get_context_data(self, **kwargs):
+        context = super(SchoolDetailView, self).get_context_data(**kwargs)
+        context['grades'] = Grade.objects.filter(school_id=self.kwargs['pk'])
+        return context
+
 
 
 

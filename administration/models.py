@@ -18,6 +18,9 @@ class School(models.Model):
     def __str__(self):
         return self.school_name
 
+    def get_absolute_url(self):
+        return reverse('administration:schoolDetail', kwargs={'pk': self.id})
+
 
 class Grade(models.Model):
     """ A grade is a group of students
@@ -27,7 +30,7 @@ class Grade(models.Model):
 
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     grade_name = models.CharField(max_length=100)
-    tests = models.ManyToManyField('maths.TestView')
+    tests = models.ManyToManyField('maths.TestView', blank=True)
 
     def __str__(self):
         return self.school.school_name + " - " + self.grade_name

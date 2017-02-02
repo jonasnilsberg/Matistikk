@@ -1,0 +1,38 @@
+{% extends 'administration/base.html' %}
+
+
+{% block body %}
+{% if object_list %}
+    <h3>Skoler</h3>
+    <ul>
+        {% for school in object_list %}
+            <li>
+                <a href="{% url 'administration:schoolDetail' school.id %}">
+                    <p>{{ school.school_name }}</p>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <h3>Ingen skoler er lagt til</h3>
+{% endif %}
+    <a href="#">
+        <button type="button">Legg til skole</button>
+    </a>
+    <br>
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Side {{ page_obj.number }} av {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}
