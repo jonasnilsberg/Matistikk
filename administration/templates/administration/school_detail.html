@@ -9,12 +9,18 @@
      <ul>
         {% for grade in grades %}
             <li>
-                {{ grade.grade_name }}
+                <a href="{% url 'administration:gradeDetail' school_pk=school.id pk=grade.id %}">
+                    {{ grade.grade_name }}
+                </a>
             </li>
         {% endfor %}
     </ul>
-
-     <a href="#">
-        <button type="button">Oppdater skole</button>
-    </a>
+    {% if request.user.is_superuser %}
+        <a href="{% url 'administration:schoolUpdate' school.id %}">
+            <button type="button">Oppdater skole</button>
+        </a>
+        <a href="{% url 'administration:gradeCreate' school.id %}">
+            <button type="button">Legg til klasse</button>
+        </a>
+    {% endif %}
 {% endblock %}

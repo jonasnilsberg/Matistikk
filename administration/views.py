@@ -14,7 +14,12 @@ from .models import Person, School, Grade
 class PersonListView(StaffuserRequiredMixin, generic.ListView):
     """
        Class to list all the persons
+
        If the user is staff only students will show
+
+       :param StaffuserRequiredMixin: Inherits StaffuserRequiredMixin that checks if the user is logged in as staff
+       :param generic.ListView: Inherits generic.ListView that makes a page representing a list of Person objects. See more at https://docs.djangoproject.com/en/1.10/ref/class-based-views/generic-display/
+       :return: List of person objects
     """
 
     login_url = '/'
@@ -30,8 +35,13 @@ class PersonListView(StaffuserRequiredMixin, generic.ListView):
 
 class PersonDetailView(StaffuserRequiredMixin, generic.DetailView):
     """
-       Class to list a specific Person based on username
-       returns the user to value set in template_name
+        Class to get a specific Person based on the username
+
+        :param StaffuserRequiredMixin: Inherits StaffuserRequiredMixin that checks if the user is logged in as staff
+        :param generic.DetailView: Inherits generic.DetailView that makes a page representing a specific Person object.
+        :return: Person object
+
+        See more about generic views at https://docs.djangoproject.com/en/1.10/ref/class-based-views/generic-display/
     """
 
     model = Person
@@ -40,6 +50,7 @@ class PersonDetailView(StaffuserRequiredMixin, generic.DetailView):
 
 
 class PersonCreateView(StaffuserRequiredMixin, generic.CreateView):
+
     login_url = '/'
     template_name = 'administration/student_create.html'
     model = Person
@@ -84,9 +95,43 @@ class SchoolDetailView(StaffuserRequiredMixin, generic.DetailView):
         return context
 
 
+class SchoolCreateView(SuperuserRequiredMixin, generic.CreateView):
+    login_url = '/'
+    template_name = 'administration/school_form.html'
+    model = School
+    fields = ['school_name', 'school_address']
+    success_url = '/administration/allschools/'
 
 
+class SchoolUpdateView(SuperuserRequiredMixin, generic.UpdateView):
+    login_url = '/'
+    model = School
+    template_name = 'administration/school_form.html'
+    fields = ['school_name', 'school_address']
 
 
+class GradeCreateView(SuperuserRequiredMixin, generic.CreateView):
+    login_url = '/'
+    model = Grade
+    template_name = 'administration/grade_form.html'
+    fields = ['grade_name', 'tests']
 
+    def form_valid(self, form):
+        grade = form.save(commit=False)
+        grade.school_id = self.kwargs['pk']
+        grade.save()
+
+        return super(GradeCreateView, self).form_valid(form)
+
+
+class GradeDetailView(StaffuserRequiredMixin, generic.DetailView):
+    login_url = '/'
+    model = Grade
+    template_name = 'administration/grade_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GradeDetailView, self).get_context_data(**kwargs)
+        context['students'] = Person.objects.filter(grade_id=self.kwargs['pk'], is_staff=False)
+        context['teachers'] = Person.objects.filter(grade_id=self.kwargs['pk'], is_staff=True)
+        return context
 

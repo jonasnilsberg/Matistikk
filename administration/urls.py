@@ -9,4 +9,9 @@ urlpatterns = [
     url(r'getallusers/update/(?P<slug>[\w-]+)/$', views.PersonUpdateView.as_view(), name='personUpdate'),
     url(r'allschools/$', views.SchoolListView.as_view(), name='schoolList'),
     url(r'allschools/(?P<pk>[0-9]+)/$', views.SchoolDetailView.as_view(), name="schoolDetail"),
+    url(r'createschool/$', views.SchoolCreateView.as_view(), name='schoolCreate'),
+    url(r'allschools/update/(?P<pk>[0-9]+)/$', views.SchoolUpdateView.as_view(), name='schoolUpdate'),
+    url(r'allschools/update/(?P<pk>[0-9]+)/addgrade', views.GradeCreateView.as_view(), name='gradeCreate'),
+    url(r'allschools/(?P<school_pk>[0-9]+)/grade/(?P<pk>[0-9]+)', views.GradeDetailView.as_view(), name='gradeDetail'),
+
 ]
