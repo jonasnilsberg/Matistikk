@@ -1,0 +1,20 @@
+{% extends 'administration/base.html' %}
+
+{% block body %}
+    <a href="{% url 'administration:schoolList' %}">
+        <button type="button">Tilbake</button>
+    </a>
+    <h3>{{ school.school_name }}</h3>
+    <h5>Adresse: {{ school.school_address }}</h5>
+     <ul>
+        {% for grade in grades %}
+            <li>
+                {{ grade.grade_name }}
+            </li>
+        {% endfor %}
+    </ul>
+
+     <a href="#">
+        <button type="button">Oppdater skole</button>
+    </a>
+{% endblock %}
