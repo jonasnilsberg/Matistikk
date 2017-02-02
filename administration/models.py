@@ -12,8 +12,8 @@ class School(models.Model):
     :school_name: The name of the school
     :school_address: The address of the school"""
 
-    school_name = models.CharField(max_length=100)
-    school_address = models.CharField(max_length=100)
+    school_name = models.CharField(max_length=100, verbose_name='Navn')
+    school_address = models.CharField(max_length=100, verbose_name='Adresse')
 
     def __str__(self):
         return self.school_name
@@ -34,6 +34,9 @@ class Grade(models.Model):
 
     def __str__(self):
         return self.school.school_name + " - " + self.grade_name
+
+    def get_absolute_url(self):
+        return reverse('administration:schoolDetail', kwargs={'pk': self.school_id})
 
 
 class Person(AbstractUser):
@@ -65,3 +68,4 @@ Person._meta.get_field('first_name').verbose_name = 'fornavn'
 Person._meta.get_field('last_name').verbose_name = 'etternavn'
 Person._meta.get_field('is_staff').verbose_name = 'lærer'
 Person._meta.get_field('email').verbose_name = 'Epost'
+

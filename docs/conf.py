@@ -48,8 +48,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'matistikk'
-copyright = '2017, Jonas, Haldor, Sondre'
-author = 'Jonas, Haldor, Sondre'
+copyright = '2017, Jonas Nilsberg Refsnæs, Haldor Myre, Sondre Oldervoll'
+author = 'Jonas Nilsberg Refsnæs, Haldor Myre, Sondre Oldervoll'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

@@ -47,8 +47,23 @@
 <dl class="class">
 <dt id="administration.views.PersonDetailView">
 <em class="property">class </em><code class="descclassname">administration.views.</code><code class="descname">PersonDetailView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#administration.views.PersonDetailView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to list a specific Person based on username
-returns the user to value set in template_name</p>
+<dd><p>Class to get a specific Person based on the username</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>StaffuserRequiredMixin</strong> &#8211; Inherits StaffuserRequiredMixin that checks if the user is logged in as staff</li>
+<li><strong>generic.DetailView</strong> &#8211; Inherits generic.DetailView that makes a page representing a specific Person object.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Person object</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>See more about generic views at <a class="reference external" href="https://docs.djangoproject.com/en/1.10/ref/class-based-views/generic-display/">https://docs.djangoproject.com/en/1.10/ref/class-based-views/generic-display/</a></p>
 <dl class="attribute">
 <dt id="administration.views.PersonDetailView.model">
 <code class="descname">model</code><a class="headerlink" href="#administration.views.PersonDetailView.model" title="Permalink to this definition">¶</a></dt>
@@ -60,8 +75,23 @@ returns the user to value set in template_name</p>
 <dl class="class">
 <dt id="administration.views.PersonListView">
 <em class="property">class </em><code class="descclassname">administration.views.</code><code class="descname">PersonListView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#administration.views.PersonListView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class to list all the persons
-If the user is staff only students will show</p>
+<dd><p>Class to list all the persons</p>
+<p>If the user is staff only students will show</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>StaffuserRequiredMixin</strong> &#8211; Inherits StaffuserRequiredMixin that checks if the user is logged in as staff</li>
+<li><strong>generic.ListView</strong> &#8211; Inherits generic.ListView that makes a page representing a list of Person objects. See more at <a class="reference external" href="https://docs.djangoproject.com/en/1.10/ref/class-based-views/generic-display/">https://docs.djangoproject.com/en/1.10/ref/class-based-views/generic-display/</a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">List of person objects</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -101,7 +131,7 @@ If the user is staff only students will show</p>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2017, Jonas, Haldor, Sondre.
+      &copy;2017, Jonas Nilsberg Refsnæs, Haldor Myre, Sondre Oldervoll.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.2</a>

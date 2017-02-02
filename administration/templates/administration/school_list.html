@@ -16,9 +16,12 @@
 {% else %}
     <h3>Ingen skoler er lagt til</h3>
 {% endif %}
-    <a href="#">
-        <button type="button">Legg til skole</button>
-    </a>
+    {% if request.user.is_superuser %}
+        <a href="{% url 'administration:schoolCreate' %}">
+            <button type="button">Legg til skole</button>
+        </a>
+    {% endif %}
+
     <br>
     <div class="pagination">
     <span class="step-links">

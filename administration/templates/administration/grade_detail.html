@@ -1,0 +1,44 @@
+{% extends 'administration/base.html' %}
+
+{% block body %}
+    <a href="{% url 'administration:schoolDetail' grade.school_id %}">
+        <button type="button">Tilbake</button>
+    </a>
+    <h3>{{ grade.grade_name }}</h3>
+
+    <h4>Lærere:</h4>
+     <ul>
+        {% for teacher in teachers %}
+            <li>
+                <a href="{% url 'administration:personDetail' teacher.username %}">
+                    <p>{{ teacher.first_name }} {{ teacher.last_name }}</p>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    <h4>Elever:</h4>
+     <ul>
+        {% for student in students %}
+            <li>
+                <a href="{% url 'administration:personDetail' student.username %}">
+                    <p>{{ student.first_name }} {{ student.last_name }}</p>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    <h4>Tester:</h4>
+     <ul>
+        {% for test in grade.tests_set.all %}
+            <li>
+                <a href="#">
+                    <p>ParagrafTest</p>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% if request.user.is_superuser %}
+        <a href="#">
+            <button type="button">Oppdater klasse</button>
+        </a>
+    {% endif %}
+{% endblock %}
