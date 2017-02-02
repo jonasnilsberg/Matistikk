@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponse, HttpResponseRedirect
 from braces.views import LoginRequiredMixin, StaffuserRequiredMixin, SuperuserRequiredMixin
+from django.core.paginator import Paginator
+
 from .models import Person
 # Create your views here.
 
@@ -15,6 +17,7 @@ class PersonListView(StaffuserRequiredMixin, generic.ListView):
     """
     login_url = '/'
     template_name = 'administration/person_list.html'
+    paginate_by = 20
 
     def get_queryset(self):
         if not self.request.user.is_superuser:
@@ -46,6 +49,16 @@ class PersonCreateView(StaffuserRequiredMixin, generic.CreateView):
         person.set_password('ntnu123')
         person.save()
         return super(PersonCreateView, self).form_valid(form)
+
+
+class PersonUpdateView(StaffuserRequiredMixin, generic.UpdateView):
+    template_name = 'administration/student_create.html'
+    login_url = '/'
+    model = Person
+    slug_field = "username"
+    fields = ['first_name', 'last_name', 'email', 'sex', 'grade']
+
+
 
 
 

@@ -12,8 +12,9 @@
         <li><lable>Klasse: </lable>{{ person.grade.grade_name }}</li>
         <li><lable>Kjønn: </lable>{{ person.sex }}</li>
         <li><lable>Sist innlogget: </lable>{{ person.last_login }}</li>
-
-
-
     </ul>
+
+     <a href="{% url 'administration:personUpdate' person.username %}">
+        <button type="button">Oppdater bruker</button>
+    </a>
 {% endblock %}
