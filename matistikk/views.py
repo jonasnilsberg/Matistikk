@@ -7,7 +7,7 @@ from django.contrib.auth import login
 class LoginView(FormView):
     template_name = 'administration/login.html'
     form_class = AuthenticationForm
-    success_url = 'maths'
+    success_url = '/'
 
     def form_valid(self, form):
         login(self.request, form.get_user())
