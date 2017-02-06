@@ -5,39 +5,77 @@
 <div class="panel panel-info">
     <div class="panel-heading">
         <h1>Brukeroversikt</h1>
-        <form method="get" action="#">
-            {% csrf_token %}
-            <div class="input-group">
-                <div class="input-group-btn">
-                    <button class="btn btn-primary" type="button" aria-label="Søk">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
-                </div>
-                <input type="text" class="form-control" id="search" onkeyup="userSearch()" placeholder="Søk etter bruker">
+        <div class="input-group">
+            <div class="input-group-btn">
+                <button class="btn btn-primary" type="button" aria-label="Søk">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
             </div>
-        </form>
+            <input type="text" class="form-control" id="search" onkeyup="userSearch()" placeholder="Søk etter bruker">
+        </div>
+
     </div> <!-- #Panel-heading -->
     <div class="panel-body">
-        <table class="table table-hover table-striped table-responsive" id="usertable">
-            <thead>
-                <tr>
-                    <th>Fornavn</th>
-                    <th>Etternavn</th>
-                    <th>Brukernavn</th>
-                    <th>Brukerinfo</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for person in object_list %}
-                <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}">
-                        <td>{{ person.first_name }}</td>
-                        <td>{{ person.last_name }}</td>
-                        <td>{{ person.username }}</td>
-                        <td><a class="btn btn-primary" href="{% url 'administration:personDetail' person.username %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a></td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        <ul class="nav nav-tabs">
+            <li class="nav active"><a href="#A" data-toggle="tab">Alle brukere</a></li>
+            <li class="nav"><a href="#B" data-toggle="tab">Elever</a></li>
+            <li class="nav"><a href="#C" data-toggle="tab">Lærere</a></li>
+            <li class="nav"><a href="#D" data-toggle="tab">Administratorer</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="A">
+                <table class="table table-hover table-striped table-responsive" id="usertable">
+                    <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Brukernavn</th>
+                            <th>Brukerinfo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for person in object_list %}
+                        <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}">
+                                <td>{{ person.first_name }}</td>
+                                <td>{{ person.last_name }}</td>
+                                <td>{{ person.username }}</td>
+                                <td><a class="btn btn-primary" href="{% url 'administration:personDetail' person.username %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="B">
+                <table class="table table-hover table-striped table-responsive" id="usertable">
+                    <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Brukernavn</th>
+                            <th>Brukerinfo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for person in object_list %}
+                        {% if not person.is_staff and not person.is_superuser %}
+                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}">
+                                <td>{{ person.first_name }}</td>
+                                <td>{{ person.last_name }}</td>
+                                <td>{{ person.username }}</td>
+                                <td><a class="btn btn-primary" href="{% url 'administration:personDetail' person.username %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="C">
+                SALAAAM BITCHES!!
+            </div>
+            <div class="tab-pane fade" id="D">
+                SALAAAM BITCHES!!!
+            </div>
+        </div>
         {% else %}
             <h3>Ingen brukere er lagt til</h3>
         {% endif %}
@@ -58,7 +96,7 @@
 
    <script>
     function userSearch() {
-      var input, filter, table, tr, td, i;
+      var input, filter, table, tr, td, i, td1, td2;
       input = document.getElementById("search");
       filter = input.value.toUpperCase();
       table = document.getElementById("usertable");
