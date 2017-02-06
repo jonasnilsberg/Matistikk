@@ -3,8 +3,12 @@
 
 {% block body %}
 {% if object_list %}
-    <h3>Brukeroversikt</h3>
-    <ul>
+    <h1>Brukeroversikt</h1>
+    <form method="get" action="#">
+        {% csrf_token %}
+        <input type="text" placeholder="Søk etter bruker" id="search">
+    </form>
+    <ul id="list">
         {% for person in object_list %}
             <li>
                 <a href="{% url 'administration:personDetail' person.username %}">
@@ -20,7 +24,7 @@
         <button type="button">Legg til bruker</button>
     </a>
     <br>
-    <div class="pagination">
+<!--    <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
             <a href="?page={{ page_obj.previous_page_number }}">previous</a>
@@ -34,5 +38,32 @@
             <a href="?page={{ page_obj.next_page_number }}">next</a>
         {% endif %}
     </span>
+    -->
+
 </div>
+    <script>
+    $(function () {
+        $('#search').keyup(function () {
+            $.ajax({
+                type: 'POST',
+                url: '/administration/getallusers/',
+                data: {
+                    'search_text' : $('#search').val(),
+                    'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: 'html',
+                success: searchSuccess,
+                error: searchError,
+            })
+        })
+        
+    });
+    function searchSuccess(data) {
+        $('#list').empty();
+        $('#list').html(data);
+    }
+    function searchError(xhr) {
+        alert('error')
+    }
+    </script>
 {% endblock %}

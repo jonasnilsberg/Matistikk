@@ -9,11 +9,16 @@ from django.core.urlresolvers import reverse
 
 class School(models.Model):
     """A school
+
     :school_name: The name of the school
-    :school_address: The address of the school"""
+    :school_address: The address of the school
+    """
 
     school_name = models.CharField(max_length=100, verbose_name='Navn')
     school_address = models.CharField(max_length=100, verbose_name='Adresse')
+
+    class Meta:
+        ordering = ['school_name']
 
     def __str__(self):
         return self.school_name
@@ -24,13 +29,19 @@ class School(models.Model):
 
 class Grade(models.Model):
     """ A grade is a group of students
-    :school: the school object the grade relates to
-    :grade_name the name identifies the grade within the school
-    :tests = which tests this class has been given access to. """
+
+    :school: The school object the grade relates to
+
+    :grade_name: The name name of the grade
+
+    :tests: Which tests this class has been given access to. """
 
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     grade_name = models.CharField(max_length=100)
     tests = models.ManyToManyField('maths.TestView', blank=True)
+
+    class Meta:
+        ordering = ['grade_name']
 
     def __str__(self):
         return self.school.school_name + " - " + self.grade_name
@@ -40,9 +51,11 @@ class Grade(models.Model):
 
 
 class Person(AbstractUser):
-    """A person is a customUser modal, it contains information about the user that does not relate to user-management.
+    """A person is a customUser model, it contains information about the user that does not relate to user-management.
+
     :grade: The grade this person is registered to
-    :SEX: The sex of the person."""
+    :Sex: The sex of the person.
+    """
 
     grade = models.ForeignKey(Grade, default="", blank=True, null=True, verbose_name="klasse")
     SEX = [

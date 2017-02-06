@@ -6,11 +6,16 @@
 Welcome to matistikk's documentation!
 =====================================
 
+Introduction:
+
+Requirments:
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   modules/views
+   administration/administration
+   maths/maths
 
 Indices and tables
 ==================

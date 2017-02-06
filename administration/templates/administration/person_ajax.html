@@ -1,0 +1,7 @@
+{% for person in persons %}
+    <li>
+        <a href="{% url 'administration:personDetail' person.username %}">
+            <p>{{ person.username }}</p>
+        </a>
+    </li>
+{% endfor %}
