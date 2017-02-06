@@ -81,4 +81,3 @@ Person._meta.get_field('first_name').verbose_name = 'fornavn'
 Person._meta.get_field('last_name').verbose_name = 'etternavn'
 Person._meta.get_field('is_staff').verbose_name = 'lærer'
 Person._meta.get_field('email').verbose_name = 'Epost'
-
