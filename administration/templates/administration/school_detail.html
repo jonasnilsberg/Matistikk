@@ -1,20 +1,30 @@
 {% extends 'matistikk/base.html' %}
 
 {% block body %}
-    <a class="btn btn-primary" href="{% url 'administration:schoolList' %}">Tilbake</a>
-    <h3>{{ school.school_name }}</h3>
-    <h5>Adresse: {{ school.school_address }}</h5>
-    <ul>
-        {% for grade in grades %}
-            <li>
-                <a href="{% url 'administration:gradeDetail' school_pk=school.id pk=grade.id %}">
-                    {{ grade.grade_name }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-    {% if request.user.is_superuser %}
-            <a class="btn btn-primary" href="{% url 'administration:schoolUpdate' school.id %}">Oppdater skole</a>
-            <a class="btn btn-primary" href="{% url 'administration:gradeCreate' school.id %}">Legg til klasse</a>
-    {% endif %}
+    <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Tilbake</a>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1 class="panel-title">{{ school.school_name }}</h1>
+            <h5>Adresse: {{ school.school_address }}</h5>
+        </div>
+        <div class="panel-body">
+            <h2>Klasser</h2>
+            <ul>
+                {% for grade in grades %}
+                    <li>
+                        <a href="{% url 'administration:gradeDetail' school_pk=school.id pk=grade.id %}">
+                            {{ grade.grade_name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if request.user.is_superuser %}
+            <div class="panel-footer">
+                <a class="btn btn-primary" href="{% url 'administration:schoolUpdate' school.id %}"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater skole</a>
+                <a class="btn btn-primary" href="{% url 'administration:gradeCreate' school.id %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til klasse</a>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
