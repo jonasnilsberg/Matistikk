@@ -3,23 +3,22 @@
 {% block body %}
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-12 col-md-7">
+            <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Tilbake</a>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h1>Skoleadministrasjon</h1>
+                </div>
                 <div class="panel-body">
-                    <a class="btn btn-primary" href="{% url 'administration:schoolList' %}">Tilbake</a>
                     <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {% include 'matistikk/form-template.html' %}
                         <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-success">Submit </button>
-                            </div>
+                            <button type="submit" class="btn btn-success">Submit </button>
                         </div>
                     </form>
 
                 </div>
             </div>
-
         </div>
-
     </div>
 {% endblock %}

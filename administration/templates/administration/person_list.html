@@ -1,67 +1,81 @@
 {% extends 'matistikk/base.html' %}
 
-
 {% block body %}
 {% if object_list %}
-    <h1>Brukeroversikt</h1>
-    <form method="get" action="#">
-        {% csrf_token %}
-        <input type="text" placeholder="Søk etter bruker" id="search">
-    </form>
-    <ul id="list">
-        {% for person in object_list %}
-            <li>
-                <a href="{% url 'administration:personDetail' person.username %}">
-                    {{ person.username }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <h3>Ingen brukere er lagt til</h3>
-{% endif %}
-    <a class="btn btn-primary" href="{% url 'administration:createPerson' %}">Legg til bruker</a>
-    <br>
-<!--    <div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h1>Brukeroversikt</h1>
+        <form method="get" action="#">
+            {% csrf_token %}
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button class="btn btn-primary" type="button" aria-label="Søk">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </div>
+                <input type="text" class="form-control" id="search" onkeyup="userSearch()" placeholder="Søk etter bruker">
+            </div>
+        </form>
+    </div> <!-- #Panel-heading -->
+    <div class="panel-body">
+        <table class="table table-hover table-striped table-responsive" id="usertable">
+            <thead>
+                <tr>
+                    <th>Fornavn</th>
+                    <th>Etternavn</th>
+                    <th>Brukernavn</th>
+                    <th>Brukerinfo</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for person in object_list %}
+                <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}">
+                        <td>{{ person.first_name }}</td>
+                        <td>{{ person.last_name }}</td>
+                        <td>{{ person.username }}</td>
+                        <td><a class="btn btn-primary" href="{% url 'administration:personDetail' person.username %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <h3>Ingen brukere er lagt til</h3>
         {% endif %}
+    </div> <!-- #Panel-body -->
+    <div class="panel-footer">
+        <a class="btn btn-primary" href="{% url 'administration:createPerson' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til bruker</a>
+    </div> <!-- #Panel-footer -->
+</div> <!-- #Panel -->
 
-        <span class="current">
-            Side {{ page_obj.number }} av {{ page_obj.paginator.num_pages }}.
-        </span>
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-        {% endif %}
-    </span>
-    -->
-
-</div>
     <script>
-    $(function () {
-        $('#search').keyup(function () {
-            $.ajax({
-                type: 'POST',
-                url: '/administrasjon/brukere/',
-                data: {
-                    'search_text' : $('#search').val(),
-                    'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val()
-                },
-                dataType: 'html',
-                success: searchSuccess,
-                error: searchError,
-            })
-        })
-        
+    jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.document.location = $(this).data("href");
+        });
     });
-    function searchSuccess(data) {
-        $('#list').empty();
-        $('#list').html(data);
-    }
-    function searchError(xhr) {
-        alert('error')
+    </script>
+
+   <script>
+    function userSearch() {
+      var input, filter, table, tr, td, i;
+      input = document.getElementById("search");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("usertable");
+      tr = table.getElementsByTagName("tr");
+
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        td1 = tr[i].getElementsByTagName("td")[1];
+        td2 = tr[i].getElementsByTagName("td")[2];
+        if (td) {
+          if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
     }
     </script>
 {% endblock %}

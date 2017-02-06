@@ -1,43 +1,53 @@
 {% extends 'matistikk/base.html' %}
 
 {% block body %}
-    <a class="btn btn-primary" href="{% url 'administration:schoolDetail' grade.school_id %}">Tilbake</a>
-    <h3>{{ grade.grade_name }}</h3>
+    <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Tilbake</a>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>{{ grade.grade_name }}</h1>
+        </div>
 
-    <h4>Lærere:</h4>
-     <ul>
-        {% for teacher in teachers %}
-            <li>
-                <a href="{% url 'administration:personDetail' teacher.username %}">
-                    {{ teacher.first_name }} {{ teacher.last_name }}
-                </a>
-            </li>
-        {% endfor %}
-         <a class="btn btn-primary" href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}">Legg til Lærer</a>
-    </ul>
-    <h4>Elever:</h4>
-     <ul>
-        {% for student in students %}
-            <li>
-                <a href="{% url 'administration:personDetail' student.username %}">
-                    {{ student.first_name }} {{ student.last_name }}
-                </a>
-            </li>
-        {% endfor %}
+        <div class="panel-body">
+            <h4>Lærere</h4>
+             <ul>
+                {% for teacher in teachers %}
+                    <li>
+                        <a href="{% url 'administration:personDetail' teacher.username %}">
+                            {{ teacher.first_name }} {{ teacher.last_name }}
+                        </a>
+                    </li>
+                {% endfor %}
 
-         <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}">Legg til Elev</a>
-    </ul>
-    <h4>Tester:</h4>
-     <ul>
-        {% for test in grade.tests_set.all %}
-            <li>
-                <a href="#">
-                    <p>ParagrafTest</p>
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-    {% if request.user.is_superuser %}
-            <a class="btn btn-primary" href="{% url 'administration:gradeUpdate' school_pk=grade.school_id pk=grade.id %}">Oppdater klasse</a>
-    {% endif %}
+             </ul>
+             <a class="btn btn-primary" href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}">Legg til Lærer</a>
+             <hr>
+             <h4>Elever</h4>
+             <ul>
+                {% for student in students %}
+                    <li>
+                        <a href="{% url 'administration:personDetail' student.username %}">
+                            {{ student.first_name }} {{ student.last_name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}">Legg til Elev</a>
+            <hr>
+            <h4>Tester</h4>
+             <ul>
+                {% for test in grade.tests_set.all %}
+                    <li>
+                        <a href="#">
+                            <p>ParagrafTest</p>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="panel-footer">
+            {% if request.user.is_superuser %}
+                <a class="btn btn-primary" href="{% url 'administration:gradeUpdate' school_pk=grade.school_id pk=grade.id %}">Oppdater klasse</a>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

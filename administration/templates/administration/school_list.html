@@ -2,37 +2,29 @@
 
 {% block body %}
 {% if object_list %}
-    <h3>Skoler</h3>
-    <ul>
-        {% for school in object_list %}
-            <li>
-                <a href="{% url 'administration:schoolDetail' school.id %}">
-                    {{ school.school_name }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <h3>Ingen skoler er lagt til</h3>
-{% endif %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>Skoler</h1>
+        </div>
+        <div class="panel-body">
+            <ul>
+                {% for school in object_list %}
+                    <li>
+                        <a href="{% url 'administration:schoolDetail' school.id %}">
+                            {{ school.school_name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+                <h3>Ingen skoler er lagt til</h3>
+            {% endif %}
+        </div>
+
     {% if request.user.is_superuser %}
-        <a class="btn btn-primary" href="{% url 'administration:schoolCreate' %}">Legg til skole</a>
-    {% endif %}
-
-    <br>
-    <div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Side {{ page_obj.number }} av {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-        {% endif %}
-    </span>
-</div>
+        <div class="panel-footer">
+            <a class="btn btn-primary" href="{% url 'administration:schoolCreate' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til skole</a>
+        </div>
+    </div>
+{% endif %}
 {% endblock %}

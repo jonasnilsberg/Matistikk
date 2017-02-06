@@ -1,16 +1,23 @@
 {% extends 'matistikk/base.html' %}
 
 {% block body %}
-    <a class="btn btn-primary" href="{% url 'administration:personList' %}">Tilbake</a>
-    <h3>{{ person.username }}</h3>
-    <ul>
-        <li><lable>First name: </lable>{{ person.first_name }}</li>
-        <li><lable>Last name: </lable>{{ person.last_name }}</li>
-        <li><lable>Skole: </lable>{{ person.grade.school.school_name }}</li>
-        <li><lable>Klasse: </lable>{{ person.grade.grade_name }}</li>
-        <li><lable>Kjønn: </lable>{{ person.sex }}</li>
-        <li><lable>Sist innlogget: </lable>{{ person.last_login }}</li>
-    </ul>
-
-    <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}">Oppdater bruker</a>
+<a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Tilbake</a>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h1>{{ person.username }}</h1>
+    </div>
+    <div class="panel-body">
+        <ul>
+            <li><lable>Fornavn: </lable>{{ person.first_name }}</li>
+            <li><lable>Etternavn: </lable>{{ person.last_name }}</li>
+            <li><lable>Skole: </lable>{{ person.grade.school.school_name }}</li>
+            <li><lable>Klasse: </lable>{{ person.grade.grade_name }}</li>
+            <li><lable>Kjønn: </lable>{{ person.sex }}</li>
+            <li><lable>Sist innlogget: </lable>{{ person.last_login }}</li>
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater bruker</a>
+    </div>
+</div>
 {% endblock %}
