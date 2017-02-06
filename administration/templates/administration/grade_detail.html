@@ -1,9 +1,7 @@
 {% extends 'matistikk/base.html' %}
 
 {% block body %}
-    <a href="{% url 'administration:schoolDetail' grade.school_id %}">
-        <button type="button">Tilbake</button>
-    </a>
+    <a class="btn btn-primary" href="{% url 'administration:schoolDetail' grade.school_id %}">Tilbake</a>
     <h3>{{ grade.grade_name }}</h3>
 
     <h4>Lærere:</h4>
@@ -11,26 +9,23 @@
         {% for teacher in teachers %}
             <li>
                 <a href="{% url 'administration:personDetail' teacher.username %}">
-                    <p>{{ teacher.first_name }} {{ teacher.last_name }}</p>
+                    {{ teacher.first_name }} {{ teacher.last_name }}
                 </a>
             </li>
         {% endfor %}
-      <a href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}">
-         <button>Legg til Lærer</button>
-     </a>
+         <a class="btn btn-primary" href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}">Legg til Lærer</a>
     </ul>
     <h4>Elever:</h4>
      <ul>
         {% for student in students %}
             <li>
                 <a href="{% url 'administration:personDetail' student.username %}">
-                    <p>{{ student.first_name }} {{ student.last_name }}</p>
+                    {{ student.first_name }} {{ student.last_name }}
                 </a>
             </li>
         {% endfor %}
-     <a href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}">
-         <button>Legg til Elev</button>
-     </a>
+
+         <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}">Legg til Elev</a>
     </ul>
     <h4>Tester:</h4>
      <ul>
@@ -43,8 +38,6 @@
         {% endfor %}
     </ul>
     {% if request.user.is_superuser %}
-        <a href="{% url 'administration:gradeUpdate' school_pk=grade.school_id pk=grade.id %}">
-            <button type="button">Oppdater klasse</button>
-        </a>
+            <a class="btn btn-primary" href="{% url 'administration:gradeUpdate' school_pk=grade.school_id pk=grade.id %}">Oppdater klasse</a>
     {% endif %}
 {% endblock %}

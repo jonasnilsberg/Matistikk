@@ -20,9 +20,7 @@
 {% else %}
     <h3>Ingen brukere er lagt til</h3>
 {% endif %}
-    <a href="{% url 'administration:createPerson' %}">
-        <button type="button">Legg til bruker</button>
-    </a>
+    <a class="btn btn-primary" href="{% url 'administration:createPerson' %}">Legg til bruker</a>
     <br>
 <!--    <div class="pagination">
     <span class="step-links">

@@ -5,9 +5,7 @@
         <div class="row">
             <div class="col-sm-12 col-md-7">
                 <div class="panel-body">
-                 <a href="{% url 'administration:schoolList' %}">
-                    <button type="button">Tilbake</button>
-                 </a>
+                    <a class="btn btn-primary" href="{% url 'administration:schoolList' %}">Tilbake</a>
                     <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {% include 'matistikk/form-template.html' %}

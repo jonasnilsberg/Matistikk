@@ -1,9 +1,7 @@
 {% extends 'matistikk/base.html' %}
 
 {% block body %}
-    <a href="{% url 'administration:personList' %}">
-        <button type="button">Tilbake</button>
-    </a>
+    <a class="btn btn-primary" href="{% url 'administration:personList' %}">Tilbake</a>
     <h3>{{ person.username }}</h3>
     <ul>
         <li><lable>First name: </lable>{{ person.first_name }}</li>
@@ -14,7 +12,5 @@
         <li><lable>Sist innlogget: </lable>{{ person.last_login }}</li>
     </ul>
 
-     <a href="{% url 'administration:personUpdate' person.username %}">
-        <button type="button">Oppdater bruker</button>
-    </a>
+    <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}">Oppdater bruker</a>
 {% endblock %}

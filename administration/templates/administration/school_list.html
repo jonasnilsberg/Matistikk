@@ -1,6 +1,5 @@
 {% extends 'matistikk/base.html' %}
 
-
 {% block body %}
 {% if object_list %}
     <h3>Skoler</h3>
@@ -8,7 +7,7 @@
         {% for school in object_list %}
             <li>
                 <a href="{% url 'administration:schoolDetail' school.id %}">
-                    <p>{{ school.school_name }}</p>
+                    {{ school.school_name }}
                 </a>
             </li>
         {% endfor %}
@@ -17,9 +16,7 @@
     <h3>Ingen skoler er lagt til</h3>
 {% endif %}
     {% if request.user.is_superuser %}
-        <a href="{% url 'administration:schoolCreate' %}">
-            <button type="button">Legg til skole</button>
-        </a>
+        <a class="btn btn-primary" href="{% url 'administration:schoolCreate' %}">Legg til skole</a>
     {% endif %}
 
     <br>
