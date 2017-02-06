@@ -21,8 +21,8 @@ from maths import views as mathViews
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^maths/', include('maths.urls', namespace='maths')),
-    url(r'^administration/', include('administration.urls', namespace='administration')),
+    url(r'^matistikk/', include('maths.urls', namespace='maths')),
+    url(r'^administrasjon/', include('administration.urls', namespace='administration')),
     url(r'^$', mathViews.IndexView.as_view(), name='index'),
     url(r'login/$', views.LoginView.as_view(), name='login'),
     url(r'^logout/', auth_views.logout, {'next_page': '/'}, name="logout"),

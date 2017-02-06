@@ -26,7 +26,7 @@ class PersonListView(views.StaffuserRequiredMixin, views.AjaxResponseMixin, gene
         :return: List of person objects
     """
 
-    login_url = '/'
+    login_url = '/login'
     template_name = 'administration/person_list.html'
 
     def post_ajax(self, request, *args, **kwargs):
@@ -80,16 +80,16 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
             saving the form when validated
     """
 
-    login_url = '/'
+    login_url = '/login/'
     is_staff = False
     template_name = 'administration/student_create.html'
     model = Person
     fields = ['username', 'first_name', 'last_name', 'email', 'sex', 'grade']
-    success_url = '/administration/getallusers'
+    success_url = '/administrasjon/brukere'
 
     def get_initial(self):
         if self.kwargs.get('pk'):
-            self.success_url = 'administration/allschools/' + self.kwargs.get('school_pk') + '/grade/' + \
+            self.success_url = 'administrasjon/skoler/' + self.kwargs.get('school_pk') + '/klasse/' + \
                                self.kwargs.get('pk')
             return {'grade': self.kwargs.get('pk'),'is_staff': self.is_staff}
 
@@ -128,7 +128,7 @@ class PersonUpdateView(views.StaffuserRequiredMixin, generic.UpdateView):
         :return: The HttpResponse set in success_url
     """
     template_name = 'administration/student_create.html'
-    login_url = '/'
+    login_url = '/login'
     model = Person
     slug_field = "username"
     fields = ['first_name', 'last_name', 'email', 'sex', 'grade']
@@ -143,7 +143,7 @@ class SchoolListView(views.StaffuserRequiredMixin, generic.ListView):
         :return: List of School objects
 
     """
-    login_url = '/'
+    login_url = '/login'
     model = School
     template_name = 'administration/school_list.html'
     paginate_by = 20
@@ -177,7 +177,7 @@ class SchoolCreateView(views.SuperuserRequiredMixin, generic.CreateView):
             saving the form when validated
         :return: The HttpResponse set in success_url
     """
-    login_url = '/'
+    login_url = '/login'
     template_name = 'administration/school_form.html'
     model = School
     fields = ['school_name', 'school_address']
@@ -194,7 +194,7 @@ class SchoolUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
             saving the form when validated.
         :return: The HttpResponse set in success_url
     """
-    login_url = '/'
+    login_url = '/login'
     model = School
     template_name = 'administration/school_form.html'
     fields = ['school_name', 'school_address']
@@ -209,7 +209,7 @@ class GradeDetailView(views.StaffuserRequiredMixin, generic.DetailView):
         :return: School object
 
     """
-    login_url = '/'
+    login_url = '/login'
     model = Grade
     template_name = 'administration/grade_detail.html'
 
@@ -230,7 +230,7 @@ class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):
             saving the form when validated
         :return: The HttpResponse set in success_url
     """
-    login_url = '/'
+    login_url = '/login'
     model = Grade
     template_name = 'administration/grade_form.html'
     fields = ['grade_name', 'tests']
@@ -244,7 +244,7 @@ class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):
 
 
 class GradeUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
-    login_url = '/'
+    login_url = '/login'
     model = Grade
     template_name = 'administration/grade_form.html'
     fields = ['grade_name', 'tests']

@@ -46,7 +46,7 @@
         $('#search').keyup(function () {
             $.ajax({
                 type: 'POST',
-                url: '/administration/getallusers/',
+                url: '/administrasjon/brukere/',
                 data: {
                     'search_text' : $('#search').val(),
                     'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val()
