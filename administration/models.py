@@ -41,7 +41,7 @@ class Grade(models.Model):
     tests = models.ManyToManyField('maths.TestView', blank=True)
 
     class Meta:
-        ordering = ['grade_name']
+        ordering = ['school_id', 'grade_name']
 
     def __str__(self):
         return self.school.school_name + " - " + self.grade_name
@@ -81,4 +81,3 @@ Person._meta.get_field('first_name').verbose_name = 'fornavn'
 Person._meta.get_field('last_name').verbose_name = 'etternavn'
 Person._meta.get_field('is_staff').verbose_name = 'lærer'
 Person._meta.get_field('email').verbose_name = 'Epost'
-

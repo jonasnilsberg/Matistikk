@@ -1,11 +1,12 @@
 from django.views import generic
 from braces import views
+from django.core.urlresolvers import reverse
 from django.contrib.auth.forms import PasswordChangeForm
 from .forms import ChangePasswordForm
 from .models import Person, School, Grade
 from django.shortcuts import render, render_to_response, HttpResponse
 from django.http import JsonResponse
-
+from django.contrib import messages
 
 import logging
 from django.core import serializers
@@ -13,6 +14,32 @@ from django.core.paginator import Paginator
 
 
 # Create your views here.
+class TestView:
+    logging.error('Test')
+
+
+class MyPageDetailView(generic.FormView):
+    def test_func(self, user):
+        return self.request.user.username == self.kwargs.get('slug')
+
+    form_class = PasswordChangeForm
+    slug_field = 'username'
+    template_name = 'administration/mypage.html'
+    success_url = '/'
+
+    def get_success_url(self):
+        return reverse('administration:myPage', kwargs={'slug': self.kwargs.get('slug')})
+
+    def get_form(self, form_class):
+        return form_class(self.request.user, **self.get_form_kwargs())
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Your password was successfully updated!')
+        person = form.save(commit=False)
+        password = form.cleaned_data['new_password1']
+        person.set_password(password)
+        person.save()
+        return super(MyPageDetailView, self).form_valid(form)
 
 
 class PersonListView(views.StaffuserRequiredMixin, views.AjaxResponseMixin, generic.ListView):
@@ -88,12 +115,26 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
     success_url = '/administrasjon/brukere'
 
     def get_initial(self):
+        """
+            Function that checks for preset Person values and sets the to the field
+
+            :param self: References to the class itself and all it's variables.
+            :return: List the preset values
+        """
+
         if self.kwargs.get('pk'):
             self.success_url = 'administrasjon/skoler/' + self.kwargs.get('school_pk') + '/klasse/' + \
                                self.kwargs.get('pk')
-            return {'grade': self.kwargs.get('pk'),'is_staff': self.is_staff}
+            return {'grade': self.kwargs.get('pk'), 'is_staff': self.is_staff}
 
     def get_form_class(self):
+        """
+            Function that sets and extra 'is_staff' value to fields if the logged in user is_superuser
+
+            :param self: References to the class itself and all it's variables.
+            :return: The form class
+        """
+
         if self.request.user.is_superuser:
             self.fields = ['username', 'first_name', 'last_name', 'email', 'sex', 'grade', 'is_staff']
         return super(PersonCreateView, self).get_form_class()
@@ -127,6 +168,7 @@ class PersonUpdateView(views.StaffuserRequiredMixin, generic.UpdateView):
             saving the form when validated.
         :return: The HttpResponse set in success_url
     """
+
     template_name = 'administration/student_create.html'
     login_url = '/login'
     model = Person
@@ -143,6 +185,7 @@ class SchoolListView(views.StaffuserRequiredMixin, generic.ListView):
         :return: List of School objects
 
     """
+
     login_url = '/login'
     model = School
     template_name = 'administration/school_list.html'
@@ -158,6 +201,7 @@ class SchoolDetailView(views.StaffuserRequiredMixin, generic.DetailView):
         :return: School object
 
     """
+
     model = School
     template_name = 'administration/school_detail.html'
 
@@ -177,6 +221,7 @@ class SchoolCreateView(views.SuperuserRequiredMixin, generic.CreateView):
             saving the form when validated
         :return: The HttpResponse set in success_url
     """
+
     login_url = '/login'
     template_name = 'administration/school_form.html'
     model = School
@@ -194,6 +239,7 @@ class SchoolUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
             saving the form when validated.
         :return: The HttpResponse set in success_url
     """
+
     login_url = '/login'
     model = School
     template_name = 'administration/school_form.html'
@@ -207,8 +253,8 @@ class GradeDetailView(views.StaffuserRequiredMixin, generic.DetailView):
         :param views.StaffuserRequiredMixin: Inherits views.StaffuserRequiredMixin that checks if the user is logged in as staff
         :param generic.UpdateView: Inherits generic.DetailView that makes a page representing a specific object.
         :return: School object
-
     """
+
     login_url = '/login'
     model = Grade
     template_name = 'administration/grade_detail.html'
@@ -230,6 +276,7 @@ class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):
             saving the form when validated
         :return: The HttpResponse set in success_url
     """
+
     login_url = '/login'
     model = Grade
     template_name = 'administration/grade_form.html'
@@ -244,6 +291,15 @@ class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):
 
 
 class GradeUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
+    """
+        Class to update a Grade object based on the id
+
+        :param views.SuperuserRequiredMixin: Inherits views.SuperuserRequiredMixin that checks if the user is logged in
+            as superuser
+        :param generic.UpdateView: Inherits generic.CreateView that displays a form for updating a specific object and
+            saving the form when validated.
+        :return: The HttpResponse set in success_url
+    """
     login_url = '/login'
     model = Grade
     template_name = 'administration/grade_form.html'

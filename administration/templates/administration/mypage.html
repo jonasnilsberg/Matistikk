@@ -1,0 +1,23 @@
+{% extends 'matistikk/base.html' %}
+
+{% block body %}
+    <h3>{{ request.user.username }}</h3>
+    <ul>
+        <li><lable>First name: </lable>{{ request.user.first_name }}</li>
+        <li><lable>Last name: </lable>{{ request.user.last_name }}</li>
+        <li><lable>Skole: </lable>{{ request.user.grade.school.school_name }}</li>
+        <li><lable>Klasse: </lable>{{ request.user.grade.grade_name }}</li>
+    </ul>
+     <form form class="form-horizontal" action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Submit </button>
+     </form>
+    {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
