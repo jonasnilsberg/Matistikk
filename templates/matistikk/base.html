@@ -9,7 +9,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <link rel="stylesheet" type="text/css" href="{% static 'maths/style.css' %}" />
-
+        <link rel="icon" href="http://bildr.no/view/WS9ITTNK">
     </head>
         <body>
         {% if request.user.is_superuser %}
@@ -61,12 +61,12 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="pull left" href="../../maths/templates/maths"><img src="http://bildr.no/image/Tjl2U25M.jpeg" width="240" height="50"/></a>
+                        <a class="pull left" href="{% url 'index' %}"><img src="http://bildr.no/image/Tjl2U25M.jpeg" width="240" height="50"/></a>
                     </div>
                     <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
                             <li><a href="../../maths/templates/maths"><span class="glyphicon glyphicon-home "></span></a></li>
-                            <li><a href="mypageview">Min Side</a></li>
+                            <li><a href="{% url 'administration:myPage' request.user.username %}">Min Side</a></li>
                             <li><a href="createtestview">Lag Øvingstest</a></li>
                             <li><a href="statisticview">Statistikk</a></li>
                             <li><a href="edittests">Rediger mine tester</a>

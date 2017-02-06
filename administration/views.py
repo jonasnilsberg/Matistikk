@@ -6,7 +6,7 @@ from .forms import ChangePasswordForm
 from .models import Person, School, Grade
 from django.shortcuts import render, render_to_response, HttpResponse
 from django.http import JsonResponse
-
+from django.contrib import messages
 
 import logging
 from django.core import serializers
@@ -27,8 +27,19 @@ class MyPageDetailView(generic.FormView):
     template_name = 'administration/mypage.html'
     success_url = '/'
 
+    def get_success_url(self):
+        return reverse('administration:myPage', kwargs={'slug': self.kwargs.get('slug')})
+
     def get_form(self, form_class):
         return form_class(self.request.user, **self.get_form_kwargs())
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Your password was successfully updated!')
+        person = form.save(commit=False)
+        password = form.cleaned_data['new_password1']
+        person.set_password(password)
+        person.save()
+        return super(MyPageDetailView, self).form_valid(form)
 
 
 class PersonListView(views.StaffuserRequiredMixin, views.AjaxResponseMixin, generic.ListView):
