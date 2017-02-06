@@ -24,6 +24,7 @@ from django.conf import settings
 settings.configure()
 
 # -- General configuration ------------------------------------------------
+autodoc_signatures_as_is = True
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #

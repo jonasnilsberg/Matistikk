@@ -27,10 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# Sets the login_redirect_url to where to go after a successful login
-LOGIN_REDIRECT_URL = '/administration'
-
-
 # Application definition
 
 INSTALLED_APPS = [
