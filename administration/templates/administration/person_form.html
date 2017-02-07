@@ -14,7 +14,13 @@
                 <div class="panel-body">
                     <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {% bootstrap_form form %}
+                        {% bootstrap_form_errors form %}
+                        {% bootstrap_field form.first_name set_required="True"%}
+                        {% bootstrap_field form.last_name %}
+                        {% bootstrap_field form.email %}
+                        {% bootstrap_field form.date_of_birth placeholder="dd.mm.yyyy"%}
+                        {% bootstrap_field form.sex %}
+                        {% bootstrap_field form.grade %}
                 {% buttons %}
                     <button type="submit" class="btn btn-primary">
                         {% bootstrap_icon "check" %} Lagre
@@ -26,3 +32,4 @@
         </div>
     </div>
 {% endblock %}
+

@@ -1,8 +1,8 @@
 from django.views import generic
 from braces import views
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-from .forms import ChangePasswordForm
 from .models import Person, School, Grade
 from django.shortcuts import render, render_to_response, HttpResponse
 from django.http import JsonResponse
@@ -11,11 +11,10 @@ from django.contrib import messages
 import logging
 from django.core import serializers
 from django.core.paginator import Paginator
+from django.core.exceptions import ValidationError
 
 
 # Create your views here.
-class TestView:
-    logging.error('Test')
 
 
 class MyPageDetailView(generic.FormView):
@@ -29,15 +28,16 @@ class MyPageDetailView(generic.FormView):
     def get_success_url(self):
         return reverse('administration:myPage', kwargs={'slug': self.kwargs.get('slug')})
 
-    def get_form(self, form_class):
+    def get_form(self, form_class=form_class):
         return form_class(self.request.user, **self.get_form_kwargs())
 
     def form_valid(self, form):
-        messages.success(self.request, 'Your password was successfully updated!')
         person = form.save(commit=False)
         password = form.cleaned_data['new_password1']
         person.set_password(password)
         person.save()
+        update_session_auth_hash(self.request, form.user)
+        messages.success(self.request, 'Passordet ble oppdatert!')
         return super(MyPageDetailView, self).form_valid(form)
 
 
@@ -95,8 +95,9 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
     login_url = reverse_lazy('login')
     is_staff = False
     template_name = 'administration/person_form.html'
+    #form_class = PersonForm
     model = Person
-    fields = ['username', 'first_name', 'last_name', 'email', 'sex', 'grade']
+    fields = ['first_name', 'last_name', 'email', 'sex', 'grade']
     success_url = reverse_lazy('administration:personList')
 
     def get_initial(self):
@@ -108,8 +109,9 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
         """
 
         if self.kwargs.get('pk'):
-            self.success_url = 'administrasjon/skoler/' + self.kwargs.get('school_pk') + '/klasse/' + \
-                               self.kwargs.get('pk')
+            self.success_url = reverse_lazy('administration:gradeDetail',
+                                            kwargs={'school_pk': self.kwargs.get('school_pk'),
+                                                    'pk': self.kwargs.get('pk')})
             return {'grade': self.kwargs.get('pk'), 'is_staff': self.is_staff}
 
     def get_form_class(self):
@@ -119,9 +121,8 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
             :param self: References to the class itself and all it's variables.
             :return: The form class
         """
-
         if self.request.user.is_superuser:
-            self.fields = ['username', 'first_name', 'last_name', 'email', 'sex', 'grade', 'is_staff']
+            self.fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grade', 'is_staff']
         return super(PersonCreateView, self).get_form_class()
 
     def form_valid(self, form):
@@ -133,11 +134,29 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
             :param form: References to the model form.
             :return: The HttpResponse set in success_url.
         """
-
+        first_name_form = form.cleaned_data['first_name']
+        last_name_form = form.cleaned_data['last_name']
+        first_name = first_name_form.replace(" ", "")
+        first_name_lower = first_name.lower()
+        last_name_lower = last_name_form.lower()
+        last_name_tab = str.split(last_name_lower)
+        username = first_name_lower
+        for letter in last_name_tab:
+            username += letter[0]
         person = form.save(commit=False)
-        staff = self.request.POST.get('staff')
-        if staff:
-            person.is_staff = staff
+        last_name_list = list(last_name_tab[-1])
+        for letter in last_name_list[1:]:
+            if Person.objects.filter(username__exact=username):
+                username += letter
+            else:
+                person.username = username
+                break
+        counter = 1
+        username_correct = username
+        while Person.objects.filter(username__exact=username_correct):
+            username_correct = username + str(counter)
+            counter +=1
+        person.username = username_correct
         person.set_password('ntnu123')
         person.save()
         return super(PersonCreateView, self).form_valid(form)
@@ -158,7 +177,7 @@ class PersonUpdateView(views.StaffuserRequiredMixin, generic.UpdateView):
     login_url = reverse_lazy('login')
     model = Person
     slug_field = "username"
-    fields = ['first_name', 'last_name', 'email', 'sex', 'grade']
+    fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grade']
 
 
 class SchoolListView(views.StaffuserRequiredMixin, generic.ListView):
