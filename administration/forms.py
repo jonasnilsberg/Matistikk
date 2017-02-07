@@ -1,13 +1,9 @@
-from django.contrib.auth.models import User
 from django import forms
 from .models import Person
+from django.core.exceptions import ValidationError
 
+my_default_errors = {
+    'required': 'Testing',
+    'invalid': 'Enter a valid value'
+}
 
-class ChangePasswordForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-    new_password = forms.CharField(widget=forms.PasswordInput)
-    new_password_check = forms.CharField(widget=forms.PasswordInput)
-
-    class Meta:
-        model = Person
-        fields = ['password']

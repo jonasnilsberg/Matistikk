@@ -119,6 +119,7 @@ TIME_ZONE = 'Europe/Oslo'
 USE_I18N = True
 
 USE_L10N = True
+DATE_FORMAT = 'd.m.Y'
 
 USE_TZ = True
 
@@ -129,3 +130,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'administration.Person'
+
+DATE_INPUT_FORMATS = ('%d-%m-%Y','%Y-%m-%d')
+
+# File upload with django-excel
+FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
+                        "django_excel.TemporaryExcelFileUploadHandler")
