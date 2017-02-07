@@ -1,5 +1,8 @@
 {% extends 'matistikk/base.html' %}
-
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
 {% block body %}
     <div class="container-fluid">
         <div class="row">
@@ -11,10 +14,12 @@
                 <div class="panel-body">
                     <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {% include 'matistikk/form-template.html' %}
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-success">Submit </button>
-                        </div>
+                        {% bootstrap_form form %}
+                        {% buttons %}
+                            <button type="submit" class="btn btn-primary">
+                                {% bootstrap_icon "check" %} Lagre
+                            </button>
+                        {% endbuttons %}
                     </form>
 
                 </div>

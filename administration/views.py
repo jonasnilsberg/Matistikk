@@ -1,6 +1,6 @@
 from django.views import generic
 from braces import views
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.forms import PasswordChangeForm
 from .forms import ChangePasswordForm
 from .models import Person, School, Grade
@@ -25,7 +25,6 @@ class MyPageDetailView(generic.FormView):
     form_class = PasswordChangeForm
     slug_field = 'username'
     template_name = 'administration/mypage.html'
-    success_url = '/'
 
     def get_success_url(self):
         return reverse('administration:myPage', kwargs={'slug': self.kwargs.get('slug')})
@@ -53,22 +52,8 @@ class PersonListView(views.StaffuserRequiredMixin, views.AjaxResponseMixin, gene
         :return: List of person objects
     """
 
-    login_url = '/login'
+    login_url = reverse_lazy('login')
     template_name = 'administration/person_list.html'
-
-    def post_ajax(self, request, *args, **kwargs):
-        """
-            Function that checks if the post request is an ajax post and finds the searched for Persons.
-
-            :param self:
-                References to the class itself and all it's variables
-            :param request:
-                The request
-            :return: List of person objects
-        """
-        search_text = request.POST['search_text']
-        person_list = Person.objects.filter(username__icontains=search_text)
-        return render_to_response('administration/person_ajax.html', {'persons': person_list})
 
     def get_queryset(self):
         """
@@ -107,12 +92,12 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
             saving the form when validated
     """
 
-    login_url = '/login/'
+    login_url = reverse_lazy('login')
     is_staff = False
-    template_name = 'administration/student_create.html'
+    template_name = 'administration/person_form.html'
     model = Person
     fields = ['username', 'first_name', 'last_name', 'email', 'sex', 'grade']
-    success_url = '/administrasjon/brukere'
+    success_url = reverse_lazy('administration:personList')
 
     def get_initial(self):
         """
@@ -169,8 +154,8 @@ class PersonUpdateView(views.StaffuserRequiredMixin, generic.UpdateView):
         :return: The HttpResponse set in success_url
     """
 
-    template_name = 'administration/student_create.html'
-    login_url = '/login'
+    template_name = 'administration/person_form.html'
+    login_url = reverse_lazy('login')
     model = Person
     slug_field = "username"
     fields = ['first_name', 'last_name', 'email', 'sex', 'grade']
@@ -186,7 +171,7 @@ class SchoolListView(views.StaffuserRequiredMixin, generic.ListView):
 
     """
 
-    login_url = '/login'
+    login_url = reverse_lazy('login')
     model = School
     template_name = 'administration/school_list.html'
     paginate_by = 20
@@ -201,7 +186,7 @@ class SchoolDetailView(views.StaffuserRequiredMixin, generic.DetailView):
         :return: School object
 
     """
-
+    login_url = reverse_lazy('login')
     model = School
     template_name = 'administration/school_detail.html'
 
@@ -222,11 +207,11 @@ class SchoolCreateView(views.SuperuserRequiredMixin, generic.CreateView):
         :return: The HttpResponse set in success_url
     """
 
-    login_url = '/login'
+    login_url = reverse_lazy('login')
     template_name = 'administration/school_form.html'
     model = School
     fields = ['school_name', 'school_address']
-    success_url = '/administration/allschools/'
+    success_url = reverse_lazy('administration:schoolList')
 
 
 class SchoolUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
@@ -240,7 +225,7 @@ class SchoolUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
         :return: The HttpResponse set in success_url
     """
 
-    login_url = '/login'
+    login_url = reverse_lazy('login')
     model = School
     template_name = 'administration/school_form.html'
     fields = ['school_name', 'school_address']
@@ -255,7 +240,7 @@ class GradeDetailView(views.StaffuserRequiredMixin, generic.DetailView):
         :return: School object
     """
 
-    login_url = '/login'
+    login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_detail.html'
 
@@ -277,7 +262,7 @@ class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):
         :return: The HttpResponse set in success_url
     """
 
-    login_url = '/login'
+    login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_form.html'
     fields = ['grade_name', 'tests']
@@ -300,7 +285,7 @@ class GradeUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
             saving the form when validated.
         :return: The HttpResponse set in success_url
     """
-    login_url = '/login'
+    login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_form.html'
     fields = ['grade_name', 'tests']
