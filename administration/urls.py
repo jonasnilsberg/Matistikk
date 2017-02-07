@@ -4,7 +4,7 @@ from . import views
 app_name = 'administration'
 urlpatterns = [
     url(r'^(?P<slug>[\w-]+)/minside/$', views.MyPageDetailView.as_view(), name='myPage'),
-    url(r'createuser/$', views.PersonCreateView.as_view(), name='createPerson'),
+    url(r'nybruker/$', views.PersonCreateView.as_view(), name='createPerson'),
     url(r'brukere/$', views.PersonListView.as_view(), name='personList'),
     url(r'brukere/(?P<slug>[\w-]+)/$', views.PersonDetailView.as_view(), name="personDetail"),
     url(r'brukere/oppdater/(?P<slug>[\w-]+)/$', views.PersonUpdateView.as_view(), name='personUpdate'),

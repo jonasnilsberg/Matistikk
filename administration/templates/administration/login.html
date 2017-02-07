@@ -8,7 +8,10 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+        {% load bootstrap3 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+        {% bootstrap_messages %}
         <title>Logg Inn - Matistikk</title>
 
         <style>
@@ -17,7 +20,7 @@
         }
         body{
             background-image: url("http://bildr.no/image/Qm9kSHln.jpeg");
-            padding-top: 100px;
+            padding-top: 50px;
         }
         .tab-content{
             border-left: 1px solid #ddd;
@@ -86,16 +89,15 @@
                             {% block body%}
                             <form class="form-horizontal" action="" method="POST" >
                                 {% csrf_token %}
-                                {% include 'matistikk/form-template.html' %}
-                                <div class="form-group">
-                                    <div class="col-lg-12">
-                                        <button type="submit" class="btn btn-success">Send</button>
-                                    </div>
-                                </div>
+                                {% bootstrap_form_errors form %}
+                                {% bootstrap_field form.username addon_before='<span class="glyphicon glyphicon-user"></span>'%}
+                                {% bootstrap_field form.password addon_before='<span class="glyphicon glyphicon-lock"></span>'%}
+                        {% buttons %}
+                            <button type="submit" class="btn btn-primary">
+                                {% bootstrap_icon "log-in" %} Logg inn
+                            </button>
+                        {% endbuttons %}
                             </form>
-                                {% if form.non_field_errors %}
-                                    <div class="alert alert-danger" role="alert"><p>Brukernavn og passord stemmer ikke</p></div>
-                                {% endif %}
                          {% endblock %}
                         </div>
 

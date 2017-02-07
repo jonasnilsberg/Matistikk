@@ -1,17 +1,25 @@
 {% extends 'matistikk/base.html' %}
-
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
 {% block body %}
-    <h3>{{ request.user.username }}</h3>
+    <h3></h3>
     <ul>
-        <li><lable>First name: </lable>{{ request.user.first_name }}</li>
-        <li><lable>Last name: </lable>{{ request.user.last_name }}</li>
+        <li><lable>Brukernavn: </lable>{{ request.user.username }}</li>
+        <li><lable>Fornavn: </lable>{{ request.user.first_name }}</li>
+        <li><lable>Etternavn: </lable>{{ request.user.last_name }}</li>
         <li><lable>Skole: </lable>{{ request.user.grade.school.school_name }}</li>
         <li><lable>Klasse: </lable>{{ request.user.grade.grade_name }}</li>
     </ul>
      <form form class="form-horizontal" action="" method="post">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-success">Submit </button>
+                {% bootstrap_form form %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                        {% bootstrap_icon "check" %} Oppdater passord
+                    </button>
+                {% endbuttons %}
      </form>
     {% if messages %}
 <ul class="messages">
