@@ -23,12 +23,16 @@
                         {% bootstrap_field form.grade %}
                         {% if request.user.is_superuser %}
                             {% bootstrap_field form.is_staff %}
+                            {% bootstrap_field form.is_active %}
                         {% endif %}
-                {% buttons %}
-                    <button type="submit" class="btn btn-primary">
-                        {% bootstrap_icon "check" %} Lagre
-                    </button>
-                {% endbuttons %}
+                        {% if request.user.is_staff and request.user.grade_id == person.grade_id and not person.is_staff %}
+                            {% bootstrap_field form.is_active %}
+                        {% endif %}
+                        {% buttons %}
+                            <button type="submit" class="btn btn-primary">
+                                {% bootstrap_icon "check" %} Lagre
+                            </button>
+                        {% endbuttons %}
                     </form>
                 </div>
             </div>

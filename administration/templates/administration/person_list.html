@@ -15,7 +15,7 @@
             <input type="text" class="form-control" id="search" onkeyup="userSearch(); studentSearch(); adminSearch(); teacherSearch();" placeholder="Søk etter bruker">
             </div>
         </div>
-        <a class="btn btn-primary" href="{% url 'administration:createPerson' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til bruker</a>
+        <a class="btn btn-primary" href="{% url 'administration:personCreate' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til bruker</a>
     </div> <!-- #Panel-heading -->
     <div class="panel-body">
         <ul class="nav nav-tabs">
@@ -125,7 +125,7 @@
         {% endif %}
     </div> <!-- #Panel-body -->
     <div class="panel-footer">
-        <a class="btn btn-primary" href="{% url 'administration:createPerson' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til bruker</a>
+        <a class="btn btn-primary" href="{% url 'administration:personCreate' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til bruker</a>
     </div> <!-- #Panel-footer -->
 </div> <!-- #Panel -->
 

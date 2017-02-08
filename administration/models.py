@@ -48,9 +48,6 @@ class Grade(models.Model):
     def __str__(self):
         return self.school.school_name + " - " + self.grade_name
 
-    def get_absolute_url(self):
-        return reverse('administration:schoolDetail', kwargs={'pk': self.school_id})
-
 
 class Person(AbstractUser):
     """A person is a customUser model, it contains information about the user that does not relate to user-management.

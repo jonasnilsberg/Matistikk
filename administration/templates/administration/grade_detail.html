@@ -37,6 +37,7 @@
             <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}">Legg til Elev</a>
             <form action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
+                        {% bootstrap_messages %}
                         {% bootstrap_form form %}
                         {% buttons %}
                             <button type="submit" class="btn btn-primary">
