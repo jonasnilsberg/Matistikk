@@ -1,4 +1,5 @@
 from django.views import generic
+from django.views.generic import edit
 from braces import views
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth import login, update_session_auth_hash
@@ -12,7 +13,7 @@ import logging
 from django.core import serializers
 from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
-
+from .forms import PersonForm, FileUpload
 
 # Create your views here.
 
@@ -95,9 +96,9 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
     login_url = reverse_lazy('login')
     is_staff = False
     template_name = 'administration/person_form.html'
-    #form_class = PersonForm
-    model = Person
-    fields = ['first_name', 'last_name', 'email', 'sex', 'grade']
+    form_class = PersonForm
+    #model = Person
+    #fields = ['first_name', 'last_name', 'email', 'sex', 'grade']
     success_url = reverse_lazy('administration:personList')
 
     def get_initial(self):
@@ -113,17 +114,6 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
                                             kwargs={'school_pk': self.kwargs.get('school_pk'),
                                                     'pk': self.kwargs.get('pk')})
             return {'grade': self.kwargs.get('pk'), 'is_staff': self.is_staff}
-
-    def get_form_class(self):
-        """
-            Function that sets and extra 'is_staff' value to fields if the logged in user is_superuser
-
-            :param self: References to the class itself and all it's variables.
-            :return: The form class
-        """
-        if self.request.user.is_superuser:
-            self.fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grade', 'is_staff']
-        return super(PersonCreateView, self).get_form_class()
 
     def form_valid(self, form):
         """
@@ -175,9 +165,9 @@ class PersonUpdateView(views.StaffuserRequiredMixin, generic.UpdateView):
 
     template_name = 'administration/person_form.html'
     login_url = reverse_lazy('login')
+    form_class = PersonForm
     model = Person
     slug_field = "username"
-    fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grade']
 
 
 class SchoolListView(views.StaffuserRequiredMixin, generic.ListView):
@@ -250,7 +240,7 @@ class SchoolUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
     fields = ['school_name', 'school_address']
 
 
-class GradeDetailView(views.StaffuserRequiredMixin, generic.DetailView):
+class GradeDetailView(views.StaffuserRequiredMixin,edit.FormMixin, generic.DetailView):
     """
         Class to get a specific Grade based on the grade.id
 
@@ -258,7 +248,7 @@ class GradeDetailView(views.StaffuserRequiredMixin, generic.DetailView):
         :param generic.UpdateView: Inherits generic.DetailView that makes a page representing a specific object.
         :return: School object
     """
-
+    form_class = FileUpload
     login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_detail.html'
@@ -267,7 +257,14 @@ class GradeDetailView(views.StaffuserRequiredMixin, generic.DetailView):
         context = super(GradeDetailView, self).get_context_data(**kwargs)
         context['students'] = Person.objects.filter(grade_id=self.kwargs['pk'], is_staff=False)
         context['teachers'] = Person.objects.filter(grade_id=self.kwargs['pk'], is_staff=True)
+        context['form'] = self.get_form()
         return context
+
+
+class PhotoUploadView(generic.FormView):
+    form_class = PersonForm
+    template_name = 'administration/grade_detail.html'
+    success_url = '/thanks/'
 
 
 class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):
