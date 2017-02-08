@@ -11,7 +11,7 @@
                     <span class="glyphicon glyphicon-search"></span>
                 </button>
             </div>
-            <input type="text" class="form-control" id="search" onkeyup="userSearch()" placeholder="Søk etter bruker">
+            <input type="text" class="form-control" id="search" onkeyup="userSearch(); studentSearch(); adminSearch(); teacherSearch();" placeholder="Søk etter bruker">
         </div>
 
     </div> <!-- #Panel-heading -->
@@ -46,7 +46,7 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="B">
-                <table class="table table-hover table-striped table-responsive" id="usertable">
+                <table class="table table-hover table-striped table-responsive" id="studenttable">
                     <thead>
                         <tr>
                             <th>Fornavn</th>
@@ -70,10 +70,52 @@
                 </table>
             </div>
             <div class="tab-pane fade" id="C">
-                SALAAAM BITCHES!!
+                <table class="table table-hover table-striped table-responsive" id="teachertable">
+                    <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Brukernavn</th>
+                            <th>Brukerinfo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for person in object_list %}
+                        {% if person.is_staff and not person.is_superuser %}
+                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}">
+                                <td>{{ person.first_name }}</td>
+                                <td>{{ person.last_name }}</td>
+                                <td>{{ person.username }}</td>
+                                <td><a class="btn btn-primary" href="{% url 'administration:personDetail' person.username %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
             <div class="tab-pane fade" id="D">
-                SALAAAM BITCHES!!!
+                <table class="table table-hover table-striped table-responsive" id="admintable">
+                    <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Brukernavn</th>
+                            <th>Brukerinfo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for person in object_list %}
+                        {% if person.is_superuser %}
+                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}">
+                                <td>{{ person.first_name }}</td>
+                                <td>{{ person.last_name }}</td>
+                                <td>{{ person.username }}</td>
+                                <td><a class="btn btn-primary" href="{% url 'administration:personDetail' person.username %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
         {% else %}
@@ -87,33 +129,117 @@
 
 
     <script>
-    jQuery(document).ready(function($) {
-        $(".clickable-row").click(function() {
-            window.document.location = $(this).data("href");
+        /**
+         * This function makes the rows of the user-, student-, teacher- and admintable clickable
+         */
+        jQuery(document).ready(function($) {
+            $(".clickable-row").click(function() {
+                window.document.location = $(this).data("href");
+            });
         });
-    });
     </script>
 
-   <script>
-    function userSearch() {
-      var input, filter, table, tr, td, i, td1, td2;
-      input = document.getElementById("search");
-      filter = input.value.toUpperCase();
-      table = document.getElementById("usertable");
-      tr = table.getElementsByTagName("tr");
+    <script>
 
-      for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
-        td1 = tr[i].getElementsByTagName("td")[1];
-        td2 = tr[i].getElementsByTagName("td")[2];
-        if (td) {
-          if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = "";
-          } else {
-            tr[i].style.display = "none";
+        /**
+         * This function matches the text in the search field with the content in the table with all users
+         * and removes rows that don't match the search criteria.
+         */
+        function userSearch() {
+          var input, filter, table, tr, td, i, td1, td2, fullname;
+          input = document.getElementById("search");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("usertable");
+          tr = table.getElementsByTagName("tr");
+
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            td1 = tr[i].getElementsByTagName("td")[1];
+            td2 = tr[i].getElementsByTagName("td")[2];
+
+            if (td) {
+              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
           }
         }
-      }
-    }
+
+        /**
+         * This function matches the text in the search field with the content in the table with all students
+         * and removes rows that don't match the search criteria.
+         */
+        function studentSearch() {
+          var input, filter, table, tr, td, i, td1, td2;
+          input = document.getElementById("search");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("studenttable");
+          tr = table.getElementsByTagName("tr");
+
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            td1 = tr[i].getElementsByTagName("td")[1];
+            td2 = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+        }
+
+        /**
+         * This function matches the text in the search field with the content in the table with all teachers
+         * and removes rows that don't match the search criteria.
+         */
+        function teacherSearch() {
+          var input, filter, table, tr, td, i, td1, td2;
+          input = document.getElementById("search");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("teachertable");
+          tr = table.getElementsByTagName("tr");
+
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            td1 = tr[i].getElementsByTagName("td")[1];
+            td2 = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+        }
+
+        /**
+         * This function matches the text in the search field with the content in the table with all admins
+         * and removes rows that don't match the search criteria.
+         */
+        function adminSearch() {
+          var input, filter, table, tr, td, i, td1, td2;
+          input = document.getElementById("search");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("admintable");
+          tr = table.getElementsByTagName("tr");
+
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            td1 = tr[i].getElementsByTagName("td")[1];
+            td2 = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+        }
     </script>
 {% endblock %}
