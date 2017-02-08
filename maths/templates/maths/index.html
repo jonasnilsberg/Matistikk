@@ -2,6 +2,38 @@
 
 {% block body %}
 
-    <h1>Velkommen til Matistikk</h1>
+    <center>
+        <h1>Velkommen til Matistikk</h1>
+        <hr>
+        {% if request.user.is_superuser %}
+        <div class="col-lg-8">
+            <div class="col-lg-12">
+                <a class="btn btn-default" href="{% url 'administration:myPage' request.user.username %}"><span style="font-size:10em; color: #ff9933" class="glyphicon glyphicon-user"></span><br>Min Side</a>
+                <a class="btn btn-default" href="createtestview"><span style="font-size:10em; color: #ff9933" class="glyphicon glyphicon-book"></span><br>Lag Test</a>
+                <a class="btn btn-default" href="statisticview"><span style="font-size:10em; color: #ff9933" class="glyphicon glyphicon-signal"></span><br>Statistikk</a>
+            </div>
+            <div class="col-lg-12">
+                <a class="btn btn-default" href="createfunctiontaskview"><span style="font-size:10em; color: #ffcc33" class="glyphicon glyphicon-road"></span><br>Lag Funksjonsoppgave</a>
+                <a class="btn btn-default" href="createtaskview"><span style="font-size:10em; color: #ffcc33" class="glyphicon glyphicon-th"></span><br>Lag Brøkoppgave</a>
+                <a class="btn btn-default" href="creategeometrytaskview"><span style="font-size:10em; color: #ffcc33" class="glyphicon glyphicon-triangle-top"></span><br>Lag Geometrioppgave</a>
+            </div>
+            <div class="col-lg-12">
+                <a class="btn btn-default" href="alltests"><span style="font-size:10em; color: #ff6600" class="glyphicon glyphicon-align-left"></span><br>Testoversikt</a>
+                <a class="btn btn-default" href="{% url 'administration:personList' %}"><span style="font-size:10em; color: #ff6600" class="glyphicon glyphicon-align-center"></span><br>Brukeroversikt</a>
+                <a class="btn btn-default" href="{% url 'administration:schoolList' %}"><span style="font-size:10em; color: #ff6600" class="glyphicon glyphicon-align-right"></span><br>Skoleoversikt</a>
+                <hr>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <h1>Administratorpanel</h1>
+            <a class="btn btn-default" href="{% url 'administration:createPerson' %}"><span style="font-size:10em; color: #ff4400" class="glyphicon glyphicon-plus"></span><br>Legg til ny bruker</a>
+            <a class="btn btn-default" href="{% url 'administration:schoolCreate' %}"><span style="font-size:10em; color: #ff4400" class="glyphicon glyphicon-plus"></span><br>Legg til ny skole</a>
+        </div>
+
+
+
+
+        {% endif %}
+    </center>
 
 {% endblock %}

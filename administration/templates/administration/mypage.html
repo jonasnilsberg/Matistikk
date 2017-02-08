@@ -4,22 +4,33 @@
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
 {% block body %}
-    <h3></h3>
-    <ul>
-        <li><lable>Brukernavn: </lable>{{ request.user.username }}</li>
-        <li><lable>Fornavn: </lable>{{ request.user.first_name }}</li>
-        <li><lable>Etternavn: </lable>{{ request.user.last_name }}</li>
-        <li><lable>Skole: </lable>{{ request.user.grade.school.school_name }}</li>
-        <li><lable>Klasse: </lable>{{ request.user.grade.grade_name }}</li>
-    </ul>
-     <form form class="form-horizontal" action="" method="post">
+    <h1>Brukerinformasjon</h1>
+    <hr>
+    <label>Brukernavn: </label>
+    {{ request.user.username }}<br>
+    <label>Fornavn: </label>
+    {{ request.user.first_name }}<br>
+    <label>Etternavn: </label>
+    {{ request.user.last_name }}<br>
+    <label>Skole: </label>
+    {{ request.user.grade.school.school_name }}<br>
+    <label>Klasse: </label>
+    {{ request.user.grade.grade_name }}<br>
+    <div class="panel panel-default col-lg-5 col-md-5 col-sm-8 col-xs-12">
+        <div class="panel-heading">
+            <h1>Endre passord</h1>
+        </div>
+        <div class="panel-body">
+             <form class="form-horizontal" action="" method="post">
                 {% csrf_token %}
                 {% bootstrap_form form %}
                 {% buttons %}
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-success form-control">
                         {% bootstrap_icon "check" %} Oppdater passord
                     </button>
                 {% endbuttons %}
                 {% bootstrap_messages  %}
-     </form>
+             </form>
+        </div>
+    </div>
 {% endblock %}
