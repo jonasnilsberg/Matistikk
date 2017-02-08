@@ -65,7 +65,7 @@
                     </div>
                     <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li><a href="../../maths/templates/maths"><span class="glyphicon glyphicon-home "></span></a></li>
+                            <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
                             <li><a href="{% url 'administration:myPage' request.user.username %}">Min Side</a></li>
                             <li><a href="createtestview">Lag Øvingstest</a></li>
                             <li><a href="statisticview">Statistikk</a></li>
@@ -92,12 +92,12 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="pull left" href="../../maths/templates/maths"><img src="http://bildr.no/image/Tjl2U25M.jpeg" width="240" height="50" alt="Home"/></a>
+                        <a class="pull left" href="{% url 'index' %}"><img src="http://bildr.no/image/Tjl2U25M.jpeg" width="240" height="50" alt="Home"/></a>
                     </div>
                     <div class="navbar-collapse collapse" id="mynavbar">
                         <ul class="nav navbar-nav">
 
-                            <li><a href="../../maths/templates/maths"><span class="glyphicon glyphicon-home "></span></a></li>
+                            <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
                             <li><a href="mypageview">Min Side</a></li>
                             <li><a href="testview">Tester</a></li>
                             <li><a href="helpview">Hjelp</a></li>

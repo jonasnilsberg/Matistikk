@@ -40,13 +40,10 @@
             width: 300px;
         }
         #logintab{
-            width: 133.3px;
-        }
-        #registertab{
-            width: 133.3px;
+            width: 200px;
         }
         #forgotpasswordtab{
-            width: 133.3px;
+            width: 200px;
         }
         .container {
             border: 1px solid black;
@@ -73,76 +70,49 @@
         <div class="container">
             <img src="http://bildr.no/image/djdYNzZp.jpeg" id="MatistikkLogoSkriftBesk"
                 class="img-responsive center-block" width="600" height="300" alt="Responsive Image"/>
-            <div id="lol">
-                <center>
-                    <!-- Tab panes -->
-                    <ul class="nav nav-tabs">
-                        <li class="nav active" id="logintab"><a href="#A" data-toggle="tab">Innlogging</a></li>
-                        <li class="nav" id="registertab"><a href="#B" data-toggle="tab">Registrering</a></li>
-                        <li class="nav" id="forgotpasswordtab"><a href="#C" data-toggle="tab">Glemt passord</a></li>
-                    </ul>
+            <center>
+                <!-- Tab panes -->
+                <ul class="nav nav-tabs">
+                    <li class="nav active" id="logintab"><a href="#A" data-toggle="tab">Innlogging</a></li>
+                    <li class="nav" id="forgotpasswordtab"><a href="#B" data-toggle="tab">Glemt passord</a></li>
+                </ul>
 
-                    <!-- Tab panes content -->
-                    <div class="tab-content">
-                        <!--Login form-->
-                        <div class="tab-pane fade in active" id="A">
-                            {% block body%}
-                            <form class="form-horizontal" action="" method="POST" >
-                                {% csrf_token %}
-                                {% bootstrap_form_errors form %}
-                                {% bootstrap_field form.username addon_before='<span class="glyphicon glyphicon-user"></span>'%}
-                                {% bootstrap_field form.password addon_before='<span class="glyphicon glyphicon-lock"></span>'%}
-                        {% buttons %}
-                            <button type="submit" class="btn btn-success form-control">
-                                {% bootstrap_icon "log-in" %} Logg inn
-                            </button>
-                        {% endbuttons %}
-                            </form>
-                         {% endblock %}
-                        </div>
-
-                        <!--SignUp Form-->
-                        <div class="tab-pane fade" id="B">
-                            <form id="signup-form" action="newuser" method="POST" modelAttribute="student">
-                                <div class="form-group">
-                                    <label>Brukernavn</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                        <input type="text" class="form-control" name="username" placeholder="E-post" autofocus >
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Alder</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-gift"></i></span>
-                                        <input type="text" class="form-control" name="age" placeholder="Alder">
-                                    </div>
-                                </div>
-                                <label class="radio-inline"><input type="radio" name="sex" value="true" checked="checked">Mann</label>
-                                <label class="radio-inline"><input type="radio" name="sex" value="false">Dame</label>
-                                <div>
-                                    <br>
-                                    <button type="submit" class="btn btn-primary">Registrer</button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!--ForgotPassword form-->
-                        <div class="tab-pane fade" id="C">
-                            <form id="forgotPassword-form" action="forgotpassword" method="POST" modelAttribute="student">
-                                <div class="form-group">
-                                    <label>Brukernavn</label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                        <input type="text" class="form-control" name="username" placeholder="E-post" autofocus>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Send passord</button>
-                            </form>
-                        </div>
+                <!-- Tab panes content -->
+                <div class="tab-content">
+                    <!--Login form-->
+                    <div class="tab-pane fade in active" id="A">
+                        {% block body%}
+                        <form class="form-horizontal" action="" method="POST" >
+                            {% csrf_token %}
+                            {% bootstrap_form_errors form %}
+                            {% bootstrap_field form.username addon_before='<span class="glyphicon glyphicon-user"></span>'%}
+                            {% bootstrap_field form.password addon_before='<span class="glyphicon glyphicon-lock"></span>'%}
+                    {% buttons %}
+                        <button type="submit" class="btn btn-success form-control">
+                            {% bootstrap_icon "log-in" %} Logg inn
+                        </button>
+                    {% endbuttons %}
+                        </form>
+                     {% endblock %}
                     </div>
-                </center>
-            </div>
+
+
+                    <!--ForgotPassword form-->
+                    <div class="tab-pane fade" id="B">
+                        <form id="forgotPassword-form" action="forgotpassword" method="POST" modelAttribute="student">
+                            <div class="form-group">
+                                <label>Brukernavn</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input type="text" class="form-control" name="username" placeholder="Brukernavn" autofocus>
+                                </div>
+                                <br><button type="submit" class="btn btn-success form-control">Send passord</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </center>
         </div>
     </body>
 </html>
