@@ -8,12 +8,15 @@ from .models import Person, School, Grade
 from django.shortcuts import render, render_to_response, HttpResponse
 from django.http import JsonResponse
 from django.contrib import messages
+from django.views import View
 
 import logging
 from django.core import serializers
 from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
 from .forms import PersonForm, FileUpload
+
+import datetime
 
 # Create your views here.
 
@@ -124,29 +127,9 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
             :param form: References to the model form.
             :return: The HttpResponse set in success_url.
         """
-        first_name_form = form.cleaned_data['first_name']
-        last_name_form = form.cleaned_data['last_name']
-        first_name = first_name_form.replace(" ", "")
-        first_name_lower = first_name.lower()
-        last_name_lower = last_name_form.lower()
-        last_name_tab = str.split(last_name_lower)
-        username = first_name_lower
-        for letter in last_name_tab:
-            username += letter[0]
         person = form.save(commit=False)
-        last_name_list = list(last_name_tab[-1])
-        for letter in last_name_list[1:]:
-            if Person.objects.filter(username__exact=username):
-                username += letter
-            else:
-                person.username = username
-                break
-        counter = 1
-        username_correct = username
-        while Person.objects.filter(username__exact=username_correct):
-            username_correct = username + str(counter)
-            counter +=1
-        person.username = username_correct
+        username = Person.createusername(person)
+        person.username = username
         person.set_password('ntnu123')
         person.save()
         return super(PersonCreateView, self).form_valid(form)
@@ -240,7 +223,7 @@ class SchoolUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
     fields = ['school_name', 'school_address']
 
 
-class GradeDetailView(views.StaffuserRequiredMixin,edit.FormMixin, generic.DetailView):
+class GradeDisplay(views.StaffuserRequiredMixin, generic.DetailView):
     """
         Class to get a specific Grade based on the grade.id
 
@@ -248,23 +231,51 @@ class GradeDetailView(views.StaffuserRequiredMixin,edit.FormMixin, generic.Detai
         :param generic.UpdateView: Inherits generic.DetailView that makes a page representing a specific object.
         :return: School object
     """
-    form_class = FileUpload
     login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_detail.html'
+    success_url = '/'
 
     def get_context_data(self, **kwargs):
-        context = super(GradeDetailView, self).get_context_data(**kwargs)
+        context = super(GradeDisplay, self).get_context_data(**kwargs)
         context['students'] = Person.objects.filter(grade_id=self.kwargs['pk'], is_staff=False)
         context['teachers'] = Person.objects.filter(grade_id=self.kwargs['pk'], is_staff=True)
-        context['form'] = self.get_form()
+        context['form'] = FileUpload()
         return context
 
 
-class PhotoUploadView(generic.FormView):
-    form_class = PersonForm
+class FileUploadView(generic.FormView):
     template_name = 'administration/grade_detail.html'
-    success_url = '/thanks/'
+    form_class = FileUpload
+    model = Person
+
+    def post(self, request, *args, **kwargs):
+        logging.error('post')
+        person_dict = request.FILES['file'].get_array()
+        for person_obj in person_dict[1:]:
+            person = Person(first_name=person_obj[0], last_name=person_obj[1],
+                            email=person_obj[2], sex=person_obj[4])
+            person.date_of_birth = datetime.datetime.strptime(person_obj[3], "%d.%m.%Y").strftime("%Y-%m-%d")
+            username = Person.createusername(person)
+            person.username = username
+            person.set_password('ntnu123')
+            person.grade_id = self.kwargs.get('pk')
+            person.save()
+        return super().post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('administration:gradeDetail', kwargs={'school_pk': self.kwargs.get('school_pk'),
+                                                    'pk': self.kwargs.get('pk')})
+
+
+class GradeDetailView(View):
+    def get(self, request, *args, **kwargs):
+        view = GradeDisplay.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = FileUploadView.as_view()
+        return view(request, *args, **kwargs)
 
 
 class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):

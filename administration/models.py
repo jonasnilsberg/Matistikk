@@ -76,7 +76,29 @@ class Person(AbstractUser):
     def get_absolute_url(self):
         return reverse('administration:personDetail', kwargs={'slug': self.username})
 
-
+    def createusername(self):
+        first_name_form = self.first_name
+        last_name_form = self.last_name
+        first_name = first_name_form.replace(" ", "")
+        first_name_lower = first_name.lower()
+        last_name_lower = last_name_form.lower()
+        last_name_tab = str.split(last_name_lower)
+        username = first_name_lower
+        for letter in last_name_tab:
+            username += letter[0]
+        last_name_list = list(last_name_tab[-1])
+        for letter in last_name_list[1:]:
+            if Person.objects.filter(username__exact=username):
+                username += letter
+            else:
+                self.username = username
+                break
+        counter = 1
+        username_correct = username
+        while Person.objects.filter(username__exact=username_correct):
+            username_correct = username + str(counter)
+            counter += 1
+        return username_correct
 
 #This is in order to have different names shown by the django-forms than variable-names
 Person._meta.get_field('username').verbose_name = 'brukernavn'
