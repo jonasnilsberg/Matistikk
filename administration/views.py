@@ -17,6 +17,8 @@ from django.core.exceptions import ValidationError
 from .forms import PersonForm, FileUpload
 
 import datetime
+from django.utils.safestring import mark_safe
+
 
 # Create your views here.
 
@@ -250,17 +252,37 @@ class FileUploadView(generic.FormView):
     model = Person
 
     def post(self, request, *args, **kwargs):
-        logging.error('post')
+        persons = []
+        order = ['fornavn', 'etternavn', 'epost', 'fødselsdag', 'kjønn']
         person_dict = request.FILES['file'].get_array()
+        line_number = 2
+        for person_obj in person_dict[:1]:
+            for field, correct_field in zip(person_obj, order):
+                print(field, correct_field)
+                if not str(field).lower() == str(correct_field).lower():
+                    message = mark_safe('Feltene dine samsvarer ikke med de påkrevde.'
+                                        "<br /><br />"
+                                        'Fornavn - Etternavn - Epost - Fødselsdag - Kjønn')
+                    messages.error(self.request, message)
+                    return super().post(request, *args, **kwargs)
         for person_obj in person_dict[1:]:
-            person = Person(first_name=person_obj[0], last_name=person_obj[1],
-                            email=person_obj[2], sex=person_obj[4])
-            person.date_of_birth = datetime.datetime.strptime(person_obj[3], "%d.%m.%Y").strftime("%Y-%m-%d")
-            username = Person.createusername(person)
-            person.username = username
-            person.set_password('ntnu123')
-            person.grade_id = self.kwargs.get('pk')
-            person.save()
+            try:
+                person = Person(first_name=person_obj[0], last_name=person_obj[1],
+                                email=person_obj[2], sex=person_obj[4])
+                person.date_of_birth = datetime.datetime.strptime(person_obj[3], "%d.%m.%Y").strftime("%Y-%m-%d")
+                username = Person.createusername(person)
+                person.username = username
+                person.set_password('ntnu123')
+                person.grade_id = self.kwargs.get('pk')
+                persons.append(person)
+                line_number += 1
+            except Exception:
+                message = mark_safe('Noe gikk galt med ' + person_obj[0] + " " + person_obj[1] + ' på linje '+
+                               str(line_number) + "." + "<br /><br />" "Ingen brukere ble lagt til.")
+                messages.error(self.request, message)
+                return super().post(request, *args, **kwargs)
+        Person.objects.bulk_create(persons)
+        messages.success(self.request, str(len(persons)) + " elever ble lagt til!")
         return super().post(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -295,6 +317,7 @@ class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):
     fields = ['grade_name', 'tests']
 
     def form_valid(self, form):
+        self.success_url = reverse_lazy('administration:schoolDetail', kwargs={'pk': self.kwargs.get('pk')})
         grade = form.save(commit=False)
         grade.school_id = self.kwargs['pk']
         grade.save()
