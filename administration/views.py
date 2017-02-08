@@ -12,7 +12,7 @@ import logging
 from django.core import serializers
 from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
-
+from .forms import PersonForm
 
 # Create your views here.
 
@@ -95,9 +95,9 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
     login_url = reverse_lazy('login')
     is_staff = False
     template_name = 'administration/person_form.html'
-    #form_class = PersonForm
-    model = Person
-    fields = ['first_name', 'last_name', 'email', 'sex', 'grade']
+    form_class = PersonForm
+    #model = Person
+    #fields = ['first_name', 'last_name', 'email', 'sex', 'grade']
     success_url = reverse_lazy('administration:personList')
 
     def get_initial(self):
@@ -113,17 +113,6 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
                                             kwargs={'school_pk': self.kwargs.get('school_pk'),
                                                     'pk': self.kwargs.get('pk')})
             return {'grade': self.kwargs.get('pk'), 'is_staff': self.is_staff}
-
-    def get_form_class(self):
-        """
-            Function that sets and extra 'is_staff' value to fields if the logged in user is_superuser
-
-            :param self: References to the class itself and all it's variables.
-            :return: The form class
-        """
-        if self.request.user.is_superuser:
-            self.fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grade', 'is_staff']
-        return super(PersonCreateView, self).get_form_class()
 
     def form_valid(self, form):
         """
@@ -175,9 +164,9 @@ class PersonUpdateView(views.StaffuserRequiredMixin, generic.UpdateView):
 
     template_name = 'administration/person_form.html'
     login_url = reverse_lazy('login')
+    form_class = PersonForm
     model = Person
     slug_field = "username"
-    fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grade']
 
 
 class SchoolListView(views.StaffuserRequiredMixin, generic.ListView):
