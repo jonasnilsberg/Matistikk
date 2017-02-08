@@ -35,8 +35,7 @@
                 {% endfor %}
             </ul>
             <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}">Legg til Elev</a>
-            <a class="btn btn-primary" href="#">Last opp Elever med Excel</a>
-            <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
+            <form action="" enctype="multipart/form-data">
                         {% csrf_token %}
                         {% bootstrap_form form %}
                         {% buttons %}

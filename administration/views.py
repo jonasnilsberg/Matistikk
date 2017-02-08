@@ -1,4 +1,5 @@
 from django.views import generic
+from django.views.generic import edit
 from braces import views
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth import login, update_session_auth_hash
@@ -12,7 +13,7 @@ import logging
 from django.core import serializers
 from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
-from .forms import PersonForm
+from .forms import PersonForm, FileUpload
 
 # Create your views here.
 
@@ -239,7 +240,7 @@ class SchoolUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
     fields = ['school_name', 'school_address']
 
 
-class GradeDetailView(views.StaffuserRequiredMixin, generic.DetailView):
+class GradeDetailView(views.StaffuserRequiredMixin,edit.FormMixin, generic.DetailView):
     """
         Class to get a specific Grade based on the grade.id
 
@@ -247,7 +248,7 @@ class GradeDetailView(views.StaffuserRequiredMixin, generic.DetailView):
         :param generic.UpdateView: Inherits generic.DetailView that makes a page representing a specific object.
         :return: School object
     """
-
+    form_class = FileUpload
     login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_detail.html'
@@ -256,7 +257,14 @@ class GradeDetailView(views.StaffuserRequiredMixin, generic.DetailView):
         context = super(GradeDetailView, self).get_context_data(**kwargs)
         context['students'] = Person.objects.filter(grade_id=self.kwargs['pk'], is_staff=False)
         context['teachers'] = Person.objects.filter(grade_id=self.kwargs['pk'], is_staff=True)
+        context['form'] = self.get_form()
         return context
+
+
+class PhotoUploadView(generic.FormView):
+    form_class = PersonForm
+    template_name = 'administration/grade_detail.html'
+    success_url = '/thanks/'
 
 
 class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):

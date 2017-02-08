@@ -16,3 +16,6 @@ class PersonForm(forms.ModelForm):
         model = Person
         fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grade', 'is_staff']
 
+
+class FileUpload(forms.Form):
+    file = forms.FileField(label="Last opp en CSV-fil med elever", )
