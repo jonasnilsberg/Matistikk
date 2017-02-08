@@ -1,5 +1,8 @@
 {% extends 'matistikk/base.html' %}
-
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
 {% block body %}
     <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Tilbake</a>
     <div class="panel panel-info">
@@ -33,6 +36,15 @@
             </ul>
             <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}">Legg til Elev</a>
             <a class="btn btn-primary" href="#">Last opp Elever med Excel</a>
+            <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        {% buttons %}
+                            <button type="submit" class="btn btn-primary">
+                                {% bootstrap_icon "check" %} Lagre
+                            </button>
+                        {% endbuttons %}
+                    </form>
             <hr>
             <h4>Tester</h4>
              <ul>

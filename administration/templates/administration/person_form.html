@@ -21,6 +21,9 @@
                         {% bootstrap_field form.date_of_birth placeholder="dd.mm.yyyy"%}
                         {% bootstrap_field form.sex %}
                         {% bootstrap_field form.grade %}
+                        {% if request.user.is_superuser %}
+                            {% bootstrap_field form.is_staff %}
+                        {% endif %}
                 {% buttons %}
                     <button type="submit" class="btn btn-primary">
                         {% bootstrap_icon "check" %} Lagre
