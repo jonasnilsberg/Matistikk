@@ -5,15 +5,17 @@
 <div class="panel panel-info">
     <div class="panel-heading">
         <h1>Brukeroversikt</h1>
-        <div class="input-group">
-            <div class="input-group-btn">
-                <button class="btn btn-primary" type="button" aria-label="Søk">
-                    <span class="glyphicon glyphicon-search"></span>
-                </button>
-            </div>
+        <div class="col-xs-10">
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button class="btn btn-primary" type="button" aria-label="Søk">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </div>
             <input type="text" class="form-control" id="search" onkeyup="userSearch(); studentSearch(); adminSearch(); teacherSearch();" placeholder="Søk etter bruker">
+            </div>
         </div>
-
+        <a class="btn btn-primary" href="{% url 'administration:createPerson' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til bruker</a>
     </div> <!-- #Panel-heading -->
     <div class="panel-body">
         <ul class="nav nav-tabs">
