@@ -1,18 +1,44 @@
 from django.views import generic
 from braces import views
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
-from .forms import ChangePasswordForm
 from .models import Person, School, Grade
 from django.shortcuts import render, render_to_response, HttpResponse
 from django.http import JsonResponse
-
+from django.contrib import messages
 
 import logging
 from django.core import serializers
 from django.core.paginator import Paginator
+from django.core.exceptions import ValidationError
 
 
 # Create your views here.
+
+
+class MyPageDetailView(generic.FormView):
+    def test_func(self, user):
+        return self.request.user.username == self.kwargs.get('slug')
+
+    form_class = PasswordChangeForm
+    slug_field = 'username'
+    template_name = 'administration/mypage.html'
+
+    def get_success_url(self):
+        return reverse('administration:myPage', kwargs={'slug': self.kwargs.get('slug')})
+
+    def get_form(self, form_class=form_class):
+        return form_class(self.request.user, **self.get_form_kwargs())
+
+    def form_valid(self, form):
+        person = form.save(commit=False)
+        password = form.cleaned_data['new_password1']
+        person.set_password(password)
+        person.save()
+        update_session_auth_hash(self.request, form.user)
+        messages.success(self.request, 'Passordet ble oppdatert!')
+        return super(MyPageDetailView, self).form_valid(form)
 
 
 class PersonListView(views.StaffuserRequiredMixin, views.AjaxResponseMixin, generic.ListView):
@@ -26,22 +52,8 @@ class PersonListView(views.StaffuserRequiredMixin, views.AjaxResponseMixin, gene
         :return: List of person objects
     """
 
-    login_url = '/login'
+    login_url = reverse_lazy('login')
     template_name = 'administration/person_list.html'
-
-    def post_ajax(self, request, *args, **kwargs):
-        """
-            Function that checks if the post request is an ajax post and finds the searched for Persons.
-
-            :param self:
-                References to the class itself and all it's variables
-            :param request:
-                The request
-            :return: List of person objects
-        """
-        search_text = request.POST['search_text']
-        person_list = Person.objects.filter(username__icontains=search_text)
-        return render_to_response('administration/person_ajax.html', {'persons': person_list})
 
     def get_queryset(self):
         """
@@ -80,22 +92,37 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
             saving the form when validated
     """
 
-    login_url = '/login/'
+    login_url = reverse_lazy('login')
     is_staff = False
-    template_name = 'administration/student_create.html'
+    template_name = 'administration/person_form.html'
+    #form_class = PersonForm
     model = Person
-    fields = ['username', 'first_name', 'last_name', 'email', 'sex', 'grade']
-    success_url = '/administrasjon/brukere'
+    fields = ['first_name', 'last_name', 'email', 'sex', 'grade']
+    success_url = reverse_lazy('administration:personList')
 
     def get_initial(self):
+        """
+            Function that checks for preset Person values and sets the to the field
+
+            :param self: References to the class itself and all it's variables.
+            :return: List the preset values
+        """
+
         if self.kwargs.get('pk'):
-            self.success_url = 'administrasjon/skoler/' + self.kwargs.get('school_pk') + '/klasse/' + \
-                               self.kwargs.get('pk')
-            return {'grade': self.kwargs.get('pk'),'is_staff': self.is_staff}
+            self.success_url = reverse_lazy('administration:gradeDetail',
+                                            kwargs={'school_pk': self.kwargs.get('school_pk'),
+                                                    'pk': self.kwargs.get('pk')})
+            return {'grade': self.kwargs.get('pk'), 'is_staff': self.is_staff}
 
     def get_form_class(self):
+        """
+            Function that sets and extra 'is_staff' value to fields if the logged in user is_superuser
+
+            :param self: References to the class itself and all it's variables.
+            :return: The form class
+        """
         if self.request.user.is_superuser:
-            self.fields = ['username', 'first_name', 'last_name', 'email', 'sex', 'grade', 'is_staff']
+            self.fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grade', 'is_staff']
         return super(PersonCreateView, self).get_form_class()
 
     def form_valid(self, form):
@@ -107,11 +134,29 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
             :param form: References to the model form.
             :return: The HttpResponse set in success_url.
         """
-
+        first_name_form = form.cleaned_data['first_name']
+        last_name_form = form.cleaned_data['last_name']
+        first_name = first_name_form.replace(" ", "")
+        first_name_lower = first_name.lower()
+        last_name_lower = last_name_form.lower()
+        last_name_tab = str.split(last_name_lower)
+        username = first_name_lower
+        for letter in last_name_tab:
+            username += letter[0]
         person = form.save(commit=False)
-        staff = self.request.POST.get('staff')
-        if staff:
-            person.is_staff = staff
+        last_name_list = list(last_name_tab[-1])
+        for letter in last_name_list[1:]:
+            if Person.objects.filter(username__exact=username):
+                username += letter
+            else:
+                person.username = username
+                break
+        counter = 1
+        username_correct = username
+        while Person.objects.filter(username__exact=username_correct):
+            username_correct = username + str(counter)
+            counter +=1
+        person.username = username_correct
         person.set_password('ntnu123')
         person.save()
         return super(PersonCreateView, self).form_valid(form)
@@ -127,11 +172,12 @@ class PersonUpdateView(views.StaffuserRequiredMixin, generic.UpdateView):
             saving the form when validated.
         :return: The HttpResponse set in success_url
     """
-    template_name = 'administration/student_create.html'
-    login_url = '/login'
+
+    template_name = 'administration/person_form.html'
+    login_url = reverse_lazy('login')
     model = Person
     slug_field = "username"
-    fields = ['first_name', 'last_name', 'email', 'sex', 'grade']
+    fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grade']
 
 
 class SchoolListView(views.StaffuserRequiredMixin, generic.ListView):
@@ -143,7 +189,8 @@ class SchoolListView(views.StaffuserRequiredMixin, generic.ListView):
         :return: List of School objects
 
     """
-    login_url = '/login'
+
+    login_url = reverse_lazy('login')
     model = School
     template_name = 'administration/school_list.html'
     paginate_by = 20
@@ -158,6 +205,7 @@ class SchoolDetailView(views.StaffuserRequiredMixin, generic.DetailView):
         :return: School object
 
     """
+    login_url = reverse_lazy('login')
     model = School
     template_name = 'administration/school_detail.html'
 
@@ -177,11 +225,12 @@ class SchoolCreateView(views.SuperuserRequiredMixin, generic.CreateView):
             saving the form when validated
         :return: The HttpResponse set in success_url
     """
-    login_url = '/login'
+
+    login_url = reverse_lazy('login')
     template_name = 'administration/school_form.html'
     model = School
     fields = ['school_name', 'school_address']
-    success_url = '/administration/allschools/'
+    success_url = reverse_lazy('administration:schoolList')
 
 
 class SchoolUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
@@ -194,7 +243,8 @@ class SchoolUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
             saving the form when validated.
         :return: The HttpResponse set in success_url
     """
-    login_url = '/login'
+
+    login_url = reverse_lazy('login')
     model = School
     template_name = 'administration/school_form.html'
     fields = ['school_name', 'school_address']
@@ -207,9 +257,9 @@ class GradeDetailView(views.StaffuserRequiredMixin, generic.DetailView):
         :param views.StaffuserRequiredMixin: Inherits views.StaffuserRequiredMixin that checks if the user is logged in as staff
         :param generic.UpdateView: Inherits generic.DetailView that makes a page representing a specific object.
         :return: School object
-
     """
-    login_url = '/login'
+
+    login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_detail.html'
 
@@ -230,7 +280,8 @@ class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):
             saving the form when validated
         :return: The HttpResponse set in success_url
     """
-    login_url = '/login'
+
+    login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_form.html'
     fields = ['grade_name', 'tests']
@@ -244,7 +295,16 @@ class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):
 
 
 class GradeUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
-    login_url = '/login'
+    """
+        Class to update a Grade object based on the id
+
+        :param views.SuperuserRequiredMixin: Inherits views.SuperuserRequiredMixin that checks if the user is logged in
+            as superuser
+        :param generic.UpdateView: Inherits generic.CreateView that displays a form for updating a specific object and
+            saving the form when validated.
+        :return: The HttpResponse set in success_url
+    """
+    login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_form.html'
     fields = ['grade_name', 'tests']

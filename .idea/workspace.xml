@@ -2,7 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a3dadf1e-2e4f-489f-9312-8d2daafdb0f5" name="IdeaFiles" comment="Endring av usermodel">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/templates/administration/mypage.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/templates/administration/person_form.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/administration/templates/administration/student_create.html" afterPath="$PROJECT_DIR$/administration/templates/administration/grade_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/forms.py" afterPath="$PROJECT_DIR$/administration/forms.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/models.py" afterPath="$PROJECT_DIR$/administration/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/grade_detail.html" afterPath="$PROJECT_DIR$/administration/templates/administration/grade_detail.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/login.html" afterPath="$PROJECT_DIR$/administration/templates/administration/login.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/person_detail.html" afterPath="$PROJECT_DIR$/administration/templates/administration/person_detail.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/school_form.html" afterPath="$PROJECT_DIR$/administration/templates/administration/school_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/urls.py" afterPath="$PROJECT_DIR$/administration/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/views.py" afterPath="$PROJECT_DIR$/administration/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/index.html" afterPath="$PROJECT_DIR$/maths/templates/maths/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/matistikk/settings.py" afterPath="$PROJECT_DIR$/matistikk/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/matistikk/views.py" afterPath="$PROJECT_DIR$/matistikk/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/matistikk/base.html" afterPath="$PROJECT_DIR$/templates/matistikk/base.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -31,7 +45,7 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/administration/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
+            <state relative-caret-position="289">
               <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
               <folding />
             </state>
@@ -51,8 +65,8 @@
       <file leaf-file-name="person_list.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="341">
-              <caret line="108" column="17" lean-forward="true" selection-start-line="108" selection-start-column="17" selection-end-line="108" selection-end-column="17" />
+            <state relative-caret-position="1836">
+              <caret line="108" column="17" lean-forward="false" selection-start-line="108" selection-start-column="17" selection-end-line="108" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -71,8 +85,8 @@
       <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/matistikk/base.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1283">
-              <caret line="16" column="47" lean-forward="true" selection-start-line="16" selection-start-column="47" selection-end-line="16" selection-end-column="47" />
+            <state relative-caret-position="272">
+              <caret line="16" column="45" lean-forward="false" selection-start-line="16" selection-start-column="45" selection-end-line="16" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -92,7 +106,7 @@
         <entry file="file://$PROJECT_DIR$/administration/templates/administration/grade_form.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="170">
-              <caret line="10" column="40" lean-forward="true" selection-start-line="10" selection-start-column="40" selection-end-line="10" selection-end-column="40" />
+              <caret line="10" column="40" lean-forward="false" selection-start-line="10" selection-start-column="40" selection-end-line="10" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -101,7 +115,7 @@
       <file leaf-file-name="school_list.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/administration/templates/administration/school_list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
+            <state relative-caret-position="595">
               <caret line="35" column="22" lean-forward="true" selection-start-line="35" selection-start-column="22" selection-end-line="35" selection-end-column="22" />
               <folding />
             </state>
@@ -111,8 +125,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="14" lean-forward="true" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
+            <state relative-caret-position="85">
+              <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -121,12 +135,9 @@
       <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/administration/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="239">
+            <state relative-caret-position="442">
               <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-              <folding>
-                <marker date="1486372489823" expanded="true" signature="291:303" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-                <marker date="1486372489823" expanded="true" signature="1679:1682" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -349,8 +360,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -796,15 +807,15 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23454158" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23720682" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28947368" sideWeight="0.50513834" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985157" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3261105" sideWeight="0.49477735" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3261105" sideWeight="0.49477735" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32719395" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30552545" sideWeight="0.49486166" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28947368" sideWeight="0.49486166" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2892741" sideWeight="0.49486166" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -868,13 +879,13 @@
     <MESSAGE value="Lagt til registrering av brukere" />
     <MESSAGE value="Lagt til personListView og personDetailView" />
     <MESSAGE value="Lagt til PersonUpdate" />
-    <MESSAGE value="Endring av usermodel" />
     <MESSAGE value="Lagt til kommentarer og laget sphinx doc folder" />
     <MESSAGE value="Fjernet paragraphs fra lister og lagt til bootstrap-buttons" />
     <MESSAGE value="Lagt til nytt brukergrensesnitt for brukeradministrasjon og ny søkefunksjon" />
     <MESSAGE value="Fiks av søk og tabeller i school_list og person_list" />
     <MESSAGE value="Ingenting" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ingenting" />
+    <MESSAGE value="Endring av usermodel" />
+    <option name="LAST_COMMIT_MESSAGE" value="Endring av usermodel" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -901,10 +912,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="629">
           <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-          <folding>
-            <marker date="1486372489823" expanded="true" signature="291:303" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1486372489823" expanded="true" signature="1679:1682" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -952,10 +960,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="629">
           <caret line="40" column="0" lean-forward="true" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-          <folding>
-            <marker date="1486372489823" expanded="true" signature="291:303" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1486372489823" expanded="true" signature="1679:1682" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1144,19 +1149,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/administration/templates/administration/student_create.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="27" lean-forward="true" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/student_create.html" />
     <entry file="file://$PROJECT_DIR$/templates/matistikk/form-template.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="1" column="28" lean-forward="true" selection-start-line="1" selection-start-column="28" selection-end-line="1" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1171,7 +1168,7 @@
     <entry file="file://$PROJECT_DIR$/administration/templates/administration/grade_form.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
-          <caret line="10" column="40" lean-forward="true" selection-start-line="10" selection-start-column="40" selection-end-line="10" selection-end-column="40" />
+          <caret line="10" column="40" lean-forward="false" selection-start-line="10" selection-start-column="40" selection-end-line="10" selection-end-column="40" />
           <folding />
         </state>
       </provider>
@@ -1202,7 +1199,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/administration/templates/administration/school_list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
+        <state relative-caret-position="595">
           <caret line="35" column="22" lean-forward="true" selection-start-line="35" selection-start-column="22" selection-end-line="35" selection-end-column="22" />
           <folding />
         </state>
@@ -1210,18 +1207,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/administration/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
+        <state relative-caret-position="442">
           <caret line="31" column="0" lean-forward="true" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-          <folding>
-            <marker date="1486372489823" expanded="true" signature="291:303" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-            <marker date="1486372489823" expanded="true" signature="1679:1682" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/administration/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
+        <state relative-caret-position="289">
           <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
           <folding />
         </state>
@@ -1229,24 +1223,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/matistikk/base.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1283">
-          <caret line="16" column="47" lean-forward="true" selection-start-line="16" selection-start-column="47" selection-end-line="16" selection-end-column="47" />
+        <state relative-caret-position="272">
+          <caret line="16" column="45" lean-forward="false" selection-start-line="16" selection-start-column="45" selection-end-line="16" selection-end-column="45" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="341">
-          <caret line="108" column="17" lean-forward="true" selection-start-line="108" selection-start-column="17" selection-end-line="108" selection-end-column="17" />
+        <state relative-caret-position="1836">
+          <caret line="108" column="17" lean-forward="false" selection-start-line="108" selection-start-column="17" selection-end-line="108" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="14" lean-forward="true" selection-start-line="7" selection-start-column="14" selection-end-line="7" selection-end-column="14" />
+        <state relative-caret-position="85">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding />
         </state>
       </provider>

@@ -3,8 +3,10 @@
 # Core Django imports
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 from django.core.urlresolvers import reverse
+import datetime
+from matistikk import settings
 
 
 class School(models.Model):
@@ -37,11 +39,11 @@ class Grade(models.Model):
     :tests: Which tests this class has been given access to. """
 
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    grade_name = models.CharField(max_length=100)
-    tests = models.ManyToManyField('maths.TestView', blank=True)
+    grade_name = models.CharField(max_length=100, verbose_name='klassenavn')
+    tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')
 
     class Meta:
-        ordering = ['grade_name']
+        ordering = ['school_id', 'grade_name']
 
     def __str__(self):
         return self.school.school_name + " - " + self.grade_name
@@ -63,6 +65,7 @@ class Person(AbstractUser):
         ("F", "Jente")
     ]
     sex = models.CharField(max_length=1, choices=SEX, verbose_name="kjønn", null=True)
+    date_of_birth = models.DateField(max_length=8, verbose_name='Fødselsdag', null=True)
 
     class Meta:
         ordering = ['username']
@@ -81,4 +84,3 @@ Person._meta.get_field('first_name').verbose_name = 'fornavn'
 Person._meta.get_field('last_name').verbose_name = 'etternavn'
 Person._meta.get_field('is_staff').verbose_name = 'lærer'
 Person._meta.get_field('email').verbose_name = 'Epost'
-

@@ -9,21 +9,27 @@
             <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Tilbake</a>
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h1>Skoleadministrasjon</h1>
+                    <h1>Brukeradministrasjon</h1>
                 </div>
                 <div class="panel-body">
                     <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {% bootstrap_form form %}
-                        {% buttons %}
-                            <button type="submit" class="btn btn-primary">
-                                {% bootstrap_icon "check" %} Lagre
-                            </button>
-                        {% endbuttons %}
+                        {% bootstrap_form_errors form %}
+                        {% bootstrap_field form.first_name set_required="True"%}
+                        {% bootstrap_field form.last_name %}
+                        {% bootstrap_field form.email %}
+                        {% bootstrap_field form.date_of_birth placeholder="dd.mm.yyyy"%}
+                        {% bootstrap_field form.sex %}
+                        {% bootstrap_field form.grade %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                        {% bootstrap_icon "check" %} Lagre
+                    </button>
+                {% endbuttons %}
                     </form>
-
                 </div>
             </div>
         </div>
     </div>
 {% endblock %}
+
