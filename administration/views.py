@@ -271,7 +271,14 @@ class FileUploadView(generic.FormView):
             try:
                 person = Person(first_name=person_obj[0], last_name=person_obj[1],
                                 email=person_obj[2], sex=person_obj[4])
-                person.date_of_birth = datetime.datetime.strptime(person_obj[3], "%d.%m.%Y").strftime("%Y-%m-%d")
+                try:
+                    person.date_of_birth = datetime.datetime.strptime(person_obj[3], "%d.%m.%Y").strftime("%Y-%m-%d")
+                except ValueError:
+                    message = mark_safe('Noe gikk galt med datoformatet. '
+                                        'Fødselsdag må være på dd.mm.yyyy eller yyyy-mm-dd'
+                                        "<br /><br />" "Ingen brukere ble lagt til.")
+                    messages.error(self.request, message)
+                    return super().post(request, *args, **kwargs)
                 username = Person.createusername(person)
                 person.username = username
                 person.set_password('ntnu123')

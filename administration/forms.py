@@ -6,11 +6,6 @@ from django.urls import reverse
 from django.http import HttpResponseForbidden
 from django.views.generic import FormView
 from django.views.generic.detail import SingleObjectMixin
-import logging
-my_default_errors = {
-    'required': 'Testing',
-    'invalid': 'Enter a valid value'
-}
 
 
 class PersonForm(forms.ModelForm):
