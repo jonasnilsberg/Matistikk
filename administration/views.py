@@ -102,8 +102,6 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
     is_staff = False
     template_name = 'administration/person_form.html'
     form_class = PersonForm
-    #model = Person
-    #fields = ['first_name', 'last_name', 'email', 'sex', 'grade']
     success_url = reverse_lazy('administration:personList')
 
     def get_initial(self):
@@ -240,8 +238,8 @@ class GradeDisplay(views.StaffuserRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(GradeDisplay, self).get_context_data(**kwargs)
-        context['students'] = Person.objects.filter(grade_id=self.kwargs['pk'], is_staff=False)
-        context['teachers'] = Person.objects.filter(grade_id=self.kwargs['pk'], is_staff=True)
+        context['students'] = Person.objects.filter(grades__id=self.kwargs['pk'], is_staff=False)
+        context['teachers'] = Person.objects.filter(grades__id=self.kwargs['pk'], is_staff=True)
         context['form'] = FileUpload()
         return context
 

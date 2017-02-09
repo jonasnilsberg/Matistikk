@@ -56,7 +56,7 @@ class Person(AbstractUser):
     :Sex: The sex of the person.
     """
 
-    grade = models.ForeignKey(Grade, default="", blank=True, null=True, verbose_name="klasse")
+    grades = models.ManyToManyField(Grade, default="", blank=True, verbose_name="klasse")
     SEX = [
         ("M", "Gutt"),
         ("F", "Jente")
