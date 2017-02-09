@@ -12,8 +12,14 @@
             <li><lable>Etternavn: </lable>{{ person.last_name }}</li>
             <li><lable>Fødselsdag: </lable>{{ person.date_of_birth }}</li>
             <li><lable>E - post: </lable>{{ person.email }}</li>
-            <li><lable>Skole: </lable>{{ person.grade.school.school_name }}</li>
-            <li><lable>Klasse: </lable>{{ person.grade.grade_name }}</li>
+            <li><lable>Klasse: </lable></li>
+            <ul>
+                {% if person.grades %}
+                {% for grade in person.grades.all %}
+                    <li>{{ grade }}</li>
+                {% endfor %}
+                {% endif %}
+            </ul>
             <li><lable>Kjønn: </lable>{{ person.sex }}</li>
             <li><lable>Sist innlogget: </lable>{{ person.last_login }}</li>
         </ul>

@@ -12,10 +12,14 @@
     {{ request.user.first_name }}<br>
     <label>Etternavn: </label>
     {{ request.user.last_name }}<br>
-    <label>Skole: </label>
-    {{ request.user.grade.school.school_name }}<br>
-    <label>Klasse: </label>
-    {{ request.user.grade.grade_name }}<br>
+    <label>Klasser: </label>
+    {% if request.user.grades %}
+    {% for grade in request.user.grades.all %}
+        <li>{{ grade }}</li>
+    {% endfor %}
+    {% endif %}
+
+    <br>
     <div class="panel panel-default col-lg-5 col-md-5 col-sm-8 col-xs-12">
         <div class="panel-heading">
             <h1>Endre passord</h1>
