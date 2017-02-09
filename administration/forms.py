@@ -19,7 +19,7 @@ class PersonForm(forms.ModelForm):
 
     class Meta:
         model = Person
-        fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grade', 'is_staff', 'is_active']
+        fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grades', 'is_staff', 'is_active']
 
 
 class FileUpload(forms.Form):
