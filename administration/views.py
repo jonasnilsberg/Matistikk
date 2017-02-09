@@ -46,6 +46,12 @@ class MyPageDetailView(generic.FormView):
         messages.success(self.request, 'Passordet ble oppdatert!')
         return super(MyPageDetailView, self).form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super(MyPageDetailView, self).get_context_data(**kwargs)
+        print(Person.objects.get(username=self.kwargs.get('slug')))
+        context['person'] = Person.objects.get(username=self.kwargs.get('slug'))
+        return context
+
 
 class PersonListView(views.StaffuserRequiredMixin, views.AjaxResponseMixin, generic.ListView):
     """
@@ -255,7 +261,6 @@ class FileUploadView(generic.FormView):
         line_number = 2
         for person_obj in person_dict[:1]:
             for field, correct_field in zip(person_obj, order):
-                print(field, correct_field)
                 if not str(field).lower() == str(correct_field).lower():
                     message = mark_safe('Feltene dine samsvarer ikke med de påkrevde.'
                                         "<br /><br />"
@@ -270,7 +275,6 @@ class FileUploadView(generic.FormView):
                 username = Person.createusername(person)
                 person.username = username
                 person.set_password('ntnu123')
-                person.grade_id = self.kwargs.get('pk')
                 persons.append(person)
                 line_number += 1
             except Exception:
@@ -279,6 +283,10 @@ class FileUploadView(generic.FormView):
                 messages.error(self.request, message)
                 return super().post(request, *args, **kwargs)
         Person.objects.bulk_create(persons)
+        grade = Grade.objects.get(id=self.kwargs.get('pk'))
+        for person in persons:
+            savedPerson = Person.objects.get(username=person.username)
+            savedPerson.grades.add(grade)
         messages.success(self.request, str(len(persons)) + " elever ble lagt til!")
         return super().post(request, *args, **kwargs)
 

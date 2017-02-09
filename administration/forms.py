@@ -1,5 +1,5 @@
 from django import forms
-from .models import Person
+from .models import Person, Grade
 from django.core.exceptions import ValidationError
 
 from django.urls import reverse
@@ -20,6 +20,11 @@ class PersonForm(forms.ModelForm):
     class Meta:
         model = Person
         fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grades', 'is_staff', 'is_active']
+
+    def __init__(self, *args, **kwargs):
+        super(PersonForm, self).__init__(*args, **kwargs)
+        self.fields["grades"].widget = forms.widgets.CheckboxSelectMultiple()
+        self.fields["grades"].queryset = Grade.objects.all()
 
 
 class FileUpload(forms.Form):
