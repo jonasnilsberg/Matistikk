@@ -238,8 +238,7 @@ class GradeDisplay(views.StaffuserRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(GradeDisplay, self).get_context_data(**kwargs)
-        context['students'] = Person.objects.filter(grades__id=self.kwargs['pk'], is_staff=False)
-        context['teachers'] = Person.objects.filter(grades__id=self.kwargs['pk'], is_staff=True)
+        context['persons'] = Person.objects.filter(grades__id=self.kwargs['pk'])
         context['form'] = FileUpload()
         return context
 

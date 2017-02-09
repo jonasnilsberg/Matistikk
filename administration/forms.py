@@ -23,8 +23,8 @@ class PersonForm(forms.ModelForm):
 
 
 class FileUpload(forms.Form):
-    file = forms.FileField(label="Last opp fil med elever", )
+    file = forms.FileField()
 
     def __init__(self, *args, **kwargs):
         super(FileUpload, self).__init__(*args, **kwargs)
-        self.fields['file'].help_text = '<br/>Aksepterte filformat: .xls, .xlsx, .ods, .csv'
+        self.fields['file'].help_text = 'Aksepterte filformat: .xls, .xlsx, .ods, .csv'
