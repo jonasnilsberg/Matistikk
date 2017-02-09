@@ -33,4 +33,3 @@ class FileUpload(forms.Form):
     def __init__(self, *args, **kwargs):
         super(FileUpload, self).__init__(*args, **kwargs)
         self.fields['file'].help_text = 'Aksepterte filformat: .xls, .xlsx, .ods, .csv'
-

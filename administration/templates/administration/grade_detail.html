@@ -1,8 +1,10 @@
 {% extends 'matistikk/base.html' %}
 {% load bootstrap3 %}
+{% load static %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
+
 {% block body %}
     <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Tilbake</a>
     <div class="panel panel-info">
@@ -11,40 +13,111 @@
         </div>
 
         <div class="panel-body">
-            <h4>Lærere</h4>
-             <ul>
-                {% for teacher in teachers %}
-                    <li>
-                        <a href="{% url 'administration:personDetail' teacher.username %}">
-                            {{ teacher.first_name }} {{ teacher.last_name }}
-                        </a>
-                    </li>
-                {% endfor %}
+            <h4>Brukere</h4>
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button class="btn btn-primary" type="button" aria-label="Søk">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </div>
+            <input type="text" class="form-control" id="search" onkeyup="allSearch(); studentSearch(); teacherSearch();" placeholder="Søk etter bruker">
+            </div>
 
-             </ul>
-             <a class="btn btn-primary" href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}">Legg til Lærer</a>
-             <hr>
-             <h4>Elever</h4>
-             <ul>
-                {% for student in students %}
-                    <li>
-                        <a href="{% url 'administration:personDetail' student.username %}">
-                            {{ student.first_name }} {{ student.last_name }}
-                        </a>
-                    </li>
-                {% endfor %}
+            <ul class="nav nav-tabs">
+                <li class="nav active"><a href="#A" data-toggle="tab">Alle</a></li>
+                <li class="nav"><a href="#B" data-toggle="tab">Elever</a></li>
+                <li class="nav"><a href="#C" data-toggle="tab">Lærere</a></li>
             </ul>
-            <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}">Legg til Elev</a>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="A">
+                    <table class="table table-hover table-striped table-responsive" id="alltable">
+                        <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Brukernavn</th>
+                            <th>Type</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for person in persons %}
+                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
+                                <td>{{ person.first_name }}</td>
+                                <td>{{ person.last_name }}</td>
+                                <td>{{ person.username }}</td>
+                                <td>
+                                    {% if person.is_staff %}
+                                        Lærer
+                                        {% else %}
+                                        Elev
+                                    {% endif %}
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="B">
+                    <table class="table table-hover table-striped table-responsive" id="studenttable">
+                        <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Brukernavn</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for person in persons %}
+                            {% if not person.is_staff %}
+                                <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
+                                    <td>{{ person.first_name }}</td>
+                                    <td>{{ person.last_name }}</td>
+                                    <td>{{ person.username }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="C">
+                    <table class="table table-hover table-striped table-responsive" id="teachertable">
+                        <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Brukernavn</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for person in persons %}
+                            {% if person.is_staff %}
+                                <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
+                                    <td>{{ person.first_name }}</td>
+                                    <td>{{ person.last_name }}</td>
+                                    <td>{{ person.username }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <a class="btn btn-primary" href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Lærer</a>
+            <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Elev</a>
+            <hr>
             <form action="" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {% bootstrap_messages %}
-                        {% bootstrap_form form %}
-                        {% buttons %}
-                            <button type="submit" class="btn btn-primary">
-                                {% bootstrap_icon "check" %} Lagre
-                            </button>
-                        {% endbuttons %}
-                    </form>
+                {% csrf_token %}
+                {% bootstrap_messages %}
+                {% bootstrap_label "Masseregistrering <button type='button' class='btn btn-default' style='font-size:1.5em; color: blue;' data-toggle='modal' data-target='#masseregModal'><span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></button>" %}
+                {% bootstrap_field form.file show_label=false %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-success">
+                        {% bootstrap_icon "arrow-up" %} Last opp
+                    </button>
+                {% endbuttons %}
+            </form>
+
             <hr>
             <h4>Tester</h4>
              <ul>
@@ -59,8 +132,130 @@
         </div>
         <div class="panel-footer">
             {% if request.user.is_superuser %}
-                <a class="btn btn-primary" href="{% url 'administration:gradeUpdate' school_pk=grade.school_id pk=grade.id %}">Oppdater klasse</a>
+                <a class="btn btn-primary" href="{% url 'administration:gradeUpdate' school_pk=grade.school_id pk=grade.id %}"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
             {% endif %}
         </div>
     </div>
+
+    <script>
+        /**
+         * This function makes the rows of the user-, student-, teacher- and admintable clickable
+         */
+        jQuery(document).ready(function($) {
+            $(".clickable-row").click(function() {
+                window.document.location = $(this).data("href");
+            });
+        });
+    </script>
+    <script>
+
+        /**
+         * This function matches the text in the search field with the content in the table with all users
+         * and removes rows that don't match the search criteria.
+         */
+        function allSearch() {
+          var input, filter, table, tr, td, i, td1, td2, fullname;
+          input = document.getElementById("search");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("alltable");
+          tr = table.getElementsByTagName("tr");
+
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            td1 = tr[i].getElementsByTagName("td")[1];
+            td2 = tr[i].getElementsByTagName("td")[2];
+
+            if (td) {
+              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+        }
+
+        /**
+         * This function matches the text in the search field with the content in the table with all students
+         * and removes rows that don't match the search criteria.
+         */
+        function studentSearch() {
+          var input, filter, table, tr, td, i, td1, td2;
+          input = document.getElementById("search");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("studenttable");
+          tr = table.getElementsByTagName("tr");
+
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            td1 = tr[i].getElementsByTagName("td")[1];
+            td2 = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+        }
+
+        /**
+         * This function matches the text in the search field with the content in the table with all teachers
+         * and removes rows that don't match the search criteria.
+         */
+        function teacherSearch() {
+          var input, filter, table, tr, td, i, td1, td2;
+          input = document.getElementById("search");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("teachertable");
+          tr = table.getElementsByTagName("tr");
+
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            td1 = tr[i].getElementsByTagName("td")[1];
+            td2 = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }
+          }
+        }
+    </script>
+
+{% endblock %}
+
+
+{% block modal %}
+<!-- Modal -->
+<div class="modal fade" id="masseregModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Masseregistrering</h4>
+            </div>
+            <div class="modal-body">
+                Masseregistrering kan gjøres ved å laste opp Excel-filer med en liste personer som skal registreres.
+                Brukerne vil bli registrert som elever i klassen du laster opp filen fra. <br><br>
+                Excel-filen må være på formatet som er vist i bildet:
+                <img src="{% static "administration/images/masseregistrering.png" %}" width="100%"><br><br>
+                <b>A1:</b> Fornavn<br>
+                <b>B1:</b> Etternavn<br>
+                <b>C1:</b> Epost<br>
+                <b>D1:</b> Fødselsdag<br>
+                <b>E1:</b> Kjønn<br>
+                Disse fem feltene må inneholde nøyaktig denne teksten for at filen skal fungere.<br>
+                <br> <b>Kjønn:</b> Oppgis med F for jente og M for gutt
+                <br> <b>Fødselsdag:</b> Oppgis i formatet dd.mm.åååå
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
