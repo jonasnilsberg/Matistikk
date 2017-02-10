@@ -37,7 +37,7 @@
                     </thead>
                     <tbody>
                     {% for person in object_list %}
-                        <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}">
+                        <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
                                 <td>{{ person.first_name }}</td>
                                 <td>{{ person.last_name }}</td>
                                 <td>{{ person.username }}</td>
@@ -60,7 +60,7 @@
                     <tbody>
                     {% for person in object_list %}
                         {% if not person.is_staff and not person.is_superuser %}
-                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}">
+                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
                                 <td>{{ person.first_name }}</td>
                                 <td>{{ person.last_name }}</td>
                                 <td>{{ person.username }}</td>
@@ -84,7 +84,7 @@
                     <tbody>
                     {% for person in object_list %}
                         {% if person.is_staff and not person.is_superuser %}
-                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}">
+                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
                                 <td>{{ person.first_name }}</td>
                                 <td>{{ person.last_name }}</td>
                                 <td>{{ person.username }}</td>
@@ -108,7 +108,7 @@
                     <tbody>
                     {% for person in object_list %}
                         {% if person.is_superuser %}
-                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}">
+                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
                                 <td>{{ person.first_name }}</td>
                                 <td>{{ person.last_name }}</td>
                                 <td>{{ person.username }}</td>

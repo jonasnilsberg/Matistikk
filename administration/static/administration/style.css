@@ -1,0 +1,108 @@
+body{
+        background-image: url("http://bildr.no/image/Qm9kSHln.jpeg");
+    }
+    .tab-content{
+        padding: 10px;
+        min-height: 250px;
+    }
+    .btn-block {
+        width: 300px;
+    }
+    * {
+        border-radius: 0 !important;
+    }
+    .container {
+        border: 1px solid black;
+        border-radius: 10px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        min-height: 650px;
+        background-color: white;
+        padding-left: 40px;
+        opacity: 0.85;
+    }
+
+    .container p{
+        color: black;
+    }
+    .container h1{
+        color:black;
+    }
+    .container h2{
+        color:black;
+    }
+    .container h3{
+        color:black;
+    }
+    .container h4{
+        color:black;
+    }
+
+    .btn{
+        border: 2px solid black;
+        color: black;
+        border: 1px solid white;
+    }
+    .btn-primary {
+        color: white;
+    }
+    .jumbotron {
+        background-color: white;
+    }
+    .jumbotron p{
+        font-size: smaller;
+        color:black;
+    }
+    .jumbotron h1{
+        font-size: large;
+    }
+    .jumbotron h2{
+        font-size:medium;
+    }
+    .jumbotron h3{
+        font-size:small;
+    }
+
+    .navbar{
+        border-bottom-color: black;
+
+    }
+    .footer{
+        box-shadow: 0px 0px 1px #444;
+    }
+
+    .page-header h1{
+        font-size: large;
+    }
+    .page-header h2{
+        font-size:medium;
+    }
+    .page-header h3{
+        font-size:small;
+   }
+
+    p{
+        color: black;
+        opacity: 1;
+    }
+    h{
+        color:black;
+        opacity: 1;
+    }
+
+    logo{
+        margin-left:30px;
+    }
+
+    .centered-text {
+        position: absolute;
+        top: 48%;
+        color: white;
+        text-align: center;
+        left: 0;
+        width: 100%;
+        font-size: x-large;
+    }
+
+
+
