@@ -41,7 +41,7 @@
     {% endif %}
 </div>
 
-{% if request.user.is_superuser %}
+{% if request.user.role == 4 %}
     <div class="panel-footer">
         <a class="btn btn-primary" href="{% url 'administration:schoolCreate' %}"><span class="glyphicon glyphicon-plus"
                                                                                         aria-hidden="true"></span> Legg

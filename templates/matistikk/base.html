@@ -12,7 +12,7 @@
     <link rel="icon" href="http://bildr.no/view/WS9ITTNK">
 </head>
 <body>
-{% if request.user.is_superuser %}
+{% if request.user.role == 4 %}
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -52,7 +52,7 @@
         </div>
     </nav>
 
-{% elif request.user.is_staff and not request.user.is_superuser %}
+{% elif request.user.role == 2 or request.user.role == 3 %}
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">

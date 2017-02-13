@@ -10,19 +10,19 @@
         <div class="panel-body">
             <ul>
                 <li>
-                    <lable>Fornavn:</lable>
+                    <label>Fornavn:</label>
                     {{ person.first_name }}</li>
                 <li>
-                    <lable>Etternavn:</lable>
+                    <label>Etternavn:</label>
                     {{ person.last_name }}</li>
                 <li>
-                    <lable>Fødselsdag:</lable>
+                    <label>Fødselsdag:</label>
                     {{ person.date_of_birth }}</li>
                 <li>
-                    <lable>E - post:</lable>
+                    <label>E-post:</label>
                     {{ person.email }}</li>
                 <li>
-                    <lable>Klasse:</lable>
+                    <label>Klasser:</label>
                 </li>
                 <ul>
                     {% if person.grades %}
@@ -32,10 +32,10 @@
                     {% endif %}
                 </ul>
                 <li>
-                    <lable>Kjønn:</lable>
+                    <label>Kjønn:</label>
                     {{ person.sex }}</li>
                 <li>
-                    <lable>Sist innlogget:</lable>
+                    <label>Sist innlogget:</label>
                     {{ person.last_login }}</li>
             </ul>
         </div>

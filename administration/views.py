@@ -387,7 +387,7 @@ class GradeUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
 
 class GradeListView(views.StaffuserRequiredMixin, generic.ListView):
     login_url = reverse_lazy('login')
-    template_name = 'administration/gradeList.html'
+    template_name = 'administration/grade_list.html'
 
     def get_queryset(self):
         return Grade.objects.filter(person__username=self.request.user.username)
