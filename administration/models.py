@@ -15,7 +15,7 @@ class School(models.Model):
     :school_name: The name of the school
     :school_address: The address of the school
     """
-
+    school_administrator = models.ForeignKey('Person', null=True)
     school_name = models.CharField(max_length=100, verbose_name='Navn')
     school_address = models.CharField(max_length=100, verbose_name='Adresse')
 
