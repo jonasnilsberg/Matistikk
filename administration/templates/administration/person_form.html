@@ -22,9 +22,46 @@
                         {% bootstrap_field form.date_of_birth placeholder="dd.mm.yyyy" %}
                         {% bootstrap_field form.sex %}
                         {% bootstrap_field form.role %}
-                        {% if request.user.role == 4 %}
-                            {% bootstrap_field form.grades %}
-                        {% endif %}
+
+                        <div class="row">
+                            <label for="schools">Velg Skole</label>
+                            <select id="schools" class="form-control" onchange="changeClassList()">
+                                <option value="allschools">
+                                    Alle Skoler
+                                </option>
+                                {% for school in schools %}
+                                    <option value="{{ school.school_name }}">
+                                        {{ school.school_name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <br>
+                            <div class="col-xs-5">
+                                <label for="grades">Velg Klasse</label>
+                                <select id="grades" class="form-control" multiple="multiple">
+                                    {% for grade in gradesInfo %}
+                                        <option value="{{ forloop.counter }}">
+                                            {{ grade }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-xs-1">
+                                <br><br>
+                                <button type="button" onclick="chooseGrades()"><span
+                                        class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
+                                <button type="button" onclick="removeGrades()"><span
+                                        class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button>
+                            </div>
+                            <div class="col-xs-5">
+                                <label for="chosengrades">Valgte Klasser</label>
+                                <select id="chosengrades" class="form-control" multiple="multiple">
+                                    {% for grade in person.grades.all %}
+                                        <option value="{{ grade.id }}">{{ grade }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
                         {% if request.user.role == 4 %}
                             {% bootstrap_field form.is_active %}
                         {% endif %}
@@ -32,7 +69,7 @@
                             {% bootstrap_field form.is_active %}
                         {% endif %}
                         {% buttons %}
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-success">
                                 {% bootstrap_icon "check" %} Lagre
                             </button>
                         {% endbuttons %}
@@ -41,5 +78,65 @@
             </div>
         </div>
     </div>
-{% endblock %}
 
+    <script>
+        /**
+         * This function changes the visible grades in the "Choose Grade"-select
+         * when a user changes the value of the "Choose School"-dropdown
+         */
+        function changeClassList() {
+            var school = document.getElementById("schools").value.replace(/\s+/g, '');
+            var grades = document.getElementById("grades");
+            var options = grades.getElementsByTagName("option");
+            var option;
+
+            for (var i = 0; i < options.length; i++) {
+                option = options[i].innerHTML.replace(/\s+/g, '');
+                if (school == "allschools") {
+                    options[i].style.display = "";
+                }
+                else if (option.indexOf(school) >= 0) {
+                    options[i].style.display = "";
+                }
+                else {
+                    options[i].style.display = "none";
+                }
+            }
+        }
+
+        /**
+         * This function pushes selected grades from the "Choose Grades"-select
+         * to the "Chosen Grades"-select when the user clicks the ->-button
+         */
+        function chooseGrades() {
+            var grades = document.getElementById("grades");
+            var chosengrades = document.getElementById("chosengrades");
+            var valuelist = [];
+            for (var k = 0; k < chosengrades.options.length; k++) {
+                valuelist.push(chosengrades.options[k].value);
+            }
+
+            for (var i = 0; i < grades.options.length; i++) {
+                if (grades.options[i].selected) {
+                    if (valuelist.indexOf(grades.options[i].value) == -1) {
+                        chosengrades.innerHTML += "<option value='" + grades.options[i].value + "'>" + grades.options[i].innerHTML + "</option>";
+                    }
+                }
+            }
+        }
+
+        /**
+         * This function removes grades from the "Chosen Grades"-select
+         * when the user clicks the <--button
+         */
+        function removeGrades() {
+            var grades = document.getElementById("grades");
+            var chosengrades = document.getElementById("chosengrades");
+            for (var i = 0; i < chosengrades.options.length; i++) {
+                if (chosengrades.options[i].selected) {
+                    chosengrades.remove(chosengrades.options[i]);
+                }
+            }
+        }
+    </script>
+{% endblock %}
