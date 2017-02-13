@@ -20,6 +20,6 @@ urlpatterns = [
         name='gradeAddStudent'),
     url(r'skoler/(?P<school_pk>[0-9]+)/grade/(?P<pk>[0-9]+)/lærer/$', views.PersonCreateView.as_view(is_staff=True),
         name='gradeAddTeacher'),
-
+    url(r'mineklasser/$', views.GradeListView.as_view(), name='gradeList')
     # url(r'getallusers/search', views.PersonSearch.as_view(), name='personSearch')
 ]

@@ -11,15 +11,17 @@ from django.views.generic.detail import SingleObjectMixin
 class PersonForm(forms.ModelForm):
     first_name = forms.CharField(required=True, label='Fornavn')
     last_name = forms.CharField(required=True, label='Etternavn')
+    Test = [(1, 'test'),
+            (2, 'test2')
+            ]
+    testing = forms.ChoiceField(choices=Test, widget=forms.Select())
 
     class Meta:
         model = Person
-        fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grades', 'is_staff', 'is_active']
+        fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grades', 'is_staff', 'is_active' ]
 
     def __init__(self, *args, **kwargs):
         super(PersonForm, self).__init__(*args, **kwargs)
-        self.fields["grades"].widget = forms.widgets.CheckboxSelectMultiple()
-        self.fields["grades"].queryset = Grade.objects.all()
 
 
 class FileUpload(forms.Form):

@@ -1,0 +1,7 @@
+{% extends 'matistikk/base.html' %}
+
+{% block body %}
+    {% for grade in object_list %}
+       <a href="{% url 'administration:gradeDetail' school_pk=grade.school_id pk=grade.id %}">{{ grade }}</a>
+    {% endfor %}
+{% endblock %}
