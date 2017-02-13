@@ -1,5 +1,5 @@
 from django import forms
-from .models import Person, Grade
+from .models import Person, Grade, School
 from django.core.exceptions import ValidationError
 
 from django.urls import reverse
@@ -23,3 +23,13 @@ class FileUpload(forms.Form):
     def __init__(self, *args, **kwargs):
         super(FileUpload, self).__init__(*args, **kwargs)
         self.fields['file'].help_text = 'Aksepterte filformat: .xls, .xlsx, .ods, .csv'
+
+
+class SchoolForm(forms.ModelForm):
+    class Meta:
+        model = School
+        fields = ['school_name', 'school_address', 'school_administrator']
+
+    def __init__(self, *args, **kwargs):
+        super(SchoolForm, self).__init__(*args, **kwargs)
+        self.fields['administrator'].queryset = Person.objects.filter(role=3)

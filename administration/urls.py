@@ -18,7 +18,7 @@ urlpatterns = [
         name='gradeUpdate'),
     url(r'skoler/(?P<school_pk>[0-9]+)/klasse/(?P<pk>[0-9]+)/elev/$', views.PersonCreateView.as_view(),
         name='gradeAddStudent'),
-    url(r'skoler/(?P<school_pk>[0-9]+)/grade/(?P<pk>[0-9]+)/lærer/$', views.PersonCreateView.as_view(is_staff=True),
+    url(r'skoler/(?P<school_pk>[0-9]+)/grade/(?P<pk>[0-9]+)/lærer/$', views.PersonCreateView.as_view(role=2),
         name='gradeAddTeacher'),
     url(r'mineklasser/$', views.GradeListView.as_view(), name='gradeList')
     # url(r'getallusers/search', views.PersonSearch.as_view(), name='personSearch')
