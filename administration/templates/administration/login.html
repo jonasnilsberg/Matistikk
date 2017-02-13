@@ -1,50 +1,57 @@
 <!DOCTYPE html>
 <html lang="no">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width= device-width, initial-scale = 1">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width= device-width, initial-scale = 1">
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        {% load bootstrap3 %}
-        {% bootstrap_css %}
-        {% bootstrap_javascript %}
-        {% bootstrap_messages %}
-        <title>Logg Inn - Matistikk</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    {% load bootstrap3 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% bootstrap_messages %}
+    <title>Logg Inn - Matistikk</title>
 
-        <style>
-         .form-group{
+    <style>
+        .form-group {
             width: 300px;
         }
-        body{
+
+        body {
             background-image: url("http://bildr.no/image/Qm9kSHln.jpeg");
             padding-top: 50px;
         }
-        .tab-content{
+
+        .tab-content {
             border-left: 1px solid #ddd;
-            border-right:  1px solid #ddd;
-            border-bottom:  1px solid #ddd;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
             padding: 10px;
             width: 400px;
             min-height: 250px;
         }
-        .nav-tabs{
+
+        .nav-tabs {
             margin-bottom: 0;
             background-color: whitesmoke;
             border-top: 0px solid #ddd;
             width: 400px;
         }
+
         .btn-block {
             width: 300px;
         }
-        #logintab{
+
+        #logintab {
             width: 200px;
         }
-        #forgotpasswordtab{
+
+        #forgotpasswordtab {
             width: 200px;
         }
+
         .container {
             border: 1px solid black;
             border-radius: 10px;
@@ -52,68 +59,71 @@
             margin-bottom: 15px;
             min-height: 700px;
             width: 600px;
-            background-color:  white;
+            background-color: white;
             opacity: 0.85;
-           }
+        }
+
         * {
             font-size: 100%;
-            font-family: Century Gothic,CenturyGothic,AppleGothic,sans-serif;
+            font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
             border-radius: 0 !important;
         }
+
         .error {
             color: #ff0000;
         }
-        </style>
-    </head>
-    <body>
-        <noscript>Denne nettsiden krever at JavaScript er aktivert.</noscript>
-        <div class="container">
-            <img src="http://bildr.no/image/djdYNzZp.jpeg" id="MatistikkLogoSkriftBesk"
-                class="img-responsive center-block" width="600" height="300" alt="Responsive Image"/>
-            <center>
-                <!-- Tab panes -->
-                <ul class="nav nav-tabs">
-                    <li class="nav active" id="logintab"><a href="#A" data-toggle="tab">Innlogging</a></li>
-                    <li class="nav" id="forgotpasswordtab"><a href="#B" data-toggle="tab">Glemt passord</a></li>
-                </ul>
+    </style>
+</head>
+<body>
+<noscript>Denne nettsiden krever at JavaScript er aktivert.</noscript>
+<div class="container">
+    <img src="http://bildr.no/image/djdYNzZp.jpeg" id="MatistikkLogoSkriftBesk"
+         class="img-responsive center-block" width="600" height="300" alt="Responsive Image"/>
+    <center>
+        <!-- Tab panes -->
+        <ul class="nav nav-tabs">
+            <li class="nav active" id="logintab"><a href="#A" data-toggle="tab">Innlogging</a></li>
+            <li class="nav" id="forgotpasswordtab"><a href="#B" data-toggle="tab">Glemt passord</a></li>
+        </ul>
 
-                <!-- Tab panes content -->
-                <div class="tab-content">
-                    <!--Login form-->
-                    <div class="tab-pane fade in active" id="A">
-                        {% block body%}
-                        <form class="form-horizontal" action="" method="POST" >
-                            {% csrf_token %}
-                            {% bootstrap_form_errors form %}
-                            {% bootstrap_field form.username addon_before='<span class="glyphicon glyphicon-user"></span>'%}
-                            {% bootstrap_field form.password addon_before='<span class="glyphicon glyphicon-lock"></span>'%}
-                    {% buttons %}
-                        <button type="submit" class="btn btn-success form-control">
-                            {% bootstrap_icon "log-in" %} Logg inn
-                        </button>
-                    {% endbuttons %}
-                        </form>
-                     {% endblock %}
+        <!-- Tab panes content -->
+        <div class="tab-content">
+            <!--Login form-->
+            <div class="tab-pane fade in active" id="A">
+                {% block body %}
+                    <form class="form-horizontal" action="" method="POST">
+                        {% csrf_token %}
+                        {% bootstrap_form_errors form %}
+                        {% bootstrap_field form.username addon_before='<span class="glyphicon glyphicon-user"></span>' %}
+                        {% bootstrap_field form.password addon_before='<span class="glyphicon glyphicon-lock"></span>' %}
+                        {% buttons %}
+                            <button type="submit" class="btn btn-success form-control">
+                                {% bootstrap_icon "log-in" %} Logg inn
+                            </button>
+                        {% endbuttons %}
+                    </form>
+                {% endblock %}
+            </div>
+
+
+            <!--ForgotPassword form-->
+            <div class="tab-pane fade" id="B">
+                <form id="forgotPassword-form" action="forgotpassword" method="POST" modelAttribute="student">
+                    <div class="form-group">
+                        <label>Brukernavn</label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input type="text" class="form-control" name="username" placeholder="Brukernavn" autofocus>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-success form-control">Send passord</button>
                     </div>
 
-
-                    <!--ForgotPassword form-->
-                    <div class="tab-pane fade" id="B">
-                        <form id="forgotPassword-form" action="forgotpassword" method="POST" modelAttribute="student">
-                            <div class="form-group">
-                                <label>Brukernavn</label>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                    <input type="text" class="form-control" name="username" placeholder="Brukernavn" autofocus>
-                                </div>
-                                <br><button type="submit" class="btn btn-success form-control">Send passord</button>
-                            </div>
-
-                        </form>
-                    </div>
-                </div>
-            </center>
+                </form>
+            </div>
         </div>
-    </body>
+    </center>
+</div>
+</body>
 </html>
 

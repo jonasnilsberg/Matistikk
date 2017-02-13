@@ -6,7 +6,8 @@
 {% block body %}
     <div class="container-fluid">
         <div class="row">
-            <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Tilbake</a>
+            <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left"
+                                                                      aria-hidden="true"></span> Tilbake</a>
             <div class="panel panel-info">
                 <div class="panel-heading">
                     <h1>Brukeradministrasjon</h1>
@@ -18,7 +19,7 @@
                         {% bootstrap_field form.first_name %}
                         {% bootstrap_field form.last_name %}
                         {% bootstrap_field form.email %}
-                        {% bootstrap_field form.date_of_birth placeholder="dd.mm.yyyy"%}
+                        {% bootstrap_field form.date_of_birth placeholder="dd.mm.yyyy" %}
                         {% bootstrap_field form.sex %}
                         {% if request.user.is_superuser %}
                             {% bootstrap_field form.grades %}

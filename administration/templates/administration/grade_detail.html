@@ -6,7 +6,8 @@
 {% bootstrap_messages %}
 
 {% block body %}
-    <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Tilbake</a>
+    <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left"
+                                                              aria-hidden="true"></span> Tilbake</a>
     <div class="panel panel-info">
         <div class="panel-heading">
             <h1>{{ grade.grade_name }}</h1>
@@ -20,7 +21,8 @@
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
                 </div>
-            <input type="text" class="form-control" id="search" onkeyup="allSearch(); studentSearch(); teacherSearch();" placeholder="Søk etter bruker">
+                <input type="text" class="form-control" id="search"
+                       onkeyup="allSearch(); studentSearch(); teacherSearch();" placeholder="Søk etter bruker">
             </div>
 
             <ul class="nav nav-tabs">
@@ -41,14 +43,16 @@
                         </thead>
                         <tbody>
                         {% for person in persons %}
-                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
+                            <tr class="clickable-row"
+                                data-href="{% url 'administration:personDetail' person.username %}"
+                                style="cursor: pointer">
                                 <td>{{ person.first_name }}</td>
                                 <td>{{ person.last_name }}</td>
                                 <td>{{ person.username }}</td>
                                 <td>
                                     {% if person.is_staff %}
                                         Lærer
-                                        {% else %}
+                                    {% else %}
                                         Elev
                                     {% endif %}
 
@@ -70,7 +74,9 @@
                         <tbody>
                         {% for person in persons %}
                             {% if not person.is_staff %}
-                                <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
+                                <tr class="clickable-row"
+                                    data-href="{% url 'administration:personDetail' person.username %}"
+                                    style="cursor: pointer">
                                     <td>{{ person.first_name }}</td>
                                     <td>{{ person.last_name }}</td>
                                     <td>{{ person.username }}</td>
@@ -92,7 +98,9 @@
                         <tbody>
                         {% for person in persons %}
                             {% if person.is_staff %}
-                                <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
+                                <tr class="clickable-row"
+                                    data-href="{% url 'administration:personDetail' person.username %}"
+                                    style="cursor: pointer">
                                     <td>{{ person.first_name }}</td>
                                     <td>{{ person.last_name }}</td>
                                     <td>{{ person.username }}</td>
@@ -104,9 +112,12 @@
                 </div>
             </div>
             {% if request.user.is_superuser %}
-                <a class="btn btn-primary" href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Lærer</a>
+                <a class="btn btn-primary"
+                   href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"><span
+                        class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Lærer</a>
             {% endif %}
-            <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Elev</a>
+            <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}"><span
+                    class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Elev</a>
             <hr>
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -122,7 +133,7 @@
 
             <hr>
             <h4>Tester</h4>
-             <ul>
+            <ul>
                 {% for test in grade.tests_set.all %}
                     <li>
                         <a href="#">
@@ -134,7 +145,9 @@
         </div>
         <div class="panel-footer">
             {% if request.user.is_superuser %}
-                <a class="btn btn-primary" href="{% url 'administration:gradeUpdate' school_pk=grade.school_id pk=grade.id %}"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
+                <a class="btn btn-primary"
+                   href="{% url 'administration:gradeUpdate' school_pk=grade.school_id pk=grade.id %}"><span
+                        class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
             {% endif %}
         </div>
     </div>
@@ -143,8 +156,8 @@
         /**
          * This function makes the rows of the user-, student-, teacher- and admintable clickable
          */
-        jQuery(document).ready(function($) {
-            $(".clickable-row").click(function() {
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
                 window.document.location = $(this).data("href");
             });
         });
@@ -156,25 +169,26 @@
          * and removes rows that don't match the search criteria.
          */
         function allSearch() {
-          var input, filter, table, tr, td, i, td1, td2, fullname;
-          input = document.getElementById("search");
-          filter = input.value.toUpperCase();
-          table = document.getElementById("alltable");
-          tr = table.getElementsByTagName("tr");
+            var input, filter, table, tr, td, i, td1, td2, fullname;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("alltable");
+            tr = table.getElementsByTagName("tr");
 
-          for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            td1 = tr[i].getElementsByTagName("td")[1];
-            td2 = tr[i].getElementsByTagName("td")[2];
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
 
-            if (td) {
-              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-              } else {
-                tr[i].style.display = "none";
-              }
+                if (td) {
+                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    }
+                    else {
+                        tr[i].style.display = "none";
+                    }
+                }
             }
-          }
         }
 
         /**
@@ -182,24 +196,25 @@
          * and removes rows that don't match the search criteria.
          */
         function studentSearch() {
-          var input, filter, table, tr, td, i, td1, td2;
-          input = document.getElementById("search");
-          filter = input.value.toUpperCase();
-          table = document.getElementById("studenttable");
-          tr = table.getElementsByTagName("tr");
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("studenttable");
+            tr = table.getElementsByTagName("tr");
 
-          for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            td1 = tr[i].getElementsByTagName("td")[1];
-            td2 = tr[i].getElementsByTagName("td")[2];
-            if (td) {
-              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-              } else {
-                tr[i].style.display = "none";
-              }
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    }
+                    else {
+                        tr[i].style.display = "none";
+                    }
+                }
             }
-          }
         }
 
         /**
@@ -207,24 +222,24 @@
          * and removes rows that don't match the search criteria.
          */
         function teacherSearch() {
-          var input, filter, table, tr, td, i, td1, td2;
-          input = document.getElementById("search");
-          filter = input.value.toUpperCase();
-          table = document.getElementById("teachertable");
-          tr = table.getElementsByTagName("tr");
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("teachertable");
+            tr = table.getElementsByTagName("tr");
 
-          for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            td1 = tr[i].getElementsByTagName("td")[1];
-            td2 = tr[i].getElementsByTagName("td")[2];
-            if (td) {
-              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-              } else {
-                tr[i].style.display = "none";
-              }
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
             }
-          }
         }
     </script>
 
@@ -232,33 +247,34 @@
 
 
 {% block modal %}
-<!-- Modal -->
-<div class="modal fade" id="masseregModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Masseregistrering</h4>
-            </div>
-            <div class="modal-body">
-                Masseregistrering kan gjøres ved å laste opp Excel-filer med en liste personer som skal registreres.
-                Brukerne vil bli registrert som elever i klassen du laster opp filen fra. <br><br>
-                Excel-filen må være på formatet som er vist i bildet:
-                <img src="{% static "administration/images/masseregistrering.png" %}" width="100%"><br><br>
-                <b>A1:</b> Fornavn<br>
-                <b>B1:</b> Etternavn<br>
-                <b>C1:</b> Epost<br>
-                <b>D1:</b> Fødselsdag<br>
-                <b>E1:</b> Kjønn<br>
-                Disse fem feltene må inneholde nøyaktig denne teksten for at filen skal fungere.<br>
-                <br> <b>Epost:</b> Dette feltet er ikke påkrevd å fylle ut
-                <br> <b>Kjønn:</b> Oppgis med F for jente og M for gutt
-                <br> <b>Fødselsdag:</b> Oppgis i formatet dd.mm.åååå
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+    <!-- Modal -->
+    <div class="modal fade" id="masseregModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Masseregistrering</h4>
+                </div>
+                <div class="modal-body">
+                    Masseregistrering kan gjøres ved å laste opp Excel-filer med en liste personer som skal registreres.
+                    Brukerne vil bli registrert som elever i klassen du laster opp filen fra. <br><br>
+                    Excel-filen må være på formatet som er vist i bildet:
+                    <img src="{% static "administration/images/masseregistrering.png" %}" width="100%"><br><br>
+                    <b>A1:</b> Fornavn<br>
+                    <b>B1:</b> Etternavn<br>
+                    <b>C1:</b> Epost<br>
+                    <b>D1:</b> Fødselsdag<br>
+                    <b>E1:</b> Kjønn<br>
+                    Disse fem feltene må inneholde nøyaktig denne teksten for at filen skal fungere.<br>
+                    <br> <b>Epost:</b> Dette feltet er ikke påkrevd å fylle ut
+                    <br> <b>Kjønn:</b> Oppgis med F for jente og M for gutt
+                    <br> <b>Fødselsdag:</b> Oppgis i formatet dd.mm.åååå
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

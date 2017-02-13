@@ -1,23 +1,26 @@
 {% extends 'matistikk/base.html' %}
 
 {% block body %}
-{% if object_list %}
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h1>Brukeroversikt</h1>
-        <div class="col-xs-10">
-            <div class="input-group">
-                <div class="input-group-btn">
-                    <button class="btn btn-primary" type="button" aria-label="Søk">
-                        <span class="glyphicon glyphicon-search"></span>
-                    </button>
+    {% if object_list %}
+        <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>Brukeroversikt</h1>
+            <div class="col-xs-10">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary" type="button" aria-label="Søk">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>
+                    </div>
+                    <input type="text" class="form-control" id="search"
+                           onkeyup="userSearch(); studentSearch(); adminSearch(); teacherSearch();"
+                           placeholder="Søk etter bruker">
                 </div>
-            <input type="text" class="form-control" id="search" onkeyup="userSearch(); studentSearch(); adminSearch(); teacherSearch();" placeholder="Søk etter bruker">
             </div>
-        </div>
-        <a class="btn btn-primary" href="{% url 'administration:personCreate' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til bruker</a>
-    </div> <!-- #Panel-heading -->
-    <div class="panel-body">
+            <a class="btn btn-primary" href="{% url 'administration:personCreate' %}"><span
+                    class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til bruker</a>
+        </div> <!-- #Panel-heading -->
+        <div class="panel-body">
         <ul class="nav nav-tabs">
             <li class="nav active"><a href="#A" data-toggle="tab">Alle brukere</a></li>
             <li class="nav"><a href="#B" data-toggle="tab">Elever</a></li>
@@ -28,20 +31,23 @@
             <div class="tab-pane fade in active" id="A">
                 <table class="table table-hover table-striped table-responsive" id="usertable">
                     <thead>
-                        <tr>
-                            <th>Fornavn</th>
-                            <th>Etternavn</th>
-                            <th>Brukernavn</th>
-                            <th>Brukerinfo</th>
-                        </tr>
+                    <tr>
+                        <th>Fornavn</th>
+                        <th>Etternavn</th>
+                        <th>Brukernavn</th>
+                        <th>Brukerinfo</th>
+                    </tr>
                     </thead>
                     <tbody>
                     {% for person in object_list %}
-                        <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
-                                <td>{{ person.first_name }}</td>
-                                <td>{{ person.last_name }}</td>
-                                <td>{{ person.username }}</td>
-                                <td><a class="btn btn-primary" href="{% url 'administration:personDetail' person.username %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a></td>
+                        <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}"
+                            style="cursor: pointer">
+                            <td>{{ person.first_name }}</td>
+                            <td>{{ person.last_name }}</td>
+                            <td>{{ person.username }}</td>
+                            <td><a class="btn btn-primary"
+                                   href="{% url 'administration:personDetail' person.username %}"><span
+                                    class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a></td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -50,21 +56,26 @@
             <div class="tab-pane fade" id="B">
                 <table class="table table-hover table-striped table-responsive" id="studenttable">
                     <thead>
-                        <tr>
-                            <th>Fornavn</th>
-                            <th>Etternavn</th>
-                            <th>Brukernavn</th>
-                            <th>Brukerinfo</th>
-                        </tr>
+                    <tr>
+                        <th>Fornavn</th>
+                        <th>Etternavn</th>
+                        <th>Brukernavn</th>
+                        <th>Brukerinfo</th>
+                    </tr>
                     </thead>
                     <tbody>
                     {% for person in object_list %}
                         {% if not person.is_staff and not person.is_superuser %}
-                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
+                            <tr class="clickable-row"
+                                data-href="{% url 'administration:personDetail' person.username %}"
+                                style="cursor: pointer">
                                 <td>{{ person.first_name }}</td>
                                 <td>{{ person.last_name }}</td>
                                 <td>{{ person.username }}</td>
-                                <td><a class="btn btn-primary" href="{% url 'administration:personDetail' person.username %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a></td>
+                                <td><a class="btn btn-primary"
+                                       href="{% url 'administration:personDetail' person.username %}"><span
+                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a>
+                                </td>
                             </tr>
                         {% endif %}
                     {% endfor %}
@@ -74,21 +85,26 @@
             <div class="tab-pane fade" id="C">
                 <table class="table table-hover table-striped table-responsive" id="teachertable">
                     <thead>
-                        <tr>
-                            <th>Fornavn</th>
-                            <th>Etternavn</th>
-                            <th>Brukernavn</th>
-                            <th>Brukerinfo</th>
-                        </tr>
+                    <tr>
+                        <th>Fornavn</th>
+                        <th>Etternavn</th>
+                        <th>Brukernavn</th>
+                        <th>Brukerinfo</th>
+                    </tr>
                     </thead>
                     <tbody>
                     {% for person in object_list %}
                         {% if person.is_staff and not person.is_superuser %}
-                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
+                            <tr class="clickable-row"
+                                data-href="{% url 'administration:personDetail' person.username %}"
+                                style="cursor: pointer">
                                 <td>{{ person.first_name }}</td>
                                 <td>{{ person.last_name }}</td>
                                 <td>{{ person.username }}</td>
-                                <td><a class="btn btn-primary" href="{% url 'administration:personDetail' person.username %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a></td>
+                                <td><a class="btn btn-primary"
+                                       href="{% url 'administration:personDetail' person.username %}"><span
+                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a>
+                                </td>
                             </tr>
                         {% endif %}
                     {% endfor %}
@@ -98,21 +114,26 @@
             <div class="tab-pane fade" id="D">
                 <table class="table table-hover table-striped table-responsive" id="admintable">
                     <thead>
-                        <tr>
-                            <th>Fornavn</th>
-                            <th>Etternavn</th>
-                            <th>Brukernavn</th>
-                            <th>Brukerinfo</th>
-                        </tr>
+                    <tr>
+                        <th>Fornavn</th>
+                        <th>Etternavn</th>
+                        <th>Brukernavn</th>
+                        <th>Brukerinfo</th>
+                    </tr>
                     </thead>
                     <tbody>
                     {% for person in object_list %}
                         {% if person.is_superuser %}
-                            <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}" style="cursor: pointer">
+                            <tr class="clickable-row"
+                                data-href="{% url 'administration:personDetail' person.username %}"
+                                style="cursor: pointer">
                                 <td>{{ person.first_name }}</td>
                                 <td>{{ person.last_name }}</td>
                                 <td>{{ person.username }}</td>
-                                <td><a class="btn btn-primary" href="{% url 'administration:personDetail' person.username %}"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a></td>
+                                <td><a class="btn btn-primary"
+                                       href="{% url 'administration:personDetail' person.username %}"><span
+                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a>
+                                </td>
                             </tr>
                         {% endif %}
                     {% endfor %}
@@ -120,13 +141,15 @@
                 </table>
             </div>
         </div>
-        {% else %}
-            <h3>Ingen brukere er lagt til</h3>
-        {% endif %}
-    </div> <!-- #Panel-body -->
-    <div class="panel-footer">
-        <a class="btn btn-primary" href="{% url 'administration:personCreate' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til bruker</a>
-    </div> <!-- #Panel-footer -->
+    {% else %}
+        <h3>Ingen brukere er lagt til</h3>
+    {% endif %}
+</div> <!-- #Panel-body -->
+<div class="panel-footer">
+    <a class="btn btn-primary" href="{% url 'administration:personCreate' %}"><span class="glyphicon glyphicon-plus"
+                                                                                    aria-hidden="true"></span> Legg til
+        bruker</a>
+</div> <!-- #Panel-footer -->
 </div> <!-- #Panel -->
 
 
@@ -134,8 +157,8 @@
         /**
          * This function makes the rows of the user-, student-, teacher- and admintable clickable
          */
-        jQuery(document).ready(function($) {
-            $(".clickable-row").click(function() {
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
                 window.document.location = $(this).data("href");
             });
         });
@@ -148,25 +171,25 @@
          * and removes rows that don't match the search criteria.
          */
         function userSearch() {
-          var input, filter, table, tr, td, i, td1, td2, fullname;
-          input = document.getElementById("search");
-          filter = input.value.toUpperCase();
-          table = document.getElementById("usertable");
-          tr = table.getElementsByTagName("tr");
+            var input, filter, table, tr, td, i, td1, td2, fullname;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("usertable");
+            tr = table.getElementsByTagName("tr");
 
-          for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            td1 = tr[i].getElementsByTagName("td")[1];
-            td2 = tr[i].getElementsByTagName("td")[2];
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
 
-            if (td) {
-              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-              } else {
-                tr[i].style.display = "none";
-              }
+                if (td) {
+                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
             }
-          }
         }
 
         /**
@@ -174,24 +197,24 @@
          * and removes rows that don't match the search criteria.
          */
         function studentSearch() {
-          var input, filter, table, tr, td, i, td1, td2;
-          input = document.getElementById("search");
-          filter = input.value.toUpperCase();
-          table = document.getElementById("studenttable");
-          tr = table.getElementsByTagName("tr");
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("studenttable");
+            tr = table.getElementsByTagName("tr");
 
-          for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            td1 = tr[i].getElementsByTagName("td")[1];
-            td2 = tr[i].getElementsByTagName("td")[2];
-            if (td) {
-              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-              } else {
-                tr[i].style.display = "none";
-              }
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
             }
-          }
         }
 
         /**
@@ -199,24 +222,24 @@
          * and removes rows that don't match the search criteria.
          */
         function teacherSearch() {
-          var input, filter, table, tr, td, i, td1, td2;
-          input = document.getElementById("search");
-          filter = input.value.toUpperCase();
-          table = document.getElementById("teachertable");
-          tr = table.getElementsByTagName("tr");
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("teachertable");
+            tr = table.getElementsByTagName("tr");
 
-          for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            td1 = tr[i].getElementsByTagName("td")[1];
-            td2 = tr[i].getElementsByTagName("td")[2];
-            if (td) {
-              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-              } else {
-                tr[i].style.display = "none";
-              }
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
             }
-          }
         }
 
         /**
@@ -224,24 +247,24 @@
          * and removes rows that don't match the search criteria.
          */
         function adminSearch() {
-          var input, filter, table, tr, td, i, td1, td2;
-          input = document.getElementById("search");
-          filter = input.value.toUpperCase();
-          table = document.getElementById("admintable");
-          tr = table.getElementsByTagName("tr");
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("admintable");
+            tr = table.getElementsByTagName("tr");
 
-          for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            td1 = tr[i].getElementsByTagName("td")[1];
-            td2 = tr[i].getElementsByTagName("td")[2];
-            if (td) {
-              if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-              } else {
-                tr[i].style.display = "none";
-              }
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
             }
-          }
         }
     </script>
 {% endblock %}

@@ -1,8 +1,8 @@
 {% extends 'matistikk/base.html' %}
 
 {% block body %}
-{% if object_list %}
-    <div class="panel panel-info">
+    {% if object_list %}
+        <div class="panel panel-info">
         <div class="panel-heading">
             <h1>Skoler</h1>
             <div class="input-group">
@@ -11,67 +11,72 @@
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
                 </div>
-                <input type="text" class="form-control" id="search" onkeyup="schoolSearch()" placeholder="Søk etter skole">
+                <input type="text" class="form-control" id="search" onkeyup="schoolSearch()"
+                       placeholder="Søk etter skole">
             </div>
         </div>
         <div class="panel-body">
-            <table class="table table-hover table-striped table-responsive" id="schooltable">
-                <thead>
-                    <tr>
-                        <th>Navn</th>
-                        <th>Adresse</th>
-                        <th>Skoleinfo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for school in object_list %}
-                        <tr class="clickable-row" data-href="{% url 'administration:schoolDetail' school.id %}" style="cursor: pointer">
-                            <td>{{ school.school_name }}</td>
-                            <td>{{ school.school_address }}</td>
-                            <td><a class="btn btn-primary" href="{% url 'administration:schoolDetail' school.id %}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Se Skoleinfo</a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-                <h3>Ingen skoler er lagt til</h3>
-            {% endif %}
-        </div>
+        <table class="table table-hover table-striped table-responsive" id="schooltable">
+            <thead>
+            <tr>
+                <th>Navn</th>
+                <th>Adresse</th>
+                <th>Skoleinfo</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for school in object_list %}
+                <tr class="clickable-row" data-href="{% url 'administration:schoolDetail' school.id %}"
+                    style="cursor: pointer">
+                    <td>{{ school.school_name }}</td>
+                    <td>{{ school.school_address }}</td>
+                    <td><a class="btn btn-primary" href="{% url 'administration:schoolDetail' school.id %}"><span
+                            class="glyphicon glyphicon-home" aria-hidden="true"></span> Se Skoleinfo</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h3>Ingen skoler er lagt til</h3>
+    {% endif %}
+</div>
 
-    {% if request.user.is_superuser %}
-        <div class="panel-footer">
-            <a class="btn btn-primary" href="{% url 'administration:schoolCreate' %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til skole</a>
-        </div>
+{% if request.user.is_superuser %}
+    <div class="panel-footer">
+        <a class="btn btn-primary" href="{% url 'administration:schoolCreate' %}"><span class="glyphicon glyphicon-plus"
+                                                                                        aria-hidden="true"></span> Legg
+            til skole</a>
+    </div>
     </div>
 {% endif %}
 
     <script>
-        jQuery(document).ready(function($) {
-            $(".clickable-row").click(function() {
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
                 window.document.location = $(this).data("href");
             });
         });
     </script>
 
     <script>
-    function schoolSearch() {
-      var input, filter, table, tr, td, i, td1;
-      input = document.getElementById("search");
-      filter = input.value.toUpperCase();
-      table = document.getElementById("schooltable");
-      tr = table.getElementsByTagName("tr");
+        function schoolSearch() {
+            var input, filter, table, tr, td, i, td1;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("schooltable");
+            tr = table.getElementsByTagName("tr");
 
-      for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[0];
-        td1 = tr[i].getElementsByTagName("td")[1];
-        if (td) {
-          if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = "";
-          } else {
-            tr[i].style.display = "none";
-          }
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
         }
-      }
-    }
     </script>
 {% endblock %}
