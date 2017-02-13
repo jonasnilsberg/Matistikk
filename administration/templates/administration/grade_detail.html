@@ -50,8 +50,12 @@
                                 <td>{{ person.last_name }}</td>
                                 <td>{{ person.username }}</td>
                                 <td>
-                                    {% if person.is_staff %}
+                                    {% if person.role == 2 %}
                                         Lærer
+                                    {% elif person.role == 3 %}
+                                        Skoleadministrator
+                                    {% elif person.role == 4 %}
+                                        Administrator
                                     {% else %}
                                         Elev
                                     {% endif %}
@@ -73,7 +77,7 @@
                         </thead>
                         <tbody>
                         {% for person in persons %}
-                            {% if not person.is_staff %}
+                            {% if not person.role == 2 %}
                                 <tr class="clickable-row"
                                     data-href="{% url 'administration:personDetail' person.username %}"
                                     style="cursor: pointer">
@@ -97,7 +101,7 @@
                         </thead>
                         <tbody>
                         {% for person in persons %}
-                            {% if person.is_staff %}
+                            {% if person.role == 2 or person.role == 3 or person.role == 4 %}
                                 <tr class="clickable-row"
                                     data-href="{% url 'administration:personDetail' person.username %}"
                                     style="cursor: pointer">
@@ -111,7 +115,7 @@
                     </table>
                 </div>
             </div>
-            {% if request.user.is_superuser %}
+            {% if request.user.role == 4 or request.user.role == 3 %}
                 <a class="btn btn-primary"
                    href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"><span
                         class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Lærer</a>
@@ -144,7 +148,7 @@
             </ul>
         </div>
         <div class="panel-footer">
-            {% if request.user.is_superuser %}
+            {% if request.user.role == 4 or request.user.role == 3 %}
                 <a class="btn btn-primary"
                    href="{% url 'administration:gradeUpdate' school_pk=grade.school_id pk=grade.id %}"><span
                         class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
