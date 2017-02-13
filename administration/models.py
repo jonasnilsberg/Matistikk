@@ -15,6 +15,7 @@ class School(models.Model):
     :school_name: The name of the school
     :school_address: The address of the school
     """
+
     school_name = models.CharField(max_length=100, verbose_name='Navn')
     school_address = models.CharField(max_length=100, verbose_name='Adresse')
 
@@ -60,8 +61,15 @@ class Person(AbstractUser):
         ("M", "Gutt"),
         ("F", "Jente")
     ]
+    ROLE = [
+        (1, "Elev"),
+        (2, 'Lærer'),
+        (3, 'Skoleadministrator'),
+        (4, 'Administrator')
+    ]
     sex = models.CharField(max_length=1, choices=SEX, verbose_name="kjønn", null=True)
     date_of_birth = models.DateField(max_length=8, verbose_name='Fødselsdag', null=True)
+    role = models.IntegerField(choices=ROLE, default=1, verbose_name='brukertype')
 
     class Meta:
         ordering = ['username']
@@ -96,9 +104,12 @@ class Person(AbstractUser):
             counter += 1
         return username_correct
 
+
+
 #This is in order to have different names shown by the django-forms than variable-names
 Person._meta.get_field('username').verbose_name = 'brukernavn'
 Person._meta.get_field('first_name').verbose_name = 'fornavn'
 Person._meta.get_field('last_name').verbose_name = 'etternavn'
 Person._meta.get_field('is_staff').verbose_name = 'lærer'
 Person._meta.get_field('email').verbose_name = 'Epost'
+

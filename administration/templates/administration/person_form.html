@@ -21,11 +21,11 @@
                         {% bootstrap_field form.email %}
                         {% bootstrap_field form.date_of_birth placeholder="dd.mm.yyyy" %}
                         {% bootstrap_field form.sex %}
+                        {% bootstrap_field form.role %}
                         {% if request.user.is_superuser %}
                             {% bootstrap_field form.grades %}
                         {% endif %}
                         {% if request.user.is_superuser %}
-                            {% bootstrap_field form.is_staff %}
                             {% bootstrap_field form.is_active %}
                         {% endif %}
                         {% if request.user.is_staff and request.user.grade_id == person.grade_id and not person.is_staff and not request.user.is_superuser %}
