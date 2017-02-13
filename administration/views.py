@@ -57,6 +57,13 @@ class AdministratorCheck:
         return False
 
 
+class TeacherCheck:
+    def test_func(self, user):
+        if self.request.user.role == 2 or self.request.user.role == 3:
+            return True
+        return AdministratorCheck
+
+
 class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
     def test_func(self, user):
         return self.request.user.username == self.kwargs.get('slug')
@@ -129,7 +136,7 @@ class PersonDetailView(GradeCheck, views.UserPassesTestMixin, generic.DetailView
     slug_field = "username"
 
 
-class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
+class PersonCreateView(TeacherCheck, views.UserPassesTestMixin,  generic.CreateView):
     """
         Class to create a Person object
 
@@ -179,8 +186,14 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
         person.save()
         return super(PersonCreateView, self).form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super(PersonCreateView, self).get_context_data(**kwargs)
+        context['schools'] = School.objects.all()
+        context['gradesInfo'] = Grade.objects.all()
+        return context
 
-class PersonUpdateView(gradecheck, views.UserPassesTestMixin, generic.UpdateView):
+
+class PersonUpdateView(GradeCheck, views.UserPassesTestMixin, generic.UpdateView):
     """
         Class to update a Person object based on the username
 
@@ -198,7 +211,7 @@ class PersonUpdateView(gradecheck, views.UserPassesTestMixin, generic.UpdateView
     slug_field = "username"
 
 
-class SchoolListView(views.SuperuserRequiredMixin, generic.ListView):
+class SchoolListView(AdministratorCheck, views.UserPassesTestMixin, generic.ListView):
     """
         Class to list out all School objects
 
@@ -406,7 +419,7 @@ class GradeUpdateView(AdministratorCheck, views.UserPassesTestMixin, generic.Upd
     fields = ['grade_name', 'tests']
 
 
-class GradeListView(views.StaffuserRequiredMixin, generic.ListView):
+class GradeListView(TeacherCheck, views.UserPassesTestMixin, generic.ListView):
     login_url = reverse_lazy('login')
     template_name = 'administration/grade_list.html'
 

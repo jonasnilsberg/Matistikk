@@ -25,6 +25,7 @@
                         {% if request.user.role == 4 %}
                             {% bootstrap_field form.grades %}
                         {% endif %}
+                        <input >
                         {% if request.user.role == 4 %}
                             {% bootstrap_field form.is_active %}
                         {% endif %}
@@ -37,6 +38,12 @@
                             </button>
                         {% endbuttons %}
                     </form>
+                {% for school in schools %}
+                    {{ school.school_address }}
+                {% endfor %}
+                {% for grade in gradesInfo %}
+                    {{ grade.grade_name }}
+                {% endfor %}
                 </div>
             </div>
         </div>
