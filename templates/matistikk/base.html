@@ -70,9 +70,6 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
                     <li><a href="{% url 'administration:myPage' request.user.username %}">Min Side</a></li>
-                    <li><a href="createtestview">Lag Øvingstest</a></li>
-                    <li><a href="statisticview">Statistikk</a></li>
-                    <li><a href="edittests">Rediger mine tester</a>
                     <li><a href="{% url 'administration:gradeList' %}">Mine klasser</a></li>
                     <li><a href="aboutview">Om</a></li>
                 </ul>
