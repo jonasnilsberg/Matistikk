@@ -23,7 +23,7 @@ import re
 # Create your views here.
 
 
-class gradecheck():
+class gradecheck:
     def test_func(self, user):
         if self.request.user.is_superuser:
             return True
@@ -33,6 +33,27 @@ class gradecheck():
             for grade_student in grades_student:
                 if grade_teacher == grade_student:
                     return True
+        return False
+
+
+class GradeCheck:
+    def test_func(self, user):
+        if self.request.user.role == 4:
+            return True
+        if self.request.user.role == 3 or self.request.user.role == 2 :
+            grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
+            grades_student = Grade.objects.filter(person__username=self.kwargs.get('slug'))
+            for grade_teacher in grades_teacher:
+                for grade_student in grades_student:
+                    if grade_teacher == grade_student:
+                        return True
+        return False
+
+
+class AdministratorCheck:
+    def test_func(self, user):
+        if self.request.user.role == 4:
+            return True
         return False
 
 
@@ -66,7 +87,7 @@ class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
         return context
 
 
-class PersonListView(views.SuperuserRequiredMixin, views.AjaxResponseMixin, generic.ListView):
+class PersonListView(AdministratorCheck, views.UserPassesTestMixin, generic.ListView):
     """
         Class to list all the persons
 
@@ -93,7 +114,7 @@ class PersonListView(views.SuperuserRequiredMixin, views.AjaxResponseMixin, gene
             return Person.objects.all()
 
 
-class PersonDetailView(gradecheck, views.UserPassesTestMixin , generic.DetailView):
+class PersonDetailView(GradeCheck, views.UserPassesTestMixin, generic.DetailView):
     """
         Class to get a specific Person based on the username
 
@@ -193,7 +214,7 @@ class SchoolListView(views.SuperuserRequiredMixin, generic.ListView):
     paginate_by = 20
 
 
-class SchoolDetailView(views.SuperuserRequiredMixin, generic.DetailView):
+class SchoolDetailView(AdministratorCheck, views.UserPassesTestMixin, generic.DetailView):
     """
         Class to get a specific Person based on the username
 
@@ -212,7 +233,7 @@ class SchoolDetailView(views.SuperuserRequiredMixin, generic.DetailView):
         return context
 
 
-class SchoolCreateView(views.SuperuserRequiredMixin, generic.CreateView):
+class SchoolCreateView(AdministratorCheck, views.UserPassesTestMixin, generic.CreateView):
     """
         Class to create a School object
 
@@ -230,7 +251,7 @@ class SchoolCreateView(views.SuperuserRequiredMixin, generic.CreateView):
     success_url = reverse_lazy('administration:schoolList')
 
 
-class SchoolUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
+class SchoolUpdateView(AdministratorCheck, views.UserPassesTestMixin, generic.UpdateView):
     """
         Class to update a School object based on the school.id
 
@@ -326,7 +347,7 @@ class FileUploadView(generic.FormView):
                                                     'pk': self.kwargs.get('pk')})
 
 
-class GradeDetailView(views.UserPassesTestMixin, View):
+class GradeDetailView(AdministratorCheck, views.UserPassesTestMixin, View):
     def test_func(self, user):
         if self.request.user.is_superuser:
             return True
@@ -344,7 +365,7 @@ class GradeDetailView(views.UserPassesTestMixin, View):
         return view(request, *args, **kwargs)
 
 
-class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):
+class GradeCreateView(AdministratorCheck, views.UserPassesTestMixin, generic.CreateView):
     """
         Class to create a Grade object
 
@@ -369,7 +390,7 @@ class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):
         return super(GradeCreateView, self).form_valid(form)
 
 
-class GradeUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
+class GradeUpdateView(AdministratorCheck, views.UserPassesTestMixin, generic.UpdateView):
     """
         Class to update a Grade object based on the id
 
@@ -387,7 +408,7 @@ class GradeUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
 
 class GradeListView(views.StaffuserRequiredMixin, generic.ListView):
     login_url = reverse_lazy('login')
-    template_name = 'administration/gradeList.html'
+    template_name = 'administration/grade_list.html'
 
     def get_queryset(self):
         return Grade.objects.filter(person__username=self.request.user.username)
