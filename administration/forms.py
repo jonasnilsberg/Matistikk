@@ -25,6 +25,15 @@ class FileUpload(forms.Form):
         self.fields['file'].help_text = 'Aksepterte filformat: .xls, .xlsx, .ods, .csv'
 
 
+class ChangePassword(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+    password2 = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = Person
+        fields = ['password']
+        
+        
 class SchoolForm(forms.ModelForm):
     class Meta:
         model = School

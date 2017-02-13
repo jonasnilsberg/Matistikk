@@ -14,7 +14,7 @@ import logging
 from django.core import serializers
 from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
-from .forms import PersonForm, FileUpload, SchoolForm
+from .forms import PersonForm, FileUpload, ChangePassword, SchoolForm
 
 import datetime
 from django.utils.safestring import mark_safe
@@ -28,6 +28,7 @@ class AdministratorCheck:
         if self.request.user.role == 4:
             return True
         return False
+
 
 
 class SchoolCheck:
@@ -77,7 +78,6 @@ class TeacherCheck:
             return True
         return False
 
-
 class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
     def test_func(self, user):
         return self.request.user.username == self.kwargs.get('slug')
@@ -108,7 +108,7 @@ class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
         return context
 
 
-class PersonListView(AdministratorCheck, views.UserPassesTestMixin, generic.ListView):
+class PersonListView(views.SuperuserRequiredMixin, views.AjaxResponseMixin, generic.ListView):
     """
         Class to list all the persons
 
@@ -124,7 +124,7 @@ class PersonListView(AdministratorCheck, views.UserPassesTestMixin, generic.List
     model = Person
 
 
-class PersonDetailView(GradeCheck, views.UserPassesTestMixin, generic.DetailView):
+class PersonDisplayView(gradecheck, views.UserPassesTestMixin , generic.DetailView):
     """
         Class to get a specific Person based on the username
 
@@ -137,6 +137,69 @@ class PersonDetailView(GradeCheck, views.UserPassesTestMixin, generic.DetailView
     model = Person
     template_name = 'administration/person_detail.html'
     slug_field = "username"
+
+    def get_context_data(self, **kwargs):
+        context = super(PersonDisplayView, self).get_context_data(**kwargs)
+        context['form'] = ChangePassword()
+        return context
+
+
+class PersonDetailView(gradecheck, views.UserPassesTestMixin, View):
+    """
+        View that shows information about a Person object based on the username
+
+        :param gradecheck: Inherits views.StaffuserRequiredMixin that checks if the user is logged in as staff
+        :param generic.DetailView: Inherits generic.DetailView that makes a page representing a specific object.
+        :return: Person object
+    """
+
+    def get(self, request, *args, **kwargs):
+        """
+        Redirects to the PersonDisplayView
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        view = PersonDisplayView.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """
+        redirects to ChangePasswordView
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        view = ChangePasswordView.as_view()
+        return view(request, *args, **kwargs)
+
+
+
+class ChangePasswordView(views.StaffuserRequiredMixin, generic.FormView):
+    """
+        View that handles passwordchanging for a different user than the one that is logged in.
+    """
+    template_name = 'administration/person_detail.html'
+    form_class = ChangePassword
+    model = Person
+    slug_field = 'username'
+
+    def get_success_url(self):
+        return reverse('administration:personDetail', kwargs={'slug': self.kwargs.get('slug')})
+
+    def form_valid(self, form):
+        pw = form.cleaned_data['password']
+        pw2 = form.cleaned_data['password2']
+        if pw == pw2:
+            person = Person.objects.get(username=self.kwargs.get('slug'))
+            person.set_password(pw)
+            person.save()
+        else:
+            messages.error(self.request,'Feltene var ikke like')
+        return super(ChangePasswordView, self).form_valid(form)
+
 
 
 class PersonCreateView(SchoolCheck, views.UserPassesTestMixin,  generic.CreateView):
@@ -186,14 +249,8 @@ class PersonCreateView(SchoolCheck, views.UserPassesTestMixin,  generic.CreateVi
         person.save()
         return super(PersonCreateView, self).form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super(PersonCreateView, self).get_context_data(**kwargs)
-        context['schools'] = School.objects.all()
-        context['gradesInfo'] = Grade.objects.all()
-        return context
 
-
-class PersonUpdateView(GradeCheck, views.UserPassesTestMixin, generic.UpdateView):
+class PersonUpdateView(gradecheck, views.UserPassesTestMixin, generic.UpdateView):
     """
         Class to update a Person object based on the username
 
@@ -215,7 +272,6 @@ class PersonUpdateView(GradeCheck, views.UserPassesTestMixin, generic.UpdateView
         context['schools'] = School.objects.all()
         context['gradesInfo'] = Grade.objects.all()
         return context
-
 
 
 class SchoolListView(SchoolAdministratorCheck, views.UserPassesTestMixin, generic.ListView):
@@ -241,6 +297,7 @@ class SchoolListView(SchoolAdministratorCheck, views.UserPassesTestMixin, generi
         return super(SchoolListView, self).get_context_data(**kwargs)
 
 
+
 class SchoolDetailView(SchoolCheck, views.UserPassesTestMixin, generic.DetailView):
     """
         Class to get a specific Person based on the username
@@ -260,7 +317,7 @@ class SchoolDetailView(SchoolCheck, views.UserPassesTestMixin, generic.DetailVie
         return context
 
 
-class SchoolCreateView(AdministratorCheck, views.UserPassesTestMixin, generic.CreateView):
+class SchoolCreateView(views.SuperuserRequiredMixin, generic.CreateView):
     """
         Class to create a School object
 
@@ -275,6 +332,8 @@ class SchoolCreateView(AdministratorCheck, views.UserPassesTestMixin, generic.Cr
     template_name = 'administration/school_form.html'
     form_class = SchoolForm
     success_url = reverse_lazy('administration:schoolList')
+
+
 
 
 class SchoolUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateView):
@@ -408,6 +467,7 @@ class GradeCreateView(SchoolCheck, views.UserPassesTestMixin, generic.CreateView
         return super(GradeCreateView, self).form_valid(form)
 
 
+
 class GradeUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateView):
     """
         Class to update a Grade object based on the id
@@ -424,10 +484,9 @@ class GradeUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateView
     fields = ['grade_name', 'tests']
 
 
-class GradeListView(TeacherCheck, views.UserPassesTestMixin, generic.ListView):
+class GradeListView(views.StaffuserRequiredMixin, generic.ListView):
     login_url = reverse_lazy('login')
-    template_name = 'administration/grade_list.html'
+    template_name = 'administration/gradeList.html'
 
     def get_queryset(self):
         return Grade.objects.filter(person__username=self.request.user.username)
-
