@@ -18,12 +18,25 @@ from .forms import PersonForm, FileUpload
 
 import datetime
 from django.utils.safestring import mark_safe
-
+import re
 
 # Create your views here.
 
 
-class MyPageDetailView(generic.FormView):
+class gradecheck():
+    def test_func(self, user):
+        if self.request.user.is_superuser:
+            return True
+        grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
+        grades_student = Grade.objects.filter(person__username=self.kwargs.get('slug'))
+        for grade_teacher in grades_teacher:
+            for grade_student in grades_student:
+                if grade_teacher == grade_student:
+                    return True
+        return False
+
+
+class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
     def test_func(self, user):
         return self.request.user.username == self.kwargs.get('slug')
 
@@ -53,7 +66,7 @@ class MyPageDetailView(generic.FormView):
         return context
 
 
-class PersonListView(views.StaffuserRequiredMixin, views.AjaxResponseMixin, generic.ListView):
+class PersonListView(views.SuperuserRequiredMixin, views.AjaxResponseMixin, generic.ListView):
     """
         Class to list all the persons
 
@@ -80,7 +93,7 @@ class PersonListView(views.StaffuserRequiredMixin, views.AjaxResponseMixin, gene
             return Person.objects.all()
 
 
-class PersonDetailView(views.StaffuserRequiredMixin, generic.DetailView):
+class PersonDetailView(gradecheck, views.UserPassesTestMixin , generic.DetailView):
     """
         Class to get a specific Person based on the username
 
@@ -133,7 +146,12 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
             :param form: References to the model form.
             :return: The HttpResponse set in success_url.
         """
+
         person = form.save(commit=False)
+        grades = form.cleaned_data['grades']
+        # if not self.request.user.is_superuser and not grades:
+          #  messages.error(self.request, 'Du har ikke rettighet til å legge til en bruker uten en klasse')
+           #    x return self.form_invalid(self)
         username = Person.createusername(person)
         person.username = username
         person.set_password('ntnu123')
@@ -141,7 +159,7 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
         return super(PersonCreateView, self).form_valid(form)
 
 
-class PersonUpdateView(views.StaffuserRequiredMixin, generic.UpdateView):
+class PersonUpdateView(gradecheck, views.UserPassesTestMixin, generic.UpdateView):
     """
         Class to update a Person object based on the username
 
@@ -159,7 +177,7 @@ class PersonUpdateView(views.StaffuserRequiredMixin, generic.UpdateView):
     slug_field = "username"
 
 
-class SchoolListView(views.StaffuserRequiredMixin, generic.ListView):
+class SchoolListView(views.SuperuserRequiredMixin, generic.ListView):
     """
         Class to list out all School objects
 
@@ -175,7 +193,7 @@ class SchoolListView(views.StaffuserRequiredMixin, generic.ListView):
     paginate_by = 20
 
 
-class SchoolDetailView(views.StaffuserRequiredMixin, generic.DetailView):
+class SchoolDetailView(views.SuperuserRequiredMixin, generic.DetailView):
     """
         Class to get a specific Person based on the username
 
@@ -229,7 +247,7 @@ class SchoolUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
     fields = ['school_name', 'school_address']
 
 
-class GradeDisplay(views.StaffuserRequiredMixin, generic.DetailView):
+class GradeDisplay(generic.DetailView):
     """
         Class to get a specific Grade based on the grade.id
 
@@ -271,17 +289,30 @@ class FileUploadView(generic.FormView):
             try:
                 person = Person(first_name=person_obj[0], last_name=person_obj[1],
                                 email=person_obj[2], sex=person_obj[4])
-                person.date_of_birth = datetime.datetime.strptime(person_obj[3], "%d.%m.%Y").strftime("%Y-%m-%d")
+                p_date = re.match(r'(\d{4}[/-]\d{1,2}[/-]\d{1,2})', str(person_obj[3]))
+                if p_date:
+                    person.date_of_birth = p_date.group(1)
+                else:
+                    person.date_of_birth = datetime.datetime.strptime(person_obj[3], "%d.%m.%Y").strftime("%Y-%m-%d")
                 username = Person.createusername(person)
                 person.username = username
                 person.set_password('ntnu123')
                 persons.append(person)
                 line_number += 1
             except Exception:
-                message = mark_safe('Noe gikk galt med ' + person_obj[0] + " " + person_obj[1] + ' på linje '+
-                               str(line_number) + "." + "<br /><br />" "Ingen brukere ble lagt til.")
-                messages.error(self.request, message)
-                return super().post(request, *args, **kwargs)
+                try:
+                    datetime.datetime.strptime(person_obj[3], '%d.%m-%Y')
+                    message = mark_safe('Noe gikk galt med ' + person_obj[0] + " " + person_obj[1] + ' på linje '+
+                                   str(line_number) + "." + "<br /><br />" "Ingen brukere ble lagt til.")
+                    messages.error(self.request, message)
+                    return super().post(request, *args, **kwargs)
+                except Exception:
+                    message = mark_safe('Noe gikk galt med datoformatet. '
+                                        'Fødselsdag må være på dd.mm.yyyy eller yyyy-mm-dd'
+                                        "<br /><br />" "Ingen brukere ble lagt til.")
+                    messages.error(self.request, message)
+                    return super().post(request, *args, **kwargs)
+
         Person.objects.bulk_create(persons)
         grade = Grade.objects.get(id=self.kwargs.get('pk'))
         for person in persons:
@@ -295,7 +326,13 @@ class FileUploadView(generic.FormView):
                                                     'pk': self.kwargs.get('pk')})
 
 
-class GradeDetailView(View):
+class GradeDetailView(views.UserPassesTestMixin, View):
+    def test_func(self, user):
+        for grade in self.request.user.grades.all():
+                if str(grade.id) == str(self.kwargs.get('pk')):
+                    return True
+        return False
+
     def get(self, request, *args, **kwargs):
         view = GradeDisplay.as_view()
         return view(request, *args, **kwargs)
@@ -346,5 +383,10 @@ class GradeUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
     fields = ['grade_name', 'tests']
 
 
+class GradeListView(views.StaffuserRequiredMixin, generic.ListView):
+    login_url = reverse_lazy('login')
+    template_name = 'administration/gradeList.html'
 
+    def get_queryset(self):
+        return Grade.objects.filter(person__username=self.request.user.username)
 

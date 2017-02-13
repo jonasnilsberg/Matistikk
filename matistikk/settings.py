@@ -131,8 +131,6 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'administration.Person'
 
-DATE_INPUT_FORMATS = ('%d-%m-%Y','%Y-%m-%d')
-
 # File upload with django-excel
 FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
                         "django_excel.TemporaryExcelFileUploadHandler")

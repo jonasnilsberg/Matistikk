@@ -103,7 +103,9 @@
                     </table>
                 </div>
             </div>
-            <a class="btn btn-primary" href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Lærer</a>
+            {% if request.user.is_superuser %}
+                <a class="btn btn-primary" href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Lærer</a>
+            {% endif %}
             <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Elev</a>
             <hr>
             <form action="" method="post" enctype="multipart/form-data">
