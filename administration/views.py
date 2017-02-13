@@ -14,7 +14,7 @@ import logging
 from django.core import serializers
 from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
-from .forms import PersonForm, FileUpload, ChangePassword
+from .forms import PersonForm, FileUpload, ChangePassword, SchoolForm
 
 import datetime
 from django.utils.safestring import mark_safe
@@ -23,18 +23,60 @@ import re
 # Create your views here.
 
 
-class gradecheck():
+class AdministratorCheck:
     def test_func(self, user):
-        if self.request.user.is_superuser:
+        if self.request.user.role == 4:
             return True
-        grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
-        grades_student = Grade.objects.filter(person__username=self.kwargs.get('slug'))
-        for grade_teacher in grades_teacher:
-            for grade_student in grades_student:
-                if grade_teacher == grade_student:
-                    return True
         return False
 
+
+
+class SchoolCheck:
+    def test_func(self, user):
+        if self.request.user.role == 4:
+            return True
+        elif self.request.user.role == 3:
+            school = School.objects.get(id=self.kwargs.get('pk'))
+            if self.request.user.id == school.school_administrator.id or self.request.user.role == 4:
+                return True
+        elif self.request.user.role == 2:
+            grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
+            grades = Grade.objects.filter(id=self.kwargs.get('pk'))
+            for grade_teacher in grades_teacher:
+                for grade in grades:
+                    if grade_teacher == grade:
+                        return True
+        return False
+
+
+class SchoolAdministratorCheck:
+    def test_func(self, user):
+        if self.request.user.role == 3 or self.request.user.role == 4:
+            return True
+        return False
+
+
+class GradeCheck:
+    def test_func(self, user):
+        if self.request.user.role == 4:
+            return True
+        if self.request.user.role == 3 or self.request.user.role == 2:
+            grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
+            print(grades_teacher)
+            grades_student = Grade.objects.filter(person__username=self.kwargs.get('slug'))
+            print(grades_student)
+            for grade_teacher in grades_teacher:
+                for grade_student in grades_student:
+                    if grade_teacher == grade_student:
+                        return True
+        return False
+
+
+class TeacherCheck:
+    def test_func(self, user):
+        if self.request.user.role == 2 or self.request.user.role == 3 or self.request.user.role == 4:
+            return True
+        return False
 
 class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
     def test_func(self, user):
@@ -79,18 +121,7 @@ class PersonListView(views.SuperuserRequiredMixin, views.AjaxResponseMixin, gene
 
     login_url = reverse_lazy('login')
     template_name = 'administration/person_list.html'
-
-    def get_queryset(self):
-        """
-           Function that Overrides the default queryset from generic.ListView to get the proper Person object list.
-
-           :param self: References to the class itself and all it's variables
-           :return: List of person objects
-        """
-        if not self.request.user.is_superuser:
-            return Person.objects.filter(is_staff=False, is_superuser=False)
-        else:
-            return Person.objects.all()
+    model = Person
 
 
 class PersonDisplayView(gradecheck, views.UserPassesTestMixin , generic.DetailView):
@@ -145,6 +176,7 @@ class PersonDetailView(gradecheck, views.UserPassesTestMixin, View):
         return view(request, *args, **kwargs)
 
 
+
 class ChangePasswordView(views.StaffuserRequiredMixin, generic.FormView):
     """
         View that handles passwordchanging for a different user than the one that is logged in.
@@ -169,7 +201,8 @@ class ChangePasswordView(views.StaffuserRequiredMixin, generic.FormView):
         return super(ChangePasswordView, self).form_valid(form)
 
 
-class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
+
+class PersonCreateView(SchoolCheck, views.UserPassesTestMixin,  generic.CreateView):
     """
         Class to create a Person object
 
@@ -179,7 +212,7 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
     """
 
     login_url = reverse_lazy('login')
-    is_staff = False
+    role = 1
     template_name = 'administration/person_form.html'
     form_class = PersonForm
     success_url = reverse_lazy('administration:personList')
@@ -196,7 +229,8 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
             self.success_url = reverse_lazy('administration:gradeDetail',
                                             kwargs={'school_pk': self.kwargs.get('school_pk'),
                                                     'pk': self.kwargs.get('pk')})
-            return {'grade': self.kwargs.get('pk'), 'is_staff': self.is_staff}
+            print(self.kwargs.get('pk'))
+            return {'grades': self.kwargs.get('pk'), 'role': self.role}
 
     def form_valid(self, form):
         """
@@ -209,10 +243,6 @@ class PersonCreateView(views.StaffuserRequiredMixin,  generic.CreateView):
         """
 
         person = form.save(commit=False)
-        grades = form.cleaned_data['grades']
-        # if not self.request.user.is_superuser and not grades:
-          #  messages.error(self.request, 'Du har ikke rettighet til å legge til en bruker uten en klasse')
-           #    x return self.form_invalid(self)
         username = Person.createusername(person)
         person.username = username
         person.set_password('ntnu123')
@@ -237,8 +267,14 @@ class PersonUpdateView(gradecheck, views.UserPassesTestMixin, generic.UpdateView
     model = Person
     slug_field = "username"
 
+    def get_context_data(self, **kwargs):
+        context = super(PersonUpdateView, self).get_context_data(**kwargs)
+        context['schools'] = School.objects.all()
+        context['gradesInfo'] = Grade.objects.all()
+        return context
 
-class SchoolListView(views.SuperuserRequiredMixin, generic.ListView):
+
+class SchoolListView(SchoolAdministratorCheck, views.UserPassesTestMixin, generic.ListView):
     """
         Class to list out all School objects
 
@@ -253,8 +289,16 @@ class SchoolListView(views.SuperuserRequiredMixin, generic.ListView):
     template_name = 'administration/school_list.html'
     paginate_by = 20
 
+    def get_context_data(self, **kwargs):
+        if self.request.user.role == 3:
+            context = super(SchoolListView, self).get_context_data(**kwargs)
+            context['object_list'] = School.objects.filter(school_administrator=self.request.user.id)
+            return context
+        return super(SchoolListView, self).get_context_data(**kwargs)
 
-class SchoolDetailView(views.SuperuserRequiredMixin, generic.DetailView):
+
+
+class SchoolDetailView(SchoolCheck, views.UserPassesTestMixin, generic.DetailView):
     """
         Class to get a specific Person based on the username
 
@@ -286,12 +330,13 @@ class SchoolCreateView(views.SuperuserRequiredMixin, generic.CreateView):
 
     login_url = reverse_lazy('login')
     template_name = 'administration/school_form.html'
-    model = School
-    fields = ['school_name', 'school_address']
+    form_class = SchoolForm
     success_url = reverse_lazy('administration:schoolList')
 
 
-class SchoolUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
+
+
+class SchoolUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateView):
     """
         Class to update a School object based on the school.id
 
@@ -387,15 +432,7 @@ class FileUploadView(generic.FormView):
                                                     'pk': self.kwargs.get('pk')})
 
 
-class GradeDetailView(views.UserPassesTestMixin, View):
-    def test_func(self, user):
-        if self.request.user.is_superuser:
-            return True
-        for grade in self.request.user.grades.all():
-                if str(grade.id) == str(self.kwargs.get('pk')):
-                    return True
-        return False
-
+class GradeDetailView(SchoolCheck, views.UserPassesTestMixin, View):
     def get(self, request, *args, **kwargs):
         view = GradeDisplay.as_view()
         return view(request, *args, **kwargs)
@@ -405,7 +442,7 @@ class GradeDetailView(views.UserPassesTestMixin, View):
         return view(request, *args, **kwargs)
 
 
-class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):
+class GradeCreateView(SchoolCheck, views.UserPassesTestMixin, generic.CreateView):
     """
         Class to create a Grade object
 
@@ -430,7 +467,8 @@ class GradeCreateView(views.SuperuserRequiredMixin, generic.CreateView):
         return super(GradeCreateView, self).form_valid(form)
 
 
-class GradeUpdateView(views.SuperuserRequiredMixin, generic.UpdateView):
+
+class GradeUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateView):
     """
         Class to update a Grade object based on the id
 
