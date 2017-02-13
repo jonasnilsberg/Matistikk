@@ -1,4 +1,8 @@
 {% extends 'matistikk/base.html' %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
 
 {% block body %}
     <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left"
@@ -38,10 +42,51 @@
                     <label>Sist innlogget:</label>
                     {{ person.last_login }}</li>
             </ul>
+        {% bootstrap_messages %}
         </div>
         <div class="panel-footer">
-            <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}"><span
+            <a class="btn btn-primary" href="{% url 'administration:personDetail' person.username %}"><span
                     class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater bruker</a>
+            {% for grade in request.user.grades.all %}
+                {% for grad in person.grades.all %}
+                    {% if grade == grade %}
+            <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal'>
+              <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block modal %}
+    <!-- Modal -->
+    <div class="modal fade" id="passwordChangeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Endre Passord</h4>
+                </div>
+                <div class="modal-body">
+                  <form class="form-horizontal" action="" method="post" autocomplete="off">
+                      {% csrf_token %}
+                      {% bootstrap_label 'Nytt Passord' %}
+                      {% bootstrap_field form.password placeholder='Nytt Passord' show_label=False %}
+                      {% bootstrap_label 'Gjenta Passord' %}
+                      {% bootstrap_field form.password2 placeholder='Gjenta Passord' show_label=False%}
+                         {% buttons %}
+                    <button type="submit" class="btn btn-success form-control">
+                        {% bootstrap_icon "check" %} Oppdater passord
+                    </button>
+                {% endbuttons %}
+                  </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
