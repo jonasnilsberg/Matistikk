@@ -328,6 +328,8 @@ class FileUploadView(generic.FormView):
 
 class GradeDetailView(views.UserPassesTestMixin, View):
     def test_func(self, user):
+        if self.request.user.is_superuser:
+            return True
         for grade in self.request.user.grades.all():
                 if str(grade.id) == str(self.kwargs.get('pk')):
                     return True
