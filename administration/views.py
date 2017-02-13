@@ -32,9 +32,12 @@ class AdministratorCheck:
 
 class SchoolCheck:
     def test_func(self, user):
-        school = School.objects.get(id=self.kwargs.get('pk'))
-        if self.request.user.id == school.school_administrator.id or self.request.user.role == 4:
+        if self.request.user.role == 4:
             return True
+        elif self.request.user.role == 3:
+            school = School.objects.get(id=self.kwargs.get('pk'))
+            if self.request.user.id == school.school_administrator.id or self.request.user.role == 4:
+                return True
         elif self.request.user.role == 2:
             grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
             grades = Grade.objects.filter(id=self.kwargs.get('pk'))
@@ -164,7 +167,7 @@ class PersonCreateView(SchoolCheck, views.UserPassesTestMixin,  generic.CreateVi
                                             kwargs={'school_pk': self.kwargs.get('school_pk'),
                                                     'pk': self.kwargs.get('pk')})
             print(self.kwargs.get('pk'))
-            return {'grade': self.kwargs.get('pk'), 'role': self.role}
+            return {'grades': self.kwargs.get('pk'), 'role': self.role}
 
     def form_valid(self, form):
         """
@@ -206,6 +209,13 @@ class PersonUpdateView(GradeCheck, views.UserPassesTestMixin, generic.UpdateView
     form_class = PersonForm
     model = Person
     slug_field = "username"
+
+    def get_context_data(self, **kwargs):
+        context = super(PersonUpdateView, self).get_context_data(**kwargs)
+        context['schools'] = School.objects.all()
+        context['gradesInfo'] = Grade.objects.all()
+        return context
+
 
 
 class SchoolListView(SchoolAdministratorCheck, views.UserPassesTestMixin, generic.ListView):
