@@ -124,7 +124,7 @@ class PersonListView(views.SuperuserRequiredMixin, views.AjaxResponseMixin, gene
     model = Person
 
 
-class PersonDisplayView(gradecheck, views.UserPassesTestMixin , generic.DetailView):
+class PersonDisplayView(generic.DetailView):
     """
         Class to get a specific Person based on the username
 
@@ -144,7 +144,7 @@ class PersonDisplayView(gradecheck, views.UserPassesTestMixin , generic.DetailVi
         return context
 
 
-class PersonDetailView(gradecheck, views.UserPassesTestMixin, View):
+class PersonDetailView(View):
     """
         View that shows information about a Person object based on the username
 
@@ -176,8 +176,7 @@ class PersonDetailView(gradecheck, views.UserPassesTestMixin, View):
         return view(request, *args, **kwargs)
 
 
-
-class ChangePasswordView(views.StaffuserRequiredMixin, generic.FormView):
+class ChangePasswordView(generic.FormView):
     """
         View that handles passwordchanging for a different user than the one that is logged in.
     """
@@ -199,7 +198,6 @@ class ChangePasswordView(views.StaffuserRequiredMixin, generic.FormView):
         else:
             messages.error(self.request,'Feltene var ikke like')
         return super(ChangePasswordView, self).form_valid(form)
-
 
 
 class PersonCreateView(SchoolCheck, views.UserPassesTestMixin,  generic.CreateView):
@@ -250,7 +248,7 @@ class PersonCreateView(SchoolCheck, views.UserPassesTestMixin,  generic.CreateVi
         return super(PersonCreateView, self).form_valid(form)
 
 
-class PersonUpdateView(gradecheck, views.UserPassesTestMixin, generic.UpdateView):
+class PersonUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateView):
     """
         Class to update a Person object based on the username
 
