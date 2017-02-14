@@ -231,12 +231,16 @@ class PersonCreateView(SchoolCheck, views.UserPassesTestMixin,  generic.CreateVi
             :param form: References to the model form.
             :return: The HttpResponse set in success_url.
         """
-
+        chosengrades = self.request.POST.get('chosengrades[]')
+        test = self.request.POST.get('test')
+        print(test)
+        print(self.request.POST)
         person = form.save(commit=False)
         username = Person.createusername(person)
+
         person.username = username
         person.set_password('ntnu123')
-        person.save()
+        #person.save()
         return super(PersonCreateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -253,7 +257,7 @@ class PersonCreateView(SchoolCheck, views.UserPassesTestMixin,  generic.CreateVi
         return context
 
 
-class PersonUpdateView(GradeCheck, views.UserPassesTestMixin, generic.UpdateView):
+class PersonUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateView):
     """
         Class to update a Person object based on the username
 
