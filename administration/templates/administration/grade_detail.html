@@ -150,7 +150,7 @@
         <div class="panel-footer">
             {% if request.user.role == 4 or request.user.role == 3 %}
                 <a class="btn btn-primary"
-                   href="{% url 'administration:gradeUpdate' school_pk=grade.school_id pk=grade.id %}"><span
+                   href="{% url 'administration:gradeUpdate' school_pk=grade.school_id grade_pk=grade.id %}"><span
                         class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
             {% endif %}
         </div>

@@ -13,14 +13,13 @@
             <ul>
                 {% for grade in grades %}
                     <li>
-                        <a href="{% url 'administration:gradeDetail' school_pk=school.id pk=grade.id %}">
+                        <a href="{% url 'administration:gradeDetail' school_pk=school.id grade_pk=grade.id %}">
                             {{ grade.grade_name }}
                         </a>
                     </li>
                 {% endfor %}
             </ul>
         </div>
-
         {% if request.user.role == 4 or request.user.role == 3 %}
             <div class="panel-footer">
                 <a class="btn btn-primary" href="{% url 'administration:schoolUpdate' school.id %}"><span

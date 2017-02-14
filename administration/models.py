@@ -15,7 +15,7 @@ class School(models.Model):
     :school_name: The name of the school
     :school_address: The address of the school
     """
-    school_administrator = models.ForeignKey('Person', null=True)
+    school_administrator = models.ForeignKey('Person', null=True, blank=True)
     school_name = models.CharField(max_length=100, verbose_name='Navn')
     school_address = models.CharField(max_length=100, verbose_name='Adresse')
 
@@ -26,7 +26,7 @@ class School(models.Model):
         return self.school_name
 
     def get_absolute_url(self):
-        return reverse('administration:schoolDetail', kwargs={'pk': self.id})
+        return reverse('administration:schoolDetail', kwargs={'school_pk': self.id})
 
 
 class Grade(models.Model):
@@ -68,7 +68,7 @@ class Person(AbstractUser):
         (4, 'Administrator')
     ]
     sex = models.CharField(max_length=1, choices=SEX, verbose_name="kjønn", null=True)
-    date_of_birth = models.DateField(max_length=8, verbose_name='Fødselsdag', null=True)
+    date_of_birth = models.DateField(max_length=8, verbose_name='Fødselsdato', null=True)
     role = models.IntegerField(choices=ROLE, default=1, verbose_name='brukertype')
 
     class Meta:
