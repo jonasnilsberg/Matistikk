@@ -14,7 +14,7 @@ class PersonForm(forms.ModelForm):
 
     class Meta:
         model = Person
-        fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'grades', 'is_staff', 'is_active', 'role']
+        fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'is_staff', 'is_active', 'role']
 
 
 class FileUpload(forms.Form):
@@ -41,4 +41,4 @@ class SchoolForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SchoolForm, self).__init__(*args, **kwargs)
-        self.fields['administrator'].queryset = Person.objects.filter(role=3)
+        self.fields['school_administrator'].queryset = Person.objects.filter(role=3)

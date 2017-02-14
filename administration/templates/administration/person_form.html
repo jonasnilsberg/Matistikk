@@ -56,6 +56,9 @@
                             <div class="col-xs-5">
                                 <label for="chosengrades">Valgte Klasser</label>
                                 <select id="chosengrades" class="form-control" multiple="multiple">
+                                {% if fromGrade %}
+                                    <option value="{{ fromGrade.id }}">{{ fromGrade }}</option>
+                                {% endif %}
                                     {% for grade in person.grades.all %}
                                         <option value="{{ grade.id }}">{{ grade }}</option>
                                     {% endfor %}
@@ -134,7 +137,7 @@
             var chosengrades = document.getElementById("chosengrades");
             for (var i = 0; i < chosengrades.options.length; i++) {
                 if (chosengrades.options[i].selected) {
-                    chosengrades.remove(chosengrades.options[i]);
+                    chosengrades.remove(i);
                 }
             }
         }
