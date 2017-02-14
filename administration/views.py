@@ -134,7 +134,9 @@ class PersonDisplayView(generic.DetailView):
         return context
 
 
+
 class PersonDetailView(SchoolCheck, View):
+
     """
         View that shows information about a Person object based on the username
 
