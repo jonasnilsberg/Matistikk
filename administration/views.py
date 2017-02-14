@@ -245,12 +245,16 @@ class PersonCreateView(SchoolCheck, generic.CreateView):
         :param form: References to the model form.
         :return: calls super
         """
-
+        chosengrades = self.request.POST.get('chosengrades[]')
+        test = self.request.POST.get('test')
+        print(test)
+        print(self.request.POST)
         person = form.save(commit=False)
         username = Person.createusername(person)
+
         person.username = username
         person.set_password('ntnu123')
-        person.save()
+        #person.save()
         return super(PersonCreateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -270,6 +274,7 @@ class PersonCreateView(SchoolCheck, generic.CreateView):
         if self.kwargs.get('grade_pk'):
             context['fromGrade'] = Grade.objects.get(id=self.kwargs.get('grade_pk'))
         return context
+
 
 
 class PersonUpdateView(SchoolCheck, generic.UpdateView):
