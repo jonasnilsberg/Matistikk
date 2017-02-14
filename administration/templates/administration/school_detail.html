@@ -7,18 +7,36 @@
         <div class="panel-heading">
             <h1 class="panel-title">{{ school.school_name }}</h1>
             <h5>Adresse: {{ school.school_address }}</h5>
+            <h5>Kontaktperson:
+                <a href="{% url 'administration:personDetail' school.school_administrator %}">{{ school.school_administrator.get_full_name }}</a>
+            </h5>
         </div>
         <div class="panel-body">
-            <h2>Klasser</h2>
-            <ul>
+            <div class="input-group">
+                <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                <input type="text" class="form-control" id="search" onkeyup="gradeSearch()"
+                       placeholder="Søk etter klasse">
+            </div>
+            <table class="table table-hover table-striped table-responsive" id="gradetable">
+                <thead>
+                <tr>
+                    <th>Klasse</th>
+                </tr>
+                </thead>
+                <tbody>
                 {% for grade in grades %}
-                    <li>
-                        <a href="{% url 'administration:gradeDetail' school_pk=school.id grade_pk=grade.id %}">
+                    <tr class="clickable-row"
+                        data-href="{% url 'administration:gradeDetail' school_pk=school.id grade_pk=grade.id %}"
+                        style="cursor: pointer">
+                        <td>
                             {{ grade.grade_name }}
-                        </a>
-                    </li>
+                        </td>
+                    </tr>
                 {% endfor %}
-            </ul>
+                </tbody>
+            </table>
         </div>
         {% if request.user.role == 4 or request.user.role == 3 %}
             <div class="panel-footer">
@@ -29,4 +47,39 @@
             </div>
         {% endif %}
     </div>
+
+    <script>
+        /**
+         * This function makes table rows clickable
+         */
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.document.location = $(this).data("href");
+            });
+        });
+    </script>
+    <script>
+        /**
+         * This function matches the text in the search field with the content in the table with all grades
+         * and removes rows that don't match the search criteria.
+         */
+        function gradeSearch() {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("gradetable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
 {% endblock %}
