@@ -15,15 +15,28 @@ import re
 # Create your views here.
 
 
-class AdministratorCheck:
+class AdministratorCheck(views.UserPassesTestMixin):
+    """
+    Checks if the logged in user has administrator privileges.
+    """
     def test_func(self, user):
         if self.request.user.role == 4:
             return True
         return False
 
 
-class SchoolCheck:
+class SchoolCheck(views.UserPassesTestMixin):
+    """
+    Checks if the logged in user has sufficient access privileges to view a object.
+    :param views.UserPassesTestMixin: djangos way of handling restricted access, it's test_func is overriden.
+    :return boolean, True if access is granted.
+    """
     def test_func(self, user):
+        """
+        :param user: Test_func has to have two arguments.
+        :return: returns true if the user is administrator, school-administrator or is a teacher in one of the grades
+        the relevant person object is in
+        """
         if self.request.user.role == 4:
             return True
         elif self.request.user.role == 3:
@@ -40,35 +53,27 @@ class SchoolCheck:
         return False
 
 
-class SchoolAdministratorCheck:
+class SchoolAdministratorCheck(views.UserPassesTestMixin):
+    """
+    Checks if the logged in user is school-administrator or administrator
+    :param views.UserPassesTestMixin: djangos way of handling restricted access, it's test_func is overriden.
+    :return boolean, True if access is granted.
+    """
     def test_func(self, user):
+        """
+        :param user: Test_func has to have two arguments.
+        :return: returns true if user is either school_administrator or administrator
+        """
         if self.request.user.role == 3 or self.request.user.role == 4:
             return True
         return False
 
 
-class GradeCheck:
-    def test_func(self, user):
-        if self.request.user.role == 4:
-            return True
-        if self.request.user.role == 3 or self.request.user.role == 2:
-            grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
-            grades_student = Grade.objects.filter(person__username=self.kwargs.get('slug'))
-            for grade_teacher in grades_teacher:
-                for grade_student in grades_student:
-                    if grade_teacher == grade_student:
-                        return True
-        return False
-
-
-class TeacherCheck:
-    def test_func(self, user):
-        if self.request.user.role == 2 or self.request.user.role == 3 or self.request.user.role == 4:
-            return True
-        return False
-
-
 class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
+    """
+    View that shows a user information about itself and allows them to change their password.
+    :param views.UserPassesTestMixin: permission check, is overridden by the test_func function
+    """
     def test_func(self, user):
         return self.request.user.username == self.kwargs.get('slug')
 
@@ -83,6 +88,11 @@ class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
         return form_class(self.request.user, **self.get_form_kwargs())
 
     def form_valid(self, form):
+        """
+        Checks if the form that has been posted is valid
+        :param form: django form
+        :return: calls MypageDetailView with form_valid and the form
+        """
         person = form.save(commit=False)
         password = form.cleaned_data['new_password1']
         person.set_password(password)
@@ -92,21 +102,23 @@ class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
         return super(MyPageDetailView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
+        """
+        Function that adds a person object to the context without overriding it
+        :param kwargs: keyword-arguments
+        :return: returns the updated context
+        """
         context = super(MyPageDetailView, self).get_context_data(**kwargs)
-        print(Person.objects.get(username=self.kwargs.get('slug')))
         context['person'] = Person.objects.get(username=self.kwargs.get('slug'))
         return context
 
 
-class PersonListView(views.SuperuserRequiredMixin, views.AjaxResponseMixin, generic.ListView):
+class PersonListView(AdministratorCheck, generic.ListView):
     """
-        Class to list all the persons
+    Class that lists all the users in the system, can only be accessed by administrators.
 
-        If the user is staff only students will show
-
-        :param views.StaffuserRequiredMixin: Inherits views.StaffuserRequiredMixin that checks if the user is logged in as staff
-        :param generic.ListView: Inherits generic.ListView that makes a page representing a list of objects.
-        :return: List of person objects
+    :param AdministratorCheck: permission check, only allows administrators
+    :param generic.ListView: Inherits generic.ListView that makes a page representing a list of objects.
+    :return: List of person objects
     """
 
     login_url = reverse_lazy('login')
@@ -116,11 +128,10 @@ class PersonListView(views.SuperuserRequiredMixin, views.AjaxResponseMixin, gene
 
 class PersonDisplayView(generic.DetailView):
     """
-        Class to get a specific Person based on the username
+    Class to get a specific Person based on the username
 
-        :param views.StaffuserRequiredMixin: Inherits views.StaffuserRequiredMixin that checks if the user is logged in as staff
-        :param generic.DetailView: Inherits generic.DetailView that makes a page representing a specific object.
-        :return: Person object
+    :param generic.DetailView: inherits from djangos DetailView displaying a single Person Object
+    :return: Person object
 
     """
 
@@ -129,29 +140,29 @@ class PersonDisplayView(generic.DetailView):
     slug_field = "username"
 
     def get_context_data(self, **kwargs):
+        """
+        Function that adds a form to the context without overriding it
+        :param kwargs: keyword-arguments
+        :return: returns the updated context
+        """
         context = super(PersonDisplayView, self).get_context_data(**kwargs)
         context['form'] = ChangePassword()
         return context
 
 
-
 class PersonDetailView(SchoolCheck, View):
-
     """
-        View that shows information about a Person object based on the username
-
-        :param GradeCheck: Inherits views.StaffuserRequiredMixin that checks if the user is logged in as staff
-        :param generic.DetailView: Inherits generic.DetailView that makes a page representing a specific object.
-        :return: Person object
+    View that handles PersonDisplayView and the ChangePasswordView, this view is not displayed
+    :param SchoolCheck:  Permission check
     """
 
     def get(self, request, *args, **kwargs):
         """
         Redirects to the PersonDisplayView
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
+        :param request: request that was sent to PersonDetaiLView
+        :param args:  Arguments that were sent with the request
+        :param kwargs: keyword-arguments
+        :return: returns the PersonDisplayView with the same parameters that this method got
         """
         view = PersonDisplayView.as_view()
         return view(request, *args, **kwargs)
@@ -159,10 +170,10 @@ class PersonDetailView(SchoolCheck, View):
     def post(self, request, *args, **kwargs):
         """
         redirects to ChangePasswordView
-        :param request:
-        :param args:
-        :param kwargs:
-        :return:
+        :param request: request that was sent to PersonDetaiLView
+        :param args:  Arguments that were sent with the request
+        :param kwargs: keyword-arguments
+        :return: returns the ChangePasswordView with the same parameters that this method got
         """
         view = ChangePasswordView.as_view()
         return view(request, *args, **kwargs)
@@ -170,7 +181,7 @@ class PersonDetailView(SchoolCheck, View):
 
 class ChangePasswordView(generic.FormView):
     """
-        View that handles passwordchanging for a different user than the one that is logged in.
+    View that handles changing password for a different user than the one that is logged in.
     """
     template_name = 'administration/person_detail.html'
     form_class = ChangePassword
@@ -181,6 +192,12 @@ class ChangePasswordView(generic.FormView):
         return reverse('administration:personDetail', kwargs={'slug': self.kwargs.get('slug')})
 
     def form_valid(self, form):
+        """
+        Function that checks if the submitted text is correct, and if correct sets this at the new password of the user.
+        If the passwords don't match it returns a errormessage.
+        :param form: References to the model form.
+        :return: calls super with the new form
+        """
         pw = form.cleaned_data['password']
         pw2 = form.cleaned_data['password2']
         if pw == pw2:
@@ -193,13 +210,13 @@ class ChangePasswordView(generic.FormView):
         return super(ChangePasswordView, self).form_valid(form)
 
 
-class PersonCreateView(SchoolCheck, views.UserPassesTestMixin,  generic.CreateView):
+class PersonCreateView(SchoolCheck, generic.CreateView):
     """
-        Class to create a Person object
+    Creates a Person object
 
-        :param views.StaffuserRequiredMixin: Inherits views.StaffuserRequiredMixin that checks if the user is logged in as staff
-        :param generic.CreateView: Inherits generic.CreateView that displays a form for creating a object and
-            saving the form when validated
+    :param SchoolCheck: Inherited permission check
+    :param generic.CreateView: Inherits generic.CreateView that displays a form for creating a object and
+        saving the form when validated
     """
 
     login_url = reverse_lazy('login')
@@ -210,10 +227,9 @@ class PersonCreateView(SchoolCheck, views.UserPassesTestMixin,  generic.CreateVi
 
     def get_initial(self):
         """
-            Function that checks for preset Person values and sets the to the field
+        Function that checks for preset Person values and sets them to the fields
 
-            :param self: References to the class itself and all it's variables.
-            :return: List the preset values
+        :return: List the preset values
         """
 
         if self.kwargs.get('grade_pk'):
@@ -224,12 +240,10 @@ class PersonCreateView(SchoolCheck, views.UserPassesTestMixin,  generic.CreateVi
 
     def form_valid(self, form):
         """
-            Function that overrides the default form_valid so that a password and is_staff can be added if
-            necessary.
+        Function that overrides form_valid and saves a new person object to the database.
 
-            :param self: References to the class itself and all it's variables.
-            :param form: References to the model form.
-            :return: The HttpResponse set in success_url.
+        :param form: References to the model form.
+        :return: calls super
         """
         chosengrades = self.request.POST.get('chosengrades[]')
         test = self.request.POST.get('test')
@@ -244,6 +258,11 @@ class PersonCreateView(SchoolCheck, views.UserPassesTestMixin,  generic.CreateVi
         return super(PersonCreateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
+        """
+        Function that adds data to the context without overriding it, adds different data depending on users role
+        :param kwargs: keyword-arguments
+        :return: returns the updated context
+        """
         context = super(PersonCreateView, self).get_context_data(**kwargs)
         if self.request.user.role == 3:
             schools = School.objects.filter(school_administrator=self.request.user.id)
@@ -257,15 +276,14 @@ class PersonCreateView(SchoolCheck, views.UserPassesTestMixin,  generic.CreateVi
         return context
 
 
-class PersonUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateView):
-    """
-        Class to update a Person object based on the username
 
-        :param views.StaffuserRequiredMixin: Inherits views.StaffuserRequiredMixin that checks if the user is logged in
-            as staff
-        :param generic.UpdateView: Inherits generic.CreateView that displays a form for updating a specific object and
-            saving the form when validated.
-        :return: The HttpResponse set in success_url
+class PersonUpdateView(SchoolCheck, generic.UpdateView):
+    """
+    Class that updates a Person object
+
+    :param SchoolCheck: inherited permission check
+    :param generic.UpdateView: Inherits generic.CreateView that displays a form for updating a specific object and
+        saving the form when validated.
     """
 
     template_name = 'administration/person_form.html'
@@ -275,6 +293,11 @@ class PersonUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateVie
     slug_field = "username"
 
     def get_context_data(self, **kwargs):
+        """
+        Function that adds data to the context without overriding it, adds different data depending on users role
+        :param kwargs: keyword-arguments
+        :return: returns the updated context
+        """
         context = super(PersonUpdateView, self).get_context_data(**kwargs)
         if self.request.user.role == 3:
             schools = School.objects.filter(school_administrator=self.request.user.id)
@@ -288,14 +311,12 @@ class PersonUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateVie
         return context
 
 
-class SchoolListView(SchoolAdministratorCheck, views.UserPassesTestMixin, generic.ListView):
+class SchoolListView(SchoolAdministratorCheck, generic.ListView):
     """
-        Class to list out all School objects
+    Class to list out all School objects
 
-        :param views.StaffuserRequiredMixin: Inherits views.StaffuserRequiredMixin that checks if the user is logged in as staff
-        :param generic.ListView: Inherits generic.ListView that represents a page containing a list of objects
-        :return: List of School objects
-
+    :param SchoolAdministratorCheck: Inherited permission check
+    :param generic.ListView: Inherits generic.ListView that represents a page containing a list of objects
     """
 
     login_url = reverse_lazy('login')
@@ -304,6 +325,11 @@ class SchoolListView(SchoolAdministratorCheck, views.UserPassesTestMixin, generi
     paginate_by = 20
 
     def get_context_data(self, **kwargs):
+        """
+        Function that adds a school object to the context without overriding it
+        :param kwargs: keyword-arguments
+        :return: returns the updated context
+        """
         if self.request.user.role == 3:
             context = super(SchoolListView, self).get_context_data(**kwargs)
             context['object_list'] = School.objects.filter(school_administrator=self.request.user.id)
@@ -311,14 +337,11 @@ class SchoolListView(SchoolAdministratorCheck, views.UserPassesTestMixin, generi
         return super(SchoolListView, self).get_context_data(**kwargs)
 
 
-class SchoolDetailView(SchoolCheck, views.UserPassesTestMixin, generic.DetailView):
+class SchoolDetailView(SchoolCheck, generic.DetailView):
     """
-        Class to get a specific Person based on the username
+    class that displays information about a specific school
 
-        :param views.StaffuserRequiredMixin: Inherits views.StaffuserRequiredMixin that checks if the user is logged in as staff
-        :param generic.UpdateView: Inherits generic.DetailView that makes a page representing a specific object.
-        :return: School object
-
+    :param SchoolCheck: Inherited permission check
     """
     login_url = reverse_lazy('login')
     model = School
@@ -326,20 +349,23 @@ class SchoolDetailView(SchoolCheck, views.UserPassesTestMixin, generic.DetailVie
     pk_url_kwarg = 'school_pk'
 
     def get_context_data(self, **kwargs):
+        """
+        Function that adds a grade object to the context without overriding it
+        :param kwargs: keyword-arguments
+        :return: returns the updated context
+        """
         context = super(SchoolDetailView, self).get_context_data(**kwargs)
         context['grades'] = Grade.objects.filter(school_id=self.kwargs['school_pk'])
         return context
 
 
-class SchoolCreateView(AdministratorCheck, views.UserPassesTestMixin, generic.CreateView):
+class SchoolCreateView(AdministratorCheck, generic.CreateView):
     """
-        Class to create a School object
+    Class to create a School object
 
-        :param views.SuperuserRequiredMixin: Inherits views.SuperuserRequiredMixin that checks if the user is logged in as a
-            superuser
-        :param generic.CreateView: Inherits generic.CreateView that displays a form for creating a object and
-            saving the form when validated
-        :return: The HttpResponse set in success_url
+    :param AdministratorCheck: inherited permission check
+    :param generic.CreateView: Inherits generic.CreateView that displays a form for creating a object and
+        saving the form when validated
     """
 
     login_url = reverse_lazy('login')
@@ -348,15 +374,13 @@ class SchoolCreateView(AdministratorCheck, views.UserPassesTestMixin, generic.Cr
     success_url = reverse_lazy('administration:schoolList')
 
 
-class SchoolUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateView):
+class SchoolUpdateView(SchoolCheck, generic.UpdateView):
     """
-        Class to update a School object based on the school.id
+    Class to update information about a school object
 
-        :param views.SuperuserRequiredMixin: Inherits views.SuperuserRequiredMixin that checks if the user is logged in as a
-            superuser
-        :param generic.UpdateView: Inherits generic.CreateView that displays a form for updating a object and
-            saving the form when validated.
-        :return: The HttpResponse set in success_url
+    :param SchoolCheck: inherited permission check
+    :param generic.UpdateView: Inherits generic.CreateView that displays a form for updating a object and
+        saving the form when validated.
     """
 
     login_url = reverse_lazy('login')
@@ -366,13 +390,12 @@ class SchoolUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateVie
     pk_url_kwarg = 'school_pk'
 
 
-class GradeDisplay(generic.DetailView):
+class GradeDisplay(SchoolCheck, generic.DetailView):
     """
-        Class to get a specific Grade based on the grade.id
+    Class that displays information about a single grade object
 
-        :param views.StaffuserRequiredMixin: Inherits views.StaffuserRequiredMixin that checks if the user is logged in as staff
-        :param generic.UpdateView: Inherits generic.DetailView that makes a page representing a specific object.
-        :return: School object
+    :param SchoolCheck: inherited permission check
+    :param generic.DetailView: Inherits generic.DetailView that makes a page representing a specific object.
     """
     login_url = reverse_lazy('login')
     model = Grade
@@ -381,6 +404,11 @@ class GradeDisplay(generic.DetailView):
     pk_url_kwarg = 'grade_pk'
 
     def get_context_data(self, **kwargs):
+        """
+        Function that adds a person object and a FileUpload form to the context without overriding it
+        :param kwargs: keyword-arguments
+        :return: returns the updated context
+        """
         context = super(GradeDisplay, self).get_context_data(**kwargs)
         context['persons'] = Person.objects.filter(grades__id=self.kwargs['grade_pk'])
         context['form'] = FileUpload()
@@ -388,6 +416,10 @@ class GradeDisplay(generic.DetailView):
 
 
 class FileUploadView(generic.FormView):
+    """
+    Class that handles uploading excel files and creating Person objects from them
+    """
+
     template_name = 'administration/grade_detail.html'
     form_class = FileUpload
     model = Person
@@ -446,25 +478,43 @@ class FileUploadView(generic.FormView):
                                                     'grade_pk': self.kwargs.get('grade_pk')})
 
 
-class GradeDetailView(SchoolCheck, views.UserPassesTestMixin, View):
+class GradeDetailView(SchoolCheck, View):
+    """
+    View that handles GradeDisplay and the FileUploadView, this view is not displayed
+    :param SchoolCheck:  Permission check
+    """
+
+
     def get(self, request, *args, **kwargs):
+        """
+        Redirects to the GradeDisplay
+        :param request: request that was sent to GradeDetailView
+        :param args:  Arguments that were sent with the request
+        :param kwargs: keyword-arguments
+        :return: returns the GradeDisplay with the same parameters that this method got
+        """
         view = GradeDisplay.as_view()
         return view(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        """
+        Redirects to the FileUploadView
+        :param request: request that was sent to FileUploadView
+        :param args:  Arguments that were sent with the request
+        :param kwargs: keyword-arguments
+        :return: returns the FileUploadView with the same parameters that this method got
+        """
         view = FileUploadView.as_view()
         return view(request, *args, **kwargs)
 
 
-class GradeCreateView(SchoolCheck, views.UserPassesTestMixin, generic.CreateView):
+class GradeCreateView(SchoolCheck, generic.CreateView):
     """
-        Class to create a Grade object
+    Class to create a Grade object
 
-        :param views.SuperuserRequiredMixin: Inherits views.SuperuserRequiredMixin that checks if the user is logged in as a
-            superuser
-        :param generic.CreateView: Inherits generic.CreateView that displays a form for creating a object and
-            saving the form when validated
-        :return: The HttpResponse set in success_url
+    :param ScoolCheck: inherited permission check
+    :param generic.CreateView: Inherits generic.CreateView that displays a form for creating a object and
+        saving the form when validated
     """
 
     login_url = reverse_lazy('login')
@@ -473,6 +523,11 @@ class GradeCreateView(SchoolCheck, views.UserPassesTestMixin, generic.CreateView
     fields = ['grade_name', 'tests']
 
     def form_valid(self, form):
+        """
+        Overrides generic.CreateViews form_valid and saves a grade to a specific school
+        :param form: represents the form object
+        :return: calls super
+        """
         self.success_url = reverse_lazy('administration:schoolDetail', kwargs={'school_pk': self.kwargs.get('school_pk')})
         grade = form.save(commit=False)
         grade.school_id = self.kwargs['school_pk']
@@ -481,15 +536,13 @@ class GradeCreateView(SchoolCheck, views.UserPassesTestMixin, generic.CreateView
         return super(GradeCreateView, self).form_valid(form)
 
 
-class GradeUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateView):
+class GradeUpdateView(SchoolCheck, generic.UpdateView):
     """
-        Class to update a Grade object based on the id
+    Class to update a Grade object
 
-        :param views.SuperuserRequiredMixin: Inherits views.SuperuserRequiredMixin that checks if the user is logged in
-            as superuser
-        :param generic.UpdateView: Inherits generic.CreateView that displays a form for updating a specific object and
-            saving the form when validated.
-        :return: The HttpResponse set in success_url
+    :param SchoolCheck: inherited permission check
+    :param generic.UpdateView: Inherits generic.CreateView that displays a form for updating a specific object and
+        saving the form when validated.
     """
     login_url = reverse_lazy('login')
     model = Grade
@@ -501,7 +554,10 @@ class GradeUpdateView(SchoolCheck, views.UserPassesTestMixin, generic.UpdateView
         return reverse_lazy('administration:schoolDetail', kwargs={'school_pk': self.kwargs.get('school_pk')})
 
 
-class GradeListView(SchoolCheck, views.UserPassesTestMixin, generic.ListView):
+class GradeListView(SchoolCheck, generic.ListView):
+    """
+    Class that displays a list of grade objects
+    """
     login_url = reverse_lazy('login')
     template_name = 'administration/gradeList.html'
 
