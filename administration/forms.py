@@ -35,10 +35,12 @@ class ChangePassword(forms.ModelForm):
         
         
 class SchoolForm(forms.ModelForm):
+
     class Meta:
         model = School
-        fields = ['school_name', 'school_address', 'school_administrator']
+        fields = ['school_name', 'school_address', 'school_administrator', 'is_active']
 
     def __init__(self, *args, **kwargs):
         super(SchoolForm, self).__init__(*args, **kwargs)
         self.fields['school_administrator'].queryset = Person.objects.filter(role=3)
+
