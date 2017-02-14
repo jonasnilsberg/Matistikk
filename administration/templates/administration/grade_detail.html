@@ -77,7 +77,7 @@
                         </thead>
                         <tbody>
                         {% for person in persons %}
-                            {% if not person.role == 2 %}
+                            {% if person.role == 1 %}
                                 <tr class="clickable-row"
                                     data-href="{% url 'administration:personDetail' person.username %}"
                                     style="cursor: pointer">
