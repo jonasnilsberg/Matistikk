@@ -15,9 +15,10 @@ class School(models.Model):
     :school_name: The name of the school
     :school_address: The address of the school
     """
-    school_administrator = models.ForeignKey('Person', null=True, blank=True)
+    school_administrator = models.ForeignKey('Person', null=True, blank=True, verbose_name='Skoleadministrator', help_text='Ikke påkrevd.')
     school_name = models.CharField(max_length=100, verbose_name='Navn')
     school_address = models.CharField(max_length=100, verbose_name='Adresse')
+    is_active = models.BooleanField(default=True, verbose_name='aktiv', help_text='Angir at denne skolen er aktiv. Avmerk denne i stedet for å slette kontoen.')
 
     class Meta:
         ordering = ['school_name']
@@ -41,6 +42,7 @@ class Grade(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     grade_name = models.CharField(max_length=100, verbose_name='klassenavn')
     tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')
+    is_active = models.BooleanField(default=True, verbose_name='aktiv')
 
     class Meta:
         ordering = ['school_id', 'grade_name']

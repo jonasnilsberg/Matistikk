@@ -13,7 +13,7 @@
                     <h1>Brukeradministrasjon</h1>
                 </div>
                 <div class="panel-body">
-                    <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
+                    <form class="form-horizontal" action="" method="post">
                         {% csrf_token %}
                         {% bootstrap_messages %}
                         {% bootstrap_field form.first_name %}
@@ -22,7 +22,7 @@
                         {% bootstrap_field form.date_of_birth placeholder="dd.mm.yyyy" %}
                         {% bootstrap_field form.sex %}
                         {% bootstrap_field form.role %}
-
+                        {% bootstrap_field form.grades field_class='hidden' %}
                         <div class="row">
                             <label for="schools">Velg Skole</label>
                             <select id="schools" class="form-control" onchange="changeClassList()">
@@ -55,10 +55,10 @@
                             </div>
                             <div class="col-xs-5">
                                 <label for="chosengrades">Valgte Klasser</label>
-                                <select id="chosengrades" class="form-control" multiple="multiple">
-                                {% if fromGrade %}
-                                    <option value="{{ fromGrade.id }}">{{ fromGrade }}</option>
-                                {% endif %}
+                                <select title="chosengrades" id="chosengrades" class="form-control" multiple="multiple">
+                                    {% if fromGrade %}
+                                        <option value="{{ fromGrade.id }}">{{ fromGrade }}</option>
+                                    {% endif %}
                                     {% for grade in person.grades.all %}
                                         <option value="{{ grade.id }}">{{ grade }}</option>
                                     {% endfor %}
@@ -83,6 +83,8 @@
     </div>
 
     <script>
+
+
         /**
          * This function changes the visible grades in the "Choose Grade"-select
          * when a user changes the value of the "Choose School"-dropdown
@@ -115,6 +117,7 @@
             var grades = document.getElementById("grades");
             var chosengrades = document.getElementById("chosengrades");
             var valuelist = [];
+            var id;
             for (var k = 0; k < chosengrades.options.length; k++) {
                 valuelist.push(chosengrades.options[k].value);
             }
@@ -122,6 +125,8 @@
             for (var i = 0; i < grades.options.length; i++) {
                 if (grades.options[i].selected) {
                     if (valuelist.indexOf(grades.options[i].value) == -1) {
+                        id = grades.options[i].value;
+                        $('#id_grades').find('option[value="' + id + '"]').prop("selected", true);
                         chosengrades.innerHTML += "<option value='" + grades.options[i].value + "'>" + grades.options[i].innerHTML + "</option>";
                     }
                 }
@@ -135,11 +140,11 @@
         function removeGrades() {
             var grades = document.getElementById("grades");
             var chosengrades = document.getElementById("chosengrades");
-            for (var i = 0; i < chosengrades.options.length; i++) {
-                if (chosengrades.options[i].selected) {
-                    chosengrades.remove(i);
-                }
-            }
+
+            $("#chosengrades option:selected").each(function () {
+                $('#id_grades').find('option[value="' + this.value + '"]').prop("selected", false);
+                $(this).remove();
+            });
         }
     </script>
 {% endblock %}

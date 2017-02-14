@@ -334,7 +334,7 @@ class SchoolListView(SchoolAdministratorCheck, generic.ListView):
 
 class SchoolDetailView(SchoolCheck, generic.DetailView):
     """
-    View that displays information about a specific school
+    class that displays information about a specific school
 
     :param SchoolCheck: Inherited permission check
     """
@@ -381,7 +381,8 @@ class SchoolUpdateView(SchoolCheck, generic.UpdateView):
     login_url = reverse_lazy('login')
     model = School
     template_name = 'administration/school_form.html'
-    fields = ['school_name', 'school_address']
+    form_class = SchoolForm
+    pk_url_kwarg = 'school_pk'
 
 
 class GradeDisplay(SchoolCheck, generic.DetailView):
@@ -541,7 +542,7 @@ class GradeUpdateView(SchoolCheck, generic.UpdateView):
     login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_form.html'
-    fields = ['grade_name', 'tests']
+    fields = ['grade_name', 'tests', 'is_active']
     pk_url_kwarg = 'grade_pk'
 
     def get_success_url(self):

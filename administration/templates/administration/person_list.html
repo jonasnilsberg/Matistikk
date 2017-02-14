@@ -7,15 +7,13 @@
             <h1>Brukeroversikt</h1>
             <div class="col-xs-10">
                 <div class="input-group">
-                    <div class="input-group-btn">
-                        <button class="btn btn-primary" type="button" aria-label="Søk">
-                            <span class="glyphicon glyphicon-search"></span>
-                        </button>
-                    </div>
+                    <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
                     <input type="text" class="form-control" id="search"
-                           onkeyup="userSearch(); studentSearch(); adminSearch(); teacherSearch();"
+                           onkeyup="userSearch(); studentSearch(); adminSearch(); teacherSearch(); inactiveSearch()"
                            placeholder="Søk etter bruker">
-                </div>
+                    </div>
             </div>
             <a class="btn btn-primary" href="{% url 'administration:personCreate' %}"><span
                     class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til bruker</a>
@@ -26,8 +24,10 @@
             <li class="nav"><a href="#B" data-toggle="tab">Elever</a></li>
             <li class="nav"><a href="#C" data-toggle="tab">Lærere</a></li>
             <li class="nav"><a href="#D" data-toggle="tab">Administratorer</a></li>
+            <li class="nav"><a href="#E" data-toggle="tab">Inaktive</a></li>
         </ul>
         <div class="tab-content">
+            <!-- All Users Tab -->
             <div class="tab-pane fade in active" id="A">
                 <table class="table table-hover table-striped table-responsive" id="usertable">
                     <thead>
@@ -40,19 +40,24 @@
                     </thead>
                     <tbody>
                     {% for person in object_list %}
-                        <tr class="clickable-row" data-href="{% url 'administration:personDetail' person.username %}"
-                            style="cursor: pointer">
-                            <td>{{ person.first_name }}</td>
-                            <td>{{ person.last_name }}</td>
-                            <td>{{ person.username }}</td>
-                            <td><a class="btn btn-primary"
-                                   href="{% url 'administration:personDetail' person.username %}"><span
-                                    class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a></td>
-                        </tr>
+                        {% if person.is_active %}
+                            <tr class="clickable-row"
+                                data-href="{% url 'administration:personDetail' person.username %}"
+                                style="cursor: pointer">
+                                <td>{{ person.first_name }}</td>
+                                <td>{{ person.last_name }}</td>
+                                <td>{{ person.username }}</td>
+                                <td><a class="btn btn-primary"
+                                       href="{% url 'administration:personDetail' person.username %}"><span
+                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a>
+                                </td>
+                            </tr>
+                        {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
             </div>
+            <!-- Student Users Tab -->
             <div class="tab-pane fade" id="B">
                 <table class="table table-hover table-striped table-responsive" id="studenttable">
                     <thead>
@@ -65,7 +70,7 @@
                     </thead>
                     <tbody>
                     {% for person in object_list %}
-                        {% if person.role == 1 %}
+                        {% if person.role == 1 and person.is_active %}
                             <tr class="clickable-row"
                                 data-href="{% url 'administration:personDetail' person.username %}"
                                 style="cursor: pointer">
@@ -74,7 +79,8 @@
                                 <td>{{ person.username }}</td>
                                 <td><a class="btn btn-primary"
                                        href="{% url 'administration:personDetail' person.username %}"><span
-                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a>
+                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
+                                    Brukerinfo</a>
                                 </td>
                             </tr>
                         {% endif %}
@@ -82,6 +88,7 @@
                     </tbody>
                 </table>
             </div>
+            <!-- Teacher Users Tab -->
             <div class="tab-pane fade" id="C">
                 <table class="table table-hover table-striped table-responsive" id="teachertable">
                     <thead>
@@ -94,7 +101,7 @@
                     </thead>
                     <tbody>
                     {% for person in object_list %}
-                        {% if person.role == 2 %}
+                        {% if person.role == 2 and person.is_active %}
                             <tr class="clickable-row"
                                 data-href="{% url 'administration:personDetail' person.username %}"
                                 style="cursor: pointer">
@@ -111,8 +118,51 @@
                     </tbody>
                 </table>
             </div>
+            <!-- Admin Users Tab -->
             <div class="tab-pane fade" id="D">
                 <table class="table table-hover table-striped table-responsive" id="admintable">
+                    <thead>
+                    <tr>
+                        <th>Fornavn</th>
+                        <th>Etternavn</th>
+                        <th>Brukernavn</th>
+                        <th>Brukertype</th>
+                        <th>Brukerinfo</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for person in object_list %}
+                        {% if person.role == 4 and person.is_active or person.role == 3 and person.is_active %}
+                            <tr class="clickable-row"
+                                data-href="{% url 'administration:personDetail' person.username %}"
+                                style="cursor: pointer">
+                                <td>{{ person.first_name }}</td>
+                                <td>{{ person.last_name }}</td>
+                                <td>{{ person.username }}</td>
+                                <td>
+                                    {% if person.role == 2 %}
+                                            Lærer
+                                        {% elif person.role == 3 %}
+                                            Skoleadministrator
+                                        {% elif person.role == 4 %}
+                                            Superbruker
+                                        {% else %}
+                                            Elev
+                                        {% endif %}
+                                </td>
+                                <td><a class="btn btn-primary"
+                                       href="{% url 'administration:personDetail' person.username %}"><span
+                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- Inactive Users Tab -->
+            <div class="tab-pane fade" id="E">
+                <table class="table table-hover table-striped table-responsive" id="inactivetable">
                     <thead>
                     <tr>
                         <th>Fornavn</th>
@@ -123,7 +173,7 @@
                     </thead>
                     <tbody>
                     {% for person in object_list %}
-                        {% if person.role == 4 %}
+                        {% if not person.is_active %}
                             <tr class="clickable-row"
                                 data-href="{% url 'administration:personDetail' person.username %}"
                                 style="cursor: pointer">
@@ -251,6 +301,31 @@
             input = document.getElementById("search");
             filter = input.value.toUpperCase();
             table = document.getElementById("admintable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        /**
+         * This function matches the text in the search field with the content in the table with all inactive users
+         * and removes rows that don't match the search criteria.
+         */
+        function inactiveSearch() {
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("inactivetable");
             tr = table.getElementsByTagName("tr");
 
             for (i = 0; i < tr.length; i++) {
