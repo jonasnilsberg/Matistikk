@@ -30,7 +30,9 @@
                     <td>{{ school.school_name }}</td>
                     <td>{{ school.school_address }}</td>
                     <td>
-                        <a href="{% url 'administration:personDetail' school.school_administrator %}">{{ school.school_administrator.get_full_name }}</a>
+                        {% if school.school_administrator.username %}
+                            <a href="{% url 'administration:personDetail' school.school_administrator.username %}">{{ school.school_administrator.get_full_name }}</a>
+                        {% endif %}
                     </td>
                     <td><a class="btn btn-primary" href="{% url 'administration:schoolDetail' school.id %}"><span
                             class="glyphicon glyphicon-home" aria-hidden="true"></span> Se Skoleinfo</a></td>

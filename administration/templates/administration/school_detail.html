@@ -8,7 +8,9 @@
             <h1 class="panel-title">{{ school.school_name }}</h1>
             <h5>Adresse: {{ school.school_address }}</h5>
             <h5>Kontaktperson:
-                <a href="{% url 'administration:personDetail' school.school_administrator %}">{{ school.school_administrator.get_full_name }}</a>
+                {% if school.school_administrator.username %}
+                    <a href="{% url 'administration:personDetail' school.school_administrator.username %}">{{ school.school_administrator.get_full_name }}</a>
+                {% endif %}
             </h5>
         </div>
         <div class="panel-body">
