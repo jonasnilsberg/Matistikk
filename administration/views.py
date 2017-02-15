@@ -119,11 +119,11 @@ class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
         return context
 
 
-class PersonListView(AdministratorCheck, generic.ListView):
+class PersonListView(SchoolAdministratorCheck, generic.ListView):
     """
     Class that lists all the users in the system, can only be accessed by administrators.
 
-    :param AdministratorCheck: permission check, only allows administrators
+    :param SchoolAdministratorCheck: permission check, only allows administrators and school administrators
     :param generic.ListView: Inherits generic.ListView that makes a page representing a list of objects.
     :return: List of person objects
     """
@@ -131,6 +131,22 @@ class PersonListView(AdministratorCheck, generic.ListView):
     login_url = reverse_lazy('login')
     template_name = 'administration/person_list.html'
     model = Person
+
+    def get_context_data(self, **kwargs):
+        """
+        Function that adds a person object to the context without overriding it
+        :param kwargs: keyword-arguments
+        :return: returns the updated context
+        """
+        context = super(PersonListView, self).get_context_data(**kwargs)
+
+        if self.request.user.role == 3:
+            schools = School.objects.filter(school_administrator=self.request.user.id)
+            persons = Person.objects.filter(grades__school_id__in=schools).distinct()
+            context['object_list'] = persons
+            return context
+
+        return context
 
 
 class PersonDisplayView(generic.DetailView):
