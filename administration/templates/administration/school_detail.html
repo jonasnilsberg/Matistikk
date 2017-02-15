@@ -16,27 +16,59 @@
                 <span class="input-group-addon">
                         <i class="fa fa-search"></i>
                     </span>
-                <input type="text" class="form-control" id="search" onkeyup="gradeSearch()"
+                <input type="text" class="form-control" id="search" onkeyup="gradeSearch(); inactiveSearch();"
                        placeholder="Søk etter klasse">
             </div>
-            <table class="table table-hover table-striped table-responsive" id="gradetable">
-                <thead>
-                <tr>
-                    <th>Klasse</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for grade in grades %}
-                    <tr class="clickable-row"
-                        data-href="{% url 'administration:gradeDetail' school_pk=school.id grade_pk=grade.id %}"
-                        style="cursor: pointer">
-                        <td>
-                            {{ grade.grade_name }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            <ul class="nav nav-tabs">
+                <li class="nav active"><a href="#A" data-toggle="tab">Alle klasser</a></li>
+                <li class="nav"><a href="#B" data-toggle="tab">Inaktive</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="A">
+                    <table class="table table-hover table-striped table-responsive" id="gradetable">
+                        <thead>
+                        <tr>
+                            <th>Klasse</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for grade in grades %}
+                            {% if grade.is_active %}
+                                <tr class="clickable-row"
+                                    data-href="{% url 'administration:gradeDetail' school_pk=school.id grade_pk=grade.id %}"
+                                    style="cursor: pointer">
+                                    <td>
+                                        {{ grade.grade_name }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="B">
+                    <table class="table table-hover table-striped table-responsive" id="inactivetable">
+                        <thead>
+                        <tr>
+                            <th>Klasse</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for grade in grades %}
+                            {% if not grade.is_active %}
+                                <tr class="clickable-row"
+                                    data-href="{% url 'administration:gradeDetail' school_pk=school.id grade_pk=grade.id %}"
+                                    style="cursor: pointer">
+                                    <td>
+                                        {{ grade.grade_name }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
         {% if request.user.role == 4 or request.user.role == 3 %}
             <div class="panel-footer">
@@ -68,6 +100,29 @@
             input = document.getElementById("search");
             filter = input.value.toUpperCase();
             table = document.getElementById("gradetable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        /**
+         * This function matches the text in the search field with the content in the table with all
+         * inactive grades and removes rows that don't match the search criteria.
+         */
+        function inactiveSearch() {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("inactivetable");
             tr = table.getElementsByTagName("tr");
 
             for (i = 0; i < tr.length; i++) {

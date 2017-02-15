@@ -14,6 +14,7 @@
 </head>
 <body>
 {% if request.user.role == 4 %}
+    <!-- Super User Navbar-->
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -53,7 +54,39 @@
         </div>
     </nav>
 
+{% elif request.user.role == 3 %}
+    <!-- School Administrator User Navbar-->
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="pull left" href="{% url 'index' %}"><img src="http://bildr.no/image/Tjl2U25M.jpeg" width="240"
+                                                                   height="50"/></a>
+            </div>
+            <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
+                    <li><a href="{% url 'administration:myPage' request.user.username %}">Min Side</a></li>
+                    <li><a href="{% url 'administration:personList' %}">Brukeroversikt</a></li>
+                    <li><a href="{% url 'administration:schoolList' %}">Mine Skoler</a></li>
+                    <li><a href="aboutview">Om</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a>Logget inn som: {{ request.user.username }}</a></li>
+                    <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span>Logg ut</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
 {% elif request.user.role == 2 %}
+    <!-- Teacher User Navbar-->
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -81,36 +114,9 @@
             </div>
         </div>
     </nav>
-{% elif request.user.role == 3 %}
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="pull left" href="{% url 'index' %}"><img src="http://bildr.no/image/Tjl2U25M.jpeg" width="240"
-                                                                   height="50"/></a>
-            </div>
-            <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
-                    <li><a href="{% url 'administration:myPage' request.user.username %}">Min Side</a></li>
-                    <li><a href="{% url 'administration:schoolList' %}">Min Skole</a></li>
-                    <li><a href="aboutview">Om</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a>Logget inn som: {{ request.user.username }}</a></li>
-                    <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span>Logg ut</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
 {% else %}
+    <!-- Student User Navbar-->
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">

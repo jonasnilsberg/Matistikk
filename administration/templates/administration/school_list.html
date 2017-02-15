@@ -1,56 +1,105 @@
 {% extends 'matistikk/base.html' %}
 
 {% block body %}
-    {% if object_list %}
-        <div class="panel panel-info">
+    <div class="panel panel-info">
         <div class="panel-heading">
             <h1>Skoler</h1>
             <div class="input-group">
-                <span class="input-group-addon">
-                        <i class="fa fa-search"></i>
-                    </span>
-                <input type="text" class="form-control" id="search" onkeyup="schoolSearch()"
+                    <span class="input-group-addon">
+                            <i class="fa fa-search"></i>
+                        </span>
+                <input type="text" class="form-control" id="search" onkeyup="schoolSearch(); inactiveSearch();"
                        placeholder="Søk etter skole">
             </div>
         </div>
         <div class="panel-body">
-        <table class="table table-hover table-striped table-responsive" id="schooltable">
-            <thead>
-            <tr>
-                <th>Navn</th>
-                <th>Adresse</th>
-                <th>Kontaktperson</th>
-                <th>Skoleinfo</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for school in object_list %}
-                <tr class="clickable-row" data-href="{% url 'administration:schoolDetail' school.id %}"
-                    style="cursor: pointer">
-                    <td>{{ school.school_name }}</td>
-                    <td>{{ school.school_address }}</td>
-                    <td>
-                        <a href="{% url 'administration:personDetail' school.school_administrator %}">{{ school.school_administrator.get_full_name }}</a>
-                    </td>
-                    <td><a class="btn btn-primary" href="{% url 'administration:schoolDetail' school.id %}"><span
-                            class="glyphicon glyphicon-home" aria-hidden="true"></span> Se Skoleinfo</a></td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <h3>Ingen skoler er lagt til</h3>
-    {% endif %}
-</div>
+            <ul class="nav nav-tabs">
+                <li class="nav active"><a href="#A" data-toggle="tab">Alle skoler</a></li>
+                <li class="nav"><a href="#B" data-toggle="tab">Inaktive</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="A">
+                    {% if object_list %}
+                        <table class="table table-hover table-striped table-responsive" id="schooltable">
+                            <thead>
+                            <tr>
+                                <th>Navn</th>
+                                <th>Adresse</th>
+                                <th>Kontaktperson</th>
+                                <th>Skoleinfo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for school in object_list %}
+                                {% if school.is_active %}
+                                    <tr class="clickable-row"
+                                        data-href="{% url 'administration:schoolDetail' school.id %}"
+                                        style="cursor: pointer">
+                                        <td>{{ school.school_name }}</td>
+                                        <td>{{ school.school_address }}</td>
+                                        <td>
+                                            <a href="{% url 'administration:personDetail' school.school_administrator %}">{{ school.school_administrator.get_full_name }}</a>
+                                        </td>
+                                        <td><a class="btn btn-primary"
+                                               href="{% url 'administration:schoolDetail' school.id %}"><span
+                                                class="glyphicon glyphicon-home" aria-hidden="true"></span> Se Skoleinfo</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <h3>Ingen skoler er lagt til</h3>
+                    {% endif %}
+                </div>
+                <div class="tab-pane fade" id="B">
+                    {% if object_list %}
+                        <table class="table table-hover table-striped table-responsive" id="inactivetable">
+                            <thead>
+                            <tr>
+                                <th>Navn</th>
+                                <th>Adresse</th>
+                                <th>Kontaktperson</th>
+                                <th>Skoleinfo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for school in object_list %}
+                                {% if not school.is_active %}
+                                    <tr class="clickable-row"
+                                        data-href="{% url 'administration:schoolDetail' school.id %}"
+                                        style="cursor: pointer">
+                                        <td>{{ school.school_name }}</td>
+                                        <td>{{ school.school_address }}</td>
+                                        <td>
+                                            <a href="{% url 'administration:personDetail' school.school_administrator %}">{{ school.school_administrator.get_full_name }}</a>
+                                        </td>
+                                        <td><a class="btn btn-primary"
+                                               href="{% url 'administration:schoolDetail' school.id %}"><span
+                                                class="glyphicon glyphicon-home" aria-hidden="true"></span> Se Skoleinfo</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <h3>Ingen skoler er lagt til</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 
-{% if request.user.role == 4 %}
-    <div class="panel-footer">
-        <a class="btn btn-primary" href="{% url 'administration:schoolCreate' %}"><span class="glyphicon glyphicon-plus"
-                                                                                        aria-hidden="true"></span> Legg
-            til skole</a>
-    </div>
-    </div>
-{% endif %}
+        {% if request.user.role == 4 %}
+            <div class="panel-footer">
+                <a class="btn btn-primary" href="{% url 'administration:schoolCreate' %}"><span
+                        class="glyphicon glyphicon-plus"
+                        aria-hidden="true"></span> Legg
+                    til skole</a>
+            </div>
+            </div>
+        {% endif %}
 
     <script>
         /**
@@ -69,7 +118,7 @@
          * and removes rows that don't match the search criteria.
          */
         function schoolSearch() {
-            var input, filter, table, tr, td, i, td1;
+            var input, filter, table, tr, td, i, td1, td2;
             input = document.getElementById("search");
             filter = input.value.toUpperCase();
             table = document.getElementById("schooltable");
@@ -78,8 +127,34 @@
             for (i = 0; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td")[0];
                 td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
                 if (td) {
-                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        /**
+         * This function matches the text in the search field with the content in the table with all
+         * inactive schools and removes rows that don't match the search criteria.
+         */
+        function inactiveSearch() {
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("inactivetable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
                         tr[i].style.display = "";
                     } else {
                         tr[i].style.display = "none";
