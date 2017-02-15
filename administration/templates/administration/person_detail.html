@@ -20,7 +20,7 @@
                     <label>Etternavn:</label>
                     {{ person.last_name }}</li>
                 <li>
-                    <label>Fødselsdag:</label>
+                    <label>Fødselsdato:</label>
                     {{ person.date_of_birth }}</li>
                 <li>
                     <label>E-post:</label>
@@ -42,14 +42,14 @@
                     <label>Sist innlogget:</label>
                     {{ person.last_login }}</li>
             </ul>
-        {% bootstrap_messages %}
+            {% bootstrap_messages %}
         </div>
         <div class="panel-footer">
 
             <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}"><span
-            class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater bruker</a>
+                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater bruker</a>
             <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal'>
-              <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
+                <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
 
         </div>
     </div>
@@ -66,18 +66,20 @@
                     <h4 class="modal-title" id="myModalLabel">Endre Passord</h4>
                 </div>
                 <div class="modal-body">
-                  <form class="form-horizontal" action="" method="post" autocomplete="off">
-                      {% csrf_token %}
-                      {% bootstrap_label 'Nytt Passord' %}
-                      {% bootstrap_field form.password placeholder='Nytt Passord' show_label=False %}
-                      {% bootstrap_label 'Gjenta Passord' %}
-                      {% bootstrap_field form.password2 placeholder='Gjenta Passord' show_label=False%}
-                         {% buttons %}
-                    <button type="submit" class="btn btn-success form-control">
-                        {% bootstrap_icon "check" %} Oppdater passord
-                    </button>
-                {% endbuttons %}
-                  </form>
+                    <div class="form-margin">
+                        <form class="form-horizontal" action="" method="post" autocomplete="off">
+                            {% csrf_token %}
+                            {% bootstrap_label 'Nytt Passord' %}
+                            {% bootstrap_field form.password placeholder='Nytt Passord' show_label=False %}
+                            {% bootstrap_label 'Gjenta Passord' %}
+                            {% bootstrap_field form.password2 placeholder='Gjenta Passord' show_label=False %}
+                            {% buttons %}
+                                <button type="submit" class="btn btn-success form-control">
+                                    {% bootstrap_icon "check" %} Oppdater passord
+                                </button>
+                            {% endbuttons %}
+                        </form>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>

@@ -13,63 +13,66 @@
                     <h1>Skoleadministrasjon</h1>
                 </div>
                 <div class="panel-body">
-                    <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {% bootstrap_field form.school_name %}
-                        {% bootstrap_field form.school_address %}
-                        {% bootstrap_field form.school_administrator addon_after='<a data-toggle="modal" data-target="#addAdministrator" style="cursor: pointer;"><span id="createPerson" class="glyphicon glyphicon-plus"></span></a>'%}
-                        <div class="alert alert-success" id="successMessageDiv">
-                            <strong>Fullført!</strong>
-                        </div>
-                        {% bootstrap_field form.is_active %}
-                        <button type="submit" class="btn btn-success">
-                            {% bootstrap_icon "check" %} Lagre
-                        </button>
-                    </form>
+                    <div class="form-margin">
+                        <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% bootstrap_field form.school_name %}
+                            {% bootstrap_field form.school_address %}
+                            {% bootstrap_field form.school_administrator addon_after='<a data-toggle="modal" data-target="#addAdministrator" style="cursor: pointer;"><span id="createPerson" class="glyphicon glyphicon-plus"></span></a>' %}
+                            <div class="alert alert-success" id="successMessageDiv">
+                                <strong>Fullført!</strong>
+                            </div>
+                            {% bootstrap_field form.is_active %}
+                            <button type="submit" class="btn btn-success">
+                                {% bootstrap_icon "check" %} Lagre
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-    $( document ).ready(function() {
-        $("#modalError").hide();
-        $("#successMessageDiv").hide();
-    });
+        $(document).ready(function () {
+            $("#modalError").hide();
+            $("#successMessageDiv").hide();
+        });
 
-       $(function () {
-        $('#administratorCreate').click(function () {
-            var first_name = $.trim($('#id_first_name').val());
-            var last_name =  $.trim($('#id_last_name').val());
-            var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
-            var email =  $.trim($('#id_email').val());
-            var date_of_birth =  $.trim($('#id_date_of_birth').val());
-            var sex =  $.trim($('#id_sex').val());;
-            if (first_name && last_name && testEmail.test(email) && date_of_birth && sex) {
-                  $.ajax({
-                    type: 'POST',
-                    url: '{% url 'administration:schoolCreate' %}',
-                    data: {
-                        'first_name' : first_name,
-                        'last_name' : last_name,
-                        'email' : email,
-                        'date_of_birth' : date_of_birth,
-                        'sex' : sex,
-                        'csrfmiddlewaretoken' : $('input[name=csrfmiddlewaretoken]').val()
-                    },
-                    dataType: 'json',
-                    success: searchSuccess,
-                    error: searchError
-                })
-            } else {
-                Errormessage()
-            }
+        $(function () {
+            $('#administratorCreate').click(function () {
+                var first_name = $.trim($('#id_first_name').val());
+                var last_name = $.trim($('#id_last_name').val());
+                var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+                var email = $.trim($('#id_email').val());
+                var date_of_birth = $.trim($('#id_date_of_birth').val());
+                var sex = $.trim($('#id_sex').val());
+                ;
+                if (first_name && last_name && testEmail.test(email) && date_of_birth && sex) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{% url 'administration:schoolCreate' %}',
+                        data: {
+                            'first_name': first_name,
+                            'last_name': last_name,
+                            'email': email,
+                            'date_of_birth': date_of_birth,
+                            'sex': sex,
+                            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                        },
+                        dataType: 'json',
+                        success: searchSuccess,
+                        error: searchError
+                    })
+                } else {
+                    Errormessage()
+                }
             })
 
         });
         function searchSuccess(data) {
             var field = $('#id_school_administrator');
-            field.append($("<option></option>").attr("value",data.id).text(data.first_name + " " + data.last_name + " - " + data.username));
+            field.append($("<option></option>").attr("value", data.id).text(data.first_name + " " + data.last_name + " - " + data.username));
             field.find('option[value="' + data.id + '"]').prop("selected", true);
             $('#successMessageDiv').append(data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username)
             $('#addAdministrator').modal('hide');
@@ -83,7 +86,6 @@
         function Errormessage() {
             $("#modalError").show();
         }
-
 
 
     </script>
@@ -102,17 +104,19 @@
                     <div id='modalError' class="alert alert-danger">
                         Noe gikk desverre galt. Vennligst fyll ut alle feltene korrekt
                     </div>
-                  <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {% bootstrap_field administratorForm.first_name %}
-                        {% bootstrap_field administratorForm.last_name %}
-                        {% bootstrap_field administratorForm.email %}
-                        {% bootstrap_field administratorForm.date_of_birth placeholder='dd.mm.yyyy' %}
-                        {% bootstrap_field administratorForm.sex %}
-                        <button id='administratorCreate' type="button" class="btn btn-success">
-                            {% bootstrap_icon "check" %} Lagre
-                        </button>
-                    </form>
+                    <div class="form-margin">
+                        <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% bootstrap_field administratorForm.first_name %}
+                            {% bootstrap_field administratorForm.last_name %}
+                            {% bootstrap_field administratorForm.email %}
+                            {% bootstrap_field administratorForm.date_of_birth placeholder='dd.mm.yyyy' %}
+                            {% bootstrap_field administratorForm.sex %}
+                            <button id='administratorCreate' type="button" class="btn btn-success">
+                                {% bootstrap_icon "check" %} Lagre
+                            </button>
+                        </form>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
