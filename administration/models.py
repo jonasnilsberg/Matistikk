@@ -42,7 +42,7 @@ class Grade(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     grade_name = models.CharField(max_length=100, verbose_name='klassenavn')
     tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')
-    is_active = models.BooleanField(default=True, verbose_name='aktiv')
+    is_active = models.BooleanField(default=True, verbose_name='aktiv', help_text='Angir at denne skolen er aktiv. Avmerk denne i stedet for å slette kontoen.')
 
     class Meta:
         ordering = ['school_id', 'grade_name']
@@ -77,7 +77,7 @@ class Person(AbstractUser):
         ordering = ['username']
 
     def __str__(self):
-        return self.username
+        return self.first_name + " " + self.last_name + " - " + self.username
 
     def get_absolute_url(self):
         return reverse('administration:personDetail', kwargs={'slug': self.username})

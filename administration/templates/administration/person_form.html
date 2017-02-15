@@ -23,7 +23,7 @@
                         {% bootstrap_field form.sex %}
                         {% bootstrap_field form.role %}
                         {% bootstrap_field form.grades field_class='hidden' %}
-                        <div class="row">
+                        <div class="row" id="gradeList">
                             <label for="schools">Velg Skole</label>
                             <select id="schools" class="form-control" onchange="changeClassList()">
                                 <option value="allschools">
@@ -83,6 +83,17 @@
     </div>
 
     <script>
+
+
+        $('#id_role').change(function() {
+            var userType = this.value;
+            if ((userType == 3) || (userType == 4)) {
+                $("#gradeList").hide();
+            } else {
+                $("#gradeList").show();
+            }
+
+        });
 
 
         /**

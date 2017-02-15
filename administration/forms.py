@@ -44,3 +44,13 @@ class SchoolForm(forms.ModelForm):
         super(SchoolForm, self).__init__(*args, **kwargs)
         self.fields['school_administrator'].queryset = Person.objects.filter(role=3)
 
+
+class SchoolAdministrator(forms.ModelForm):
+    first_name = forms.CharField(required=True, label='Fornavn')
+    last_name = forms.CharField(required=True, label='Etternavn')
+
+    class Meta:
+        model = Person
+        fields = ['email', 'date_of_birth', 'sex']
+
+

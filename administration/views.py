@@ -6,13 +6,15 @@ from django.contrib.auth.forms import PasswordChangeForm
 from .models import Person, School, Grade
 from django.contrib import messages
 from django.views import View
-from .forms import PersonForm, FileUpload, ChangePassword, SchoolForm
-
+from .forms import PersonForm, FileUpload, ChangePassword, SchoolForm, SchoolAdministrator
+from django.shortcuts import render, render_to_response
 import datetime
 from django.utils.safestring import mark_safe
 import re
 
 # Create your views here.
+from django.http import JsonResponse
+
 
 
 class AdministratorCheck(views.UserPassesTestMixin):
@@ -40,9 +42,10 @@ class SchoolCheck(views.UserPassesTestMixin):
         if self.request.user.role == 4:
             return True
         elif self.request.user.role == 3:
-            school = School.objects.get(id=self.kwargs.get('school_pk'))
-            if self.request.user.id == school.school_administrator.id:
-                return True
+            if self.kwargs.get('school_pk'):
+                school = School.objects.get(id=self.kwargs.get('school_pk'))
+                if self.request.user.id == school.school_administrator.id:
+                    return True
         elif self.request.user.role == 2:
             grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
             grades = Grade.objects.filter(id=self.kwargs.get('grade_pk'))
@@ -50,6 +53,10 @@ class SchoolCheck(views.UserPassesTestMixin):
                 for grade in grades:
                     if grade_teacher == grade:
                         return True
+        if self.kwargs.get('slug'):
+            schoolAdmin = School.objects.filter(school_administrator__username__exact=self.kwargs.get('slug'))
+            if schoolAdmin:
+                return True
         return False
 
 
@@ -261,16 +268,13 @@ class PersonCreateView(SchoolCheck, generic.CreateView):
         :param form: References to the model form.
         :return: calls super
         """
-        chosengrades = self.request.POST.get('chosengrades[]')
-        test = self.request.POST.get('test')
-        print(test)
-        print(self.request.POST)
+
         person = form.save(commit=False)
         username = Person.createusername(person)
 
         person.username = username
         person.set_password('ntnu123')
-        #person.save()
+        person.save()
         return super(PersonCreateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -374,7 +378,7 @@ class SchoolDetailView(SchoolCheck, generic.DetailView):
         return context
 
 
-class SchoolCreateView(AdministratorCheck, generic.CreateView):
+class SchoolCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.CreateView):
     """
     Class to create a School object
 
@@ -387,6 +391,40 @@ class SchoolCreateView(AdministratorCheck, generic.CreateView):
     template_name = 'administration/school_form.html'
     form_class = SchoolForm
     success_url = reverse_lazy('administration:schoolList')
+
+    def post_ajax(self, request, *args, **kwargs):
+        """
+            Function that checks if the post request is an ajax post and finds the searched for Persons.
+            :param self:
+                References to the class itself and all it's variables
+            :param request:
+                The request
+            :return: List of person objects
+        """
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        email = request.POST['email']
+        date_of_birth = request.POST['date_of_birth']
+        sex = request.POST['sex']
+        person = Person(first_name=first_name, last_name=last_name, email=email, sex=sex)
+        person.date_of_birth = datetime.datetime.strptime(date_of_birth, "%d.%m.%Y").strftime("%Y-%m-%d")
+        username = person.createusername()
+        person.username = username
+        person.role = 3
+        person.set_password('ntnu123')
+        person.save()
+        data = {
+            'username': person.username,
+            'id': person.id,
+            'first_name': person.first_name,
+            'last_name': person.last_name
+        }
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super(SchoolCreateView, self).get_context_data(**kwargs)
+        context['administratorForm'] = SchoolAdministrator()
+        return context
 
 
 class SchoolUpdateView(SchoolCheck, generic.UpdateView):
