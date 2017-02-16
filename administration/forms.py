@@ -16,6 +16,15 @@ class PersonForm(forms.ModelForm):
         model = Person
         fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'is_staff', 'is_active', 'role', 'grades']
 
+    def __init__(self, *args, **kwargs):
+        super(PersonForm, self).__init__(*args, **kwargs)
+        print(self)
+        ROLE = [
+            (1, "Elev"),
+            (2, 'Lærer'),
+        ]
+        self.fields['role'].choices = ROLE
+
 
 class FileUpload(forms.Form):
     file = forms.FileField()
