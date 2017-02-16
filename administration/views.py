@@ -16,7 +16,6 @@ import re
 from django.http import JsonResponse
 
 
-
 class AdministratorCheck(views.UserPassesTestMixin):
     """
     Checks if the logged in user has administrator privileges.
@@ -25,6 +24,14 @@ class AdministratorCheck(views.UserPassesTestMixin):
         if self.request.user.role == 4:
             return True
         return False
+
+
+class RoleCheck(views.UserPassesTestMixin):
+
+    def test_func(self, user):
+        role = [2, 3, 4]
+        if self.request.user.role in role:
+            return True
 
 
 class SchoolCheck(views.UserPassesTestMixin):
@@ -46,16 +53,32 @@ class SchoolCheck(views.UserPassesTestMixin):
                 school = School.objects.get(id=self.kwargs.get('school_pk'))
                 if self.request.user.id == school.school_administrator.id:
                     return True
+            if self.kwargs.get('slug'):
+                schools = School.objects.filter(school_administrator=self.request.user.id)
+                persons = Person.objects.filter(grades__school_id__in=schools)
+                for person in persons:
+                    if person.username == self.kwargs.get('slug'):
+                        return True
         elif self.request.user.role == 2:
-            grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
-            grades = Grade.objects.filter(id=self.kwargs.get('grade_pk'))
-            for grade_teacher in grades_teacher:
-                for grade in grades:
-                    if grade_teacher == grade:
+            if self.kwargs.get('grade_pk'):
+                grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
+                grades = Grade.objects.filter(id=self.kwargs.get('grade_pk'))
+                print(grades_teacher)
+                print(grades)
+                for grade_teacher in grades_teacher:
+                    for grade in grades:
+                        if grade_teacher == grade:
+                            return True
+            elif self.kwargs.get('slug'):
+                grades = self.request.user.grades.all()
+                print(grades)
+                persons = Person.objects.filter(grades__in=grades).distinct()
+                for person in persons:
+                    if person.username == self.kwargs.get('slug'):
                         return True
         if self.kwargs.get('slug'):
-            schoolAdmin = School.objects.filter(school_administrator__username__exact=self.kwargs.get('slug'))
-            if schoolAdmin:
+            school_admin = School.objects.filter(school_administrator__username__exact=self.kwargs.get('slug'))
+            if school_admin:
                 return True
         return False
 
@@ -119,7 +142,7 @@ class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
         return context
 
 
-class PersonListView(SchoolAdministratorCheck, generic.ListView):
+class PersonListView(RoleCheck, generic.ListView):
     """
     Class that lists all the users in the system, can only be accessed by administrators.
 
@@ -139,13 +162,17 @@ class PersonListView(SchoolAdministratorCheck, generic.ListView):
         :return: returns the updated context
         """
         context = super(PersonListView, self).get_context_data(**kwargs)
-
         if self.request.user.role == 3:
             schools = School.objects.filter(school_administrator=self.request.user.id)
             persons = Person.objects.filter(grades__school_id__in=schools).distinct()
             context['object_list'] = persons
             return context
-
+        if self.request.user.role == 2:
+            grades = self.request.user.grades.all()
+            print(grades)
+            persons = Person.objects.filter(grades__in=grades).distinct()
+            context['object_list'] = persons
+            return context
         return context
 
 
@@ -233,7 +260,7 @@ class ChangePasswordView(generic.FormView):
         return super(ChangePasswordView, self).form_valid(form)
 
 
-class PersonCreateView(SchoolCheck, generic.CreateView):
+class PersonCreateView(RoleCheck, generic.CreateView):
     """
     Creates a Person object
 
@@ -259,7 +286,7 @@ class PersonCreateView(SchoolCheck, generic.CreateView):
             self.success_url = reverse_lazy('administration:gradeDetail',
                                             kwargs={'school_pk': self.kwargs.get('school_pk'),
                                                     'grade_pk': self.kwargs.get('grade_pk')})
-            return {'role': self.role}
+            return {'role': self.role, 'grades': self.kwargs.get('grade_pk')}
 
     def form_valid(self, form):
         """
@@ -286,8 +313,18 @@ class PersonCreateView(SchoolCheck, generic.CreateView):
         context = super(PersonCreateView, self).get_context_data(**kwargs)
         if self.request.user.role == 3:
             schools = School.objects.filter(school_administrator=self.request.user.id)
+            print(schools)
+            print(Grade.objects.filter(school_id__in=schools))
             context['schools'] = schools
             context['gradesInfo'] = Grade.objects.filter(school_id__in=schools)
+        elif self.request.user.role == 2:
+            grades = self.request.user.grades.all()
+            school_ids = []
+            for grade in grades:
+                school_ids.append(grade.school_id)
+            schools = School.objects.filter(id__in=school_ids).distinct()
+            context['schools'] = schools
+            context['gradesInfo'] = grades
         else:
             context['schools'] = School.objects.all()
             context['gradesInfo'] = Grade.objects.all()
@@ -443,7 +480,7 @@ class SchoolUpdateView(SchoolCheck, generic.UpdateView):
     pk_url_kwarg = 'school_pk'
 
 
-class GradeDisplay(SchoolCheck, generic.DetailView):
+class GradeDisplay(generic.DetailView):
     """
     Class that displays information about a single grade object
 
@@ -606,7 +643,7 @@ class GradeUpdateView(SchoolCheck, generic.UpdateView):
         return reverse_lazy('administration:schoolDetail', kwargs={'school_pk': self.kwargs.get('school_pk')})
 
 
-class GradeListView(SchoolCheck, generic.ListView):
+class GradeListView(RoleCheck, generic.ListView):
     """
     Class that displays a list of grade objects
     """
