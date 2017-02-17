@@ -10,19 +10,22 @@
                                                               aria-hidden="true"></span> Tilbake</a>
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h1>{{ grade.grade_name }}</h1>
+            <h1>Klassedetaljer for {{ grade.school }} - Klasse: {{ grade.grade_name }}</h1>
         </div>
 
         <div class="panel-body">
-            <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}"><span
-                    class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Elev</a>
             <button class="btn btn-primary" data-toggle='modal' data-target='#masseregModal'><span
-                    class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Masseregistrering
+                    class="fa fa-users"
+                    aria-hidden="true"></span> Masseregistrering
             </button>
+            <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}"><span
+                    class="fa fa-user-plus"
+                    aria-hidden="true"></span> Legg til Elev</a>
             {% if request.user.role == 4 or request.user.role == 3 %}
                 <a class="btn btn-primary"
                    href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"><span
-                        class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Lærer</a>
+                        class="fa fa-user-plus"
+                        aria-hidden="true"></span> Legg til Lærer</a>
                 <a class="btn btn-primary"
                    href="{% url 'administration:gradeUpdate' school_pk=grade.school_id grade_pk=grade.id %}"><span
                         class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
@@ -183,7 +186,6 @@
                 </div>
             </div>
             <hr>
-            <hr>
             <h4>Tester</h4>
             <ul>
                 {% for test in grade.tests_set.all %}
@@ -197,11 +199,13 @@
         </div>
         <div class="panel-footer">
             <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}"><span
-                    class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Elev</a>
+                    class="fa fa-user-plus"
+                    aria-hidden="true"></span> Legg til Elev</a>
             {% if request.user.role == 4 or request.user.role == 3 %}
                 <a class="btn btn-primary"
                    href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"><span
-                        class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Lærer</a>
+                        class="fa fa-user-plus"
+                        aria-hidden="true"></span> Legg til Lærer</a>
                 <a class="btn btn-primary"
                    href="{% url 'administration:gradeUpdate' school_pk=grade.school_id grade_pk=grade.id %}"><span
                         class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
@@ -219,7 +223,8 @@
                 window.document.location = $(this).data("href");
             });
             $('#masseregModal').on('hidden.bs.modal', function () {
-                 location.reload();
+
+                location.reload();
             });
         });
     </script>
@@ -326,6 +331,30 @@
                 }
             }
         }
+
+        /**
+         * This function matches the text in the search field with the content in the table with all users
+         * in the mass registration modal and removes rows that don't match the search criteria.
+         */
+        function userSearch() {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("search1");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("addtable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
         function addExistingPerson(elem) {
             var username = elem.id;
             var url = "{% url 'administration:personUpdate' slug=12345 %}".replace(/12345/, username.toString());
@@ -341,16 +370,15 @@
                 error: searchError
             })
         }
+
         function searchSuccess(data) {
             $('#' + data.username).remove();
             $("#successMessageDiv").show();
             $('#successList').append("<li>" + data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username + "</li>")
         }
         function searchError(xhr) {
-            alert(xhr.responseText)
+            alert(xhr.responseText);
         }
-
-
     </script>
 
 {% endblock %}
@@ -402,22 +430,41 @@
                             <br> <b>Fødselsdag:</b> Oppgis i formatet dd.mm.åååå
                         </div>
                         <div class="tab-pane fade" id="EksisterendeBrukere">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                <input type="text" class="form-control" id="search1"
+                                       onkeyup="userSearch()"
+                                       placeholder="Søk etter bruker">
+                            </div>
                             <div class="alert alert-success" id="successMessageDiv">
                                 <strong>Fullført!</strong>
                                 <ul id="successList">
-
                                 </ul>
                             </div>
-                            <ul>
+                            <table class="table table-hover table-striped table-responsive table-condensed"
+                                   id="addtable">
+                                <thead>
+                                <tr>
+                                    <th>Bruker</th>
+                                    <th>Legg til</th>
+                                </tr>
+                                </thead>
+                                <tbody>
                                 {% for existingPersons in existingPersons %}
-                                    <li id="{{ existingPersons.username }}"
-                                        value="{{ existingPersons.username }}">{{ existingPersons }}
-                                        <button type="button" id="{{ existingPersons.username }}"
-                                                onclick="addExistingPerson(this)">Legg til
-                                        </button>
-                                    </li>
+                                    <tr id="{{ existingPersons.username }}" value="{{ existingPersons.username }}">
+                                        <td>{{ existingPersons }}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success btn-xs" type="button"
+                                                    id="{{ existingPersons.username }}"
+                                                    onclick="addExistingPerson(this)">Legg til
+                                            </button>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
-                            </ul>
+                                </tbody>
+                            </table>
+
                         </div>
                     </div>
                 </div>

@@ -63,15 +63,12 @@ class SchoolCheck(views.UserPassesTestMixin):
             if self.kwargs.get('grade_pk'):
                 grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
                 grades = Grade.objects.filter(id=self.kwargs.get('grade_pk'))
-                print(grades_teacher)
-                print(grades)
                 for grade_teacher in grades_teacher:
                     for grade in grades:
                         if grade_teacher == grade:
                             return True
             elif self.kwargs.get('slug'):
                 grades = self.request.user.grades.all()
-                print(grades)
                 persons = Person.objects.filter(grades__in=grades).distinct()
                 for person in persons:
                     if person.username == self.kwargs.get('slug'):
@@ -169,7 +166,6 @@ class PersonListView(RoleCheck, generic.ListView):
             return context
         if self.request.user.role == 2:
             grades = self.request.user.grades.all()
-            print(grades)
             persons = Person.objects.filter(grades__in=grades).distinct()
             context['object_list'] = persons
             return context
@@ -313,8 +309,6 @@ class PersonCreateView(RoleCheck, generic.CreateView):
         context = super(PersonCreateView, self).get_context_data(**kwargs)
         if self.request.user.role == 3:
             schools = School.objects.filter(school_administrator=self.request.user.id)
-            print(schools)
-            print(Grade.objects.filter(school_id__in=schools))
             context['schools'] = schools
             context['gradesInfo'] = Grade.objects.filter(school_id__in=schools)
         elif self.request.user.role == 2:
