@@ -39,13 +39,15 @@
 
         $(function () {
             $('#administratorCreate').click(function () {
+                var message;
+
                 var first_name = $.trim($('#id_first_name').val());
                 var last_name = $.trim($('#id_last_name').val());
                 var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
                 var email = $.trim($('#id_email').val());
                 var date_of_birth = $.trim($('#id_date_of_birth').val());
                 var sex = $.trim($('#id_sex').val());
-                ;
+
                 if (first_name && last_name && testEmail.test(email) && date_of_birth && sex) {
                     $.ajax({
                         type: 'POST',
@@ -62,27 +64,41 @@
                         success: searchSuccess,
                         error: searchError
                     })
-                } else {
-                    Errormessage()
+                }
+                else if (!testEmail.test(email) && first_name && last_name && date_of_birth && sex){
+                    message = "Epost er ikke gyldig!";
+                    Errormessage(message)
+                }
+                else {
+                    message = "Vennligst fyll ut alle feltene korrekt";
+                    Errormessage(message)
                 }
             })
-
         });
         function searchSuccess(data) {
             var field = $('#id_school_administrator');
-            field.append($("<option></option>").attr("value", data.id).text(data.first_name + " " + data.last_name + " - " + data.username));
-            field.find('option[value="' + data.id + '"]').prop("selected", true);
-            $('#successMessageDiv').append(data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username)
-            $('#addAdministrator').modal('hide');
-            $("#successMessageDiv").show();
-            $("#modalError").hide();
+            if (data.message){
+                Errormessage(data.message);
+            }
+            else{
+               field.append($("<option></option>").attr("value", data.id).text(data.first_name + " " + data.last_name + " - " + data.username));
+                field.find('option[value="' + data.id + '"]').prop("selected", true);
+                $('#successMessageDiv').append(data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username)
+                $('#addAdministrator').modal('hide');
+                $("#successMessageDiv").show();
+                $("#modalError").hide();
+            }
         }
         function searchError(xhr) {
             alert(xhr.responseText)
         }
 
-        function Errormessage() {
+        function Errormessage(message) {
             $("#modalError").show();
+            $('#liError').remove();
+            $('#errorMessage').append("<li id='liError'>" + message + "</li>")
+
+
         }
 
 
@@ -100,7 +116,8 @@
                 </div>
                 <div class="modal-body">
                     <div id='modalError' class="alert alert-danger">
-                        Noe gikk desverre galt. Vennligst fyll ut alle feltene korrekt
+                        <strong>Noe gikk desverre galt.</strong>
+                        <ul id="errorMessage"></ul>
                     </div>
                     <div class="form-margin">
                         <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">

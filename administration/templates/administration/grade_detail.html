@@ -16,6 +16,9 @@
         <div class="panel-body">
             <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}"><span
                     class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til Elev</a>
+            <button class="btn btn-primary" data-toggle='modal' data-target='#masseregModal'><span
+                    class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> Masseregistrering
+            </button>
             {% if request.user.role == 4 or request.user.role == 3 %}
                 <a class="btn btn-primary"
                    href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"><span
@@ -24,6 +27,7 @@
                    href="{% url 'administration:gradeUpdate' school_pk=grade.school_id grade_pk=grade.id %}"><span
                         class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
             {% endif %}
+            {% bootstrap_messages %}
             <h4>Brukere</h4>
             <div class="input-group">
                 <span class="input-group-addon">
@@ -179,18 +183,6 @@
                 </div>
             </div>
             <hr>
-            <form action="" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% bootstrap_messages %}
-                {% bootstrap_label "Masseregistrering <button type='button' class='btn btn-default' style='font-size:1.5em; color: blue;' data-toggle='modal' data-target='#masseregModal'><span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></button>" %}
-                {% bootstrap_field form.file show_label=false %}
-                {% buttons %}
-                    <button type="submit" class="btn btn-success">
-                        {% bootstrap_icon "arrow-up" %} Last opp
-                    </button>
-                {% endbuttons %}
-            </form>
-
             <hr>
             <h4>Tester</h4>
             <ul>
@@ -222,8 +214,12 @@
          * This function makes the rows of the user-, student-, teacher- and admintable clickable
          */
         jQuery(document).ready(function ($) {
+            $("#successMessageDiv").hide();
             $(".clickable-row").click(function () {
                 window.document.location = $(this).data("href");
+            });
+            $('#masseregModal').on('hidden.bs.modal', function () {
+                 location.reload();
             });
         });
     </script>
@@ -330,6 +326,31 @@
                 }
             }
         }
+        function addExistingPerson(elem) {
+            var username = elem.id;
+            var url = "{% url 'administration:personUpdate' slug=12345 %}".replace(/12345/, username.toString());
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'grade': {{ grade.id }},
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: 'json',
+                success: searchSuccess,
+                error: searchError
+            })
+        }
+        function searchSuccess(data) {
+            $('#' + data.username).remove();
+            $("#successMessageDiv").show();
+            $('#successList').append("<li>" + data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username + "</li>")
+        }
+        function searchError(xhr) {
+            alert(xhr.responseText)
+        }
+
+
     </script>
 
 {% endblock %}
@@ -345,20 +366,60 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">Masseregistrering</h4>
                 </div>
+
                 <div class="modal-body">
-                    Masseregistrering kan gjøres ved å laste opp Excel-filer med en liste personer som skal registreres.
-                    Brukerne vil bli registrert som elever i klassen du laster opp filen fra. <br><br>
-                    Excel-filen må være på formatet som er vist i bildet:
-                    <img src="{% static "administration/images/masseregistrering.png" %}" width="100%"><br><br>
-                    <b>A1:</b> Fornavn<br>
-                    <b>B1:</b> Etternavn<br>
-                    <b>C1:</b> Epost<br>
-                    <b>D1:</b> Fødselsdag<br>
-                    <b>E1:</b> Kjønn<br>
-                    Disse fem feltene må inneholde nøyaktig denne teksten for at filen skal fungere.<br>
-                    <br> <b>Epost:</b> Dette feltet er ikke påkrevd å fylle ut
-                    <br> <b>Kjønn:</b> Oppgis med F for jente og M for gutt
-                    <br> <b>Fødselsdag:</b> Oppgis i formatet dd.mm.åååå
+                    <ul class="nav nav-tabs">
+                        <li class="nav active"><a href="#NyeBrukere" data-toggle="tab">Nye brukere</a></li>
+                        <li class="nav"><a href="#EksisterendeBrukere" data-toggle="tab">Eksisterende brukere</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="NyeBrukere">
+                            Masseregistrering kan gjøres ved å laste opp Excel-filer med en liste personer som skal
+                            registreres.
+                            Brukerne vil bli registrert som elever i klassen du laster opp filen fra.
+                            <hr>
+                            <form action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {% bootstrap_messages %}
+                                {% bootstrap_field form.file show_label=false %}
+                                {% buttons %}
+                                    <button type="submit" class="btn btn-success">
+                                        {% bootstrap_icon "arrow-up" %} Last opp
+                                    </button>
+                                {% endbuttons %}
+                            </form>
+                            <hr>
+                            Excel-filen må være på formatet som er vist i bildet:
+                            <img src="{% static "administration/images/masseregistrering.png" %}" width="100%"><br><br>
+                            <b>A1:</b> Fornavn<br>
+                            <b>B1:</b> Etternavn<br>
+                            <b>C1:</b> Epost<br>
+                            <b>D1:</b> Fødselsdag<br>
+                            <b>E1:</b> Kjønn<br>
+                            Disse fem feltene må inneholde nøyaktig denne teksten for at filen skal fungere.<br>
+                            <br> <b>Epost:</b> Dette feltet er ikke påkrevd å fylle ut
+                            <br> <b>Kjønn:</b> Oppgis med F for jente og M for gutt
+                            <br> <b>Fødselsdag:</b> Oppgis i formatet dd.mm.åååå
+                        </div>
+                        <div class="tab-pane fade" id="EksisterendeBrukere">
+                            <div class="alert alert-success" id="successMessageDiv">
+                                <strong>Fullført!</strong>
+                                <ul id="successList">
+
+                                </ul>
+                            </div>
+                            <ul>
+                                {% for existingPersons in existingPersons %}
+                                    <li id="{{ existingPersons.username }}"
+                                        value="{{ existingPersons.username }}">{{ existingPersons }}
+                                        <button type="button" id="{{ existingPersons.username }}"
+                                                onclick="addExistingPerson(this)">Legg til
+                                        </button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
