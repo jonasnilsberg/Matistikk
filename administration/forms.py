@@ -11,10 +11,16 @@ from django.views.generic.detail import SingleObjectMixin
 class PersonForm(forms.ModelForm):
     first_name = forms.CharField(required=True, label='Fornavn')
     last_name = forms.CharField(required=True, label='Etternavn')
+    ROLE = [
+        (1, "Elev"),
+        (2, 'Lærer'),
+        (4, 'Administrator')
+    ]
+    role = forms.ChoiceField(choices=ROLE, label='Brukertype')
 
     class Meta:
         model = Person
-        fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'is_staff', 'is_active', 'role', 'grades']
+        fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'is_staff', 'is_active', 'grades']
 
     def __init__(self, *args, **kwargs):
         super(PersonForm, self).__init__(*args, **kwargs)
