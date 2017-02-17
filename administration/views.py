@@ -333,7 +333,7 @@ class PersonCreateView(RoleCheck, generic.CreateView):
         return context
 
 
-class PersonUpdateView(SchoolCheck, generic.UpdateView):
+class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView):
     """
     Class that updates a Person object
 
@@ -347,6 +347,26 @@ class PersonUpdateView(SchoolCheck, generic.UpdateView):
     form_class = PersonForm
     model = Person
     slug_field = "username"
+
+    def post_ajax(self, request, *args, **kwargs):
+        """
+                    Function that checks if the post request is an ajax post and adds the grade to the Person.
+                    :param self:
+                        References to the class itself and all it's variables
+                    :param request:
+                        The request
+                    :return: List of person objects
+                """
+        grade = Grade.objects.get(id=request.POST['grade'])
+        person = self.get_object()
+        person.grades.add(grade)
+        person.save()
+        data = {
+            'username': person.username,
+            'first_name': person.first_name,
+            'last_name': person.last_name,
+        }
+        return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         """
@@ -444,7 +464,13 @@ class SchoolCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Crea
         date_of_birth = request.POST['date_of_birth']
         sex = request.POST['sex']
         person = Person(first_name=first_name, last_name=last_name, email=email, sex=sex)
-        person.date_of_birth = datetime.datetime.strptime(date_of_birth, "%d.%m.%Y").strftime("%Y-%m-%d")
+        try:
+            person.date_of_birth = datetime.datetime.strptime(date_of_birth, "%d.%m.%Y").strftime("%Y-%m-%d")
+        except ValueError:
+            data = {
+                'message': 'Ikke rett format på fødselsdato. Må være på formen dd.mm.yyyy'
+            }
+            return JsonResponse(data)
         username = person.createusername()
         person.username = username
         person.role = 3
@@ -501,6 +527,7 @@ class GradeDisplay(generic.DetailView):
         """
         context = super(GradeDisplay, self).get_context_data(**kwargs)
         context['persons'] = Person.objects.filter(grades__id=self.kwargs['grade_pk'])
+        context['existingPersons'] = Person.objects.filter(role=1, is_active=1).exclude(grades__id=self.kwargs['grade_pk'])
         context['form'] = FileUpload()
         return context
 
@@ -652,3 +679,5 @@ class GradeListView(RoleCheck, generic.ListView):
 
     def get_queryset(self):
         return Grade.objects.filter(person__username=self.request.user.username)
+
+
