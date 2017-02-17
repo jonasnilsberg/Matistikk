@@ -10,7 +10,7 @@
         <tbody>
         {% for grade in object_list %}
             <tr class="clickable-row"
-                data-href="{% url 'administration:gradeDetail' school_pk=grade.school_id pk=grade.id %}"
+                data-href="{% url 'administration:gradeDetail' school_pk=grade.school_id grade_pk=grade.id %}"
                 style="cursor: pointer">
                 <td>{{ grade }}</td>
             </tr>

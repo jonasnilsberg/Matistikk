@@ -21,7 +21,9 @@
                         {% bootstrap_field form.email %}
                         {% bootstrap_field form.date_of_birth placeholder="dd.mm.yyyy" %}
                         {% bootstrap_field form.sex %}
-                        {% bootstrap_field form.role %}
+                        {% if not request.user.role == 2 %}
+                            {% bootstrap_field form.role %}
+                        {% endif %}
                         {% bootstrap_field form.grades field_class='hidden' %}
                         <div class="row" id="gradeList">
                             <label for="schools">Velg Skole</label>
@@ -65,12 +67,8 @@
                                 </select>
                             </div>
                         </div>
-                        {% if request.user.role == 4 %}
-                            {% bootstrap_field form.is_active %}
-                        {% endif %}
-                        {% if request.user.role == 2 and request.user.grade_id == person.grade_id and not person.role == 2 and not request.user.role == 4 %}
-                            {% bootstrap_field form.is_active %}
-                        {% endif %}
+                        {% bootstrap_field form.is_active %}
+
                         {% buttons %}
                             <button type="submit" class="btn btn-success">
                                 {% bootstrap_icon "check" %} Lagre
