@@ -16,7 +16,6 @@ import re
 from django.http import JsonResponse
 
 
-
 class AdministratorCheck(views.UserPassesTestMixin):
     """
     Checks if the logged in user has administrator privileges.
