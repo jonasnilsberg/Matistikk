@@ -26,5 +26,4 @@ urlpatterns = [
     url(r'^$', mathViews.IndexView.as_view(), name='index'),
     url(r'login/$', views.LoginView.as_view(), name='login'),
     url(r'^logout/', auth_views.logout, {'next_page': '/'}, name="logout"),
-
 ]

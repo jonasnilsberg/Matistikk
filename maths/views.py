@@ -1,5 +1,3 @@
-from django.shortcuts import render
-from django.http import HttpResponse
 from django.views.generic import TemplateView
 from braces.views import LoginRequiredMixin
 # Create your views here.
@@ -8,5 +6,6 @@ from braces.views import LoginRequiredMixin
 class IndexView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     template_name = 'maths/index.html'
+
 
 
