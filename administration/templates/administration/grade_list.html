@@ -1,22 +1,36 @@
 {% extends 'matistikk/base.html' %}
 
 {% block body %}
-    <table class="table table-hover table-striped table-responsive" id="classtable">
-        <thead>
-        <tr>
-            <th>Klasse</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for grade in object_list %}
-            <tr class="clickable-row"
-                data-href="{% url 'administration:gradeDetail' school_pk=grade.school_id grade_pk=grade.id %}"
-                style="cursor: pointer">
-                <td>{{ grade }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>Mine klasser</h1>
+            <div class="input-group">
+                    <span class="input-group-addon">
+                            <i class="fa fa-search"></i>
+                        </span>
+                <input type="text" class="form-control" id="search" onkeyup="gradeSearch()"
+                       placeholder="Søk etter klasse">
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover table-striped table-responsive" id="gradetable">
+                <thead>
+                <tr>
+                    <th>Klasse</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for grade in object_list %}
+                    <tr class="clickable-row"
+                        data-href="{% url 'administration:gradeDetail' school_pk=grade.school_id grade_pk=grade.id %}"
+                        style="cursor: pointer">
+                        <td>{{ grade }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <script>
         /**
@@ -27,5 +41,30 @@
                 window.document.location = $(this).data("href");
             });
         });
+    </script>
+
+    <script>
+        /**
+         * This function matches the text in the search field with the content in the table with all grades
+         * and removes rows that don't match the search criteria.
+         */
+        function gradeSearch() {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("gradetable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
     </script>
 {% endblock %}

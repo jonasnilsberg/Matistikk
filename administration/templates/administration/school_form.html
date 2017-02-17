@@ -13,21 +13,19 @@
                     <h1>Skoleadministrasjon</h1>
                 </div>
                 <div class="panel-body">
-                    <div class="form-margin">
-                        <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            {% bootstrap_field form.school_name %}
-                            {% bootstrap_field form.school_address %}
-                            {% bootstrap_field form.school_administrator addon_after='<a data-toggle="modal" data-target="#addAdministrator" style="cursor: pointer;"><span id="createPerson" class="glyphicon glyphicon-plus"></span></a>' %}
-                            <div class="alert alert-success" id="successMessageDiv">
-                                <strong>Fullført!</strong>
-                            </div>
-                            {% bootstrap_field form.is_active %}
-                            <button type="submit" class="btn btn-success">
-                                {% bootstrap_icon "check" %} Lagre
-                            </button>
-                        </form>
-                    </div>
+                    <form class="form-horizontal form-margin" action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% bootstrap_field form.school_name addon_before='<span class="glyphicon glyphicon-home"></span>' %}
+                        {% bootstrap_field form.school_address addon_before='<span class="fa fa-map-marker"></span>' %}
+                        {% bootstrap_field form.school_administrator addon_before='<span class="glyphicon glyphicon-user"></span>' addon_after='<a data-toggle="modal" data-target="#addAdministrator" style="cursor: pointer;"><span id="createPerson" class="glyphicon glyphicon-plus"></span></a>' %}
+                        <div class="alert alert-success" id="successMessageDiv">
+                            <strong>Fullført!</strong>
+                        </div>
+                        {% bootstrap_field form.is_active %}
+                        <button type="submit" class="btn btn-success">
+                            {% bootstrap_icon "check" %} Lagre
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -124,11 +122,11 @@
                     <div class="form-margin">
                         <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
-                            {% bootstrap_field administratorForm.first_name %}
-                            {% bootstrap_field administratorForm.last_name %}
-                            {% bootstrap_field administratorForm.email %}
-                            {% bootstrap_field administratorForm.date_of_birth placeholder='dd.mm.yyyy' %}
-                            {% bootstrap_field administratorForm.sex %}
+                            {% bootstrap_field administratorForm.first_name addon_before='<span class="glyphicon glyphicon-user"></span>' %}
+                            {% bootstrap_field administratorForm.last_name addon_before='<span class="glyphicon glyphicon-user"></span>' %}
+                            {% bootstrap_field administratorForm.email addon_before='<span class=""><strong>@</strong></span>' %}
+                            {% bootstrap_field administratorForm.date_of_birth addon_before='<span class="glyphicon glyphicon-calendar"></span>' placeholder='dd.mm.yyyy' %}
+                            {% bootstrap_field administratorForm.sex addon_before='<span class="fa fa-venus-mars"></span>' %}
                             <button id='administratorCreate' type="button" class="btn btn-success">
                                 {% bootstrap_icon "check" %} Lagre
                             </button>

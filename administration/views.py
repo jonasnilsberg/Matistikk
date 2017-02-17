@@ -505,6 +505,11 @@ class SchoolUpdateView(SchoolCheck, generic.UpdateView):
     form_class = SchoolForm
     pk_url_kwarg = 'school_pk'
 
+    def get_context_data(self, **kwargs):
+        context = super(SchoolUpdateView, self).get_context_data(**kwargs)
+        context['administratorForm'] = SchoolAdministrator()
+        return context
+
 
 class GradeDisplay(generic.DetailView):
     """

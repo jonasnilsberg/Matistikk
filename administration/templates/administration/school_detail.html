@@ -31,6 +31,7 @@
                         <thead>
                         <tr>
                             <th>Klasse</th>
+                            <th>Detaljer</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -41,6 +42,12 @@
                                     style="cursor: pointer">
                                     <td>
                                         {{ grade.grade_name }}
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-default"
+                                           href="{% url 'administration:gradeDetail' school_pk=school.id grade_pk=grade.id %}"><span
+                                                class="glyphicon glyphicon-home" aria-hidden="true"></span> Se
+                                            Klassedetaljer</a>
                                     </td>
                                 </tr>
                             {% endif %}
@@ -53,6 +60,7 @@
                         <thead>
                         <tr>
                             <th>Klasse</th>
+                            <th>Detaljer</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -63,6 +71,12 @@
                                     style="cursor: pointer">
                                     <td>
                                         {{ grade.grade_name }}
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-default"
+                                           href="{% url 'administration:gradeDetail' school_pk=school.id grade_pk=grade.id %}"><span
+                                                class="glyphicon glyphicon-home" aria-hidden="true"></span> Se
+                                            Klassedetaljer</a>
                                     </td>
                                 </tr>
                             {% endif %}

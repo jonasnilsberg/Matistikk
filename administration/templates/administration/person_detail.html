@@ -9,40 +9,100 @@
                                                               aria-hidden="true"></span> Tilbake</a>
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h1>{{ person.username }}</h1>
+            <h1>Brukerprofil - {{ person.first_name }} {{ person.last_name }}</h1>
         </div>
         <div class="panel-body">
-            <ul>
-                <li>
-                    <label>Fornavn:</label>
-                    {{ person.first_name }}</li>
-                <li>
-                    <label>Etternavn:</label>
-                    {{ person.last_name }}</li>
-                <li>
-                    <label>Fødselsdato:</label>
-                    {{ person.date_of_birth }}</li>
-                <li>
-                    <label>E-post:</label>
-                    {{ person.email }}</li>
-                <li>
-                    <label>Klasser:</label>
-                </li>
-                <ul>
-                    {% if person.grades %}
-                        {% for grade in person.grades.all %}
-                            <li>{{ grade }}</li>
-                        {% endfor %}
-                    {% endif %}
-                </ul>
-                <li>
-                    <label>Kjønn:</label>
-                    {{ person.sex }}</li>
-                <li>
-                    <label>Sist innlogget:</label>
-                    {{ person.last_login }}</li>
-            </ul>
+            <i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 15em;"></i><br>
+            <p style="font-size: 3em;">{{ person.first_name }} {{ person.last_name }}</p>
+            {% if not person.is_active %}
+                <div class="alert alert-warning" role="alert">Denne brukeren er ikke aktiv</div>
+            {% endif %}
+            <div class="col-xs-12 col-md-6">
+                <table class="table table-hover table-striped table-responsive" id="persontable">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                        </td>
+                        <td>
+                            <b>Fødselsdato</b>
+                        </td>
+                        <td>
+                            {{ person.date_of_birth }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                        </td>
+                        <td>
+                            <b>Brukernavn</b>
+                        </td>
+                        <td>
+                            {{ person.username }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                        </td>
+                        <td>
+                            <b>E-post</b>
+                        </td>
+                        <td>
+                            {{ person.email }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                        </td>
+                        <td>
+                            <b>Klasser</b>
+                        </td>
+                        <td>
+                            {% if person.grades %}
+                                {% for grade in person.grades.all %}
+                                    {{ grade }}<br>
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <i class="fa fa-venus-mars" aria-hidden="true"></i>
+                        </td>
+                        <td>
+                            <b>Kjønn</b>
+                        </td>
+                        <td>
+                            {% if person.sex == 'M' %}
+                                Gutt
+                            {% else %}
+                                Jente
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <i class="fa fa-sign-in" aria-hidden="true"></i>
+                        </td>
+                        <td>
+                            <b>Sist Innlogget</b>
+                        </td>
+                        <td>
+                            {{ person.last_login }}
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        <div class="col-xs-12">
             {% bootstrap_messages %}
+        </div>
+
         </div>
         <div class="panel-footer">
 
@@ -70,9 +130,9 @@
                         <form class="form-horizontal" action="" method="post" autocomplete="off">
                             {% csrf_token %}
                             {% bootstrap_label 'Nytt Passord' %}
-                            {% bootstrap_field form.password placeholder='Nytt Passord' show_label=False %}
+                            {% bootstrap_field form.password placeholder='Nytt Passord' addon_before='<span class="fa fa-key"></span>' show_label=False %}
                             {% bootstrap_label 'Gjenta Passord' %}
-                            {% bootstrap_field form.password2 placeholder='Gjenta Passord' show_label=False %}
+                            {% bootstrap_field form.password2 placeholder='Gjenta Passord' addon_before='<span class="fa fa-key"></span>' show_label=False %}
                             {% buttons %}
                                 <button type="submit" class="btn btn-success form-control">
                                     {% bootstrap_icon "check" %} Oppdater passord

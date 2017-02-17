@@ -13,14 +13,14 @@
                     <h1>Brukeradministrasjon</h1>
                 </div>
                 <div class="panel-body">
-                    <form class="form-horizontal" action="" method="post">
+                    <form class="form-horizontal form-margin" action="" method="post">
                         {% csrf_token %}
                         {% bootstrap_messages %}
-                        {% bootstrap_field form.first_name %}
-                        {% bootstrap_field form.last_name %}
-                        {% bootstrap_field form.email %}
-                        {% bootstrap_field form.date_of_birth placeholder="dd.mm.yyyy" %}
-                        {% bootstrap_field form.sex %}
+                        {% bootstrap_field form.first_name addon_before='<span class="glyphicon glyphicon-user"></span>' %}
+                        {% bootstrap_field form.last_name addon_before='<span class="glyphicon glyphicon-user"></span>' %}
+                        {% bootstrap_field form.email addon_before='<span class=""><strong>@</strong></span>' %}
+                        {% bootstrap_field form.date_of_birth addon_before='<span class="glyphicon glyphicon-calendar"></span>' placeholder="dd.mm.yyyy" %}
+                        {% bootstrap_field form.sex addon_before='<span class="fa fa-venus-mars"></span>' %}
                         {% if not request.user.role == 2 %}
                             {% bootstrap_field form.role %}
                         {% endif %}
@@ -57,7 +57,8 @@
                             </div>
                             <div class="col-xs-5">
                                 <label for="chosengrades">Valgte Klasser</label>
-                                <select title="chosengrades" id="chosengrades" class="form-control" multiple="multiple">
+                                <select title="chosengrades" id="chosengrades" class="form-control"
+                                        multiple="multiple">
                                     {% if fromGrade %}
                                         <option value="{{ fromGrade.id }}">{{ fromGrade }}</option>
                                     {% endif %}
@@ -83,7 +84,7 @@
     <script>
 
 
-        $('#id_role').change(function() {
+        $('#id_role').change(function () {
             var userType = this.value;
             if (userType == 4) {
                 $("#gradeList").hide();
