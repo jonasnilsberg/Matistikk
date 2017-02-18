@@ -10,8 +10,8 @@ Welcome to matistikk's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   modules/models.rst
-   modules/views.rst
+   administration/administration
+   maths/maths
 
 
 Indices and tables

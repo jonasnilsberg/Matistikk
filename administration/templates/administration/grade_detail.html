@@ -6,7 +6,7 @@
 {% bootstrap_messages %}
 
 {% block body %}
-    <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left"
+    <a class="btn btn-primary" href="{% url 'administration:schoolDetail' grade.school_id %}"><span class="glyphicon glyphicon-arrow-left"
                                                               aria-hidden="true"></span> Tilbake</a>
     <div class="panel panel-info">
         <div class="panel-heading">
@@ -186,30 +186,9 @@
                 </div>
             </div>
             <hr>
-            <h4>Tester</h4>
-            <ul>
-                {% for test in grade.tests_set.all %}
-                    <li>
-                        <a href="#">
-                            <p>ParagrafTest</p>
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
+
         </div>
         <div class="panel-footer">
-            <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}"><span
-                    class="fa fa-user-plus"
-                    aria-hidden="true"></span> Legg til Elev</a>
-            {% if request.user.role == 4 or request.user.role == 3 %}
-                <a class="btn btn-primary"
-                   href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"><span
-                        class="fa fa-user-plus"
-                        aria-hidden="true"></span> Legg til Lærer</a>
-                <a class="btn btn-primary"
-                   href="{% url 'administration:gradeUpdate' school_pk=grade.school_id grade_pk=grade.id %}"><span
-                        class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
-            {% endif %}
         </div>
     </div>
 
