@@ -6,29 +6,50 @@
 {% bootstrap_messages %}
 
 {% block body %}
-    <a class="btn btn-primary" href="{% url 'administration:schoolDetail' grade.school_id %}"><span class="glyphicon glyphicon-arrow-left"
-                                                              aria-hidden="true"></span> Tilbake</a>
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h1>Klassedetaljer for {{ grade.school }} - Klasse: {{ grade.grade_name }}</h1>
+            <h1 class="panel-title">Klasse: {{ grade.grade_name }}</h1>
+            <h5>Skole: <a href="{% url 'administration:schoolDetail' grade.school_id %}">{{ grade.school }}</a></h5>
         </div>
-
         <div class="panel-body">
-            <button class="btn btn-primary" data-toggle='modal' data-target='#masseregModal'><span
-                    class="fa fa-users"
-                    aria-hidden="true"></span> Masseregistrering
-            </button>
-            <a class="btn btn-primary" href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}"><span
-                    class="fa fa-user-plus"
-                    aria-hidden="true"></span> Legg til Elev</a>
+            {% if request.user.role == 2 %}
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"><span class="fa fa-user-plus"
+                                                                             aria-hidden="true"></span>
+                        Legg til elev <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}">Opprett ny
+                            elev</a></li>
+                        <li><a data-toggle='modal' href='#AddStudentModal'>Legg til eksisterende elev</a></li>
+                        <li><a data-toggle='modal' href='#masseregModal'>Masseregistrering av elever</a></li>
+                    </ul>
+                </div>
+            {% endif %}
             {% if request.user.role == 4 or request.user.role == 3 %}
-                <a class="btn btn-primary"
-                   href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"><span
-                        class="fa fa-user-plus"
-                        aria-hidden="true"></span> Legg til Lærer</a>
-                <a class="btn btn-primary"
-                   href="{% url 'administration:gradeUpdate' school_pk=grade.school_id grade_pk=grade.id %}"><span
-                        class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
+                <!-- Single button -->
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-refresh"
+                                                                             aria-hidden="true"></span>
+                        Oppdater klasse <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{% url 'administration:gradeUpdate' school_pk=grade.school_id grade_pk=grade.id %}">Oppdater
+                                klasseinformasjon</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}">Opprett ny
+                            lærer</a></li>
+                        <li><a data-toggle='modal' href='#AddTeacherModal'>Legg til eksisterende lærer</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}">Opprett ny
+                            elev</a></li>
+                        <li><a data-toggle='modal' href='#AddStudentModal'>Legg til eksisterende elev</a></li>
+                        <li><a data-toggle='modal' href='#masseregModal'>Masseregistrering av elever</a></li>
+                    </ul>
+                </div>
             {% endif %}
             {% bootstrap_messages %}
             <h4>Brukere</h4>
@@ -47,6 +68,7 @@
                 <li class="nav"><a href="#C" data-toggle="tab">Lærere</a></li>
                 <li class="nav"><a href="#D" data-toggle="tab">Inaktive</a></li>
             </ul>
+        <div style="overflow: auto; height: 40vh">
             <div class="tab-content">
                 <!-- All Users Tab -->
                 <div class="tab-pane fade in active" id="A">
@@ -185,10 +207,8 @@
                     </table>
                 </div>
             </div>
-            <hr>
-
         </div>
-        <div class="panel-footer">
+
         </div>
     </div>
 
@@ -197,12 +217,15 @@
          * This function makes the rows of the user-, student-, teacher- and admintable clickable
          */
         jQuery(document).ready(function ($) {
-            $("#successMessageDiv").hide();
+            $("#successMessageStudent").hide();
+            $("#successMessageTeacher").hide();
             $(".clickable-row").click(function () {
                 window.document.location = $(this).data("href");
             });
-            $('#masseregModal').on('hidden.bs.modal', function () {
-
+            $('#AddStudentModal').on('hidden.bs.modal', function () {
+                location.reload();
+            });
+            $('#AddTeacherModal').on('hidden.bs.modal', function () {
                 location.reload();
             });
         });
@@ -315,11 +338,11 @@
          * This function matches the text in the search field with the content in the table with all users
          * in the mass registration modal and removes rows that don't match the search criteria.
          */
-        function userSearch() {
+        function userSearch(search, table) {
             var input, filter, table, tr, td, i;
-            input = document.getElementById("search1");
+            input = document.getElementById(search);
             filter = input.value.toUpperCase();
-            table = document.getElementById("addtable");
+            table = document.getElementById(table);
             tr = table.getElementsByTagName("tr");
 
             for (i = 0; i < tr.length; i++) {
@@ -352,8 +375,13 @@
 
         function searchSuccess(data) {
             $('#' + data.username).remove();
-            $("#successMessageDiv").show();
-            $('#successList').append("<li>" + data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username + "</li>")
+            if (data.role == 1) {
+                $("#successMessageStudent").show();
+                $('#successListStudent').append("<li>" + data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username + "</li>")
+            } else {
+                $("#successMessageTeacher").show();
+                $('#successListTeacher').append("<li>" + data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username + "</li>")
+            }
         }
         function searchError(xhr) {
             alert(xhr.responseText);
@@ -371,81 +399,139 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Masseregistrering</h4>
+                    <h4 class="modal-title" id="myModalLabel">Masseregistrering av elever</h4>
                 </div>
-
                 <div class="modal-body">
-                    <ul class="nav nav-tabs">
-                        <li class="nav active"><a href="#NyeBrukere" data-toggle="tab">Nye brukere</a></li>
-                        <li class="nav"><a href="#EksisterendeBrukere" data-toggle="tab">Eksisterende brukere</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane fade in active" id="NyeBrukere">
-                            Masseregistrering kan gjøres ved å laste opp Excel-filer med en liste personer som skal
-                            registreres.
-                            Brukerne vil bli registrert som elever i klassen du laster opp filen fra.
-                            <hr>
-                            <form action="" method="post" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                {% bootstrap_messages %}
-                                {% bootstrap_field form.file show_label=false %}
-                                {% buttons %}
-                                    <button type="submit" class="btn btn-success">
-                                        {% bootstrap_icon "arrow-up" %} Last opp
-                                    </button>
-                                {% endbuttons %}
-                            </form>
-                            <hr>
-                            Excel-filen må være på formatet som er vist i bildet:
-                            <img src="{% static "administration/images/masseregistrering.png" %}" width="100%"><br><br>
-                            <b>A1:</b> Fornavn<br>
-                            <b>B1:</b> Etternavn<br>
-                            <b>C1:</b> Epost<br>
-                            <b>D1:</b> Fødselsdag<br>
-                            <b>E1:</b> Kjønn<br>
-                            Disse fem feltene må inneholde nøyaktig denne teksten for at filen skal fungere.<br>
-                            <br> <b>Epost:</b> Dette feltet er ikke påkrevd å fylle ut
-                            <br> <b>Kjønn:</b> Oppgis med F for jente og M for gutt
-                            <br> <b>Fødselsdag:</b> Oppgis i formatet dd.mm.åååå
-                        </div>
-                        <div class="tab-pane fade" id="EksisterendeBrukere">
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                <input type="text" class="form-control" id="search1"
-                                       onkeyup="userSearch()"
-                                       placeholder="Søk etter bruker">
-                            </div>
-                            <div class="alert alert-success" id="successMessageDiv">
-                                <strong>Fullført!</strong>
-                                <ul id="successList">
-                                </ul>
-                            </div>
-                            <table class="table table-hover table-striped table-responsive table-condensed"
-                                   id="addtable">
-                                <thead>
-                                <tr>
-                                    <th>Bruker</th>
-                                    <th>Legg til</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for existingPersons in existingPersons %}
-                                    <tr id="{{ existingPersons.username }}" value="{{ existingPersons.username }}">
-                                        <td>{{ existingPersons }}
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-success btn-xs" type="button"
-                                                    id="{{ existingPersons.username }}"
-                                                    onclick="addExistingPerson(this)">Legg til
-                                            </button>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-
-                        </div>
+                    Masseregistrering kan gjøres ved å laste opp Excel-filer med en liste elever som skal
+                    registreres.
+                    Brukerne vil bli registrert som elever i klassen du laster opp filen fra.
+                    <hr>
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% bootstrap_messages %}
+                        {% bootstrap_field form.file show_label=false %}
+                        {% buttons %}
+                            <button type="submit" class="btn btn-success">
+                                {% bootstrap_icon "arrow-up" %} Last opp
+                            </button>
+                        {% endbuttons %}
+                    </form>
+                    <hr>
+                    Excel-filen må være på formatet som er vist i bildet:
+                    <img src="{% static "administration/images/masseregistrering.png" %}" width="100%"><br><br>
+                    <b>A1:</b> Fornavn<br>
+                    <b>B1:</b> Etternavn<br>
+                    <b>C1:</b> Epost<br>
+                    <b>D1:</b> Fødselsdag<br>
+                    <b>E1:</b> Kjønn<br>
+                    Disse fem feltene må inneholde nøyaktig denne teksten for at filen skal fungere.<br>
+                    <br> <b>Epost:</b> Dette feltet er ikke påkrevd å fylle ut
+                    <br> <b>Kjønn:</b> Oppgis med F for jente og M for gutt
+                    <br> <b>Fødselsdag:</b> Oppgis i formatet dd.mm.åååå
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- AddStudentModal -->
+    <div class="modal fade" id="AddStudentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Legg til eksisterende elever</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                        <input type="text" class="form-control" id="search1"
+                               onkeyup="userSearch('search1', 'addtable')"
+                               placeholder="Søk etter bruker">
+                    </div>
+                    <div class="alert alert-success" id="successMessageStudent">
+                        <strong>Fullført!</strong>
+                        <ul id="successListStudent">
+                        </ul>
+                    </div>
+                    <table class="table table-hover table-striped table-responsive table-condensed"
+                           id="addtable">
+                        <thead>
+                        <tr>
+                            <th>Bruker</th>
+                            <th>Legg til</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for existingStudent in existingStudents %}
+                            <tr id="{{ existingStudent.username }}" value="{{ existingStudent.username }}">
+                                <td>{{ existingStudent }}
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-xs" type="button"
+                                            id="{{ existingStudent.username }}"
+                                            onclick="addExistingPerson(this)">Legg til
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- AddTeacherModal -->
+    <div class="modal fade" id="AddTeacherModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Legg til eksisterende lærere</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                        <input type="text" class="form-control" id="search2"
+                               onkeyup="userSearch('search2', 'addtable2')"
+                               placeholder="Søk etter bruker">
+                    </div>
+                    <div class="alert alert-success" id="successMessageTeacher">
+                        <strong>Fullført!</strong>
+                        <ul id="successListTeacher">
+                        </ul>
+                    </div>
+                    <table class="table table-hover table-striped table-responsive table-condensed"
+                           id="addtable2">
+                        <thead>
+                        <tr>
+                            <th>Bruker</th>
+                            <th>Legg til</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for existingTeacher in existingTeachers %}
+                            <tr id="{{ existingTeacher.username }}" value="{{ existingTeacher.username }}">
+                                <td>{{ existingTeacher }}
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-xs" type="button"
+                                            id="{{ existingTeacher.username }}"
+                                            onclick="addExistingPerson(this)">Legg til
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>

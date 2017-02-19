@@ -421,6 +421,7 @@ class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView)
             'username': person.username,
             'first_name': person.first_name,
             'last_name': person.last_name,
+            'role': person.role,
         }
         return JsonResponse(data)
 
@@ -614,7 +615,10 @@ class GradeDisplay(generic.DetailView):
         """
         context = super(GradeDisplay, self).get_context_data(**kwargs)
         context['persons'] = Person.objects.filter(grades__id=self.kwargs['grade_pk'])
-        context['existingPersons'] = Person.objects.filter(role=1, is_active=1).exclude(grades__id=self.kwargs['grade_pk'])
+        context['existingStudents'] = Person.objects.filter(role=1, is_active=1).exclude(
+            grades__id=self.kwargs['grade_pk'])
+        context['existingTeachers'] = Person.objects.filter(role=2, is_active=1).exclude(
+            grades__id=self.kwargs['grade_pk'])
         context['form'] = FileUpload()
         return context
 

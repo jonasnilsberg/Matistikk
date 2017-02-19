@@ -63,7 +63,7 @@
                         <td>
                             {% if person.grades %}
                                 {% for grade in person.grades.all %}
-                                    {{ grade }}<br>
+                                    <a href="{% url 'administration:gradeDetailFromPerson' person.username grade.id %}">{{ grade }}</a><br>
                                 {% endfor %}
                             {% endif %}
                         </td>
