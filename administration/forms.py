@@ -1,11 +1,5 @@
 from django import forms
-from .models import Person, Grade, School
-from django.core.exceptions import ValidationError
-
-from django.urls import reverse
-from django.http import HttpResponseForbidden
-from django.views.generic import FormView
-from django.views.generic.detail import SingleObjectMixin
+from .models import Grade, Person, School
 
 
 class PersonForm(forms.ModelForm):
@@ -67,5 +61,3 @@ class SchoolAdministrator(forms.ModelForm):
     class Meta:
         model = Person
         fields = ['email', 'date_of_birth', 'sex']
-
-

@@ -6,8 +6,6 @@
 {% block body %}
     <div class="container-fluid">
         <div class="row">
-            <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left"
-                                                                      aria-hidden="true"></span> Tilbake</a>
             <div class="panel panel-info">
                 <div class="panel-heading">
                     <h1>Brukeradministrasjon</h1>
@@ -24,7 +22,6 @@
                         {% if not request.user.role == 2 %}
                             {% bootstrap_field form.role %}
                         {% endif %}
-                        {% bootstrap_field form.grades field_class='hidden' %}
                         <div class="row" id="gradeList">
                             <label for="schools">Velg Skole</label>
                             <select id="schools" class="form-control" onchange="changeClassList()">

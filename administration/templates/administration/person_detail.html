@@ -5,8 +5,6 @@
 {% bootstrap_messages %}
 
 {% block body %}
-    <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left"
-                                                              aria-hidden="true"></span> Tilbake</a>
     <div class="panel panel-info">
         <div class="panel-heading">
             <h1>Brukerprofil - {{ person.first_name }} {{ person.last_name }}</h1>
@@ -63,7 +61,7 @@
                         <td>
                             {% if person.grades %}
                                 {% for grade in person.grades.all %}
-                                    {{ grade }}<br>
+                                    <a href="{% url 'administration:gradeDetailFromPerson' person.username grade.id %}">{{ grade }}</a><br>
                                 {% endfor %}
                             {% endif %}
                         </td>

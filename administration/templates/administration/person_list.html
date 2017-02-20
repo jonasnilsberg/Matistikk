@@ -13,7 +13,7 @@
                     <input type="text" class="form-control" id="search"
                            onkeyup="userSearch(); studentSearch(); adminSearch(); teacherSearch(); inactiveSearch()"
                            placeholder="Søk etter bruker">
-                    </div>
+                </div>
             </div>
             <a class="btn btn-primary" href="{% url 'administration:personCreate' %}"><span
                     class="fa fa-user-plus" aria-hidden="true"></span> Legg til bruker</a>
@@ -26,6 +26,7 @@
             <li class="nav"><a href="#D" data-toggle="tab">Administratorer</a></li>
             <li class="nav"><a href="#E" data-toggle="tab">Inaktive</a></li>
         </ul>
+        <div style="overflow: auto; height: 45vh">
         <div class="tab-content">
             <!-- All Users Tab -->
             <div class="tab-pane fade in active" id="A">
@@ -49,7 +50,8 @@
                                 <td>{{ person.username }}</td>
                                 <td><a class="btn btn-default"
                                        href="{% url 'administration:personDetail' person.username %}"><span
-                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a>
+                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
+                                    Brukerinfo</a>
                                 </td>
                             </tr>
                         {% endif %}
@@ -141,14 +143,14 @@
                                 <td>{{ person.username }}</td>
                                 <td>
                                     {% if person.role == 2 %}
-                                            Lærer
-                                        {% elif person.role == 3 %}
-                                            Skoleadministrator
-                                        {% elif person.role == 4 %}
-                                            Superbruker
-                                        {% else %}
-                                            Elev
-                                        {% endif %}
+                                        Lærer
+                                    {% elif person.role == 3 %}
+                                        Skoleadministrator
+                                    {% elif person.role == 4 %}
+                                        Superbruker
+                                    {% else %}
+                                        Elev
+                                    {% endif %}
                                 </td>
                                 <td><a class="btn btn-default"
                                        href="{% url 'administration:personDetail' person.username %}"><span
@@ -191,15 +193,11 @@
                 </table>
             </div>
         </div>
+        </div>
     {% else %}
         <h3>Ingen brukere er lagt til</h3>
     {% endif %}
 </div> <!-- #Panel-body -->
-<div class="panel-footer">
-    <a class="btn btn-primary" href="{% url 'administration:personCreate' %}"><span class="fa fa-user-plus"
-                                                                                    aria-hidden="true"></span> Legg til
-        bruker</a>
-</div> <!-- #Panel-footer -->
 </div> <!-- #Panel -->
 
 
