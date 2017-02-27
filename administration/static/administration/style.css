@@ -1,5 +1,5 @@
 body {
-    background-color: whitesmoke;
+    background: white url("images/white_background_dents_bumps_texture_69592_1920x1080.jpg");
 }
 
 .tab-content {
@@ -99,6 +99,7 @@ html,body {
 
 .container {
   width:100%;
+    max-width: 1600px;
   padding-right: 0;
   padding-left: 0;
   margin-right: auto;
@@ -134,3 +135,7 @@ html,body {
 
 .panel {
   border:none; }
+
+.box {
+    padding: 0 5px 0 5px;
+}
