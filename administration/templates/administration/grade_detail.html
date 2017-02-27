@@ -8,7 +8,7 @@
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h1 class="panel-title">Klasse: {{ grade.grade_name }}</h1>
+            <h2>Klasse: {{ grade.grade_name }}</h2>
             <h5>Skole: <a href="{% url 'administration:schoolDetail' grade.school_id %}">{{ grade.school }}</a></h5>
         </div>
         <div class="panel-body">

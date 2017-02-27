@@ -41,7 +41,7 @@ class Grade(models.Model):
 
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     grade_name = models.CharField(max_length=100, verbose_name='klassenavn')
-    tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')
+    # tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')
     is_active = models.BooleanField(default=True, verbose_name='aktiv',
                                     help_text='Angir at denne klassen er aktiv. Avmerk denne i stedet for å slette klassen.')
 
