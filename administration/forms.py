@@ -18,7 +18,6 @@ class PersonForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PersonForm, self).__init__(*args, **kwargs)
-        print(self)
         ROLE = [
             (1, "Elev"),
             (2, 'Lærer'),

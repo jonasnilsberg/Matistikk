@@ -39,6 +39,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="{% url 'administration:personList' %}">Brukeroversikt</a></li>
                             <li><a href="{% url 'administration:schoolList' %}">Skoleoversikt</a></li>
+                            <li><a href="{% url 'administration:groupList' %}">Gruppeoversikt</a></li>
                             <li><a href="alltests">Testoversikt</a></li>
                         </ul>
                     </li>
@@ -145,11 +146,9 @@
     </nav>
 {% endif %}
 <div class="container">
-    <div class="jumbotron">
-        {% block body %}
-            <p>admin/base.html</p>
-        {% endblock %}
-    </div>
+    {% block body %}
+        <p>admin/base.html</p>
+    {% endblock %}
 </div>
 {% block modal %}
 {% endblock %}

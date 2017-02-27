@@ -4,7 +4,7 @@
     {% if object_list %}
         <div class="panel panel-info">
         <div class="panel-heading">
-            <h1>Brukeroversikt</h1>
+            <h2>Brukeroversikt</h2>
             <div class="col-xs-10">
                 <div class="input-group">
                     <span class="input-group-addon">
@@ -26,7 +26,6 @@
             <li class="nav"><a href="#D" data-toggle="tab">Administratorer</a></li>
             <li class="nav"><a href="#E" data-toggle="tab">Inaktive</a></li>
         </ul>
-        <div style="overflow: auto; height: 45vh">
         <div class="tab-content">
             <!-- All Users Tab -->
             <div class="tab-pane fade in active" id="A">
@@ -112,7 +111,8 @@
                                 <td>{{ person.username }}</td>
                                 <td><a class="btn btn-default"
                                        href="{% url 'administration:personDetail' person.username %}"><span
-                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a>
+                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
+                                    Brukerinfo</a>
                                 </td>
                             </tr>
                         {% endif %}
@@ -154,7 +154,8 @@
                                 </td>
                                 <td><a class="btn btn-default"
                                        href="{% url 'administration:personDetail' person.username %}"><span
-                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a>
+                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
+                                    Brukerinfo</a>
                                 </td>
                             </tr>
                         {% endif %}
@@ -184,7 +185,8 @@
                                 <td>{{ person.username }}</td>
                                 <td><a class="btn btn-default"
                                        href="{% url 'administration:personDetail' person.username %}"><span
-                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se Brukerinfo</a>
+                                        class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
+                                    Brukerinfo</a>
                                 </td>
                             </tr>
                         {% endif %}
@@ -192,7 +194,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
         </div>
     {% else %}
         <h3>Ingen brukere er lagt til</h3>

@@ -1,58 +1,19 @@
 from administration.models import Person
 from django.db import models
-from django.core.urlresolvers import reverse
+
 
 # Create your models here.
 
 
-class AssignmentBase(models.Model):
+class Task(models.Model):
+    """The base of a task
+
+    :title: The title, max 100 letters
+    :task_type: The task type, can be t.ex. functions or fractions
+    :text: The text that describes what the task is, max 32700 letters
+    :author: The person that made the task
+    """
     title = models.CharField(max_length=100, default="")
-    description = models.TextField(max_length=1000, null=True)
-
-    class Meta:
-        abstract = True
-
-
-
-class GeogebraAssignment(AssignmentBase):
-    solution = models.CharField(max_length=100, null=True)
-
-    def __str__(self):
-        return self.assignmentBase.title
-
-
-class Test(models.Model):
-    title = models.CharField(max_length=100)
-    geogebraAssignments = models.ManyToManyField(GeogebraAssignment)
-
-    def __str__(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse('calculations:detail', kwargs={'pk': self.pk})
-
-
-class TestView(models.Model):
-    test = models.ForeignKey(Test)
-    assignmentOrder = models.CharField(max_length=100)
-
-
-# Answers ------------------------------------------------------------------------------------------------------------
-
-class AnswerBase(models.Model):
-    user = models.ForeignKey(Person, default="")
-    testView = models.ForeignKey(TestView, default="")
-
-    class Meta:
-        abstract = True
-
-
-class GeogebraAnswer(AnswerBase):
-    assignment = models.ForeignKey(GeogebraAssignment, default="", on_delete=models.CASCADE)
-    answer = models.CharField(max_length=100)
-
-    def __str__(self):
-        return "Answer - " + self.answer_base.assignment.title
-
-# ------------------------------------------------------------------------------------------------------------------------------------
-
+    task_type = models.IntegerField()
+    text = models.TextField(max_length=32700, blank=True)
+    author = models.ForeignKey(Person)

@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'bootstrap3',
     'braces',
     'django_excel',
-    'django_mysql',
     'maths',
     'administration',
 

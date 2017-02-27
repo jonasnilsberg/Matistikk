@@ -5,19 +5,20 @@
 {% bootstrap_messages %}
 
 {% block body %}
-    <a class="btn btn-primary" onclick="history.go(-1)"><span class="glyphicon glyphicon-arrow-left"
-                                                              aria-hidden="true"></span> Tilbake</a>
     <div class="panel panel-info">
         <div class="panel-heading">
             <h1>Brukerprofil - {{ person.first_name }} {{ person.last_name }}</h1>
         </div>
         <div class="panel-body">
-            <i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 15em;"></i><br>
-            <p style="font-size: 3em;">{{ person.first_name }} {{ person.last_name }}</p>
-            {% if not person.is_active %}
-                <div class="alert alert-warning" role="alert">Denne brukeren er ikke aktiv</div>
-            {% endif %}
             <div class="col-xs-12 col-md-6">
+                <center>
+                    <i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 15em;"></i><br>
+                    <p style="font-size: 3em;">{{ person.first_name }} {{ person.last_name }}</p>
+                </center>
+                {% if not person.is_active %}
+                    <div class="alert alert-warning" role="alert">Denne brukeren er ikke aktiv</div>
+                {% endif %}
+
                 <table class="table table-hover table-striped table-responsive" id="persontable">
                     <tbody>
                     <tr>
@@ -63,7 +64,8 @@
                         <td>
                             {% if person.grades %}
                                 {% for grade in person.grades.all %}
-                                    <a href="{% url 'administration:gradeDetailFromPerson' person.username grade.id %}">{{ grade }}</a><br>
+                                    <a href="{% url 'administration:gradeDetailFromPerson' person.username grade.id %}">{{ grade }}</a>
+                                    <br>
                                 {% endfor %}
                             {% endif %}
                         </td>
@@ -99,9 +101,9 @@
                     </tbody>
                 </table>
             </div>
-        <div class="col-xs-12">
-            {% bootstrap_messages %}
-        </div>
+            <div class="col-xs-12">
+                {% bootstrap_messages %}
+            </div>
 
         </div>
         <div class="panel-footer">

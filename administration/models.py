@@ -13,10 +13,12 @@ class School(models.Model):
     :school_name: The name of the school
     :school_address: The address of the school
     """
-    school_administrator = models.ForeignKey('Person', null=True, blank=True, verbose_name='Skoleadministrator', help_text='Ikke påkrevd.')
+    school_administrator = models.ForeignKey('Person', null=True, blank=True, verbose_name='Skoleadministrator',
+                                             help_text='Ikke påkrevd.')
     school_name = models.CharField(max_length=100, verbose_name='Navn')
     school_address = models.CharField(max_length=100, verbose_name='Adresse')
-    is_active = models.BooleanField(default=True, verbose_name='aktiv', help_text='Angir at denne skolen er aktiv. Avmerk denne i stedet for å slette kontoen.')
+    is_active = models.BooleanField(default=True, verbose_name='aktiv',
+                                    help_text='Angir at denne skolen er aktiv. Avmerk denne i stedet for å slette skolen.')
 
     class Meta:
         ordering = ['school_name']
@@ -39,8 +41,9 @@ class Grade(models.Model):
 
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     grade_name = models.CharField(max_length=100, verbose_name='klassenavn')
-    tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')
-    is_active = models.BooleanField(default=True, verbose_name='aktiv', help_text='Angir at denne skolen er aktiv. Avmerk denne i stedet for å slette kontoen.')
+    # tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')
+    is_active = models.BooleanField(default=True, verbose_name='aktiv',
+                                    help_text='Angir at denne klassen er aktiv. Avmerk denne i stedet for å slette klassen.')
 
     class Meta:
         ordering = ['school_id', 'grade_name']
@@ -105,11 +108,19 @@ class Person(AbstractUser):
         return username_correct
 
 
+class Gruppe(models.Model):
+    persons = models.ManyToManyField(Person, blank=True, null=True, verbose_name='Medlemmer')
+    group_name = models.CharField(max_length=100, verbose_name='Gruppenavn')
+    is_active = models.BooleanField(default=True, verbose_name='aktiv',
+                                    help_text='Angir at denne gruppen er aktiv. Avmerk denne i stedet for å slette gruppen.')
+    # tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')
 
-#This is in order to have different names shown by the django-forms than variable-names
+    def __str__(self):
+        return self.group_name
+
+# This is in order to have different names shown by the django-forms than variable-names
 Person._meta.get_field('username').verbose_name = 'brukernavn'
 Person._meta.get_field('first_name').verbose_name = 'fornavn'
 Person._meta.get_field('last_name').verbose_name = 'etternavn'
 Person._meta.get_field('is_staff').verbose_name = 'lærer'
 Person._meta.get_field('email').verbose_name = 'Epost'
-

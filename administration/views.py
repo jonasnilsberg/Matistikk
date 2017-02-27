@@ -13,7 +13,7 @@ from django.views import View, generic
 
 from .forms import (ChangePassword, FileUpload, PersonForm,
                     SchoolAdministrator, SchoolForm)
-from .models import Grade, Person, School
+from .models import Grade, Person, School, Gruppe
 
 
 class AdministratorCheck(views.UserPassesTestMixin):
@@ -352,7 +352,7 @@ class PersonCreateView(RoleCheck, generic.CreateView):
 
         person = form.save(commit=False)
         username = Person.createusername(person)
-
+        print(person)
         person.username = username
         person.set_password('ntnu123')
         person.save()
@@ -459,7 +459,6 @@ class SchoolListView(SchoolAdministratorCheck, generic.ListView):
     login_url = reverse_lazy('login')
     model = School
     template_name = 'administration/school_list.html'
-    paginate_by = 20
 
     def get_context_data(self, **kwargs):
         """
@@ -604,7 +603,6 @@ class GradeDisplay(generic.DetailView):
     login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_detail.html'
-    success_url = '/'
     pk_url_kwarg = 'grade_pk'
 
     def get_context_data(self, **kwargs):
@@ -615,6 +613,8 @@ class GradeDisplay(generic.DetailView):
         """
         context = super(GradeDisplay, self).get_context_data(**kwargs)
         context['persons'] = Person.objects.filter(grades__id=self.kwargs['grade_pk'])
+        context['schools'] = School.objects.all()
+        context['grades'] = Grade.objects.all()
         context['existingStudents'] = Person.objects.filter(role=1, is_active=1).exclude(
             grades__id=self.kwargs['grade_pk'])
         context['existingTeachers'] = Person.objects.filter(role=2, is_active=1).exclude(
@@ -745,7 +745,7 @@ class GradeCreateView(SchoolCheck, generic.CreateView):
     login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_form.html'
-    fields = ['grade_name', 'tests']
+    fields = ['grade_name', 'is_active']
 
     def form_valid(self, form):
         """
@@ -788,3 +788,22 @@ class GradeListView(RoleCheck, generic.ListView):
 
     def get_queryset(self):
         return Grade.objects.filter(person__username=self.request.user.username)
+
+
+class GroupListView(generic.ListView):
+    template_name = 'administration/group_list.html'
+    model = Gruppe
+
+
+class GroupDetailView(generic.DetailView):
+    template_name = 'administration/group_detail.html'
+    model = Gruppe
+    pk_url_kwarg = 'group_pk'
+
+
+class GroupCreateView(generic.CreateView):
+    model = Gruppe
+    fields = ['group_name', 'persons', 'is_active']
+    template_name = 'administration/group_form.html'
+    success_url = reverse_lazy('administration:groupList')
+
