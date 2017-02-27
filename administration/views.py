@@ -613,6 +613,8 @@ class GradeDisplay(generic.DetailView):
         """
         context = super(GradeDisplay, self).get_context_data(**kwargs)
         context['persons'] = Person.objects.filter(grades__id=self.kwargs['grade_pk'])
+        context['schools'] = School.objects.all()
+        context['grades'] = Grade.objects.all()
         context['existingStudents'] = Person.objects.filter(role=1, is_active=1).exclude(
             grades__id=self.kwargs['grade_pk'])
         context['existingTeachers'] = Person.objects.filter(role=2, is_active=1).exclude(
@@ -743,7 +745,7 @@ class GradeCreateView(SchoolCheck, generic.CreateView):
     login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_form.html'
-    fields = ['grade_name', 'tests']
+    fields = ['grade_name', 'is_active']
 
     def form_valid(self, form):
         """
@@ -797,3 +799,11 @@ class GroupDetailView(generic.DetailView):
     template_name = 'administration/group_detail.html'
     model = Gruppe
     pk_url_kwarg = 'group_pk'
+
+
+class GroupCreateView(generic.CreateView):
+    model = Gruppe
+    fields = ['group_name', 'persons', 'is_active']
+    template_name = 'administration/group_form.html'
+    success_url = reverse_lazy('administration:groupList')
+
