@@ -1,0 +1,69 @@
+{% extends 'matistikk/base.html' %}
+{% block body %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>Gruppeoversikt</h1>
+            <div class="input-group">
+                    <span class="input-group-addon">
+                            <i class="fa fa-search"></i>
+                        </span>
+                <input type="text" class="form-control" id="search" onkeyup="gradeSearch()"
+                       placeholder="Søk etter klasse">
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover table-striped table-responsive" id="gradetable">
+                <thead>
+                <tr>
+                    <th><Gruppe></Gruppe></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for group in object_list %}
+                    <tr class="clickable-row"
+                        data-href="{% url 'administration:groupDetail' group.id %}"
+                        style="cursor: pointer">
+                        <td>{{ group }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * This function makes the rows of the user-, student-, teacher- and admintable clickable
+         */
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.document.location = $(this).data("href");
+            });
+        });
+    </script>
+
+    <script>
+        /**
+         * This function matches the text in the search field with the content in the table with all grades
+         * and removes rows that don't match the search criteria.
+         */
+        function gradeSearch() {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("gradetable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}

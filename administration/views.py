@@ -13,7 +13,7 @@ from django.views import View, generic
 
 from .forms import (ChangePassword, FileUpload, PersonForm,
                     SchoolAdministrator, SchoolForm)
-from .models import Grade, Person, School
+from .models import Grade, Person, School, Gruppe
 
 
 class AdministratorCheck(views.UserPassesTestMixin):
@@ -352,7 +352,7 @@ class PersonCreateView(RoleCheck, generic.CreateView):
 
         person = form.save(commit=False)
         username = Person.createusername(person)
-
+        print(person)
         person.username = username
         person.set_password('ntnu123')
         person.save()
@@ -459,7 +459,6 @@ class SchoolListView(SchoolAdministratorCheck, generic.ListView):
     login_url = reverse_lazy('login')
     model = School
     template_name = 'administration/school_list.html'
-    paginate_by = 20
 
     def get_context_data(self, **kwargs):
         """
@@ -604,7 +603,6 @@ class GradeDisplay(generic.DetailView):
     login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_detail.html'
-    success_url = '/'
     pk_url_kwarg = 'grade_pk'
 
     def get_context_data(self, **kwargs):
@@ -788,3 +786,14 @@ class GradeListView(RoleCheck, generic.ListView):
 
     def get_queryset(self):
         return Grade.objects.filter(person__username=self.request.user.username)
+
+
+class GroupListView(generic.ListView):
+    template_name = 'administration/group_list.html'
+    model = Gruppe
+
+
+class GroupDetailView(generic.DetailView):
+    template_name = 'administration/group_detail.html'
+    model = Gruppe
+    pk_url_kwarg = 'group_pk'

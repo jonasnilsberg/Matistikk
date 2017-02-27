@@ -22,4 +22,6 @@ urlpatterns = [
         name='gradeAddTeacher'),
     url(r'mineklasser/$', views.GradeListView.as_view(), name='gradeList'),
     url(r'brukere/(?P<slug>[\w-]+)/klasse/(?P<grade_pk>[0-9]+)/$', views.GradeDetailView.as_view(), name='gradeDetailFromPerson'),
+    url(r'grupper/$', views.GroupListView.as_view(), name="groupList"),
+    url(r'gruppe/(?P<group_pk>[0-9]+)/$', views.GroupDetailView.as_view(), name='groupDetail'),
 ]

@@ -13,7 +13,6 @@ class AssignmentBase(models.Model):
         abstract = True
 
 
-
 class GeogebraAssignment(AssignmentBase):
     solution = models.CharField(max_length=100, null=True)
 
