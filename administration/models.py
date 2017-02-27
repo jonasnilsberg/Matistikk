@@ -109,8 +109,8 @@ class Person(AbstractUser):
 
 
 class Gruppe(models.Model):
-    persons = models.ManyToManyField(Person, blank=True, null=True)
-    group_name = models.CharField(max_length=100)
+    persons = models.ManyToManyField(Person, blank=True, null=True, verbose_name='Medlemmer')
+    group_name = models.CharField(max_length=100, verbose_name='Gruppenavn')
     is_active = models.BooleanField(default=True, verbose_name='aktiv',
                                     help_text='Angir at denne gruppen er aktiv. Avmerk denne i stedet for å slette gruppen.')
     # tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')

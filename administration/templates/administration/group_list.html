@@ -3,19 +3,26 @@
     <div class="panel panel-info">
         <div class="panel-heading">
             <h1>Gruppeoversikt</h1>
-            <div class="input-group">
+            <div class="col-xs-10">
+                <div class="input-group">
                     <span class="input-group-addon">
-                            <i class="fa fa-search"></i>
-                        </span>
-                <input type="text" class="form-control" id="search" onkeyup="gradeSearch()"
-                       placeholder="Søk etter klasse">
+                        <i class="fa fa-search"></i>
+                    </span>
+                    <input type="text" class="form-control" id="search"
+                           onkeyup="gradeSearch()"
+                           placeholder="Søk etter gruppe">
+                </div>
             </div>
+            <a class="btn btn-primary" href="{% url 'administration:groupCreate' %}"><span
+                    class="fa fa-user-plus" aria-hidden="true"></span> Legg til gruppe</a>
         </div>
         <div class="panel-body">
             <table class="table table-hover table-striped table-responsive" id="gradetable">
                 <thead>
                 <tr>
-                    <th><Gruppe></Gruppe></th>
+                    <th>
+                        <Gruppe></Gruppe>
+                    </th>
                 </tr>
                 </thead>
                 <tbody>

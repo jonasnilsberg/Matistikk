@@ -68,146 +68,146 @@
                 <li class="nav"><a href="#C" data-toggle="tab">Lærere</a></li>
                 <li class="nav"><a href="#D" data-toggle="tab">Inaktive</a></li>
             </ul>
-        <div style="overflow: auto; height: 40vh">
-            <div class="tab-content">
-                <!-- All Users Tab -->
-                <div class="tab-pane fade in active" id="A">
-                    <table class="table table-hover table-striped table-responsive" id="alltable">
-                        <thead>
-                        <tr>
-                            <th>Fornavn</th>
-                            <th>Etternavn</th>
-                            <th>Brukernavn</th>
-                            <th>Brukertype</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for person in persons %}
-                            {% if person.is_active %}
-                                <tr class="clickable-row"
-                                    data-href="{% url 'administration:personDetail' person.username %}"
-                                    style="cursor: pointer">
-                                    <td>{{ person.first_name }}</td>
-                                    <td>{{ person.last_name }}</td>
-                                    <td>{{ person.username }}</td>
-                                    <td>
-                                        {% if person.role == 2 %}
-                                            Lærer
-                                        {% elif person.role == 3 %}
-                                            Skoleadministrator
-                                        {% elif person.role == 4 %}
-                                            Administrator
-                                        {% else %}
-                                            Elev
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <!-- Student Users Tab -->
-                <div class="tab-pane fade" id="B">
-                    <table class="table table-hover table-striped table-responsive" id="studenttable">
-                        <thead>
-                        <tr>
-                            <th>Fornavn</th>
-                            <th>Etternavn</th>
-                            <th>Brukernavn</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for person in persons %}
-                            {% if person.role == 1 %}
-                                <tr class="clickable-row"
-                                    data-href="{% url 'administration:personDetail' person.username %}"
-                                    style="cursor: pointer">
-                                    <td>{{ person.first_name }}</td>
-                                    <td>{{ person.last_name }}</td>
-                                    <td>{{ person.username }}</td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <!-- Teacher Users Tab -->
-                <div class="tab-pane fade" id="C">
-                    <table class="table table-hover table-striped table-responsive" id="teachertable">
-                        <thead>
-                        <tr>
-                            <th>Fornavn</th>
-                            <th>Etternavn</th>
-                            <th>Brukernavn</th>
-                            <th>Brukertype</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for person in persons %}
-                            {% if person.role == 2  and person.is_active or person.role == 3 and person.is_active or person.role == 4 and person.is_active %}
-                                <tr class="clickable-row"
-                                    data-href="{% url 'administration:personDetail' person.username %}"
-                                    style="cursor: pointer">
-                                    <td>{{ person.first_name }}</td>
-                                    <td>{{ person.last_name }}</td>
-                                    <td>{{ person.username }}</td>
-                                    <td>
-                                        {% if person.role == 2 %}
-                                            Lærer
-                                        {% elif person.role == 3 %}
-                                            Skoleadministrator
-                                        {% elif person.role == 4 %}
-                                            Superbruker
-                                        {% else %}
-                                            Elev
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <!-- Inactive Users Tab -->
-                <div class="tab-pane fade" id="D">
-                    <table class="table table-hover table-striped table-responsive" id="inactivetable">
-                        <thead>
-                        <tr>
-                            <th>Fornavn</th>
-                            <th>Etternavn</th>
-                            <th>Brukernavn</th>
-                            <th>Brukertype</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for person in persons %}
-                            {% if not person.is_active %}
-                                <tr class="clickable-row"
-                                    data-href="{% url 'administration:personDetail' person.username %}"
-                                    style="cursor: pointer">
-                                    <td>{{ person.first_name }}</td>
-                                    <td>{{ person.last_name }}</td>
-                                    <td>{{ person.username }}</td>
-                                    <td>
-                                        {% if person.role == 2 %}
-                                            Lærer
-                                        {% elif person.role == 3 %}
-                                            Skoleadministrator
-                                        {% elif person.role == 4 %}
-                                            Administrator
-                                        {% else %}
-                                            Elev
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
+            <div style="overflow: auto; height: 40vh">
+                <div class="tab-content">
+                    <!-- All Users Tab -->
+                    <div class="tab-pane fade in active" id="A">
+                        <table class="table table-hover table-striped table-responsive" id="alltable">
+                            <thead>
+                            <tr>
+                                <th>Fornavn</th>
+                                <th>Etternavn</th>
+                                <th>Brukernavn</th>
+                                <th>Brukertype</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for person in persons %}
+                                {% if person.is_active %}
+                                    <tr class="clickable-row"
+                                        data-href="{% url 'administration:personDetail' person.username %}"
+                                        style="cursor: pointer">
+                                        <td>{{ person.first_name }}</td>
+                                        <td>{{ person.last_name }}</td>
+                                        <td>{{ person.username }}</td>
+                                        <td>
+                                            {% if person.role == 2 %}
+                                                Lærer
+                                            {% elif person.role == 3 %}
+                                                Skoleadministrator
+                                            {% elif person.role == 4 %}
+                                                Administrator
+                                            {% else %}
+                                                Elev
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Student Users Tab -->
+                    <div class="tab-pane fade" id="B">
+                        <table class="table table-hover table-striped table-responsive" id="studenttable">
+                            <thead>
+                            <tr>
+                                <th>Fornavn</th>
+                                <th>Etternavn</th>
+                                <th>Brukernavn</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for person in persons %}
+                                {% if person.role == 1 %}
+                                    <tr class="clickable-row"
+                                        data-href="{% url 'administration:personDetail' person.username %}"
+                                        style="cursor: pointer">
+                                        <td>{{ person.first_name }}</td>
+                                        <td>{{ person.last_name }}</td>
+                                        <td>{{ person.username }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Teacher Users Tab -->
+                    <div class="tab-pane fade" id="C">
+                        <table class="table table-hover table-striped table-responsive" id="teachertable">
+                            <thead>
+                            <tr>
+                                <th>Fornavn</th>
+                                <th>Etternavn</th>
+                                <th>Brukernavn</th>
+                                <th>Brukertype</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for person in persons %}
+                                {% if person.role == 2  and person.is_active or person.role == 3 and person.is_active or person.role == 4 and person.is_active %}
+                                    <tr class="clickable-row"
+                                        data-href="{% url 'administration:personDetail' person.username %}"
+                                        style="cursor: pointer">
+                                        <td>{{ person.first_name }}</td>
+                                        <td>{{ person.last_name }}</td>
+                                        <td>{{ person.username }}</td>
+                                        <td>
+                                            {% if person.role == 2 %}
+                                                Lærer
+                                            {% elif person.role == 3 %}
+                                                Skoleadministrator
+                                            {% elif person.role == 4 %}
+                                                Superbruker
+                                            {% else %}
+                                                Elev
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Inactive Users Tab -->
+                    <div class="tab-pane fade" id="D">
+                        <table class="table table-hover table-striped table-responsive" id="inactivetable">
+                            <thead>
+                            <tr>
+                                <th>Fornavn</th>
+                                <th>Etternavn</th>
+                                <th>Brukernavn</th>
+                                <th>Brukertype</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for person in persons %}
+                                {% if not person.is_active %}
+                                    <tr class="clickable-row"
+                                        data-href="{% url 'administration:personDetail' person.username %}"
+                                        style="cursor: pointer">
+                                        <td>{{ person.first_name }}</td>
+                                        <td>{{ person.last_name }}</td>
+                                        <td>{{ person.username }}</td>
+                                        <td>
+                                            {% if person.role == 2 %}
+                                                Lærer
+                                            {% elif person.role == 3 %}
+                                                Skoleadministrator
+                                            {% elif person.role == 4 %}
+                                                Administrator
+                                            {% else %}
+                                                Elev
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
 
         </div>
     </div>
@@ -217,6 +217,7 @@
          * This function makes the rows of the user-, student-, teacher- and admintable clickable
          */
         jQuery(document).ready(function ($) {
+            $("#filterStudents").hide();
             $("#successMessageStudent").hide();
             $("#successMessageTeacher").hide();
             $(".clickable-row").click(function () {
@@ -228,6 +229,20 @@
             $('#AddTeacherModal').on('hidden.bs.modal', function () {
                 location.reload();
             });
+
+            $("#schoolDrop").change(function () {
+                var test = $(this).val();
+                var gradeList = $("#gradeDrop option");
+                var list = $("#gradeDrop");
+                list.empty()
+                gradeList.each(function () {
+                    var grade = $(this).data('school');
+                    if (test == grade || grade == "allgrades") {
+                        list.append('<option value='+$(this).val()+'>'+$(this).val()+'</option>');
+                    }
+                });
+
+            });
         });
     </script>
     <script>
@@ -235,6 +250,16 @@
          * This function matches the text in the search field with the content in the table with all users
          * and removes rows that don't match the search criteria.
          */
+        function filterButton() {
+            var field = $("#filterStudents");
+            if (field.is(":visible")) {
+                field.hide();
+            } else {
+                field.show();
+            }
+
+        }
+
         function allSearch() {
             var input, filter, table, tr, td, i, td1, td2, fullname;
             input = document.getElementById("search");
@@ -386,6 +411,8 @@
         function searchError(xhr) {
             alert(xhr.responseText);
         }
+
+
     </script>
 
 {% endblock %}
@@ -447,12 +474,50 @@
                     <h4 class="modal-title" id="myModalLabel">Legg til eksisterende elever</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                        <input type="text" class="form-control" id="search1"
-                               onkeyup="userSearch('search1', 'addtable')"
-                               placeholder="Søk etter bruker">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                <input type="text" class="form-control" id="search1"
+                                       onkeyup="userSearch('search1', 'addtable')"
+                                       placeholder="Søk etter bruker">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-primary" onclick="filterButton()" style="width:100%;">
+                                Sorter<span
+                                    class="caret"></span>
+                            </button>
+                        </div>
                     </div>
+                    <div id="filterStudents">
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select class="form-control" id="schoolDrop">
+                                        <option id="allschools" value="allschools">Velg skole</option>
+                                        {% for school in schools %}
+                                            <option id="{{ school.id }}" value="{{ school.id }}">{{ school }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+                                    <select class="form-control" id="gradeDrop">
+                                        <option id="allgrades" value="allgrades" data-school="allgrades">Velg klasse</option>
+                                        {% for grade in grades %}
+                                            <option id="{{ grade.id }}"
+                                                    value="{{ grade.id }}" data-school="{{ grade.school_id }}">{{ grade }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="alert alert-success" id="successMessageStudent">
                         <strong>Fullført!</strong>
                         <ul id="successListStudent">
