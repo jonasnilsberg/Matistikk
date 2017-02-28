@@ -1,6 +1,6 @@
 import datetime
 import re
-
+from django.core import serializers
 from braces import views
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -593,7 +593,7 @@ class SchoolUpdateView(SchoolCheck, generic.UpdateView):
         return context
 
 
-class GradeDisplay(generic.DetailView):
+class GradeDisplay(generic.DetailView, views.AjaxResponseMixin):
     """
     Class that displays information about a single grade object based on the grade_id
 
@@ -614,7 +614,7 @@ class GradeDisplay(generic.DetailView):
         context = super(GradeDisplay, self).get_context_data(**kwargs)
         context['persons'] = Person.objects.filter(grades__id=self.kwargs['grade_pk'])
         context['schools'] = School.objects.all()
-        context['grades'] = Grade.objects.all()
+        context['grades'] = Grade.objects.all().exclude(id=self.kwargs['grade_pk'])
         context['existingStudents'] = Person.objects.filter(role=1, is_active=1).exclude(
             grades__id=self.kwargs['grade_pk'])
         context['existingTeachers'] = Person.objects.filter(role=2, is_active=1).exclude(
