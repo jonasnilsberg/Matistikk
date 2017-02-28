@@ -68,7 +68,7 @@
                 <li class="nav"><a href="#C" data-toggle="tab">Lærere</a></li>
                 <li class="nav"><a href="#D" data-toggle="tab">Inaktive</a></li>
             </ul>
-            <div style="overflow: auto; height: 40vh">
+            <div style="overflow: auto; max-height: 51vh">
                 <div class="tab-content">
                     <!-- All Users Tab -->
                     <div class="tab-pane fade in active" id="A">
@@ -218,6 +218,7 @@
          */
         jQuery(document).ready(function ($) {
             $("#filterStudents").hide();
+            $("#filterTeachers").hide();
             $("#successMessageStudent").hide();
             $("#successMessageTeacher").hide();
             $(".clickable-row").click(function () {
@@ -230,28 +231,106 @@
                 location.reload();
             });
 
-            $("#schoolDrop").change(function () {
+            $("#schoolDropStudent").change(function () {
+                $("#gradeDropStudent").val('');
                 var school_id = $(this).val();
-                var school_name = $("#schoolDrop :selected").text();
-                alert(school_id);
-                alert(school_name);
-                var gradeList = $("#gradeDrop option");
+                var school_name = $("#schoolDropStudent :selected").text();
+                updateExistingStudents(school_id);
+                var gradeList = $("#gradeDropStudent option");
                 gradeList.each(function () {
                     var grade_id = $(this).val();
                     var grade = $(this).text();
-                    if (grade.indexOf(school_name) >= 0) {
-                        gradeList.each(function () {
-                            if (this.value == yourValue) {
-                                exists = true;
-                            }
-                        });
-                    } else if (grade_id == "") {
-
+                    if (school_id == "") {
+                        $(this).show();
+                    }
+                    else if (grade.indexOf(school_name) >= 0 || grade_id == "") {
+                        $(this).show();
                     } else {
-                        $(this).remove();
+                        $(this).hide();
                     }
                 });
-
+            });
+            $("#schoolDropTeacher").change(function () {
+                $("#gradeDropTeacher").val('');
+                var school_id = $(this).val();
+                var school_name = $("#schoolDropTeacher :selected").text();
+                updateExistingTeacher(school_id);
+                var gradeList = $("#gradeDropTeacher option");
+                gradeList.each(function () {
+                    var grade_id = $(this).val();
+                    var grade = $(this).text();
+                    if (school_id == "") {
+                        $(this).show();
+                    }
+                    else if (grade.indexOf(school_name) >= 0 || grade_id == "") {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+            $("#gradeDropStudent").change(function () {
+                var grade_id = $(this).val();
+                if (grade_id != "") {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{% url 'administration:personList' %}',
+                        data: {
+                            'type': 'grade',
+                            'grade_id': grade_id,
+                            'role': 1,
+                            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                        },
+                        dataType: 'json',
+                        success: function (json) {
+                            var students = (json.persons);
+                            $("#existingStudentTable tr").hide();
+                            if (grade_id == "") {
+                                $("#existingStudentTable tr").show();
+                            }
+                            $.each(students, function (index, value) {
+                                $("#" + value.username).show();
+                            })
+                        },
+                        error: function (xhr) {
+                            alert('error');
+                            alert(xhr.responseText);
+                        }
+                    });
+                } else {
+                    var school_id = $("#schoolDropStudent :selected").val();
+                    updateExistingStudents(school_id);
+                }
+            });
+            $("#gradeDropTeacher").change(function () {
+                var grade_id = $(this).val();
+                if (grade_id != "") {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{% url 'administration:personList' %}',
+                        data: {
+                            'type': 'grade',
+                            'grade_id': grade_id,
+                            'role': 2,
+                            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                        },
+                        dataType: 'json',
+                        success: function (json) {
+                            var teachers = (json.persons);
+                            $("#existingTeacherTable tr").hide();
+                            $.each(teachers, function (index, value) {
+                                $("#" + value.username).show();
+                            })
+                        },
+                        error: function (xhr) {
+                            alert('error');
+                            alert(xhr.responseText);
+                        }
+                    });
+                } else {
+                    var school_id = $("#schoolDropTeacher :selected").val();
+                    updateExistingTeacher(school_id);
+                }
             });
         });
 
@@ -261,17 +340,83 @@
          * This function matches the text in the search field with the content in the table with all users
          * and removes rows that don't match the search criteria.
          */
-        function filterButton() {
+        function filterButtonStudent() {
             var field = $("#filterStudents");
-            var schoolInfo = [];
             if (field.is(":visible")) {
                 field.hide();
             } else {
-
                 field.show();
             }
-
         }
+        function filterButtonTeacher() {
+            var field = $("#filterTeachers");
+            if (field.is(":visible")) {
+                field.hide();
+            } else {
+                field.show();
+            }
+        }
+        function updateExistingStudents(school) {
+            var school_id = school;
+            if (school_id != "") {
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'administration:personList' %}',
+                    data: {
+                        'type': 'school',
+                        'school_id': school_id,
+                        'role': 1,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    dataType: 'json',
+                    success: function (json) {
+                        var students = (json.persons);
+                        $("#existingStudentTable tr").hide();
+                        $.each(students, function (index, value) {
+                            $("#" + value.username).show();
+                        })
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            } else {
+                $("#existingStudentTable tr").show();
+            }
+        }
+        function updateExistingTeacher(school) {
+            var school_id = school;
+            var teacherTable = $("#existingTeacherTable tr");
+            if (school_id != "") {
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'administration:personList' %}',
+                    data: {
+                        'type': 'school',
+                        'school_id': school_id,
+                        'role': 2,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    dataType: 'json',
+                    success: function (json) {
+                        var teachers = (json.persons);
+                        teacherTable.hide();
+                        if (school_id == "") {
+                            teacherTable.show();
+                        }
+                        $.each(teachers, function (index, value) {
+                            $("#" + value.username).show();
+                        })
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            } else {
+                teacherTable.show();
+            }
+        }
+
 
         function allSearch() {
             var input, filter, table, tr, td, i, td1, td2, fullname;
@@ -408,7 +553,7 @@
                 dataType: 'json',
                 success: searchSuccess,
                 error: searchError
-            })
+            });
         }
 
         function searchSuccess(data) {
@@ -478,7 +623,7 @@
 
 
     <!-- AddStudentModal -->
-    <div class="modal fade" id="AddStudentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade modalsize" id="AddStudentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -497,7 +642,7 @@
                             </div>
                         </div>
                         <div class="col-xs-2">
-                            <button type="button" class="btn btn-primary" onclick="filterButton()">
+                            <button type="button" class="btn btn-primary" onclick="filterButtonStudent()">
                                 Sorter<span
                                     class="caret"></span>
                             </button>
@@ -508,7 +653,7 @@
                         <div class="row">
                             <div class="col-xs-6 box">
                                 <div class="form-group">
-                                    <select class="form-control" id="schoolDrop">
+                                    <select class="form-control" id="schoolDropStudent">
                                         <option id="allschools" value="">Velg skole</option>
                                         {% for school in schools %}
                                             <option value="{{ school.id }}">{{ school }}</option>
@@ -518,7 +663,7 @@
                             </div>
                             <div class="col-xs-6 box">
                                 <div class="form-group">
-                                    <select class="form-control" id="gradeDrop">
+                                    <select class="form-control" id="gradeDropStudent">
                                         <option id="allgrades" value="">Velg klasse
                                         </option>
                                         {% for grade in grades %}
@@ -535,29 +680,34 @@
                         <ul id="successListStudent">
                         </ul>
                     </div>
-                    <table class="table table-hover table-striped table-responsive table-condensed"
-                           id="addtable">
-                        <thead>
-                        <tr>
-                            <th>Bruker</th>
-                            <th>Legg til</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for existingStudent in existingStudents %}
-                            <tr id="{{ existingStudent.username }}" value="{{ existingStudent.username }}">
-                                <td>{{ existingStudent }}
-                                </td>
-                                <td>
-                                    <button class="btn btn-success btn-xs" type="button"
-                                            id="{{ existingStudent.username }}"
-                                            onclick="addExistingPerson(this)">Legg til
-                                    </button>
-                                </td>
+                    <div style="overflow: auto; max-height: 51vh">
+
+                        <table class="table table-hover table-striped table-responsive table-condensed"
+                               id="addtable">
+                            <thead>
+                            <tr>
+                                <th>Bruker</th>
+                                <th>Legg til</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <div class="test">
+                                <tbody id="existingStudentTable">
+                                {% for existingStudent in existingStudents %}
+                                    <tr id="{{ existingStudent.username }}" value="{{ existingStudent.username }}">
+                                        <td>{{ existingStudent }}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success btn-xs" type="button"
+                                                    id="{{ existingStudent.username }}"
+                                                    onclick="addExistingPerson(this)">Legg til
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </div>
+                        </table>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
@@ -575,11 +725,48 @@
                     <h4 class="modal-title" id="myModalLabel">Legg til eksisterende lærere</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                        <input type="text" class="form-control" id="search2"
-                               onkeyup="userSearch('search2', 'addtable2')"
-                               placeholder="Søk etter bruker">
+
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                <input type="text" class="form-control" id="search2"
+                                       onkeyup="userSearch('search2', 'addtable2')"
+                                       placeholder="Søk etter bruker">
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            <button type="button" class="btn btn-primary" onclick="filterButtonTeacher()">
+                                Sorter<span
+                                    class="caret"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="filterTeachers">
+                        <hr>
+                        <div class="row">
+                            <div class="col-xs-6 box">
+                                <div class="form-group">
+                                    <select class="form-control" id="schoolDropTeacher">
+                                        <option id="allschools" value="">Velg skole</option>
+                                        {% for school in schools %}
+                                            <option value="{{ school.id }}">{{ school }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 box">
+                                <div class="form-group">
+                                    <select class="form-control" id="gradeDropTeacher">
+                                        <option id="allgrades" value="">Velg klasse
+                                        </option>
+                                        {% for grade in grades %}
+                                            <option value="{{ grade.id }}">{{ grade }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="alert alert-success" id="successMessageTeacher">
                         <strong>Fullført!</strong>
@@ -594,7 +781,7 @@
                             <th>Legg til</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="existingTeacherTable">
                         {% for existingTeacher in existingTeachers %}
                             <tr id="{{ existingTeacher.username }}" value="{{ existingTeacher.username }}">
                                 <td>{{ existingTeacher }}
