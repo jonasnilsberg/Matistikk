@@ -231,19 +231,30 @@
             });
 
             $("#schoolDrop").change(function () {
-                var test = $(this).val();
+                var school_id = $(this).val();
+                var school_name = $("#schoolDrop :selected").text();
+                alert(school_id);
+                alert(school_name);
                 var gradeList = $("#gradeDrop option");
-                var list = $("#gradeDrop");
-                list.empty()
                 gradeList.each(function () {
-                    var grade = $(this).data('school');
-                    if (test == grade || grade == "allgrades") {
-                        list.append('<option value='+$(this).val()+'>'+$(this).val()+'</option>');
+                    var grade_id = $(this).val();
+                    var grade = $(this).text();
+                    if (grade.indexOf(school_name) >= 0) {
+                        gradeList.each(function () {
+                            if (this.value == yourValue) {
+                                exists = true;
+                            }
+                        });
+                    } else if (grade_id == "") {
+
+                    } else {
+                        $(this).remove();
                     }
                 });
 
             });
         });
+
     </script>
     <script>
         /**
@@ -252,9 +263,11 @@
          */
         function filterButton() {
             var field = $("#filterStudents");
+            var schoolInfo = [];
             if (field.is(":visible")) {
                 field.hide();
             } else {
+
                 field.show();
             }
 
@@ -475,7 +488,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-10">
+                        <div class="col-xs-10">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
                                 <input type="text" class="form-control" id="search1"
@@ -483,8 +496,8 @@
                                        placeholder="Søk etter bruker">
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <button type="button" class="btn btn-primary" onclick="filterButton()" style="width:100%;">
+                        <div class="col-xs-2">
+                            <button type="button" class="btn btn-primary" onclick="filterButton()">
                                 Sorter<span
                                     class="caret"></span>
                             </button>
@@ -493,24 +506,23 @@
                     <div id="filterStudents">
                         <hr>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-xs-6 box">
                                 <div class="form-group">
                                     <select class="form-control" id="schoolDrop">
-                                        <option id="allschools" value="allschools">Velg skole</option>
+                                        <option id="allschools" value="">Velg skole</option>
                                         {% for school in schools %}
-                                            <option id="{{ school.id }}" value="{{ school.id }}">{{ school }}</option>
+                                            <option value="{{ school.id }}">{{ school }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-
+                            <div class="col-xs-6 box">
                                 <div class="form-group">
                                     <select class="form-control" id="gradeDrop">
-                                        <option id="allgrades" value="allgrades" data-school="allgrades">Velg klasse</option>
+                                        <option id="allgrades" value="">Velg klasse
+                                        </option>
                                         {% for grade in grades %}
-                                            <option id="{{ grade.id }}"
-                                                    value="{{ grade.id }}" data-school="{{ grade.school_id }}">{{ grade }}</option>
+                                            <option value="{{ grade.id }}">{{ grade }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
