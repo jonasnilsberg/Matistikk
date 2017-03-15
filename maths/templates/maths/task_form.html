@@ -3,6 +3,9 @@
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
+{% block head %}
+    <script type="text/javascript" src="https://www.geogebra.org/scripts/deployggb.js"></script>
+{% endblock %}
 
 {% block body %}
     <div class="panel panel-info">
@@ -10,15 +13,56 @@
             <h2>Lag Oppgave</h2>
         </div>
         <div class="panel-body">
-            <form class="form-horizontal form-margin" action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% bootstrap_field form.title addon_before='<span class="glyphicon glyphicon-home"></span>' %}
-                {% bootstrap_field form.text addon_before='<span class="fa fa-map-marker"></span>' %}
-                {% bootstrap_field form.task_type %}
-                <button type="submit" class="btn btn-success">
-                    {% bootstrap_icon "check" %} Lagre
-                </button>
-            </form>
+            <div class="col-md-6" id="applet_container">
+
+            </div>
+             <div class="col-md-1">
+
+            </div>
+
+            <div class="col-md-4">
+                <form class="form-horizontal form-margin" action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% bootstrap_field form.title addon_before='<span class="glyphicon glyphicon-home"></span>' %}
+                    {% bootstrap_field form.text addon_before='<span class="fa fa-map-marker"></span>' %}
+                    {% bootstrap_field form.task_type %}
+                    <button type="submit" class="btn btn-success">
+                        {% bootstrap_icon "check" %} Lagre
+                    </button>
+                </form>
+            </div>
+
         </div>
     </div>
+
+    <script>
+        var parameters = {
+            "id": "ggbApplet",
+            "width": 800,
+            "height": 600,
+            "showToolBar": true,
+            "borderColor": null,
+            "showMenuBar": true,
+            "allowStyleBar": true,
+            "showAlgebraInput": true,
+            "enableLabelDrags": false,
+            "enableShiftDragZoom": true,
+            "capturingThreshold": null,
+            "showToolBarHelp": false,
+            "errorDialogsActive": true,
+            "showTutorialLink": false,
+            "showLogging": false,
+            "useBrowserForJS": false
+        };
+
+        // Applet som inneholder GeoGebra-vinduet som lastes inn i createfunctiontask.jsp
+        var applet = new GGBApplet(parameters, '5.0', 'applet_container');
+        //  when used with Math Apps Bundle, uncomment this:
+        //  applet.setHTML5Codebase('GeoGebra/HTML5/5.0/web3d/');
+
+        // Metoden benyttes til å legge GeoGebra med forhåndsvalgt konfigurasjon inn i en applet
+        window.onload = function () {
+            applet.inject('applet_container', 'preferhtml5');
+        };
+    </script>
 {% endblock %}
