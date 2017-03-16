@@ -204,6 +204,7 @@ class PersonListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
             existing_person_list = Person.objects.filter(grades__id=grade_id, role=role).distinct()
         for person in existing_person_list.all():
             persons.append({
+                "id": person.id,
                 "first_name": person.first_name,
                 "last_name": person.last_name,
                 "username": person.username
@@ -829,3 +830,10 @@ class GroupCreateView(generic.CreateView):
     fields = ['group_name', 'persons', 'is_active']
     template_name = 'administration/group_form.html'
     success_url = reverse_lazy('administration:groupList')
+
+    def get_context_data(self, **kwargs):
+        context = super(GroupCreateView, self).get_context_data(**kwargs)
+        context['schools'] = School.objects.all()
+        context['grades'] = Grade.objects.all()
+        context['students'] = Person.objects.filter(role=1)
+        return context
