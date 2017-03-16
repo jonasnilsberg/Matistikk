@@ -11,6 +11,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'administration/style.css' %}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="icon" href="http://bildr.no/view/WS9ITTNK">
+    {% block head %}
+    {% endblock %}
 </head>
 <body>
 {% if request.user.role == 4 %}

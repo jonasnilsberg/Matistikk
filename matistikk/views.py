@@ -13,5 +13,6 @@ class LoginView(generic.FormView):
 
     def form_valid(self, form):
         login(self.request, form.get_user())
+        self.request.session.set_expiry(0)
         return HttpResponseRedirect(self.get_success_url())
 
