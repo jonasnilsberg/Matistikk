@@ -4,5 +4,43 @@
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
 {% block body %}
-    {% bootstrap_form form %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h1>Skoleadministrasjon</h1>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal form-margin" action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% bootstrap_field form.group_name addon_before='<span class="glyphicon glyphicon-home"></span>' %}
+                        {% bootstrap_field form.persons %}
+
+                        {% bootstrap_field form.is_active %}
+                        <button type="submit" class="btn btn-success">
+                            {% bootstrap_icon "check" %} Lagre
+                        </button>
+                    </form>
+
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Fornavn</th>
+                                <th>Etternavn</th>
+                                <th>Klasse</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td></td>
+                                <td>Ingen brukere er lagt til</td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <button type="button" class="btn btn-primary">Legg til elever</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
