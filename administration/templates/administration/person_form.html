@@ -4,6 +4,7 @@
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
 {% block body %}
+    <p hidden id="userRole">{{ request.user.role }}</p>
     <div class="container-fluid">
         <div class="row">
             <div class="panel panel-info">
@@ -80,7 +81,13 @@
     </div>
 
     <script>
+        jQuery(document).ready(function ($) {
+            var role = $("#userRole").text();
+            if (role != 4){
+                $('#id_role').children('option[value="4"]').hide();
 
+            }
+        });
 
         $('#id_role').change(function () {
             var userType = this.value;
@@ -89,7 +96,6 @@
             } else {
                 $("#gradeList").show();
             }
-
         });
 
 

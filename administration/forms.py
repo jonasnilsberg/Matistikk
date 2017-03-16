@@ -14,15 +14,7 @@ class PersonForm(forms.ModelForm):
 
     class Meta:
         model = Person
-        fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'is_staff', 'is_active', 'grades']
-
-    def __init__(self, *args, **kwargs):
-        super(PersonForm, self).__init__(*args, **kwargs)
-        ROLE = [
-            (1, "Elev"),
-            (2, 'Lærer'),
-        ]
-        self.fields['role'].choices = ROLE
+        fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'is_staff', 'is_active', 'grades', 'role']
 
 
 class FileUpload(forms.Form):

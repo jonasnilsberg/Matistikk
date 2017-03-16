@@ -20,6 +20,7 @@ class AdministratorCheck(views.UserPassesTestMixin):
     """
     Checks if the logged in user has administrator privileges.
     """
+
     def test_func(self, user):
         if self.request.user.role == 4:
             return True
@@ -30,6 +31,7 @@ class RoleCheck(views.UserPassesTestMixin):
     """
     Checks if the logged in user is either a teacher, schooladministrator or an administrator.
     """
+
     def test_func(self, user):
         role = [2, 3, 4]
         if self.request.user.role in role:
@@ -42,6 +44,7 @@ class SchoolCheck(views.UserPassesTestMixin):
     :param views.UserPassesTestMixin: djangos way of handling restricted access, it's test_func is overriden.
     :return boolean, True if access is granted.
     """
+
     def test_func(self, user):
         """
         :param user: Test_func has to have two arguments.
@@ -88,6 +91,7 @@ class SchoolAdministratorCheck(views.UserPassesTestMixin):
     :param views.UserPassesTestMixin: djangos way of handling restricted access, it's test_func is overriden.
     :return boolean, True if access is granted.
     """
+
     def test_func(self, user):
         """
 
@@ -173,8 +177,7 @@ class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
         return context
 
 
-class PersonListView(RoleCheck, generic.ListView):
-
+class PersonListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
     """
     Class that returns all the users that the logged in user has permission to see.
 
@@ -189,6 +192,27 @@ class PersonListView(RoleCheck, generic.ListView):
     login_url = reverse_lazy('login')
     template_name = 'administration/person_list.html'
     model = Person
+
+    def post_ajax(self, request, *args, **kwargs):
+        role = request.POST['role']
+        persons = []
+        if request.POST['type'] == "school":
+            school_id = request.POST['school_id']
+            existing_person_list = Person.objects.filter(grades__school_id=school_id, role=role).distinct()
+        else:
+            grade_id = request.POST['grade_id']
+            existing_person_list = Person.objects.filter(grades__id=grade_id, role=role).distinct()
+        for person in existing_person_list.all():
+            persons.append({
+                "id": person.id,
+                "first_name": person.first_name,
+                "last_name": person.last_name,
+                "username": person.username
+            })
+        data = {
+            'persons': persons,
+        }
+        return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         """
@@ -352,7 +376,6 @@ class PersonCreateView(RoleCheck, generic.CreateView):
 
         person = form.save(commit=False)
         username = Person.createusername(person)
-        print(person)
         person.username = username
         person.set_password('ntnu123')
         person.save()
@@ -675,8 +698,8 @@ class FileUploadView(generic.FormView):
             except Exception:
                 try:
                     datetime.datetime.strptime(person_obj[3], '%d.%m-%Y')
-                    message = mark_safe('Noe gikk galt med ' + person_obj[0] + " " + person_obj[1] + ' på linje '+
-                                   str(line_number) + "." + "<br /><br />" "Ingen brukere ble lagt til.")
+                    message = mark_safe('Noe gikk galt med ' + person_obj[0] + " " + person_obj[1] + ' på linje ' +
+                                        str(line_number) + "." + "<br /><br />" "Ingen brukere ble lagt til.")
                     messages.error(self.request, message)
                     return super().post(request, *args, **kwargs)
                 except Exception:
@@ -696,7 +719,7 @@ class FileUploadView(generic.FormView):
 
     def get_success_url(self):
         return reverse('administration:gradeDetail', kwargs={'school_pk': self.kwargs.get('school_pk'),
-                                                    'grade_pk': self.kwargs.get('grade_pk')})
+                                                             'grade_pk': self.kwargs.get('grade_pk')})
 
 
 class GradeDetailView(SchoolCheck, View):
@@ -753,7 +776,8 @@ class GradeCreateView(SchoolCheck, generic.CreateView):
         :param form: represents the form object
         :return: calls super
         """
-        self.success_url = reverse_lazy('administration:schoolDetail', kwargs={'school_pk': self.kwargs.get('school_pk')})
+        self.success_url = reverse_lazy('administration:schoolDetail',
+                                        kwargs={'school_pk': self.kwargs.get('school_pk')})
         grade = form.save(commit=False)
         grade.school_id = self.kwargs['school_pk']
         grade.save()
@@ -807,3 +831,9 @@ class GroupCreateView(generic.CreateView):
     template_name = 'administration/group_form.html'
     success_url = reverse_lazy('administration:groupList')
 
+    def get_context_data(self, **kwargs):
+        context = super(GroupCreateView, self).get_context_data(**kwargs)
+        context['schools'] = School.objects.all()
+        context['grades'] = Grade.objects.all()
+        context['students'] = Person.objects.filter(role=1)
+        return context
