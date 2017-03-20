@@ -8,37 +8,257 @@
         <div class="row">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h1>Skoleadministrasjon</h1>
+                    <h1>Gruppeadministrasjon</h1>
                 </div>
                 <div class="panel-body">
-                    <form class="form-horizontal form-margin" action="" method="POST" enctype="multipart/form-data">
+                    <form class="form-margin" action="" method="post">
                         {% csrf_token %}
-                        {% bootstrap_field form.group_name addon_before='<span class="glyphicon glyphicon-home"></span>' %}
-                        {% bootstrap_field form.persons %}
-
-                        {% bootstrap_field form.is_active %}
-                        <button type="submit" class="btn btn-success">
-                            {% bootstrap_icon "check" %} Lagre
+                        {% bootstrap_messages %}
+                        {% bootstrap_field form.group_name addon_before='<span class="glyphicon glyphicon-user"></span>' %}
+                        {% bootstrap_field form.persons field_class='hidden' show_label=False %}
+                        <div id="tableDiv" style="min-height: 20vh; border: 1px solid; border-color: lightgray;">
+                            <table id="table" class="table table-striped" >
+                                <thead>
+                                <tr>
+                                    <th>Fornavn</th>
+                                    <th>Etternavn</th>
+                                    <th>Brukernavn</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody >
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStudents">
+                            Legg til elever
                         </button>
+                        {% bootstrap_field form.is_active %}
+                        {% buttons %}
+                            <button type="submit" class="btn btn-success">
+                                {% bootstrap_icon "check" %} Lagre
+                            </button>
+                        {% endbuttons %}
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
 
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>Fornavn</th>
-                                <th>Etternavn</th>
-                                <th>Klasse</th>
+    </script>
+    <script>
+        $(document).ready(function ($) {
+            $("#filterStudents").hide();
+
+            $("#schoolDropStudent").change(function () {
+                $("#gradeDropStudent").val('');
+                var school_id = $(this).val();
+                var school_name = $("#schoolDropStudent :selected").text();
+                updateExistingStudents(school_id);
+                var gradeList = $("#gradeDropStudent option");
+                gradeList.each(function () {
+                    var grade_id = $(this).val();
+                    var grade = $(this).text();
+                    if (school_id == "") {
+                        $(this).show();
+                    }
+                    else if (grade.indexOf(school_name) >= 0 || grade_id == "") {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+
+             $("#gradeDropStudent").change(function () {
+                var grade_id = $(this).val();
+                if (grade_id != "") {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{% url 'administration:personList' %}',
+                        data: {
+                            'type': 'grade',
+                            'grade_id': grade_id,
+                            'role': 1,
+                            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                        },
+                        dataType: 'json',
+                        success: function (json) {
+                            var students = (json.persons);
+                            $("#studentTable tr").hide();
+                            if (grade_id == "") {
+                                $("#studentTable tr").show();
+                            }
+                            $.each(students, function (index, value) {
+                                $("#" + value.id).show();
+                            })
+                        },
+                        error: function (xhr) {
+                            alert('error');
+                            alert(xhr.responseText);
+                        }
+                    });
+                } else {
+                    var school_id = $("#schoolDropStudent :selected").val();
+                    updateExistingStudents(school_id);
+                }
+            });
+        });
+
+        function updateExistingStudents(school) {
+            var school_id = school;
+            if (school_id != "") {
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'administration:personList' %}',
+                    data: {
+                        'type': 'school',
+                        'school_id': school_id,
+                        'role': 1,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    dataType: 'json',
+                    success: function (json) {
+                        var students = (json.persons);
+                        $("#studentTable tr").hide();
+                        $.each(students, function (index, value) {
+                            $("#" + value.id).show();
+                        })
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            } else {
+                $("#studentTable tr").show();
+            }
+        }
+
+        function filterButtonStudent() {
+            var field = $("#filterStudents");
+            if (field.is(":visible")) {
+                field.hide();
+            } else {
+                field.show();
+            }
+        }
+
+        function addStudent(elem) {
+            var id = elem.id;
+            var data = $.parseJSON($(elem).attr('data-button'));
+            $('#id_persons option[value=' + data.id + ']').attr('selected', 'selected');
+            $("#table > tbody").append("<tr id=row" + id + "><td>" + data.first_name + "</td><td>" + data.last_name + "</td><td>" + data.username + "</td><td><button value=" + data.id + " type='button' onclick='removeStudent(this)' class='btn btn-primary btn-xs'>Fjern</button></td></tr>");
+            $('#' + id).hide();
+        }
+
+        function removeStudent(elem) {
+            var value = (elem.value);
+            $('#row' + value).remove();
+            $('#' + value).show();
+            $('#id_persons option[value=' + value + ']').attr('selected', false);
+        }
+
+        function userSearch(search, table) {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById(search);
+            filter = input.value.toUpperCase();
+            table = document.getElementById(table);
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}
+{% block modal %}
+    <!-- Modal -->
+    <div class="modal fade" id="addStudents" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Legg til elever</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                <input type="text" class="form-control" id="search1"
+                                       onkeyup="userSearch('search1', 'addtable')"
+                                       placeholder="Søk etter bruker">
+                            </div>
+                        </div>
+                        <div class="col-xs-2">
+                            <button type="button" class="btn btn-primary" onclick="filterButtonStudent()">
+                                Sorter<span
+                                    class="caret"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="filterStudents">
+                        <hr>
+                        <div class="row">
+                            <div class="col-xs-6 box">
+                                <div class="form-group">
+                                    <select class="form-control" id="schoolDropStudent" onchange="schoolChange()">
+                                        <option id="allschools" value="">Velg skole</option>
+                                        {% for school in schools %}
+                                            <option value="{{ school.id }}">{{ school }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 box">
+                                <div class="form-group">
+                                    <select class="form-control" id="gradeDropStudent" onchange="gradeChange()">
+                                        <option id="allgrades" value="">Velg klasse
+                                        </option>
+                                        {% for grade in grades %}
+                                            <option value="{{ grade.id }}">{{ grade }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-hover table-striped table-responsive table-condensed"
+                           id="addtable">
+                        <thead>
+                        <tr>
+                            <th>Bruker</th>
+                            <th>Legg til</th>
+                        </tr>
+                        </thead>
+                        <tbody id="studentTable">
+                        {% for student in students %}
+                            <tr id="{{ student.id }}" value="{{ student.username }}">
+                                <td>{{ student }}
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-xs" type="button"
+                                            id="{{ student.id }}" value="{{ student }}"
+                                            data-button='{"id": "{{ student.id }}","first_name": "{{ student.first_name }}", "last_name": "{{ student.last_name }}", "username": "{{ student.username }}"}'
+                                            onclick="addStudent(this)">Legg til
+                                    </button>
+                                </td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td></td>
-                                <td>Ingen brukere er lagt til</td>
-                                <td></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <button type="button" class="btn btn-primary">Legg til elever</button>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                 </div>
             </div>
         </div>
