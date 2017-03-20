@@ -193,21 +193,21 @@ class PersonListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
     template_name = 'administration/person_list.html'
     model = Person
 
-    def post_ajax(self, request, *args, **kwargs):
-        role = request.POST['role']
+    def get_ajax(self, request, *args, **kwargs):
         persons = []
-        if request.POST['type'] == "school":
-            school_id = request.POST['school_id']
-            existing_person_list = Person.objects.filter(grades__school_id=school_id, role=role).distinct()
+        if request.GET['type'] == "school":
+            school_id = request.GET['school_id']
+            existing_person_list = Person.objects.filter(grades__school_id=school_id).distinct()
         else:
-            grade_id = request.POST['grade_id']
-            existing_person_list = Person.objects.filter(grades__id=grade_id, role=role).distinct()
+            grade_id = request.GET['grade_id']
+            existing_person_list = Person.objects.filter(grades__id=grade_id).distinct()
         for person in existing_person_list.all():
             persons.append({
                 "id": person.id,
                 "first_name": person.first_name,
                 "last_name": person.last_name,
-                "username": person.username
+                "username": person.username,
+                "role": person.role
             })
         data = {
             'persons': persons,
@@ -223,15 +223,22 @@ class PersonListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
         :return: The updated context data
         """
         context = super(PersonListView, self).get_context_data(**kwargs)
+        if self.request.user.role == 4:
+            context['schools'] = School.objects.all()
+            context['grades'] = Grade.objects.all()
         if self.request.user.role == 3:
             schools = School.objects.filter(school_administrator=self.request.user.id)
             persons = Person.objects.filter(grades__school_id__in=schools).distinct()
             context['object_list'] = persons
+            context['schools'] = schools
+            grades = Grade.objects.filter(school__exact=schools)
+            context['grades'] = grades
             return context
         if self.request.user.role == 2:
             grades = self.request.user.grades.all()
             persons = Person.objects.filter(grades__in=grades).distinct()
             context['object_list'] = persons
+            context['grades'] = grades
             return context
         return context
 
@@ -469,6 +476,15 @@ class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView)
         return context
 
 
+class PersonDeleteView(SchoolAdministratorCheck, generic.DeleteView):
+    slug_field = 'username'
+    model = Person
+    success_url = reverse_lazy('administration:personList')
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+
 class SchoolListView(SchoolAdministratorCheck, generic.ListView):
     """
     Class to list out all School objects
@@ -693,8 +709,14 @@ class FileUploadView(generic.FormView):
                 username = Person.createusername(person)
                 person.username = username
                 person.set_password('ntnu123')
-                persons.append(person)
-                line_number += 1
+                personCheck = Person.objects.filter(first_name=person.first_name, last_name=person.last_name, date_of_birth=person.date_of_birth)
+                if not personCheck:
+                    persons.append(person)
+                    line_number += 1
+                else:
+                    message = person.first_name + " " + person.last_name + " med fødselsdag " + person.date_of_birth + \
+                              " ble ikke lagt til for at en person med samme detaljer allerede er registrert."
+                    messages.error(self.request, message)
             except Exception:
                 try:
                     datetime.datetime.strptime(person_obj[3], '%d.%m-%Y')
@@ -708,7 +730,6 @@ class FileUploadView(generic.FormView):
                                         "<br /><br />" "Ingen brukere ble lagt til.")
                     messages.error(self.request, message)
                     return super().post(request, *args, **kwargs)
-
         Person.objects.bulk_create(persons)
         grade = Grade.objects.get(id=self.kwargs.get('grade_pk'))
         for person in persons:
@@ -796,7 +817,7 @@ class GradeUpdateView(SchoolCheck, generic.UpdateView):
     login_url = reverse_lazy('login')
     model = Grade
     template_name = 'administration/grade_form.html'
-    fields = ['grade_name', 'tests', 'is_active']
+    fields = ['grade_name', 'is_active']
     pk_url_kwarg = 'grade_pk'
 
     def get_success_url(self):
@@ -825,11 +846,33 @@ class GroupDetailView(generic.DetailView):
     pk_url_kwarg = 'group_pk'
 
 
-class GroupCreateView(generic.CreateView):
+class GroupCreateView(views.AjaxResponseMixin, generic.CreateView):
     model = Gruppe
     fields = ['group_name', 'persons', 'is_active']
     template_name = 'administration/group_form.html'
     success_url = reverse_lazy('administration:groupList')
+
+    def get_ajax(self, request, *args, **kwargs):
+        role = request.GET['role']
+        persons = []
+        if request.GET['type'] == "school":
+            school_id = request.GET['school_id']
+            existing_person_list = Person.objects.filter(grades__school_id=school_id, role=role).distinct()
+        else:
+            grade_id = request.GET['grade_id']
+            existing_person_list = Person.objects.filter(grades__id=grade_id, role=role).distinct()
+        for person in existing_person_list.all():
+            persons.append({
+                "id": person.id,
+                "first_name": person.first_name,
+                "last_name": person.last_name,
+                "username": person.username,
+                "role": person.role
+            })
+        data = {
+            'persons': persons,
+        }
+        return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         context = super(GroupCreateView, self).get_context_data(**kwargs)
@@ -837,3 +880,8 @@ class GroupCreateView(generic.CreateView):
         context['grades'] = Grade.objects.all()
         context['students'] = Person.objects.filter(role=1)
         return context
+
+    def form_valid(self, form):
+        gruppe = form.save(commit=False)
+        gruppe.creator_id = self.request.user.id
+        return super(GroupCreateView, self).form_valid(form)

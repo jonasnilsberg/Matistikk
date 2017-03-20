@@ -1,9 +1,6 @@
-body {
-    background: white url("images/polyagonal-web-design.jpg");
-}
-
 .tab-content {
-    padding: 10px;
+    overflow: auto;
+    max-height: 60vh;
     min-height: 250px;
 }
 
@@ -31,6 +28,10 @@ p, h1, h2, h3, h4, h5, h6 {
 
 .btn-primary {
     color: whitesmoke;
+}
+
+#filterUserBtn {
+    margin-left: 10px;
 }
 
 .jumbotron p {
@@ -150,6 +151,32 @@ html, body {
 }
 
 .panel {
-
     border: none;
+}
+
+.panel-height {
+    max-height: 80vh;
+    overflow: scroll;
+}
+.btn .caret {
+    margin-left: 5px;
+}
+
+.nav.nav-tabs .form-group {
+    margin-bottom: 15px;
+    float: right;
+    width: 50%;
+    padding-left: 10px;
+}
+
+.table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+    table-layout: fixed;
+}
+
+.modalOverflow {
+    overflow: auto;
+    max-height: 50vh;
 }

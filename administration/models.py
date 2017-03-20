@@ -2,7 +2,7 @@
 
 # Core Django imports
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 from django.core.urlresolvers import reverse
 
@@ -109,7 +109,8 @@ class Person(AbstractUser):
 
 
 class Gruppe(models.Model):
-    persons = models.ManyToManyField(Person, blank=True, null=True, verbose_name='Medlemmer')
+    creator = models.ForeignKey(Person, verbose_name='Ansvarlig', related_name='+')
+    persons = models.ManyToManyField(Person, blank=True, verbose_name='Medlemmer')
     group_name = models.CharField(max_length=100, verbose_name='Gruppenavn')
     is_active = models.BooleanField(default=True, verbose_name='aktiv',
                                     help_text='Angir at denne gruppen er aktiv. Avmerk denne i stedet for å slette gruppen.')
