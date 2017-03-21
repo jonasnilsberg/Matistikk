@@ -15,7 +15,8 @@
         <div class="panel-body">
             <ul class="nav nav-tabs">
                 <li class="nav active"><a href="#A" data-toggle="tab">Alle grupper</a></li>
-                <li class="nav"><a href="#B" data-toggle="tab">Inaktive</a></li>
+                <li class="nav"><a href="#B" data-toggle="tab">Mine grupper</a></li>
+                <li class="nav"><a href="#C" data-toggle="tab">Inaktive</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="A">
@@ -47,6 +48,34 @@
                     </table>
                 </div>
                 <div class="tab-pane fade" id="B">
+                    <table class="table table-hover table-striped table-responsive" id="gradetable">
+                        <thead>
+                        <tr>
+                            <th>Gruppenavn</th>
+                            <th>Ansvarlig</th>
+                            <th>Gruppeinfo</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for group in object_list %}
+                            {% if group.creator_id == request.user.id %}
+                                <tr class="clickable-row"
+                                    data-href="{% url 'administration:groupDetail' group.id %}"
+                                    style="cursor: pointer">
+                                    <td>{{ group }}</td>
+                                    <td>{{ group.creator.get_full_name }}</td>
+                                    <td><a class="btn btn-default"
+                                           href="{% url 'administration:groupDetail' group.id %}"><span
+                                            class="glyphicon glyphicon-home" aria-hidden="true"></span> Se
+                                        Gruppeinfo</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="C">
                     <table class="table table-hover table-striped table-responsive" id="gradetable">
                         <thead>
                         <tr>

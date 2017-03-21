@@ -885,3 +885,28 @@ class GroupCreateView(views.AjaxResponseMixin, generic.CreateView):
         gruppe = form.save(commit=False)
         gruppe.creator_id = self.request.user.id
         return super(GroupCreateView, self).form_valid(form)
+
+
+class GroupUpdateView(SchoolCheck, generic.UpdateView):
+    """
+    Class to update a Group object
+
+    :param SchoolCheck: inherited permission check
+    :param generic.UpdateView: Inherits generic.CreateView that displays a form for updating a specific object and
+        saving the form when validated.
+    """
+    login_url = reverse_lazy('login')
+    model = Gruppe
+    template_name = 'administration/group_form.html'
+    fields = ['group_name', 'is_active', 'persons']
+    pk_url_kwarg = 'group_pk'
+
+    def get_success_url(self):
+        return reverse_lazy('administration:groupDetail', kwargs={'group_pk': self.kwargs.get('group_pk')})
+
+    def get_context_data(self, **kwargs):
+        context = super(GroupUpdateView, self).get_context_data(**kwargs)
+        context['schools'] = School.objects.all()
+        context['grades'] = Grade.objects.all()
+        context['students'] = Person.objects.filter(role=1)
+        return context

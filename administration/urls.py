@@ -26,4 +26,6 @@ urlpatterns = [
     url(r'gruppe/(?P<group_pk>[0-9]+)/$', views.GroupDetailView.as_view(), name='groupDetail'),
     url(r'grupper/nygruppe/$', views.GroupCreateView.as_view(), name='groupCreate'),
     url(r'brukere/slett/(?P<slug>[\w-]+)/$', views.PersonDeleteView.as_view(), name='personDelete'),
+    url(r'gruppe/(?P<group_pk>[0-9]+)/oppdater/$', views.GroupUpdateView.as_view(), name='groupUpdate'),
+
 ]
