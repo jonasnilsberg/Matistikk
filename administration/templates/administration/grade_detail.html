@@ -10,6 +10,14 @@
         <div class="panel-heading">
             <h2>Klasse: {{ grade.grade_name }}</h2>
             <h5>Skole: <a href="{% url 'administration:schoolDetail' grade.school_id %}">{{ grade.school }}</a></h5>
+            <div class="input-group">
+                <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                <input type="text" class="form-control" id="search"
+                       onkeyup="allSearch(); studentSearch(); teacherSearch(); inactiveSearch();"
+                       placeholder="Søk etter bruker">
+            </div>
         </div>
         <div class="panel-body">
             {% if request.user.role == 2 %}
@@ -52,23 +60,13 @@
                 </div>
             {% endif %}
             {% bootstrap_messages %}
-            <h4>Brukere</h4>
-            <div class="input-group">
-                <span class="input-group-addon">
-                        <i class="fa fa-search"></i>
-                    </span>
-                <input type="text" class="form-control" id="search"
-                       onkeyup="allSearch(); studentSearch(); teacherSearch(); inactiveSearch();"
-                       placeholder="Søk etter bruker">
-            </div>
-
             <ul class="nav nav-tabs">
                 <li class="nav active"><a href="#A" data-toggle="tab">Alle</a></li>
                 <li class="nav"><a href="#B" data-toggle="tab">Elever</a></li>
                 <li class="nav"><a href="#C" data-toggle="tab">Lærere</a></li>
                 <li class="nav"><a href="#D" data-toggle="tab">Inaktive</a></li>
             </ul>
-            <div style="overflow: auto; max-height: 51vh">
+            <div>
                 <div class="tab-content">
                     <!-- All Users Tab -->
                     <div class="tab-pane fade in active" id="A">
@@ -273,8 +271,8 @@
                 var grade_id = $(this).val();
                 if (grade_id != "") {
                     $.ajax({
-                        type: 'POST',
-                        url: '{% url 'administration:personList' %}',
+                        type: 'GET',
+                        url: '{% url 'administration:groupCreate' %}',
                         data: {
                             'type': 'grade',
                             'grade_id': grade_id,
@@ -306,8 +304,8 @@
                 var grade_id = $(this).val();
                 if (grade_id != "") {
                     $.ajax({
-                        type: 'POST',
-                        url: '{% url 'administration:personList' %}',
+                        type: 'GET',
+                        url: '{% url 'administration:groupCreate' %}',
                         data: {
                             'type': 'grade',
                             'grade_id': grade_id,
@@ -344,6 +342,7 @@
             var field = $("#filterStudents");
             if (field.is(":visible")) {
                 field.hide();
+                $("#existingStudentTable tr").show();
             } else {
                 field.show();
             }
@@ -352,6 +351,7 @@
             var field = $("#filterTeachers");
             if (field.is(":visible")) {
                 field.hide();
+                $("#existingTeacherTable tr").show();
             } else {
                 field.show();
             }
@@ -360,8 +360,8 @@
             var school_id = school;
             if (school_id != "") {
                 $.ajax({
-                    type: 'POST',
-                    url: '{% url 'administration:personList' %}',
+                    type: 'GET',
+                    url: '{% url 'administration:groupCreate' %}',
                     data: {
                         'type': 'school',
                         'school_id': school_id,
@@ -389,8 +389,8 @@
             var teacherTable = $("#existingTeacherTable tr");
             if (school_id != "") {
                 $.ajax({
-                    type: 'POST',
-                    url: '{% url 'administration:personList' %}',
+                    type: 'GET',
+                    url: '{% url 'administration:groupCreate' %}',
                     data: {
                         'type': 'school',
                         'school_id': school_id,
@@ -642,9 +642,9 @@
                             </div>
                         </div>
                         <div class="col-xs-2">
-                            <button type="button" class="btn btn-primary" onclick="filterButtonStudent()">
-                                Sorter<span
-                                    class="caret"></span>
+                            <button id="filterUserBtn" type="button" class="btn btn-primary"
+                                    onclick="filterButtonStudent()">
+                                Sorter<span class="caret"></span>
                             </button>
                         </div>
                     </div>
@@ -680,7 +680,7 @@
                         <ul id="successListStudent">
                         </ul>
                     </div>
-                    <div style="overflow: auto; max-height: 51vh">
+                    <div class="modalOverflow">
 
                         <table class="table table-hover table-striped table-responsive table-condensed"
                                id="addtable">

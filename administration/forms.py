@@ -8,6 +8,7 @@ class PersonForm(forms.ModelForm):
     ROLE = [
         (1, "Elev"),
         (2, 'Lærer'),
+        (3, 'Skoleadministrator'),
         (4, 'Administrator')
     ]
     role = forms.ChoiceField(choices=ROLE, label='Brukertype')

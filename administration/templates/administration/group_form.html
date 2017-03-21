@@ -75,8 +75,8 @@
                 var grade_id = $(this).val();
                 if (grade_id != "") {
                     $.ajax({
-                        type: 'POST',
-                        url: '{% url 'administration:personList' %}',
+                        type: 'GET',
+                        url: '{% url 'administration:groupCreate' %}',
                         data: {
                             'type': 'grade',
                             'grade_id': grade_id,
@@ -110,8 +110,8 @@
             var school_id = school;
             if (school_id != "") {
                 $.ajax({
-                    type: 'POST',
-                    url: '{% url 'administration:personList' %}',
+                    type: 'GET',
+                    url: '{% url 'administration:groupCreate' %}',
                     data: {
                         'type': 'school',
                         'school_id': school_id,
@@ -200,7 +200,7 @@
                             </div>
                         </div>
                         <div class="col-xs-2">
-                            <button type="button" class="btn btn-primary" onclick="filterButtonStudent()">
+                            <button id="filterUserBtn" type="button" class="btn btn-primary" onclick="filterButtonStudent()">
                                 Sorter<span
                                     class="caret"></span>
                             </button>
