@@ -1,11 +1,13 @@
 {% extends 'matistikk/base.html' %}
 {% load bootstrap3 %}
+{% load staticfiles %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
 {% block head %}
-    <script type="text/javascript" src="https://www.geogebra.org/scripts/deployggb.js"></script>
+    <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
 {% endblock %}
+
 
 {% block body %}
     <div class="panel panel-info">
@@ -70,8 +72,8 @@
                                     <input type="text" class="form-control" id="alternativ2" placeholder="Alternativ 2">
                                 </div>
 
-                                <input type="button" id="lessFields" onclick="" value="-">
-                                <input type="button" id="moreFields" onclick="" value="+">
+                                <input type="button" id="lessFields" onclick="lessFields()" value="-">
+                                <input type="button" id="moreFields" onclick="moreFields()" value="+">
                                 <br>
                                 <hr>
                                 <label for="dropdown">Velg riktig alternativ</label><br>
@@ -82,36 +84,48 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="panel panel-default" id="geoRadio">
                         <div class=" panel-heading" role="tab">
                             <p class="panel-title">
                                 <label><input type="radio" name="answer_type" value="3" data-toggle="collapse"
                                               data-parent="#accordion" data-target="#collapse7"
-                                              onclick="radioClick(this)"> Geogebra</label>
+                                              onclick="radioClick(this)"> Kun tillegg</label>
                             </p>
                         </div>
                         <div id="collapse7" class="panel-collapse collapse">
                             <div class="panel-body">
-                                Hvis dette alternativet velges, vil eleven kunne svare kun med Geogebra.
+                                Hvis dette alternativet velges, vil eleven kunne svare kun med tillegg.
                             </div>
                         </div>
                     </div>
                 </div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Felt for begrunnelse
+                        <div class="material-switch pull-right">
+                            <input id="reasoning" name="reasoning1" type="checkbox"/>
+                            <label for="reasoning" class="label-success"></label>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        Bruk tillegg (Geogebra, puslespill, rekkefølge etc..)
+                        <div class="material-switch pull-right">
+                            <input id="extra" name="extra1" type="checkbox"/>
+                            <label for="extra" class="label-success"></label>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <div class="col-md-1">
 
-            </div>
-
-            <div class="col-md-4">
+            <div class="col-md-5 form-margin">
                 <label for="choosetask">Velg oppgavetype</label>
-                    <select class="form-control input-lg" id="choosetask">
-                        <option>Geogebra</option>
-                        <option>Velg riktig</option>
-                        <option>Rekkefølge</option>
-                    </select>
+                <select class="form-control input-lg" id="choosetask">
+                    <option>Geogebra</option>
+                    <option>Velg riktig</option>
+                    <option>Rekkefølge</option>
+                </select>
                 <div id="applet_container"></div>
-                <form class="form-horizontal form-margin hidden" action="" method="POST"
+                <form class="form-horizontal form-margin" action="" method="POST"
                       enctype="multipart/form-data">
                     {% csrf_token %}
                     {% bootstrap_field form.title addon_before='<span class="glyphicon glyphicon-home"></span>' %}
@@ -126,7 +140,7 @@
         </div>
         <div class="panel-footer">
             <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-check"
+                <button type="button" onclick="onSubmit()" class="btn btn-success"><span class="glyphicon glyphicon-check"
                                                                     aria-hidden="true"></span> Send Inn
                 </button>
                 <button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-eye-open"
@@ -168,7 +182,9 @@
     </script>
 
     <script>
-        // Metoden setter farger for panelet ved valg av svarform
+        /**
+         * Metoden setter farger for panelet ved valg av svarform
+         */
         function radioClick(myRadio) {
             var valg = myRadio.value;
             if (valg == 1) {
@@ -183,6 +199,51 @@
                 document.getElementById('tekstRadio').className = "panel panel-default";
                 document.getElementById('flervalgRadio').className = "panel panel-default";
                 document.getElementById('geoRadio').className = "panel panel-success";
+            }
+        }
+
+        function onSubmit(){
+            var taskname1 = document.getElementById('taskname');
+            var taskname2 = document.getElementById('id_title');
+            var tasktext1 = document.getElementById('tasktext');
+            var tasktext2 = document.getElementById('id_text');
+
+            taskname2.value = taskname1.value;
+            tasktext2.value = tasktext1.value;
+        }
+    </script>
+
+    <script>
+        /**
+         * This function adds one option to the multiple choice
+         * when the user clicks the "+"-button.
+         */
+        var counter = 3;
+        function moreFields() {
+            if (counter < 10) {
+                $('#fields').append('<label for="alternativ' + counter + '">Alternativ ' + counter + '</label>');
+                $('#fields').append("<input type='text' class='form-control' id='alternativ" + counter + "' placeholder='Alternativ " + counter + "'>");
+                $('#dropdown').append('<option id="dropdown' + counter + '">Alternativ ' + counter + '</option>');
+                counter++;
+            }
+            else {
+                alert("Du kan ikke ha mer enn ni alternativer.");
+            }
+        }
+
+        /**
+         * This function removes one option from the multiple choice
+         * when the user clicks the "-"-button.
+         */
+        function lessFields() {
+            if (counter > 3) {
+                counter--;
+                $('#alternativ' + counter).remove();
+                $('label[for=alternativ' + counter + ']').remove();
+                $('#dropdown' + counter).remove();
+            }
+            else {
+                alert("Du kan ikke ha mindre enn to alternativer.");
             }
         }
     </script>

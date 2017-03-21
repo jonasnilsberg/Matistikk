@@ -5,6 +5,16 @@ from django.db import models
 # Create your models here.
 
 
+class Category(models.Model):
+    """
+    :category: The name of the category
+    """
+    category = models.CharField(max_length=50, verbose_name="kategori")
+
+    def __str__(self):
+        return self.category
+
+
 class Task(models.Model):
     """The base of a task
 
@@ -14,6 +24,15 @@ class Task(models.Model):
     :author: The person that made the task
     """
     title = models.CharField(max_length=100, default="")
-    task_type = models.IntegerField()
     text = models.TextField(max_length=32700, blank=True)
+    answertype = models.IntegerField()
+    reasoning = models.BooleanField()
+    extra = models.BooleanField()
     author = models.ForeignKey(Person)
+    category = models.ManyToManyField(Category)
+
+
+class MultipleChoiceTask(models.Model):
+    task = models.ForeignKey(Task)
+    option = models.CharField(max_length=500)
+    correct = models.BooleanField()
