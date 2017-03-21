@@ -380,7 +380,6 @@ class PersonCreateView(RoleCheck, generic.CreateView):
         :param form: References to the model form.
         :return: calls super
         """
-
         person = form.save(commit=False)
         username = Person.createusername(person)
         person.username = username
@@ -709,7 +708,8 @@ class FileUploadView(generic.FormView):
                 username = Person.createusername(person)
                 person.username = username
                 person.set_password('ntnu123')
-                personCheck = Person.objects.filter(first_name=person.first_name, last_name=person.last_name, date_of_birth=person.date_of_birth)
+                personCheck = Person.objects.filter(first_name=person.first_name, last_name=person.last_name,
+                                                    date_of_birth=person.date_of_birth)
                 if not personCheck:
                     persons.append(person)
                     line_number += 1

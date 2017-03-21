@@ -180,3 +180,10 @@ html, body {
     overflow: auto;
     max-height: 50vh;
 }
+
+.modal-body .table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+    table-layout: auto;
+}

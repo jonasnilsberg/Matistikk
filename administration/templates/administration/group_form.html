@@ -90,11 +90,10 @@
                         success: function (json) {
                             var students = (json.persons);
                             $("#studentTable tr").hide();
-                            if (grade_id == "") {
-                                $("#studentTable tr").show();
-                            }
                             $.each(students, function (index, value) {
-                                $("#" + value.id).show();
+                                if ($('#row' + value.id).length == 0) {
+                                    $("#" + value.id).show();
+                                }
                             })
                         },
                         error: function (xhr) {
@@ -126,7 +125,10 @@
                         var students = (json.persons);
                         $("#studentTable tr").hide();
                         $.each(students, function (index, value) {
-                            $("#" + value.id).show();
+                            if ($('#row' + value.id).length == 0) {
+                                $("#" + value.id).show();
+                            }
+
                         })
                     },
                     error: function (xhr) {
@@ -134,7 +136,12 @@
                     }
                 });
             } else {
-                $("#studentTable tr").show();
+
+                $("#studentTable tr").each(function (index, value) {
+                    if ($('#row' + value.id).length == 0) {
+                        $("#" + value.id).show();
+                    }
+                });
             }
         }
 

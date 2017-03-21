@@ -14,7 +14,7 @@ class School(models.Model):
     :school_address: The address of the school
     """
     school_administrator = models.ForeignKey('Person', null=True, blank=True, verbose_name='Skoleadministrator',
-                                             help_text='Ikke påkrevd.')
+                                             help_text='Ikke påkrevd.', on_delete=models.SET_NULL)
     school_name = models.CharField(max_length=100, verbose_name='Navn')
     school_address = models.CharField(max_length=100, verbose_name='Adresse')
     is_active = models.BooleanField(default=True, verbose_name='aktiv',
