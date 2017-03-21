@@ -3,6 +3,9 @@
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
+{% block head %}
+    <script type="text/javascript" src="https://www.geogebra.org/scripts/deployggb.js"></script>
+{% endblock %}
 
 {% block body %}
     <div class="panel panel-info">
@@ -10,15 +13,177 @@
             <h2>Lag Oppgave</h2>
         </div>
         <div class="panel-body">
-            <form class="form-horizontal form-margin" action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% bootstrap_field form.title addon_before='<span class="glyphicon glyphicon-home"></span>' %}
-                {% bootstrap_field form.text addon_before='<span class="fa fa-map-marker"></span>' %}
-                {% bootstrap_field form.task_type %}
-                <button type="submit" class="btn btn-success">
-                    {% bootstrap_icon "check" %} Lagre
+            <div class="col-md-5">
+                <label for="taskname">Oppgavenavn</label>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-tasks"></i></span>
+                    <input type="text" class="form-control input-lg" id="taskname" placeholder="Oppgavenavn">
+                </div>
+                <label for="choosetype">Velg tema</label>
+                <select class="form-control" id="choosetype">
+                    <option>Funksjoner</option>
+                    <option>Brøk</option>
+                    <option>Geometri</option>
+                    <option>Aritmetikk</option>
+                </select>
+                <div class="form-group">
+                    <label for="tasktext">Oppgavetekst</label>
+                    <textarea class="form-control" id="tasktext" rows="6" style="resize:vertical"
+                              placeholder="Skriv oppgavetekst her..."></textarea>
+                </div>
+
+                <label for="accordion">Velg svartype</label>
+                <div id="accordion" class="panel-group" role="tablist">
+                    <div class="panel panel-default" id="tekstRadio">
+                        <div class=" panel-heading" role="tab">
+                            <h4 class="panel-title">
+                                <label><input type="radio" name="answer_type" value="1" data-toggle="collapse"
+                                              data-parent="#accordion" data-target="#collapse5"
+                                              onclick="radioClick(this)" required>
+                                    Tekstsvar</label>
+                            </h4>
+                        </div>
+                        <div id="collapse5" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div>
+                                    Hvis dette alternativet velges, vil eleven kunne gi et tekstlig svar
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default" id="flervalgRadio">
+                        <div class="panel-heading" role="tab">
+                            <p class="panel-title">
+                                <label><input type="radio" name="answer_type" value="2" data-toggle="collapse"
+                                              data-parent="#accordion" data-target="#collapse6"
+                                              onclick="radioClick(this)"> Flervalgstest</label>
+                            </p>
+                        </div>
+                        <div id="collapse6" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="form-group" id="fields">
+                                    <label for="alternativ1">Alternativ 1</label>
+                                    <input type="text" class="form-control" id="alternativ1" placeholder="Alternativ 1"
+                                           autofocus>
+                                    <label for="alternativ2">Alternativ 2</label>
+                                    <input type="text" class="form-control" id="alternativ2" placeholder="Alternativ 2">
+                                </div>
+
+                                <input type="button" id="lessFields" onclick="" value="-">
+                                <input type="button" id="moreFields" onclick="" value="+">
+                                <br>
+                                <hr>
+                                <label for="dropdown">Velg riktig alternativ</label><br>
+                                <select id="dropdown">
+                                    <option id="dropdown1">Alternativ 1</option>
+                                    <option id="dropdown2">Alternativ 2</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default" id="geoRadio">
+                        <div class=" panel-heading" role="tab">
+                            <p class="panel-title">
+                                <label><input type="radio" name="answer_type" value="3" data-toggle="collapse"
+                                              data-parent="#accordion" data-target="#collapse7"
+                                              onclick="radioClick(this)"> Geogebra</label>
+                            </p>
+                        </div>
+                        <div id="collapse7" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Hvis dette alternativet velges, vil eleven kunne svare kun med Geogebra.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1">
+
+            </div>
+
+            <div class="col-md-4">
+                <label for="choosetask">Velg oppgavetype</label>
+                    <select class="form-control input-lg" id="choosetask">
+                        <option>Geogebra</option>
+                        <option>Velg riktig</option>
+                        <option>Rekkefølge</option>
+                    </select>
+                <div id="applet_container"></div>
+                <form class="form-horizontal form-margin hidden" action="" method="POST"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% bootstrap_field form.title addon_before='<span class="glyphicon glyphicon-home"></span>' %}
+                    {% bootstrap_field form.text addon_before='<span class="fa fa-map-marker"></span>' %}
+                    {% bootstrap_field form.task_type %}
+                    <button type="submit" class="btn btn-success">
+                        {% bootstrap_icon "check" %} Lagre
+                    </button>
+                </form>
+            </div>
+
+        </div>
+        <div class="panel-footer">
+            <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-check"
+                                                                    aria-hidden="true"></span> Send Inn
                 </button>
-            </form>
+                <button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-eye-open"
+                                                                    aria-hidden="true"></span> Forhåndsvis
+                </button>
+            </div>
         </div>
     </div>
+
+    <script>
+        var parameters = {
+            "id": "ggbApplet",
+            "width": 800,
+            "height": 600,
+            "showToolBar": true,
+            "borderColor": null,
+            "showMenuBar": true,
+            "allowStyleBar": true,
+            "showAlgebraInput": true,
+            "enableLabelDrags": false,
+            "enableShiftDragZoom": true,
+            "capturingThreshold": null,
+            "showToolBarHelp": false,
+            "errorDialogsActive": true,
+            "showTutorialLink": false,
+            "showLogging": false,
+            "useBrowserForJS": false
+        };
+
+        // Applet som inneholder GeoGebra-vinduet som lastes inn i createfunctiontask.jsp
+        var applet = new GGBApplet(parameters, '5.0', 'applet_container');
+        //  when used with Math Apps Bundle, uncomment this:
+        //  applet.setHTML5Codebase('GeoGebra/HTML5/5.0/web3d/');
+
+        // Metoden benyttes til å legge GeoGebra med forhåndsvalgt konfigurasjon inn i en applet
+        window.onload = function () {
+            applet.inject('applet_container', 'preferhtml5');
+        };
+    </script>
+
+    <script>
+        // Metoden setter farger for panelet ved valg av svarform
+        function radioClick(myRadio) {
+            var valg = myRadio.value;
+            if (valg == 1) {
+                document.getElementById('tekstRadio').className = "panel panel-success";
+                document.getElementById('flervalgRadio').className = "panel panel-default";
+                document.getElementById('geoRadio').className = "panel panel-default";
+            } else if (valg == 2) {
+                document.getElementById('tekstRadio').className = "panel panel-default";
+                document.getElementById('flervalgRadio').className = "panel panel-success";
+                document.getElementById('geoRadio').className = "panel panel-default";
+            } else {
+                document.getElementById('tekstRadio').className = "panel panel-default";
+                document.getElementById('flervalgRadio').className = "panel panel-default";
+                document.getElementById('geoRadio').className = "panel panel-success";
+            }
+        }
+    </script>
 {% endblock %}

@@ -3,14 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="a3dadf1e-2e4f-489f-9312-8d2daafdb0f5" name="IdeaFiles" comment="Endringer på personCreateView">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/forms.py" afterPath="$PROJECT_DIR$/administration/forms.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/static/administration/style.css" afterPath="$PROJECT_DIR$/administration/static/administration/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/grade_detail.html" afterPath="$PROJECT_DIR$/administration/templates/administration/grade_detail.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/grade_form.html" afterPath="$PROJECT_DIR$/administration/templates/administration/grade_form.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/person_form.html" afterPath="$PROJECT_DIR$/administration/templates/administration/person_form.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/school_form.html" afterPath="$PROJECT_DIR$/administration/templates/administration/school_form.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/views.py" afterPath="$PROJECT_DIR$/administration/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/index.html" afterPath="$PROJECT_DIR$/maths/templates/maths/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/matistikk/settings.py" afterPath="$PROJECT_DIR$/matistikk/settings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/matistikk/views.py" afterPath="$PROJECT_DIR$/matistikk/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/matistikk/base.html" afterPath="$PROJECT_DIR$/templates/matistikk/base.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -39,8 +37,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/administration/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="282">
-              <caret line="200" column="107" lean-forward="false" selection-start-line="200" selection-start-column="107" selection-end-line="200" selection-end-column="107" />
+            <state relative-caret-position="3438">
+              <caret line="206" column="32" lean-forward="false" selection-start-line="206" selection-start-column="32" selection-end-line="206" selection-end-column="32" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -48,36 +46,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="group_list.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/administration/templates/administration/group_list.html">
+      <file leaf-file-name="grade_detail.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/administration/templates/administration/grade_detail.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="15" column="22" lean-forward="false" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="37" />
+            <state relative-caret-position="4878">
+              <caret line="271" column="11" lean-forward="false" selection-start-line="271" selection-start-column="11" selection-end-line="303" selection-end-column="15" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="grade_detail.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/administration/templates/administration/grade_detail.html">
+      <file leaf-file-name="group_form.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/administration/templates/administration/group_form.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="313" column="37" lean-forward="false" selection-start-line="313" selection-start-column="37" selection-end-line="313" selection-end-column="37" />
-              <folding>
-                <element signature="e#4032#4072#0#HTML" expanded="true" />
-                <element signature="e#27071#27078#0#HTML" expanded="true" />
-                <element signature="e#29489#29496#0#HTML" expanded="true" />
-                <element signature="e#32315#32355#0#HTML" expanded="true" />
-              </folding>
+            <state relative-caret-position="324">
+              <caret line="18" column="66" lean-forward="false" selection-start-line="18" selection-start-column="66" selection-end-line="18" selection-end-column="66" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/administration/static/administration/style.css">
+      <file leaf-file-name="person_form.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_form.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="138" column="0" lean-forward="true" selection-start-line="138" selection-start-column="0" selection-end-line="138" selection-end-column="0" />
+            <state relative-caret-position="396">
+              <caret line="22" column="92" lean-forward="false" selection-start-line="22" selection-start-column="55" selection-end-line="22" selection-end-column="92" />
               <folding />
             </state>
           </provider>
@@ -86,8 +79,8 @@
       <file leaf-file-name="school_form.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/administration/templates/administration/school_form.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="49" column="20" lean-forward="false" selection-start-line="49" selection-start-column="20" selection-end-line="63" selection-end-column="23" />
+            <state relative-caret-position="306">
+              <caret line="17" column="198" lean-forward="false" selection-start-line="17" selection-start-column="147" selection-end-line="17" selection-end-column="198" />
               <folding />
             </state>
           </provider>
@@ -96,15 +89,9 @@
       <file leaf-file-name="person_list.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="7" column="28" lean-forward="false" selection-start-line="7" selection-start-column="28" selection-end-line="7" selection-end-column="28" />
-              <folding>
-                <element signature="e#2212#2235#0#HTML" expanded="true" />
-                <element signature="e#3770#3793#0#HTML" expanded="true" />
-                <element signature="e#5328#5351#0#HTML" expanded="true" />
-                <element signature="e#6967#6990#0#HTML" expanded="true" />
-                <element signature="e#9072#9095#0#HTML" expanded="true" />
-              </folding>
+            <state relative-caret-position="54">
+              <caret line="3" column="13" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -112,7 +99,7 @@
       <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/administration/forms.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
+            <state relative-caret-position="270">
               <caret line="16" column="118" lean-forward="false" selection-start-line="16" selection-start-column="118" selection-end-line="16" selection-end-column="118" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
@@ -134,25 +121,10 @@
       <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/administration/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1544">
+            <state relative-caret-position="1962">
               <caret line="112" column="76" lean-forward="false" selection-start-line="112" selection-start-column="76" selection-end-line="112" selection-end-column="76" />
               <folding>
                 <element signature="e#87#115#0" expanded="true" />
-                <marker date="1488206983786" expanded="true" signature="1203:1990" ph="..." />
-                <marker date="1488206983786" expanded="true" signature="1854:1901" ph="..." />
-                <marker date="1488206983786" expanded="true" signature="1925:1990" ph="..." />
-                <marker date="1488206983786" expanded="true" signature="2020:3973" ph="..." />
-                <marker date="1488206983786" expanded="true" signature="2025:2232" ph="&quot;&quot;&quot;A person is a customUser model, it contains information about the user that does not relate to user-management....&quot;&quot;&quot;" />
-                <marker date="1488206983786" expanded="true" signature="2335:2386" ph="..." />
-                <marker date="1488206983786" expanded="true" signature="2400:2512" ph="..." />
-                <marker date="1488206983786" expanded="true" signature="2790:2822" ph="..." />
-                <marker date="1488206983786" expanded="true" signature="2846:2924" ph="..." />
-                <marker date="1488206983786" expanded="true" signature="2957:3043" ph="..." />
-                <marker date="1488206983786" expanded="true" signature="3074:3973" ph="..." />
-                <marker date="1488206983786" expanded="true" signature="3554:3734" ph="..." />
-                <marker date="1488206983786" expanded="true" signature="3671:3734" ph="..." />
-                <marker date="1488206983786" expanded="true" signature="3861:3941" ph="..." />
-                <marker date="1488206983786" expanded="true" signature="4486:4517" ph="..." />
               </folding>
             </state>
           </provider>
@@ -170,16 +142,7 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>arg</find>
-      <find>reverse_lazy</find>
-      <find>get_form(</find>
-      <find>excel</find>
-      <find>GradeC</find>
-      <find>schoolListView</find>
-      <find>personCrea</find>
-      <find>personCreateView</find>
       <find>CreateView</find>
-      <find>gradeDetailView</find>
       <find>option</find>
       <find>grades</find>
       <find>PersonListView</find>
@@ -200,6 +163,15 @@
       <find>pri</find>
       <find>gradeList</find>
       <find>schoolDrop</find>
+      <find>button</find>
+      <find>gradeDetail</find>
+      <find>gradeDetailView</find>
+      <find>addExistingPerson</find>
+      <find>existingTeacherTable</find>
+      <find>userSearch</find>
+      <find>schoolDropStudent</find>
+      <find>existingStudentTable</find>
+      <find>personList</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -236,7 +208,6 @@
         <option value="$PROJECT_DIR$/templates/matistikk/base.html" />
         <option value="$PROJECT_DIR$/administration/templates/administration/group_detail.html" />
         <option value="$PROJECT_DIR$/maths/models.py" />
-        <option value="$PROJECT_DIR$/administration/templates/administration/group_form.html" />
         <option value="$PROJECT_DIR$/administration/urls.py" />
         <option value="$PROJECT_DIR$/administration/templates/administration/group_list.html" />
         <option value="$PROJECT_DIR$/administration/models.py" />
@@ -246,8 +217,9 @@
         <option value="$PROJECT_DIR$/administration/templates/administration/person_form.html" />
         <option value="$PROJECT_DIR$/administration/static/administration/style.css" />
         <option value="$PROJECT_DIR$/administration/forms.py" />
-        <option value="$PROJECT_DIR$/administration/views.py" />
         <option value="$PROJECT_DIR$/administration/templates/administration/grade_detail.html" />
+        <option value="$PROJECT_DIR$/administration/views.py" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/group_form.html" />
       </list>
     </option>
   </component>
@@ -969,33 +941,54 @@
       <option name="project" value="LOCAL" />
       <updated>1488269450801</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Endringer på personCreateView">
+      <created>1488294706629</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1488294706629</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Endringer på personCreateView">
+      <created>1488306077201</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1488306077201</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Gruppehåndtering">
+      <created>1489653953007</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1489653953007</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-1" width="1920" height="1053" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20757738" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21664888" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17745303" sideWeight="0.5140187" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985157" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18045112" sideWeight="0.48598132" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2706767" sideWeight="0.48598132" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32776618" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29860365" sideWeight="0.4870808" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24958768" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22663802" sideWeight="0.49257833" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="99" y="75" width="1722" height="879" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2964554" sideWeight="0.4870808" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1058,7 +1051,8 @@
     <MESSAGE value="Kommentering i views.py" />
     <MESSAGE value="Lagt til grupper" />
     <MESSAGE value="Endringer på personCreateView" />
-    <option name="LAST_COMMIT_MESSAGE" value="Endringer på personCreateView" />
+    <MESSAGE value="Gruppehåndtering" />
+    <option name="LAST_COMMIT_MESSAGE" value="Gruppehåndtering" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1092,27 +1086,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/navbarelev.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-314">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/navbarlaerer.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-36">
-          <caret line="10" column="53" lean-forward="false" selection-start-line="10" selection-start-column="53" selection-end-line="10" selection-end-column="88" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/navbaradmin.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-432">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/navbarelev.html" />
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/navbarlaerer.html" />
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/navbaradmin.html" />
     <entry file="file://$PROJECT_DIR$/administration/templates/administration/base.html" />
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/index.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -1229,9 +1205,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="108">
           <caret line="7" column="26" lean-forward="false" selection-start-line="7" selection-start-column="26" selection-end-line="7" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#32#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1259,10 +1232,25 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/administration/templates/administration/group_form.html">
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/group_list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="26" lean-forward="false" selection-start-line="6" selection-start-column="26" selection-end-line="6" selection-end-column="26" />
+        <state relative-caret-position="270">
+          <caret line="15" column="22" lean-forward="false" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/grade_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="13" column="60" lean-forward="false" selection-start-line="13" selection-start-column="60" selection-end-line="13" selection-end-column="60" />
           <folding />
         </state>
       </provider>
@@ -1275,88 +1263,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/administration/templates/administration/group_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="15" column="22" lean-forward="false" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1544">
-          <caret line="112" column="76" lean-forward="false" selection-start-line="112" selection-start-column="76" selection-end-line="112" selection-end-column="76" />
-          <folding>
-            <element signature="e#87#115#0" expanded="true" />
-            <marker date="1488206983786" expanded="true" signature="1203:1990" ph="..." />
-            <marker date="1488206983786" expanded="true" signature="1854:1901" ph="..." />
-            <marker date="1488206983786" expanded="true" signature="1925:1990" ph="..." />
-            <marker date="1488206983786" expanded="true" signature="2020:3973" ph="..." />
-            <marker date="1488206983786" expanded="true" signature="2025:2232" ph="&quot;&quot;&quot;A person is a customUser model, it contains information about the user that does not relate to user-management....&quot;&quot;&quot;" />
-            <marker date="1488206983786" expanded="true" signature="2335:2386" ph="..." />
-            <marker date="1488206983786" expanded="true" signature="2400:2512" ph="..." />
-            <marker date="1488206983786" expanded="true" signature="2790:2822" ph="..." />
-            <marker date="1488206983786" expanded="true" signature="2846:2924" ph="..." />
-            <marker date="1488206983786" expanded="true" signature="2957:3043" ph="..." />
-            <marker date="1488206983786" expanded="true" signature="3074:3973" ph="..." />
-            <marker date="1488206983786" expanded="true" signature="3554:3734" ph="..." />
-            <marker date="1488206983786" expanded="true" signature="3671:3734" ph="..." />
-            <marker date="1488206983786" expanded="true" signature="3861:3941" ph="..." />
-            <marker date="1488206983786" expanded="true" signature="4486:4517" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="7" column="28" lean-forward="false" selection-start-line="7" selection-start-column="28" selection-end-line="7" selection-end-column="28" />
-          <folding>
-            <element signature="e#2212#2235#0#HTML" expanded="true" />
-            <element signature="e#3770#3793#0#HTML" expanded="true" />
-            <element signature="e#5328#5351#0#HTML" expanded="true" />
-            <element signature="e#6967#6990#0#HTML" expanded="true" />
-            <element signature="e#9072#9095#0#HTML" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/templates/administration/grade_form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="13" column="60" lean-forward="false" selection-start-line="13" selection-start-column="60" selection-end-line="13" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/templates/administration/school_form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="49" column="20" lean-forward="false" selection-start-line="49" selection-start-column="20" selection-end-line="63" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/static/administration/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="138" column="0" lean-forward="true" selection-start-line="138" selection-start-column="0" selection-end-line="138" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/administration/forms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
+        <state relative-caret-position="270">
           <caret line="16" column="118" lean-forward="false" selection-start-line="16" selection-start-column="118" selection-end-line="16" selection-end-column="118" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
@@ -1364,18 +1273,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_form.html">
+    <entry file="file://$PROJECT_DIR$/administration/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-96">
-          <caret line="86" column="0" lean-forward="false" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="0" />
+        <state relative-caret-position="1962">
+          <caret line="112" column="76" lean-forward="false" selection-start-line="112" selection-start-column="76" selection-end-line="112" selection-end-column="76" />
+          <folding>
+            <element signature="e#87#115#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/school_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="17" column="198" lean-forward="false" selection-start-line="17" selection-start-column="147" selection-end-line="17" selection-end-column="198" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/administration/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="200" column="107" lean-forward="false" selection-start-line="200" selection-start-column="107" selection-end-line="200" selection-end-column="107" />
+        <state relative-caret-position="3438">
+          <caret line="206" column="32" lean-forward="false" selection-start-line="206" selection-start-column="32" selection-end-line="206" selection-end-column="32" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
@@ -1384,14 +1303,40 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/administration/templates/administration/grade_detail.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="313" column="37" lean-forward="false" selection-start-line="313" selection-start-column="37" selection-end-line="313" selection-end-column="37" />
-          <folding>
-            <element signature="e#4032#4072#0#HTML" expanded="true" />
-            <element signature="e#27071#27078#0#HTML" expanded="true" />
-            <element signature="e#29489#29496#0#HTML" expanded="true" />
-            <element signature="e#32315#32355#0#HTML" expanded="true" />
-          </folding>
+        <state relative-caret-position="4878">
+          <caret line="271" column="11" lean-forward="false" selection-start-line="271" selection-start-column="11" selection-end-line="303" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="3" column="13" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/static/administration/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="3" lean-forward="false" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="22" column="92" lean-forward="false" selection-start-line="22" selection-start-column="55" selection-end-line="22" selection-end-column="92" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/group_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" column="66" lean-forward="false" selection-start-line="18" selection-start-column="66" selection-end-line="18" selection-end-column="66" />
+          <folding />
         </state>
       </provider>
     </entry>
