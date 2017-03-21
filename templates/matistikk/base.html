@@ -135,7 +135,7 @@
                 <ul class="nav navbar-nav">
 
                     <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
-                    <li><a href="mypageview">Min Side</a></li>
+                    <li><a href="{% url 'administration:myPage' request.user.username %}">Min Side</a></li>
                     <li><a href="testview">Tester</a></li>
                     <li><a href="helpview">Hjelp</a></li>
                     <li><a href="aboutview">Om</a></li>

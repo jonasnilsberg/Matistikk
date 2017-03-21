@@ -5,121 +5,118 @@
 {% bootstrap_messages %}
 {% block body %}
     <div class="panel panel-info">
-        <div class="panel-heading">
-            <h2>Brukerinformasjon - {{ person.first_name }} {{ person.last_name }}</h2>
+    <div class="panel-heading">
+        <h2>Brukerinformasjon - {{ person.first_name }} {{ person.last_name }}</h2>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-6">
+            <i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 15em;"></i><br>
+            <p style="font-size: 3em;">{{ person.first_name }} {{ person.last_name }}</p>
+            {% if not person.is_active %}
+                <div class="alert alert-warning" role="alert">Denne brukeren er ikke aktiv</div>
+            {% endif %}
+
+            <table class="table table-hover table-striped table-responsive" id="persontable">
+                <tbody>
+                <tr>
+                    <td>
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                        <b>Fødselsdato</b>
+                    </td>
+                    <td>
+                        {{ person.date_of_birth }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <b>Brukernavn</b>
+                    </td>
+                    <td>
+                        {{ person.username }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                        <b>E-post</b>
+                    </td>
+                    <td>
+                        {{ person.email }}
+                    </td>
+                </tr>
+                <tr>
+
+                    <td>
+                        <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                        <b>Klasser</b>
+                    </td>
+                    <td>
+                        {% if person.grades %}
+                            {% for grade in person.grades.all %}
+                                <a href="{% url 'administration:gradeDetailFromPerson' person.username grade.id %}">{{ grade }}</a>
+                                <br>
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <i class="fa fa-venus-mars" aria-hidden="true"></i>
+                        <b>Kjønn</b>
+                    </td>
+                    <td>
+                        {% if person.sex == 'M' %}
+                            Gutt
+                        {% else %}
+                            Jente
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <i class="fa fa-sign-in" aria-hidden="true"></i>
+                        <b>Sist Innlogget</b>
+                    </td>
+                    <td>
+                        {{ person.last_login }}
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+            {% bootstrap_messages %}
         </div>
-        <div class="panel-body">
-            <div class="col-md-6">
-                <center>
-                    <i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 15em;"></i><br>
-                    <p style="font-size: 3em;">{{ person.first_name }} {{ person.last_name }}</p>
-                </center>
-                {% if not person.is_active %}
-                    <div class="alert alert-warning" role="alert">Denne brukeren er ikke aktiv</div>
-                {% endif %}
+    </div>
+    <div class="panel-footer">
+        <a class='btn btn-primary' data-toggle='modal' data-target='#updatePasswordModal'>
+            <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
+    </div>
+{% endblock %}
 
-                <table class="table table-hover table-striped table-responsive" id="persontable">
-                    <tbody>
-                    <tr>
-                        <td>
-                            <i class="fa fa-calendar" aria-hidden="true"></i>
-                        </td>
-                        <td>
-                            <b>Fødselsdato</b>
-                        </td>
-                        <td>
-                            {{ person.date_of_birth }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <i class="fa fa-user" aria-hidden="true"></i>
-                        </td>
-                        <td>
-                            <b>Brukernavn</b>
-                        </td>
-                        <td>
-                            {{ person.username }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                        </td>
-                        <td>
-                            <b>E-post</b>
-                        </td>
-                        <td>
-                            {{ person.email }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <i class="fa fa-graduation-cap" aria-hidden="true"></i>
-                        </td>
-                        <td>
-                            <b>Klasser</b>
-                        </td>
-                        <td>
-                            {% if person.grades %}
-                                {% for grade in person.grades.all %}
-                                    <a href="{% url 'administration:gradeDetailFromPerson' person.username grade.id %}">{{ grade }}</a>
-                                    <br>
-                                {% endfor %}
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <i class="fa fa-venus-mars" aria-hidden="true"></i>
-                        </td>
-                        <td>
-                            <b>Kjønn</b>
-                        </td>
-                        <td>
-                            {% if person.sex == 'M' %}
-                                Gutt
-                            {% else %}
-                                Jente
-                            {% endif %}
-                        </td>
-                    </tr>
+{% block modal %}
 
-                    <tr>
-                        <td>
-                            <i class="fa fa-sign-in" aria-hidden="true"></i>
-                        </td>
-                        <td>
-                            <b>Sist Innlogget</b>
-                        </td>
-                        <td>
-                            {{ person.last_login }}
-                        </td>
-                    </tr>
-
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-1">
-
-            </div>
-            <div class="col-md-3">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+    <div class="modal fade" id="updatePasswordModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h3>Endre passord</h3>
-                    </div>
-                    <div class="panel-body">
-                        <form class="form-horizontal form-margin" action="" method="post">
-                            {% csrf_token %}
-                            {% bootstrap_form form %}
-                            {% buttons %}
-                                <button type="submit" class="btn btn-success form-control">
-                                    {% bootstrap_icon "check" %} Oppdater passord
-                                </button>
-                            {% endbuttons %}
-                            {% bootstrap_messages %}
-                        </form>
-                    </div>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal form-margin" action="" method="post">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    {% buttons %}
+                        <button type="submit" class="btn btn-success">
+                            {% bootstrap_icon "check" %} Oppdater passord
+                        </button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Avbryt</button>
+                    {% endbuttons %}
                 </div>
             </div>
         </div>
