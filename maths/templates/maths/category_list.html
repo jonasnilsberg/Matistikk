@@ -1,0 +1,69 @@
+{% extends 'matistikk/base.html' %}
+
+{% block body %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1>Kategorier</h1>
+            <div class="input-group">
+                    <span class="input-group-addon">
+                            <i class="fa fa-search"></i>
+                        </span>
+                <input type="text" class="form-control" id="search" onkeyup="categorySearch();"
+                       placeholder="Søk etter kategori">
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="tab-content">
+                {% if object_list %}
+                    <table class="table table-hover table-striped table-responsive" id="categoryTable">
+                        <thead>
+                        <tr>
+                            <th>Navn</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for category in object_list %}
+                            <tr>
+                                <td>{{ category }}</td>
+                                <td><a class="btn btn-primary btn-sm" href="{% url 'maths:categoryUpdate' category.id %}">Oppdater</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <h3>Ingen skoler er lagt til</h3>
+                {% endif %}
+            </div>
+        </div>
+        <div class="panel-footer">
+            <a class="btn btn-primary" href="{% url 'maths:categoryCreate' %}"><span
+                    class="glyphicon glyphicon-plus"
+                    aria-hidden="true"></span> Legg til kategori</a>
+        </div>
+    </div>
+    <script>
+        /**
+         * This function matches the text in the search field with the content in the table with all schools
+         * and removes rows that don't match the search criteria.
+         */
+        function categorySearch() {
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("categoryTable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}

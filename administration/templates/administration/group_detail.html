@@ -10,6 +10,12 @@
                 {% endif %}
             </h5>
             <h5>
+                Klasse:
+                {% if gruppe.grade %}
+                    <a href="{% url 'administration:gradeDetail' gruppe.grade.school_id gruppe.grade.id %}">{{ gruppe.grade }}</a>
+                {% endif %}
+            </h5>
+            <h5>
                 Synlig:
                 {% if gruppe.visible %}
                     Ja
@@ -102,8 +108,6 @@
             <a class="btn btn-primary" href="{% url 'administration:groupUpdate' group_pk=gruppe.id %}"><span
                     class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater gruppe</a
         </div>
-        <a class="btn btn-primary" href="#"><span
-                class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til elever</a
     </div>
 
     <script>

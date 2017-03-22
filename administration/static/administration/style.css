@@ -235,3 +235,8 @@ html, body {
     background: inherit;
     left: 20px;
 }
+
+.panel-heading h2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

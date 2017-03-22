@@ -12,7 +12,7 @@
                     <a class="btn btn-default" href="{% url 'administration:myPage' request.user.username %}"><span
                             style="font-size:10em; color: #ff9933;" class="glyphicon glyphicon-user"></span><br>Min Side</a>
                     <a class="btn btn-default"><span style="font-size:10em; color: #ff9933"
-                                                                           class="glyphicon glyphicon-book"></span><br>Lag
+                                                     class="glyphicon glyphicon-book"></span><br>Lag
                         Test</a>
                     <a class="btn btn-default" href="statisticview"><span style="font-size:10em; color: #ff9933"
                                                                           class="glyphicon glyphicon-signal"></span><br>Statistikk</a>
@@ -21,8 +21,9 @@
                     <a class="btn btn-default" href="{% url 'maths:createTask' %}"><span
                             style="font-size:10em; color: #ffcc33" class="glyphicon glyphicon-road"></span><br>Lag
                         Funksjonsoppgave</a>
-                    <a class="btn btn-default" href="{% url 'maths:createTask' %}"><span style="font-size:10em; color: #ffcc33"
-                                                                           class="glyphicon glyphicon-th"></span><br>Lag
+                    <a class="btn btn-default" href="{% url 'maths:createTask' %}"><span
+                            style="font-size:10em; color: #ffcc33"
+                            class="glyphicon glyphicon-th"></span><br>Lag
                         Brøkoppgave</a>
                     <a class="btn btn-default" href="{% url 'maths:createTask' %}"><span
                             style="font-size:10em; color: #ffcc33" class="glyphicon glyphicon-triangle-top"></span><br>Lag
@@ -46,6 +47,8 @@
                 <a class="btn btn-default" href="{% url 'administration:schoolCreate' %}"><span
                         style="font-size:10em; color: #ff4400" class="glyphicon glyphicon-plus"></span><br>Legg til ny
                     skole</a>
+                <a class="btn btn-default" href="{% url 'maths:categoryList' %}"><span
+                        style="font-size:10em; color: #ff4400" class="glyphicon glyphicon-plus"></span><br>Kategorier</a>
             </div>
 
         {% elif request.user.role == 3 %}

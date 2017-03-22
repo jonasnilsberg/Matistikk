@@ -116,6 +116,7 @@ class Gruppe(models.Model):
                                     help_text='Angir at denne gruppen er aktiv. Avmerk denne i stedet for å slette gruppen.')
     # tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')
     visible = models.BooleanField(default=False, verbose_name="synlig", help_text='Angir om gruppen skal være synlig for sine medlemmer.')
+    grade = models.ForeignKey(Grade, blank=True, null=True, verbose_name='klasse', help_text='Ikke påkrevd.')
 
     class Meta:
         ordering = ['group_name']

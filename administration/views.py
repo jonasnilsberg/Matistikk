@@ -662,6 +662,7 @@ class GradeDisplay(generic.DetailView, views.AjaxResponseMixin):
         context['persons'] = Person.objects.filter(grades__id=self.kwargs['grade_pk'])
         context['schools'] = School.objects.all()
         context['grades'] = Grade.objects.all().exclude(id=self.kwargs['grade_pk'])
+        context['groups'] = Gruppe.objects.filter(grade__id=self.kwargs['grade_pk'])
         context['existingStudents'] = Person.objects.filter(role=1, is_active=1).exclude(
             grades__id=self.kwargs['grade_pk'])
         context['existingTeachers'] = Person.objects.filter(role=2, is_active=1).exclude(
@@ -849,15 +850,29 @@ class GroupListView(AdministratorCheck, generic.ListView):
     model = Gruppe
 
 
-class GroupDetailView(AdministratorCheck, generic.DetailView):
+class GroupDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.DetailView):
     template_name = 'administration/group_detail.html'
     model = Gruppe
     pk_url_kwarg = 'group_pk'
 
+    def get_ajax(self, request, *args, **kwargs):
+        persons = []
+        person_list = Person.objects.filter(gruppe__id=self.kwargs.get('group_pk'))
+        for person in person_list:
+            persons.append({
+                "first_name": person.first_name,
+                "last_name": person.last_name,
+                "username": person.username,
+            })
+        data = {
+            'persons': persons
+        }
+        return JsonResponse(data)
+
 
 class GroupCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.CreateView):
     model = Gruppe
-    fields = ['group_name', 'persons', 'is_active', 'visible']
+    fields = ['group_name', 'persons', 'is_active', 'visible', 'grade']
     template_name = 'administration/group_form.html'
     success_url = reverse_lazy('administration:groupList')
 
@@ -907,7 +922,7 @@ class GroupUpdateView(SchoolCheck, generic.UpdateView):
     login_url = reverse_lazy('login')
     model = Gruppe
     template_name = 'administration/group_form.html'
-    fields = ['group_name', 'is_active', 'persons', 'visible']
+    fields = ['group_name', 'is_active', 'persons', 'visible', 'grade']
     pk_url_kwarg = 'group_pk'
 
     def get_success_url(self):
@@ -919,3 +934,6 @@ class GroupUpdateView(SchoolCheck, generic.UpdateView):
         context['grades'] = Grade.objects.all()
         context['students'] = Person.objects.filter(role=1)
         return context
+
+
+
