@@ -14,7 +14,7 @@ class School(models.Model):
     :school_address: The address of the school
     """
     school_administrator = models.ForeignKey('Person', null=True, blank=True, verbose_name='Skoleadministrator',
-                                             help_text='Ikke påkrevd.', on_delete=models.SET_NULL)
+                                             help_text='Ikke påkrevd. Opprett en ny skoleadministrator ved å trykke på plusstegnet', on_delete=models.SET_NULL)
     school_name = models.CharField(max_length=100, verbose_name='Navn')
     school_address = models.CharField(max_length=100, verbose_name='Adresse')
     is_active = models.BooleanField(default=True, verbose_name='aktiv',
@@ -115,9 +115,14 @@ class Gruppe(models.Model):
     is_active = models.BooleanField(default=True, verbose_name='aktiv',
                                     help_text='Angir at denne gruppen er aktiv. Avmerk denne i stedet for å slette gruppen.')
     # tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')
+    visible = models.BooleanField(default=False, verbose_name="synlig", help_text='Angir om gruppen skal være synlig for sine medlemmer.')
+
+    class Meta:
+        ordering = ['group_name']
 
     def __str__(self):
         return self.group_name
+
 
 # This is in order to have different names shown by the django-forms than variable-names
 Person._meta.get_field('username').verbose_name = 'brukernavn'

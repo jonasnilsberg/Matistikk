@@ -22,8 +22,9 @@ class AdministratorCheck(views.UserPassesTestMixin):
     """
 
     def test_func(self, user):
-        if self.request.user.role == 4:
-            return True
+        if self.request.user.is_authenticated():
+            if self.request.user.role == 4:
+                return True
         return False
 
 
@@ -34,8 +35,10 @@ class RoleCheck(views.UserPassesTestMixin):
 
     def test_func(self, user):
         role = [2, 3, 4]
-        if self.request.user.role in role:
-            return True
+        if self.request.user.is_authenticated():
+            if self.request.user.role in role:
+                return True
+        return False
 
 
 class SchoolCheck(views.UserPassesTestMixin):
@@ -51,37 +54,38 @@ class SchoolCheck(views.UserPassesTestMixin):
         :return: returns true if the user is administrator, school-administrator or is a teacher in one of the grades
         the relevant person object is in
         """
-        if self.request.user.role == 4:
-            return True
-        elif self.request.user.role == 3:
-            if self.kwargs.get('school_pk'):
-                school = School.objects.get(id=self.kwargs.get('school_pk'))
-                if self.request.user.id == school.school_administrator.id:
-                    return True
-            if self.kwargs.get('slug'):
-                schools = School.objects.filter(school_administrator=self.request.user.id)
-                persons = Person.objects.filter(grades__school_id__in=schools)
-                for person in persons:
-                    if person.username == self.kwargs.get('slug'):
-                        return True
-        elif self.request.user.role == 2:
-            if self.kwargs.get('grade_pk'):
-                grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
-                grades = Grade.objects.filter(id=self.kwargs.get('grade_pk'))
-                for grade_teacher in grades_teacher:
-                    for grade in grades:
-                        if grade_teacher == grade:
-                            return True
-            elif self.kwargs.get('slug'):
-                grades = self.request.user.grades.all()
-                persons = Person.objects.filter(grades__in=grades).distinct()
-                for person in persons:
-                    if person.username == self.kwargs.get('slug'):
-                        return True
-        if self.kwargs.get('slug'):
-            school_admin = School.objects.filter(school_administrator__username__exact=self.kwargs.get('slug'))
-            if school_admin:
+        if self.request.user.is_authenticated():
+            if self.request.user.role == 4:
                 return True
+            elif self.request.user.role == 3:
+                if self.kwargs.get('school_pk'):
+                    school = School.objects.get(id=self.kwargs.get('school_pk'))
+                    if self.request.user.id == school.school_administrator.id:
+                        return True
+                if self.kwargs.get('slug'):
+                    schools = School.objects.filter(school_administrator=self.request.user.id)
+                    persons = Person.objects.filter(grades__school_id__in=schools)
+                    for person in persons:
+                        if person.username == self.kwargs.get('slug'):
+                            return True
+            elif self.request.user.role == 2:
+                if self.kwargs.get('grade_pk'):
+                    grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
+                    grades = Grade.objects.filter(id=self.kwargs.get('grade_pk'))
+                    for grade_teacher in grades_teacher:
+                        for grade in grades:
+                            if grade_teacher == grade:
+                                return True
+                elif self.kwargs.get('slug'):
+                    grades = self.request.user.grades.all()
+                    persons = Person.objects.filter(grades__in=grades).distinct()
+                    for person in persons:
+                        if person.username == self.kwargs.get('slug'):
+                            return True
+            if self.kwargs.get('slug'):
+                school_admin = School.objects.filter(school_administrator__username__exact=self.kwargs.get('slug'))
+                if school_admin:
+                    return True
         return False
 
 
@@ -98,8 +102,9 @@ class SchoolAdministratorCheck(views.UserPassesTestMixin):
         :param user: Test_func has to have two arguments.
         :return: returns true if user is either school_administrator or administrator
         """
-        if self.request.user.role == 3 or self.request.user.role == 4:
-            return True
+        if self.request.user.is_authenticated():
+            if self.request.user.role == 3 or self.request.user.role == 4:
+                return True
         return False
 
 
@@ -380,7 +385,11 @@ class PersonCreateView(RoleCheck, generic.CreateView):
         :param form: References to the model form.
         :return: calls super
         """
+
         person = form.save(commit=False)
+        if self.request.user.role == 3:
+            if person.role > 3 or person.role < 1:
+                return super(PersonCreateView, self).form_invalid(form)
         username = Person.createusername(person)
         person.username = username
         person.set_password('ntnu123')
@@ -835,20 +844,20 @@ class GradeListView(RoleCheck, generic.ListView):
         return Grade.objects.filter(person__username=self.request.user.username)
 
 
-class GroupListView(generic.ListView):
+class GroupListView(AdministratorCheck, generic.ListView):
     template_name = 'administration/group_list.html'
     model = Gruppe
 
 
-class GroupDetailView(generic.DetailView):
+class GroupDetailView(AdministratorCheck, generic.DetailView):
     template_name = 'administration/group_detail.html'
     model = Gruppe
     pk_url_kwarg = 'group_pk'
 
 
-class GroupCreateView(views.AjaxResponseMixin, generic.CreateView):
+class GroupCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.CreateView):
     model = Gruppe
-    fields = ['group_name', 'persons', 'is_active']
+    fields = ['group_name', 'persons', 'is_active', 'visible']
     template_name = 'administration/group_form.html'
     success_url = reverse_lazy('administration:groupList')
 
@@ -898,7 +907,7 @@ class GroupUpdateView(SchoolCheck, generic.UpdateView):
     login_url = reverse_lazy('login')
     model = Gruppe
     template_name = 'administration/group_form.html'
-    fields = ['group_name', 'is_active', 'persons']
+    fields = ['group_name', 'is_active', 'persons', 'visible']
     pk_url_kwarg = 'group_pk'
 
     def get_success_url(self):
