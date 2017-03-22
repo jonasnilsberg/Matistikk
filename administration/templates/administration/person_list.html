@@ -60,7 +60,7 @@
                         <tbody>
                         {% for person in object_list %}
                             {% if person.is_active %}
-                                <tr class="clickable-row"
+                                <tr id="user{{ person.id }}" class="clickable-row"
                                     data-href="{% url 'administration:personDetail' person.username %}"
                                     style="cursor: pointer">
                                     <td>{{ person.first_name }}</td>

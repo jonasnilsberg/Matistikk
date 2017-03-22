@@ -9,6 +9,14 @@
                     <a href="{% url 'administration:personDetail' gruppe.creator.username %}">{{ gruppe.creator.get_full_name }}</a>
                 {% endif %}
             </h5>
+            <h5>
+                Synlig:
+                {% if gruppe.visible %}
+                    Ja
+                {% else %}
+                    Nei
+                {% endif %}
+            </h5>
             <div class="input-group">
                 <span class="input-group-addon">
                         <i class="fa fa-search"></i>
@@ -18,7 +26,11 @@
             </div>
         </div>
         <div class="panel-body">
-
+            {% if gruppe.is_active == False %}
+                <div class="alert alert-warning">
+                    <strong>Inaktiv!</strong> Denne gruppen er satt som inaktiv.
+                </div>
+            {% endif %}
             <ul class="nav nav-tabs">
                 <li class="nav active"><a href="#A" data-toggle="tab">Alle elever</a></li>
                 <li class="nav"><a href="#B" data-toggle="tab">Inaktive</a></li>
