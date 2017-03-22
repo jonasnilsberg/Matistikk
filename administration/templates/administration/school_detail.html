@@ -10,15 +10,16 @@
                     <a href="{% url 'administration:personDetail' school.school_administrator.username %}">{{ school.school_administrator.get_full_name }}</a>
                 {% endif %}
             </h5>
-        </div>
-        <div class="panel-body">
-            <div class="input-group">
+        <div class="input-group">
                 <span class="input-group-addon">
                         <i class="fa fa-search"></i>
                     </span>
                 <input type="text" class="form-control" id="search" onkeyup="gradeSearch(); inactiveSearch();"
                        placeholder="Søk etter klasse">
             </div>
+        </div>
+        <div class="panel-body">
+
             <ul class="nav nav-tabs">
                 <li class="nav active"><a href="#A" data-toggle="tab">Alle klasser</a></li>
                 <li class="nav"><a href="#B" data-toggle="tab">Inaktive</a></li>

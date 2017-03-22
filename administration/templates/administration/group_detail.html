@@ -1,5 +1,151 @@
 {% extends 'matistikk/base.html' %}
 
 {% block body %}
-    {{ gruppe }}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2>{{ gruppe }}</h2>
+            <h5>Ansvarlig:
+                {% if gruppe.creator.username %}
+                    <a href="{% url 'administration:personDetail' gruppe.creator.username %}">{{ gruppe.creator.get_full_name }}</a>
+                {% endif %}
+            </h5>
+            <div class="input-group">
+                <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                <input type="text" class="form-control" id="search" onkeyup="gradeSearch(); inactiveSearch();"
+                       placeholder="Søk etter bruker">
+            </div>
+        </div>
+        <div class="panel-body">
+
+            <ul class="nav nav-tabs">
+                <li class="nav active"><a href="#A" data-toggle="tab">Alle elever</a></li>
+                <li class="nav"><a href="#B" data-toggle="tab">Inaktive</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="A">
+                    <table class="table table-hover table-striped table-responsive" id="gradetable">
+                        <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Brukernavn</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for person in gruppe.persons.all %}
+                            {% if person.is_active %}
+                                <tr id="user{{ person.id }}" class="clickable-row"
+                                    data-href="{% url 'administration:personDetail' person.username %}"
+                                    style="cursor: pointer">
+                                    <td>
+                                        {{ person.first_name }}
+                                    </td>
+                                    <td>
+                                        {{ person.last_name }}
+                                    </td>
+                                    <td>
+                                        {{ person.username }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="B">
+                    <table class="table table-hover table-striped table-responsive" id="inactivetable">
+                        <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Brukernavn</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for person in gruppe.persons.all %}
+                            {% if not person.is_active %}
+                                <tr class="clickable-row"
+                                    data-href="{% url 'administration:personDetail' person.username %}"
+                                    style="cursor: pointer">
+                                    <td>
+                                        {{ person.first_name }}
+                                    </td>
+                                    <td>
+                                        {{ person.last_name }}
+                                    </td>
+                                    <td>
+                                        {{ person.username }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <a class="btn btn-primary" href="{% url 'administration:groupUpdate' group_pk=gruppe.id %}"><span
+                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater gruppe</a
+        </div>
+        <a class="btn btn-primary" href="#"><span
+                class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til elever</a
+    </div>
+
+    <script>
+        /**
+         * This function makes the rows of the user-, student-, teacher- and admintable clickable
+         */
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.document.location = $(this).data("href");
+            });
+        });
+        function gradeSearch() {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("gradetable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        /**
+         * This function matches the text in the search field with the content in the table with all inactive users
+         * and removes rows that don't match the search criteria.
+         */
+        function inactiveSearch() {
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("inactivetable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+
 {% endblock %}
