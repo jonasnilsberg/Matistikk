@@ -78,8 +78,8 @@
                                 <hr>
                                 <label for="dropdown">Velg riktig alternativ</label><br>
                                 <select id="dropdown">
-                                    <option id="dropdown1">Alternativ 1</option>
-                                    <option id="dropdown2">Alternativ 2</option>
+                                    <option id="dropdown1" value="1">Alternativ 1</option>
+                                    <option id="dropdown2" value="2">Alternativ 2</option>
                                 </select>
                             </div>
                         </div>
@@ -130,8 +130,11 @@
                     {% csrf_token %}
                     {% bootstrap_field form.title addon_before='<span class="glyphicon glyphicon-home"></span>' %}
                     {% bootstrap_field form.text addon_before='<span class="fa fa-map-marker"></span>' %}
-                    {% bootstrap_field form.task_type %}
-                    <button type="submit" class="btn btn-success">
+                    {% bootstrap_field form.answertype %}
+                    {% bootstrap_field form.reasoning %}
+                    {% bootstrap_field form.extra %}
+                    {% bootstrap_field form.options %}
+                    <button type="submit" id="submitbutton" class="btn btn-success">
                         {% bootstrap_icon "check" %} Lagre
                     </button>
                 </form>
@@ -207,9 +210,48 @@
             var taskname2 = document.getElementById('id_title');
             var tasktext1 = document.getElementById('tasktext');
             var tasktext2 = document.getElementById('id_text');
+            var reasoning1 = document.getElementById('reasoning');
+            var reasoning2 = document.getElementById('id_reasoning');
+            var extra1 = document.getElementById('extra');
+            var extra2 = document.getElementById('id_extra');
+            var answertype1 = $("input[type='radio'][name='answer_type']:checked").val();
+            var answertype2 = document.getElementById('id_answertype');
+            var options = document.getElementById('id_options');
+            var select = document.getElementById('dropdown');
 
             taskname2.value = taskname1.value;
             tasktext2.value = tasktext1.value;
+            answertype2.value = answertype1;
+
+            if(reasoning1.checked){
+                reasoning2.checked = true;
+            }
+            else{
+                reasoning2.checked = false;
+            }
+
+            if(extra1.checked){
+                extra2.checked = true;
+            }
+            else{
+                extra2.checked = false;
+            }
+
+            if(answertype1 == 2){
+                var inputCount = document.getElementById('fields').getElementsByTagName('input').length;
+
+                for(var i = 1; i <= inputCount; i++){
+                    if(i == 1){
+                        options.value += select.options[select.selectedIndex].value + "|||||"
+                    }
+                    options.value += document.getElementById('alternativ' + i).value;
+                    if(!(i+1 > inputCount)){
+                        options.value += "|||||";
+                    }
+                }
+            }
+
+            //document.getElementById('submitbutton').click();
         }
     </script>
 
@@ -223,7 +265,7 @@
             if (counter < 10) {
                 $('#fields').append('<label for="alternativ' + counter + '">Alternativ ' + counter + '</label>');
                 $('#fields').append("<input type='text' class='form-control' id='alternativ" + counter + "' placeholder='Alternativ " + counter + "'>");
-                $('#dropdown').append('<option id="dropdown' + counter + '">Alternativ ' + counter + '</option>');
+                $('#dropdown').append('<option id="dropdown' + counter + '" value="' + counter + '">Alternativ ' + counter + '</option>');
                 counter++;
             }
             else {
