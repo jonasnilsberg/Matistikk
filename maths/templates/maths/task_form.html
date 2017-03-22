@@ -6,6 +6,10 @@
 {% bootstrap_messages %}
 {% block head %}
     <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/i18n/defaults-*.min.js"></script>
 {% endblock %}
 
 
@@ -21,13 +25,13 @@
                     <span class="input-group-addon"><i class="fa fa-tasks"></i></span>
                     <input type="text" class="form-control input-lg" id="taskname" placeholder="Oppgavenavn">
                 </div>
-                <label for="choosetype">Velg tema</label>
-                <select class="form-control" id="choosetype">
-                    <option>Funksjoner</option>
-                    <option>Brøk</option>
-                    <option>Geometri</option>
-                    <option>Aritmetikk</option>
+                <label for="choosetype">Velg tema</label><br>
+                <select id="choosetype" class="selectpicker form-control" multiple>
+                    {% for category in categories %}
+                        <option value="{{ forloop.counter }}">{{ category }}</option>
+                    {% endfor %}
                 </select>
+
                 <div class="form-group">
                     <label for="tasktext">Oppgavetekst</label>
                     <textarea class="form-control" id="tasktext" rows="6" style="resize:vertical"
@@ -47,9 +51,7 @@
                         </div>
                         <div id="collapse5" class="panel-collapse collapse">
                             <div class="panel-body">
-                                <div>
-                                    Hvis dette alternativet velges, vil eleven kunne gi et tekstlig svar
-                                </div>
+                                Hvis dette alternativet velges, vil eleven svare med tekst.
                             </div>
                         </div>
                     </div>
@@ -77,7 +79,7 @@
                                 <br>
                                 <hr>
                                 <label for="dropdown">Velg riktig alternativ</label><br>
-                                <select id="dropdown">
+                                <select id="dropdown" class="form-control">
                                     <option id="dropdown1" value="1">Alternativ 1</option>
                                     <option id="dropdown2" value="2">Alternativ 2</option>
                                 </select>
@@ -117,7 +119,7 @@
                 </ul>
             </div>
 
-            <div class="col-md-5 form-margin">
+            <div class="col-md-4 form-margin">
                 <label for="choosetask">Velg oppgavetype</label>
                 <select class="form-control input-lg" id="choosetask">
                     <option>Geogebra</option>
@@ -125,7 +127,7 @@
                     <option>Rekkefølge</option>
                 </select>
                 <div id="applet_container"></div>
-                <form class="form-horizontal form-margin" action="" method="POST"
+                <form class="form-horizontal form-margin hidden" action="" method="POST"
                       enctype="multipart/form-data">
                     {% csrf_token %}
                     {% bootstrap_field form.title addon_before='<span class="glyphicon glyphicon-home"></span>' %}
@@ -134,6 +136,8 @@
                     {% bootstrap_field form.reasoning %}
                     {% bootstrap_field form.extra %}
                     {% bootstrap_field form.options %}
+                    {% bootstrap_field form.category %}
+                    {% bootstrap_field form.base64 %}
                     <button type="submit" id="submitbutton" class="btn btn-success">
                         {% bootstrap_icon "check" %} Lagre
                     </button>
@@ -143,8 +147,9 @@
         </div>
         <div class="panel-footer">
             <div class="btn-group" role="group" aria-label="...">
-                <button type="button" onclick="onSubmit()" class="btn btn-success"><span class="glyphicon glyphicon-check"
-                                                                    aria-hidden="true"></span> Send Inn
+                <button type="button" onclick="onSubmit()" class="btn btn-success"><span
+                        class="glyphicon glyphicon-check"
+                        aria-hidden="true"></span> Send Inn
                 </button>
                 <button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-eye-open"
                                                                     aria-hidden="true"></span> Forhåndsvis
@@ -156,8 +161,8 @@
     <script>
         var parameters = {
             "id": "ggbApplet",
-            "width": 800,
-            "height": 600,
+            "width": 1200,
+            "height": 750,
             "showToolBar": true,
             "borderColor": null,
             "showMenuBar": true,
@@ -205,7 +210,7 @@
             }
         }
 
-        function onSubmit(){
+        function onSubmit() {
             var taskname1 = document.getElementById('taskname');
             var taskname2 = document.getElementById('id_title');
             var tasktext1 = document.getElementById('tasktext');
@@ -218,40 +223,55 @@
             var answertype2 = document.getElementById('id_answertype');
             var options = document.getElementById('id_options');
             var select = document.getElementById('dropdown');
+            var categoryselect1 = document.getElementById('choosetype');
+            var categoryselect2 = document.getElementById('id_category');
+            var base64 = document.getElementById('id_base64');
 
             taskname2.value = taskname1.value;
             tasktext2.value = tasktext1.value;
             answertype2.value = answertype1;
 
-            if(reasoning1.checked){
+            if (reasoning1.checked) {
                 reasoning2.checked = true;
             }
-            else{
+            else {
                 reasoning2.checked = false;
             }
 
-            if(extra1.checked){
+            if (extra1.checked) {
                 extra2.checked = true;
+                base64.value = ggbApplet.getBase64();
             }
-            else{
+            else {
                 extra2.checked = false;
             }
 
-            if(answertype1 == 2){
+            if (answertype1 == 2) {
                 var inputCount = document.getElementById('fields').getElementsByTagName('input').length;
 
-                for(var i = 1; i <= inputCount; i++){
-                    if(i == 1){
+                for (var i = 1; i <= inputCount; i++) {
+                    if (i == 1) {
                         options.value += select.options[select.selectedIndex].value + "|||||"
                     }
                     options.value += document.getElementById('alternativ' + i).value;
-                    if(!(i+1 > inputCount)){
+                    if (!(i + 1 > inputCount)) {
                         options.value += "|||||";
                     }
                 }
             }
 
-            //document.getElementById('submitbutton').click();
+            var z = categoryselect1.length;
+
+            for (var y = 0; y < z; y++) {
+                if (categoryselect1.options[y].selected) {
+                    categoryselect2.options[y].selected = true;
+                }
+                else {
+                    categoryselect2.options[y].selected = false;
+                }
+            }
+
+            document.getElementById('submitbutton').click();
         }
     </script>
 
@@ -262,6 +282,7 @@
          */
         var counter = 3;
         function moreFields() {
+            $('#warning').remove();
             if (counter < 10) {
                 $('#fields').append('<label for="alternativ' + counter + '">Alternativ ' + counter + '</label>');
                 $('#fields').append("<input type='text' class='form-control' id='alternativ" + counter + "' placeholder='Alternativ " + counter + "'>");
@@ -269,7 +290,9 @@
                 counter++;
             }
             else {
-                alert("Du kan ikke ha mer enn ni alternativer.");
+                $('#fields').append('<div class="alert alert-warning alert-dismissible" role="alert" id="warning">' +
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                    'Du kan maks ha ni svaralternativer.</div>');
             }
         }
 
@@ -278,6 +301,7 @@
          * when the user clicks the "-"-button.
          */
         function lessFields() {
+            $('#warning').remove();
             if (counter > 3) {
                 counter--;
                 $('#alternativ' + counter).remove();
@@ -285,7 +309,9 @@
                 $('#dropdown' + counter).remove();
             }
             else {
-                alert("Du kan ikke ha mindre enn to alternativer.");
+                $('#fields').append('<div class="alert alert-warning alert-dismissible" role="alert" id="warning">' +
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                    'Du kan ikke ha mindre enn to svaralternativer.</div>');
             }
         }
     </script>

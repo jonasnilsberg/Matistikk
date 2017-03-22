@@ -36,3 +36,8 @@ class MultipleChoiceTask(models.Model):
     task = models.ForeignKey(Task)
     option = models.CharField(max_length=500)
     correct = models.BooleanField()
+
+
+class GeogebraTask(models.Model):
+    task = models.ForeignKey(Task)
+    base64 = models.CharField(max_length=32700)
