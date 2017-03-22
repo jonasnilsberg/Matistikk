@@ -1,8 +1,8 @@
 from django.views import generic
 from braces.views import LoginRequiredMixin
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm
-from .models import Task, MultipleChoiceTask
+from .models import Task, MultipleChoiceTask, Category
 # Create your views here.
 
 
@@ -34,3 +34,23 @@ class CreateTaskView(generic.CreateView):
                 multiplechoice.save()
                 x += 1
         return super(CreateTaskView, self).form_valid(form)
+
+
+class CategoryListView(generic.ListView):
+    model = Category
+    template_name = 'maths/category_list.html'
+
+
+class CategoryCreateView(generic.CreateView):
+    model = Category
+    fields = ['category']
+    template_name = 'maths/category_form.html'
+    success_url = reverse_lazy('maths:categoryList')
+
+
+class CategoryUpdateView(generic.UpdateView):
+    model = Category
+    fields = ['category']
+    template_name = 'maths/category_form.html'
+    success_url = reverse_lazy('maths:categoryList')
+    pk_url_kwarg = 'category_pk'
