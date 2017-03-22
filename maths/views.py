@@ -1,6 +1,6 @@
 from django.views import generic
 from braces.views import LoginRequiredMixin
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask
 # Create your views here.
@@ -45,6 +45,26 @@ class CreateTaskView(generic.CreateView):
             geogebratask = GeogebraTask(base64=base64, task=task)
             geogebratask.save()
         return super(CreateTaskView, self).form_valid(form)
+
+
+class CategoryListView(generic.ListView):
+    model = Category
+    template_name = 'maths/category_list.html'
+
+
+class CategoryCreateView(generic.CreateView):
+    model = Category
+    fields = ['category']
+    template_name = 'maths/category_form.html'
+    success_url = reverse_lazy('maths:categoryList')
+
+
+class CategoryUpdateView(generic.UpdateView):
+    model = Category
+    fields = ['category']
+    template_name = 'maths/category_form.html'
+    success_url = reverse_lazy('maths:categoryList')
+    pk_url_kwarg = 'category_pk'
 
 
 class TaskListView(generic.ListView):

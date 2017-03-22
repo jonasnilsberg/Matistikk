@@ -11,6 +11,9 @@ class Category(models.Model):
     """
     category = models.CharField(max_length=50, verbose_name="kategori")
 
+    class Meta:
+        ordering = ['category']
+
     def __str__(self):
         return self.category
 
@@ -31,13 +34,20 @@ class Task(models.Model):
     author = models.ForeignKey(Person)
     category = models.ManyToManyField(Category)
 
+    def __str__(self):
+        return str(self.id) + " - " + self.title
+
 
 class MultipleChoiceTask(models.Model):
     task = models.ForeignKey(Task)
     option = models.CharField(max_length=500)
     correct = models.BooleanField()
 
+    def __str__(self):
+        return self.option
+
 
 class GeogebraTask(models.Model):
     task = models.ForeignKey(Task)
     base64 = models.CharField(max_length=32700)
+
