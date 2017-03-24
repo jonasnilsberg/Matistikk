@@ -5,7 +5,6 @@ Person
 --------
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
 
    views/MyPageDetailView
    views/PersonListView
@@ -19,7 +18,6 @@ School
 ---------
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
 
    views/SchoolListView
    views/SchoolDetailView
@@ -30,7 +28,6 @@ Grade
 --------
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
 
    views/GradeListView
    views/GradeDetailView
@@ -43,7 +40,6 @@ Group
 ------
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
    
    views/GroupListView
    views/GroupDetailView
