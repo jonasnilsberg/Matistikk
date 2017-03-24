@@ -3,17 +3,55 @@ Views
 
 Person
 --------
-.. toctree::
-   :maxdepth: 2
+MyPageDetailView
+++++++++++++++++++
 
-   views/MyPageDetailView
-   views/PersonListView
-   views/PersonDisplayView
-   views/ChangePasswordView
-   views/PersonDetailView
-   views/PersonCreateView
-   views/PersonUpdateView
-   
+.. automodule:: administration.views
+    :members: MyPageDetailView
+    :show-inheritance:
+
+PersonListView
+++++++++++++++++
+
+.. automodule:: administration.views
+    :members: PersonListView
+    :show-inheritance:
+
+PersonDisplayView
+++++++++++++++++++
+
+.. automodule:: administration.views
+    :members: PersonDisplayView
+    :show-inheritance:
+
+ChangePasswordView
+++++++++++++++++++++
+
+.. automodule:: administration.views
+    :members: ChangePasswordView
+    :show-inheritance:
+
+MyPageDetailView
+++++++++++++++++++
+
+.. automodule:: administration.views
+    :members: MyPageDetailView
+    :show-inheritance:
+
+PersonCreateView
++++++++++++++++++
+
+.. automodule:: administration.views
+    :members: PersonCreateView
+    :show-inheritance:
+
+PersonUpdateView
+++++++++++++++++++
+
+.. automodule:: administration.views
+    :members: PersonUpdateView
+    :show-inheritance:
+
 School
 ---------
 .. toctree::
