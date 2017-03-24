@@ -1,85 +1,164 @@
-Views
-========
+**Views**
+==================================
+**Permissions**
+-------------------------------
+*AdministratorCheck*
+++++++++++++++++
+.. automodule:: administration.views
+    :members: AdministratorCheck
+    :show-inheritance:
 
-Person
---------
-MyPageDetailView
-++++++++++++++++++
+*RoleCheck*
+++++++++
+.. automodule:: administration.views
+    :members: RoleCheck
+    :show-inheritance:
 
+*SchoolCheck*
+++++++++++
+.. automodule:: administration.views
+    :members: SchoolCheck
+    :show-inheritance:
+
+*SchoolAdministratorCheck*
+++++++++++++++++++++++
+.. automodule:: administration.views
+    :members: SchoolAdministratorCheck
+    :show-inheritance:
+
+
+**Person**
+----------------------------
+*MyPageDetailView*
++++++++++++++++
 .. automodule:: administration.views
     :members: MyPageDetailView
     :show-inheritance:
 
-PersonListView
-++++++++++++++++
-
+*PersonListView*
++++++++++++++
 .. automodule:: administration.views
     :members: PersonListView
     :show-inheritance:
 
-PersonDisplayView
-++++++++++++++++++
-
+*PersonDisplayView*
++++++++++++++++
 .. automodule:: administration.views
     :members: PersonDisplayView
     :show-inheritance:
 
-ChangePasswordView
-++++++++++++++++++++
-
+*ChangePasswordView*
++++++++++++++++++
 .. automodule:: administration.views
     :members: ChangePasswordView
     :show-inheritance:
 
-MyPageDetailView
-++++++++++++++++++
-
-.. automodule:: administration.views
-    :members: MyPageDetailView
-    :show-inheritance:
-
-PersonCreateView
-+++++++++++++++++
-
+*PersonCreateView*
++++++++++++++++
 .. automodule:: administration.views
     :members: PersonCreateView
     :show-inheritance:
 
-PersonUpdateView
-++++++++++++++++++
-
+*PersonUpdateView*
++++++++++++++++
 .. automodule:: administration.views
     :members: PersonUpdateView
     :show-inheritance:
 
-School
----------
-.. toctree::
-   :maxdepth: 2
+*PersonDeleteView*
++++++++++++++++
+.. automodule:: administration.views
+    :members: PersonDeleteView
+    :show-inheritance:
 
-   views/SchoolListView
-   views/SchoolDetailView
-   views/SchoolCreateView
-   views/SchoolUpdateView
-   
-Grade
---------
-.. toctree::
-   :maxdepth: 2
+**School**
+--------------------
 
-   views/GradeListView
-   views/GradeDetailView
-   views/GradeDisplay
-   views/FileUploadView
-   views/GradeCreateView
-   views/GradeUpdateView
+*SchoolListView*
+++++++++++++++
+.. automodule:: administration.views
+    :members: SchoolListView
+    :show-inheritance:
+
+*SchoolDetailView*
++++++++++++++++
+.. automodule:: administration.views
+    :members: SchoolDetailView
+    :show-inheritance:
+
+*SchoolCreateView*
++++++++++++++++
+.. automodule:: administration.views
+    :members: SchoolCreateView
+    :show-inheritance:
+
+*SchoolUpdateView*
++++++++++++++++
+.. automodule:: administration.views
+    :members: SchoolUpdateView
+    :show-inheritance:
    
-Group
-------
-.. toctree::
-   :maxdepth: 2
+**Grade**
+------------------------
+*GradeListView*
++++++++++++++
+.. automodule:: administration.views
+    :members: GradeListView
+    :show-inheritance:
+
+*GradeDetailView*
++++++++++++++
+.. automodule:: administration.views
+    :members: GradeDetailView
+    :show-inheritance:
+
+*GradeDisplay*
+++++++++++++
+.. automodule:: administration.views
+    :members: GradeDisplay
+    :show-inheritance:
+
+*FileUploadView*
+++++++++++++++
+.. automodule:: administration.views
+    :members: FileUploadView
+    :show-inheritance:
+
+*GradeCreateView*
+++++++++++++++
+.. automodule:: administration.views
+    :members: GradeCreateView
+    :show-inheritance:
+
+*GradeUpdateView*
++++++++++++++++
+.. automodule:: administration.views
+    :members: GradeUpdateView
+    :show-inheritance:
    
-   views/GroupListView
-   views/GroupDetailView
-   views/GroupCreateView
-   views/GroupUpdateView
+**Group**
+---------------------
+*GroupListView*
++++++++++++++
+.. automodule:: administration.views
+    :members: GroupListView
+    :show-inheritance:
+
+*GroupDetailView*
+++++++++++++++
+.. automodule:: administration.views
+    :members: GroupDetailView
+    :show-inheritance:
+
+*GroupCreateView*
++++++++++++++++
+.. automodule:: administration.views
+    :members: GroupCreateView
+    :show-inheritance:
+
+*GroupUpdateView*
++++++++++++++++
+.. automodule:: administration.views
+    :members: GroupUpdateView
+    :show-inheritance:
+

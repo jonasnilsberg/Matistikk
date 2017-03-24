@@ -1,32 +1,32 @@
-Forms
+**Forms**
 ===========
 
-PersonForm
-------------
+*PersonForm*
+--------
 .. automodule:: administration.forms
     :members: PersonForm
     :show-inheritance:
 
-FileUploadForm
+*FileUploadForm*
 ------------
 .. automodule:: administration.forms
     :members: FileUploadForm
     :show-inheritance:
 
-ChangePasswordForm
---------------------
+*ChangePasswordForm*
+--------------
 .. automodule:: administration.forms
     :members: ChangePasswordForm
     :show-inheritance:
 
-SchoolForm
---------------
+*SchoolForm*
+-------
 .. automodule:: administration.forms
     :members: SchoolForm
     :show-inheritance:
 
-SchoolAdministratorForm
---------------------------
+*SchoolAdministratorForm*
+--------------------
 .. automodule:: administration.forms
     :members: SchoolAdministratorForm
     :show-inheritance:
