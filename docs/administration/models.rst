@@ -1,25 +1,25 @@
-Models
+**Models**
 ===========
 
-School
+*School*
 ---------
 .. automodule:: administration.models
     :members: School
     :show-inheritance:
 
-Grade
+*Grade*
 ---------
 .. automodule:: administration.models
     :members: Grade
     :show-inheritance:
 
-Person
+*Person*
 ----------
 .. automodule:: administration.models
     :members: Person
     :show-inheritance:
 
-Group
+*Group*
 ---------
 .. automodule:: administration.models
     :members: Gruppe

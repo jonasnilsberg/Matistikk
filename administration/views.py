@@ -19,9 +19,16 @@ from .models import Grade, Person, School, Gruppe
 class AdministratorCheck(views.UserPassesTestMixin):
     """
     Checks if the logged in user has administrator privileges.
+
+     **UserPassesTestMixin:**
+        Mixin that check is the logged in user passes the test given in :func:`test_func`
     """
 
     def test_func(self, user):
+        """
+            :param user: Person that has to pass the test.
+            :return: True if the user logged in as an administrator.
+        """
         if self.request.user.is_authenticated():
             if self.request.user.role == 4:
                 return True
@@ -30,10 +37,17 @@ class AdministratorCheck(views.UserPassesTestMixin):
 
 class RoleCheck(views.UserPassesTestMixin):
     """
-    Checks if the logged in user is either a teacher, schooladministrator or an administrator.
+    Checks if the logged in user is either a teacher, school administrator or an administrator.
+
+     **UserPassesTestMixin:**
+        Mixin that check is the logged in user passes the test given in :func:`test_func`
     """
 
     def test_func(self, user):
+        """
+            :param user: Person that has to pass the test.
+            :return: True if the user is an administrator, school administrator or a teacher.
+        """
         role = [2, 3, 4]
         if self.request.user.is_authenticated():
             if self.request.user.role in role:
@@ -43,16 +57,18 @@ class RoleCheck(views.UserPassesTestMixin):
 
 class SchoolCheck(views.UserPassesTestMixin):
     """
-    Checks if the logged in user has sufficient access privileges to view a object.
-    :param views.UserPassesTestMixin: djangos way of handling restricted access, it's test_func is overriden.
-    :return boolean, True if access is granted.
+    Checks if the logged in user has sufficient access privileges to view or alter an object.
+
+    **UserPassesTestMixin:**
+        Mixin that check is the logged in user passes the test given in :func:`test_func`
+
     """
 
     def test_func(self, user):
         """
-        :param user: Test_func has to have two arguments.
-        :return: returns true if the user is administrator, school-administrator or is a teacher in one of the grades
-        the relevant person object is in
+            :param user: Person that has to pass the test.
+            :return: True if the user is an administrator, school-administrator or is a teacher in one of the grades
+                the relevant person object is in.
         """
         if self.request.user.is_authenticated():
             if self.request.user.role == 4:
@@ -91,16 +107,17 @@ class SchoolCheck(views.UserPassesTestMixin):
 
 class SchoolAdministratorCheck(views.UserPassesTestMixin):
     """
-    Checks if the logged in user is school-administrator or administrator
-    :param views.UserPassesTestMixin: djangos way of handling restricted access, it's test_func is overriden.
-    :return boolean, True if access is granted.
+    Checks if the logged in user is an administrator or school administrator.
+
+    **UserPassesTestMixin:**
+        Mixin that check is the logged in user passes the test given in :func:`test_func`
+
     """
 
     def test_func(self, user):
         """
-
-        :param user: Test_func has to have two arguments.
-        :return: returns true if user is either school_administrator or administrator
+        :param user: Person that has to pass the test.
+        :return: True if user is either a school administrator or administrator
         """
         if self.request.user.is_authenticated():
             if self.request.user.role == 3 or self.request.user.role == 4:
@@ -114,7 +131,7 @@ class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
 
 
     **UserPassesTestMixin :**
-        Checks if the logged in user passes a given test. The test is given in **test_func**.
+        Checks if the logged in user passes a given test. The test is given in **test_func()**.
     **FormView :**
         A view that displays a form
 
