@@ -188,6 +188,8 @@ class PersonListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
 
     **RoleCheck:**
         Permission check, only allows teachers, administrators and school administrators.
+    **AjaxResponseMixin**
+        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **ListView:**
         Inherits generic.ListView that makes a page representing a list of objects.
 
@@ -199,6 +201,15 @@ class PersonListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
     model = Person
 
     def get_ajax(self, request, *args, **kwargs):
+        """
+        Function that checks if the get request is an ajax request and returns the persons matching the school or the
+        grade.
+
+        :param request: Request that was sent to PersonListView
+        :param args:  Arguments that were sent with the request
+        :param kwargs: Keyword-arguments
+        :return: JsonResponse containing the necessary Person information
+        """
         persons = []
         if request.GET['type'] == "school":
             school_id = request.GET['school_id']
@@ -231,20 +242,18 @@ class PersonListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
         if self.request.user.role == 4:
             context['schools'] = School.objects.all()
             context['grades'] = Grade.objects.all()
-        if self.request.user.role == 3:
+        elif self.request.user.role == 3:
             schools = School.objects.filter(school_administrator=self.request.user.id)
             persons = Person.objects.filter(grades__school_id__in=schools).distinct()
             context['object_list'] = persons
             context['schools'] = schools
             grades = Grade.objects.filter(school__exact=schools)
             context['grades'] = grades
-            return context
-        if self.request.user.role == 2:
+        elif self.request.user.role == 2:
             grades = self.request.user.grades.all()
             persons = Person.objects.filter(grades__in=grades).distinct()
             context['object_list'] = persons
             context['grades'] = grades
-            return context
         return context
 
 
@@ -269,6 +278,9 @@ class PersonDisplayView(generic.DetailView):
         :return: The updated context
         """
         context = super(PersonDisplayView, self).get_context_data(**kwargs)
+        if self.kwargs.get('grade_pk'):
+            context['grade_pk'] = self.kwargs['grade_pk']
+            context['school_pk'] = self.kwargs['school_pk']
         context['form'] = ChangePassword()
         return context
 
@@ -369,7 +381,7 @@ class PersonCreateView(RoleCheck, generic.CreateView):
         """
         Function that checks for preset Person values and sets them to the fields
 
-        :return: List the preset values
+        :return: List of the preset values
         """
 
         if self.kwargs.get('grade_pk'):
@@ -383,14 +395,14 @@ class PersonCreateView(RoleCheck, generic.CreateView):
         Function that overrides form_valid and saves a new person object to the database.
 
         :param form: References to the model form.
-        :return: calls super
+        :return: Validated form
         """
 
         person = form.save(commit=False)
         if self.request.user.role == 3:
             if person.role > 3 or person.role < 1:
                 return super(PersonCreateView, self).form_invalid(form)
-        username = Person.createusername(person)
+        username = Person.create_username(person)
         person.username = username
         person.set_password('ntnu123')
         person.save()
@@ -431,8 +443,10 @@ class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView)
 
     **SchoolCheck:**
         Permission check.
+    **AjaxResponseMixin**
+        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **UpdateView:**
-        Inherits Django's Update that displays a form for updating a specific object and
+        Inherits Django's UpdateView that displays a form for updating a specific object and
         saving the form when validated.
     """
 
@@ -485,9 +499,27 @@ class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView)
 
 
 class PersonDeleteView(SchoolAdministratorCheck, generic.DeleteView):
+    """
+    Class that updates a Person object
+
+    **SchoolCheck:**
+        Permission check.
+    **UpdateView:**
+        Inherits Django's UpdateView that displays a form for updating a specific object and
+        saving the form when validated.
+    """
     slug_field = 'username'
     model = Person
-    success_url = reverse_lazy('administration:personList')
+
+    def get_success_url(self):
+        success_url = reverse_lazy('administration:personList')
+        print(self.kwargs.get('grade_pk'))
+        if self.kwargs.get('grade_pk'):
+            print()
+            success_url = reverse_lazy('administration:gradeDetail',
+                                       kwargs={'school_pk': self.kwargs.get('school_pk'),
+                                               'grade_pk': self.kwargs.get('grade_pk')})
+        return success_url
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
@@ -554,6 +586,8 @@ class SchoolCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Crea
 
     **AdministratorCheck:**
         inherited permission check
+    **AjaxResponseMixin**
+        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **CreateView:**
         Inherits generic.CreateView that displays a form for creating a object and
         saving the form when validated
@@ -586,7 +620,7 @@ class SchoolCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Crea
                 'message': 'Ikke rett format på fødselsdato. Må være på formen dd.mm.yyyy'
             }
             return JsonResponse(data)
-        username = person.createusername()
+        username = person.create_username()
         person.username = username
         person.role = 3
         person.set_password('ntnu123')
@@ -640,7 +674,28 @@ class SchoolUpdateView(SchoolCheck, generic.UpdateView):
         return context
 
 
-class GradeDisplay(generic.DetailView, views.AjaxResponseMixin):
+class GradeListView(RoleCheck, generic.ListView):
+    """
+    Class that displays a list of grade objects
+
+    **RoleCheck**
+        Permission check, only allows teachers, administrators and school administrators.
+    **ListView**
+        Inherits Django's ListView that represents a page containing a list of objects.
+    """
+    login_url = reverse_lazy('login')
+    template_name = 'administration/gradeList.html'
+
+    def get_queryset(self):
+        """
+        Function that defines the queryset.
+
+        :return: List of grades.
+        """
+        return Grade.objects.filter(person__username=self.request.user.username)
+
+
+class GradeDisplay(generic.DetailView):
     """
     Class that displays information about a single grade object based on the grade_id
 
@@ -654,7 +709,7 @@ class GradeDisplay(generic.DetailView, views.AjaxResponseMixin):
 
     def get_context_data(self, **kwargs):
         """
-        Function that adds a person object and a FileUpload form to the context without overriding it
+        Function that adds objects and a FileUpload form to the context without overriding it
         :param kwargs: keyword-arguments
         :return: returns the updated context
         """
@@ -715,7 +770,7 @@ class FileUploadView(generic.FormView):
                     person.date_of_birth = p_date.group(1)
                 else:
                     person.date_of_birth = datetime.datetime.strptime(person_obj[3], "%d.%m.%Y").strftime("%Y-%m-%d")
-                username = Person.createusername(person)
+                username = Person.create_username(person)
                 person.username = username
                 person.set_password('ntnu123')
                 personCheck = Person.objects.filter(first_name=person.first_name, last_name=person.last_name,
@@ -749,6 +804,11 @@ class FileUploadView(generic.FormView):
         return super().post(request, *args, **kwargs)
 
     def get_success_url(self):
+        """
+        Determines the URL to redirect to when the Post is successful.
+
+        :return: The Success url
+        """
         return reverse('administration:gradeDetail', kwargs={'school_pk': self.kwargs.get('school_pk'),
                                                              'grade_pk': self.kwargs.get('grade_pk')})
 
@@ -763,7 +823,7 @@ class GradeDetailView(SchoolCheck, View):
 
     def get(self, request, *args, **kwargs):
         """
-        Redirects to the GradeDisplay
+        Handels all get requests and redirects to :func:`GradeDisplay`
 
         :param request: request that was sent to GradeDetailView
         :param args:  Arguments that were sent with the request
@@ -775,7 +835,7 @@ class GradeDetailView(SchoolCheck, View):
 
     def post(self, request, *args, **kwargs):
         """
-        Redirects to the FileUploadView
+        Handles all post request and redirects to the :func:`FileUploadView`
 
         :param request: request that was sent to FileUploadView
         :param args:  Arguments that were sent with the request
@@ -791,8 +851,9 @@ class GradeCreateView(SchoolCheck, generic.CreateView):
     Class to create a Grade object
 
     **ScoolCheck:**
-        inherited permission check
-    **CreateView: Inherits generic.CreateView that displays a form for creating a object and
+        Inherited permission check
+    **CreateView:**
+        Inherits generic.CreateView that displays a form for creating a object and
         saving the form when validated
     """
 
@@ -820,42 +881,65 @@ class GradeUpdateView(SchoolCheck, generic.UpdateView):
     """
     Class to update a Grade object
 
-    :param SchoolCheck: inherited permission check
-    :param generic.UpdateView: Inherits generic.CreateView that displays a form for updating a specific object and
+    **SchoolCheck:**
+        Inherited permission check
+    **UpdateView:**
+        Inherits generic.UpdateView that displays a form for updating a specific object and
         saving the form when validated.
     """
     login_url = reverse_lazy('login')
+    pk_url_kwarg = 'grade_pk'
     model = Grade
     template_name = 'administration/grade_form.html'
     fields = ['grade_name', 'is_active']
-    pk_url_kwarg = 'grade_pk'
 
     def get_success_url(self):
-        return reverse_lazy('administration:schoolDetail', kwargs={'school_pk': self.kwargs.get('school_pk')})
+        """
+        Determines the URL to redirect to when the Post is successful.
 
-
-class GradeListView(RoleCheck, generic.ListView):
-    """
-    Class that displays a list of grade objects
-    """
-    login_url = reverse_lazy('login')
-    template_name = 'administration/gradeList.html'
-
-    def get_queryset(self):
-        return Grade.objects.filter(person__username=self.request.user.username)
+        :return: The Success url
+        """
+        return reverse_lazy('administration:gradeDetail', kwargs={'school_pk': self.kwargs.get('school_pk'),
+                                                                  'grade_pk': self.kwargs.get('grade_pk')})
 
 
 class GroupListView(AdministratorCheck, generic.ListView):
+    """
+    Class that displays a list of group objects.
+
+    **AdministratorCheck:**
+        Inherited permission check
+    **ListView:**
+        Inherits Django's ListView that represents a page containing a list of objects.
+    """
     template_name = 'administration/group_list.html'
     model = Gruppe
 
 
 class GroupDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.DetailView):
+    """
+    Class that displays information about a single grade object based on the grade_id
+
+    **AdministratorCheck:**
+        Inherited permission check
+    **AjaxResponseMixin:**
+        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
+    **DetailView:**
+        Inherits generic.DetailView that makes a page representing a specific object.
+    """
     template_name = 'administration/group_detail.html'
     model = Gruppe
     pk_url_kwarg = 'group_pk'
 
     def get_ajax(self, request, *args, **kwargs):
+        """
+        Function that checks if the get request is an ajax request and returns the persons in the group.
+
+        :param request: Request that was sent to GroupDetailView
+        :param args:  Arguments that were sent with the request
+        :param kwargs: Keyword-arguments
+        :return: JsonResponse containing the necessary Person information
+        """
         persons = []
         person_list = Person.objects.filter(gruppe__id=self.kwargs.get('group_pk'))
         for person in person_list:
@@ -871,12 +955,44 @@ class GroupDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.Detai
 
 
 class GroupCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.CreateView):
+    """
+    Class that displays information about a single grade object based on the grade_id
+
+    **AdministratorCheck:**
+        Inherited permission check
+    **AjaxResponseMixin:**
+        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
+    **CreateView:**
+        Inherits generic.CreateView that displays a form for creating a object and
+        saving the form when validated
+    """
     model = Gruppe
     fields = ['group_name', 'persons', 'is_active', 'visible', 'grade']
     template_name = 'administration/group_form.html'
     success_url = reverse_lazy('administration:groupList')
 
+    def get_initial(self):
+        """
+        Function that checks for preset values and sets them to the fields.
+
+        :return: List of the preset values.
+        """
+        if self.kwargs.get('grade_pk'):
+            self.success_url = reverse_lazy('administration:gradeDetail',
+                                            kwargs={'school_pk': self.kwargs.get('school_pk'),
+                                                    'grade_pk': self.kwargs.get('grade_pk')})
+            return {'grade': self.kwargs.get('grade_pk')}
+
     def get_ajax(self, request, *args, **kwargs):
+        """
+        Function that checks if the get request is an ajax request and returns the persons matching the role and
+        school/grade.
+
+        :param request: Request that was sent to GroupCreateView
+        :param args:  Arguments that were sent with the request
+        :param kwargs: Keyword-arguments
+        :return: JsonResponse containing the necessary Person information
+        """
         role = request.GET['role']
         persons = []
         if request.GET['type'] == "school":
@@ -899,6 +1015,11 @@ class GroupCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Creat
         return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
+        """
+        Function that adds objects to the context without overriding it.
+        :param kwargs: keyword-arguments
+        :return: returns the updated context
+        """
         context = super(GroupCreateView, self).get_context_data(**kwargs)
         context['schools'] = School.objects.all()
         context['grades'] = Grade.objects.all()
@@ -906,17 +1027,24 @@ class GroupCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Creat
         return context
 
     def form_valid(self, form):
+        """
+        Overrides generic.CreateViews form_valid and adds the creator to the group and then saves it.
+        :param form: represents the form object
+        :return: calls super
+        """
         gruppe = form.save(commit=False)
         gruppe.creator_id = self.request.user.id
         return super(GroupCreateView, self).form_valid(form)
 
 
-class GroupUpdateView(SchoolCheck, generic.UpdateView):
+class GroupUpdateView(AdministratorCheck, generic.UpdateView):
     """
-    Class to update a Group object
+    Class to update a specific group object bases on the group_id
 
-    :param SchoolCheck: inherited permission check
-    :param generic.UpdateView: Inherits generic.CreateView that displays a form for updating a specific object and
+    **AdministratorCheck:**
+        Inherited permission check
+    **UpdateView:**
+        Inherits generic.UpdateView that displays a form for updating a specific object and
         saving the form when validated.
     """
     login_url = reverse_lazy('login')
@@ -926,14 +1054,21 @@ class GroupUpdateView(SchoolCheck, generic.UpdateView):
     pk_url_kwarg = 'group_pk'
 
     def get_success_url(self):
+        """
+        Determines the URL to redirect to when the Post is successful.
+
+        :return: The Success url
+        """
         return reverse_lazy('administration:groupDetail', kwargs={'group_pk': self.kwargs.get('group_pk')})
 
     def get_context_data(self, **kwargs):
+        """
+        Function that adds objects to the context without overriding it.
+        :param kwargs: keyword-arguments
+        :return: returns the updated context
+        """
         context = super(GroupUpdateView, self).get_context_data(**kwargs)
         context['schools'] = School.objects.all()
         context['grades'] = Grade.objects.all()
         context['students'] = Person.objects.filter(role=1)
         return context
-
-
-

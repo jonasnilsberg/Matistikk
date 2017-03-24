@@ -9,7 +9,7 @@
                         <i class="fa fa-search"></i>
                     </span>
                 <input type="text" class="form-control" id="search"
-                       onkeyup="userSearch(); studentSearch(); adminSearch(); teacherSearch(); inactiveSearch()"
+                       onkeyup="userSearch('usertable'); userSearch('studenttable'); userSearch('teachertable'); adminSearch(); userSearch('inactivetable');"
                        placeholder="Søk etter bruker">
             </div>
         </div> <!-- #Panel-heading -->
@@ -23,7 +23,7 @@
                 <li class="nav"><a href="#E" data-toggle="tab">Inaktive</a></li>
                 <div class="col-sm-3" style="float: right">
                     <div class="form-group">
-                        <select class="form-control" id="gradeDropStudent">
+                        <select class="form-control" id="gradeDropList">
                             <option id="allschools" value="">Velg Klasse</option>
                             {% for grade in grades %}
                                 <option value="{{ grade.id }}">{{ grade }}</option>
@@ -32,7 +32,7 @@
                     </div>
                     {% if request.user.role != 2 %}
                         <div class="form-group">
-                            <select class="form-control" id="schoolDropStudent" onchange="schoolChange()">
+                            <select class="form-control" id="schoolDropList">
                                 <option id="allgrades" value="">Velg Skole
                                 </option>
                                 {% for school in schools %}
@@ -232,16 +232,20 @@
         jQuery(document).ready(function ($) {
             $(".clickable-row").click(function () {
                 window.document.location = $(this).data("href");
-                $("#schoolDropStudent").val("");
-                $("#gradeDropStudent").val("");
+                $("#schoolDropList").val("");
+                $("#gradeDropList").val("");
 
             });
-            $("#schoolDropStudent").change(function () {
-                $("#gradeDropStudent").val('');
+            /**
+             * This function runs on a change in the schoolDropList, and gets the users in the selected school. The users
+             * are sorted out in the table.
+             */
+            $("#schoolDropList").change(function () {
+                $("#gradeDropList").val('');
                 var school_id = $(this).val();
-                var school_name = $("#schoolDropStudent :selected").text();
-                updateExistingStudents(school_id);
-                var gradeList = $("#gradeDropStudent option");
+                var school_name = $("#schoolDropList :selected").text();
+                updateUsers(school_id);
+                var gradeList = $("#gradeDropList option");
                 gradeList.each(function () {
                     var grade_id = $(this).val();
                     var grade = $(this).text();
@@ -255,8 +259,11 @@
                     }
                 });
             });
-
-            $("#gradeDropStudent").change(function () {
+            /**
+             * This function runs on a change in the gradeDropList, and gets the users in the selected grade. The users
+             * are sorted out in the table.
+             */
+            $("#gradeDropList").change(function () {
                 var grade_id = $(this).val();
                 if (grade_id != "") {
                     $.ajax({
@@ -291,12 +298,15 @@
                         }
                     });
                 } else {
-                    var school_id = $("#schoolDropStudent :selected").val();
-                    updateExistingStudents(school_id);
+                    var school_id = $("#schoolDropList :selected").val();
+                    updateUsers(school_id);
                 }
             });
         });
-        function updateExistingStudents(school) {
+        /**
+         * Function that gets the userlist with an ajax-call and displays them in the table.
+         */
+        function updateUsers(school) {
             var school_id = school;
             if (school_id != "") {
                 $.ajax({
@@ -340,46 +350,21 @@
     <script>
 
         /**
-         * This function matches the text in the search field with the content in the table with all users
+         * This function matches the text in the search field with the content in the table given in the parameter.
          * and removes rows that don't match the search criteria.
          */
-        function userSearch() {
-            var input, filter, table, tr, td, i, td1, td2, fullname;
-            input = document.getElementById("search");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("usertable");
-            tr = table.getElementsByTagName("tr");
-
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0];
-                td1 = tr[i].getElementsByTagName("td")[1];
-                td2 = tr[i].getElementsByTagName("td")[2];
-
-                if (td) {
-                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-
-        /**
-         * This function matches the text in the search field with the content in the table with all students
-         * and removes rows that don't match the search criteria.
-         */
-        function studentSearch() {
+        function userSearch(inputTable) {
             var input, filter, table, tr, td, i, td1, td2;
             input = document.getElementById("search");
             filter = input.value.toUpperCase();
-            table = document.getElementById("studenttable");
+            table = document.getElementById(inputTable);
             tr = table.getElementsByTagName("tr");
 
             for (i = 0; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td")[0];
                 td1 = tr[i].getElementsByTagName("td")[1];
                 td2 = tr[i].getElementsByTagName("td")[2];
+
                 if (td) {
                     if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
                         tr[i].style.display = "";
@@ -389,32 +374,6 @@
                 }
             }
         }
-
-        /**
-         * This function matches the text in the search field with the content in the table with all teachers
-         * and removes rows that don't match the search criteria.
-         */
-        function teacherSearch() {
-            var input, filter, table, tr, td, i, td1, td2;
-            input = document.getElementById("search");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("teachertable");
-            tr = table.getElementsByTagName("tr");
-
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0];
-                td1 = tr[i].getElementsByTagName("td")[1];
-                td2 = tr[i].getElementsByTagName("td")[2];
-                if (td) {
-                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-
         /**
          * This function matches the text in the search field with the content in the table with all admins
          * and removes rows that don't match the search criteria.
@@ -430,33 +389,9 @@
                 td = tr[i].getElementsByTagName("td")[0];
                 td1 = tr[i].getElementsByTagName("td")[1];
                 td2 = tr[i].getElementsByTagName("td")[2];
+                td3 = tr[i].getElementsByTagName("td")[3];
                 if (td) {
-                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-
-        /**
-         * This function matches the text in the search field with the content in the table with all inactive users
-         * and removes rows that don't match the search criteria.
-         */
-        function inactiveSearch() {
-            var input, filter, table, tr, td, i, td1, td2;
-            input = document.getElementById("search");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("inactivetable");
-            tr = table.getElementsByTagName("tr");
-
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0];
-                td1 = tr[i].getElementsByTagName("td")[1];
-                td2 = tr[i].getElementsByTagName("td")[2];
-                if (td) {
-                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1 || td3.innerHTML.toUpperCase().indexOf(filter) > -1) {
                         tr[i].style.display = "";
                     } else {
                         tr[i].style.display = "none";

@@ -10,11 +10,16 @@ from django.core.urlresolvers import reverse
 class School(models.Model):
     """A school
 
-    :school_name: The name of the school
-    :school_address: The address of the school
+
+    :school_admin: The person responsible for the school.
+    :school_name: The name of the school.
+    :school_address: The address of the school.
+    :is_active: Value that says if the school is active or not.
+
     """
     school_administrator = models.ForeignKey('Person', null=True, blank=True, verbose_name='Skoleadministrator',
-                                             help_text='Ikke påkrevd. Opprett en ny skoleadministrator ved å trykke på plusstegnet', on_delete=models.SET_NULL)
+                                             help_text='Ikke påkrevd. Opprett en ny skoleadministrator ved å trykke på plusstegnet til høyre.',
+                                             on_delete=models.SET_NULL)
     school_name = models.CharField(max_length=100, verbose_name='Navn')
     school_address = models.CharField(max_length=100, verbose_name='Adresse')
     is_active = models.BooleanField(default=True, verbose_name='aktiv',
@@ -27,6 +32,9 @@ class School(models.Model):
         return self.school_name
 
     def get_absolute_url(self):
+        """
+            Function that sets the absolute_url.
+        """
         return reverse('administration:schoolDetail', kwargs={'school_pk': self.id})
 
 
@@ -34,11 +42,11 @@ class Grade(models.Model):
     """ A grade is a group of students
 
     :school: The school object the grade relates to
-
     :grade_name: The name name of the grade
+    :tests: Which tests this class has been given access to.
+    :is_active: Value that says if the school is active or not.
 
-    :tests: Which tests this class has been given access to. """
-
+    """
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     grade_name = models.CharField(max_length=100, verbose_name='klassenavn')
     # tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')
@@ -55,8 +63,11 @@ class Grade(models.Model):
 class Person(AbstractUser):
     """A person is a customUser model, it contains information about the user that does not relate to user-management.
 
-    :grade: The grade this person is registered to
+    :grades: The grades this person is registered to.
     :Sex: The sex of the person.
+    :Date_of_birth: The persons date of birth.
+    :Role: The role this user has in the system.
+
     """
 
     grades = models.ManyToManyField(Grade, default="", blank=True, verbose_name="klasse")
@@ -81,9 +92,15 @@ class Person(AbstractUser):
         return self.first_name + " " + self.last_name + " - " + self.username
 
     def get_absolute_url(self):
+        """
+            Function that sets the absolute_url.
+        """
         return reverse('administration:personDetail', kwargs={'slug': self.username})
 
-    def createusername(self):
+    def create_username(self):
+        """
+            Function that generates a username based on the first and last name.
+        """
         first_name_form = self.first_name
         last_name_form = self.last_name
         first_name = first_name_form.replace(" ", "")
@@ -109,14 +126,24 @@ class Person(AbstractUser):
 
 
 class Gruppe(models.Model):
+    """ A Group is a group of students
+
+     :creator: The creator of the group.
+     :persons: The persons in this group.
+     :group_name: The name of the group.
+     :is_active: Value that says if the group is active or not.
+     :visible: Value that says if the group should be visible to its members or not.
+
+     """
     creator = models.ForeignKey(Person, verbose_name='Ansvarlig', related_name='+')
     persons = models.ManyToManyField(Person, blank=True, verbose_name='Medlemmer')
     group_name = models.CharField(max_length=100, verbose_name='Gruppenavn')
     is_active = models.BooleanField(default=True, verbose_name='aktiv',
                                     help_text='Angir at denne gruppen er aktiv. Avmerk denne i stedet for å slette gruppen.')
     # tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')
-    visible = models.BooleanField(default=False, verbose_name="synlig", help_text='Angir om gruppen skal være synlig for sine medlemmer.')
-    grade = models.ForeignKey(Grade, blank=True, null=True, verbose_name='klasse')
+    visible = models.BooleanField(default=False, verbose_name="synlig",
+                                  help_text='Angir om gruppen skal være synlig for sine medlemmer.')
+    grade = models.ForeignKey(Grade, blank=True, null=True, verbose_name='klasse', help_text='Ikke påkrevd.')
 
     class Meta:
         ordering = ['group_name']

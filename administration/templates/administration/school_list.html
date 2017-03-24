@@ -8,7 +8,7 @@
                     <span class="input-group-addon">
                             <i class="fa fa-search"></i>
                         </span>
-                <input type="text" class="form-control" id="search" onkeyup="schoolSearch(); inactiveSearch();"
+                <input type="text" class="form-control" id="search" onkeyup="schoolSearch('schooltable'); schoolSearch('inactivetable');"
                        placeholder="Søk etter skole">
             </div>
         </div>
@@ -107,7 +107,7 @@
 
     <script>
         /**
-         * This function makes table rows clickable
+         * This function makes table rows clickable.
          */
         jQuery(document).ready(function ($) {
             $(".clickable-row").click(function () {
@@ -121,36 +121,11 @@
          * This function matches the text in the search field with the content in the table with all schools
          * and removes rows that don't match the search criteria.
          */
-        function schoolSearch() {
+        function schoolSearch(inputTable) {
             var input, filter, table, tr, td, i, td1, td2;
             input = document.getElementById("search");
             filter = input.value.toUpperCase();
-            table = document.getElementById("schooltable");
-            tr = table.getElementsByTagName("tr");
-
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0];
-                td1 = tr[i].getElementsByTagName("td")[1];
-                td2 = tr[i].getElementsByTagName("td")[2];
-                if (td) {
-                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-
-        /**
-         * This function matches the text in the search field with the content in the table with all
-         * inactive schools and removes rows that don't match the search criteria.
-         */
-        function inactiveSearch() {
-            var input, filter, table, tr, td, i, td1, td2;
-            input = document.getElementById("search");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("inactivetable");
+            table = document.getElementById(inputTable);
             tr = table.getElementsByTagName("tr");
 
             for (i = 0; i < tr.length; i++) {
