@@ -6,22 +6,14 @@ class PersonForm(forms.ModelForm):
     """
     Form used to create a new person.
 
-    **First_name:**
-        Persons first name.
-    **Last_name:**
-        Persons last name.
-    **Email:**
-        Persons email.
-    **Date_of_Birth:**
-        Persons date of birth.
-    **Sex:**
-        Persons sex.
-    **Is_active:**
-        Decides if the Person is active or not. Used instead of deleting the Person.
-    **Grades:**
-        Which grades the person are in.
-    **Role:**
-        Persons role in the system.
+    :First_name: Persons first name.
+    :Last_name: Persons last name.
+    :Email: Persons email.
+    :Date_of_Birth: Persons date of birth.
+    :Sex: Persons sex.
+    :Is_active: Decides if the Person is active or not. Used instead of deleting the Person.
+    :Grades: Which grades the person are in.
+    :Role: Persons role in the system.
 
     """
     first_name = forms.CharField(required=True, label='Fornavn')
@@ -39,8 +31,7 @@ class FileUpload(forms.Form):
     """
     Form used to upload excel file with Person information.
 
-    **File:**
-        The file that will be uploaded.
+    :File: The file that will be uploaded.
 
     """
     file = forms.FileField()
@@ -57,10 +48,8 @@ class ChangePassword(forms.ModelForm):
     """
     Form used to change the password to a Person.
 
-    **password:**
-        New password for the Person.
-    **password2:**
-        New repeated password for the Person.
+    :Password: New password for the Person.
+    :Password2: New repeated password for the Person.
 
     """
 
@@ -79,16 +68,13 @@ class SchoolForm(forms.ModelForm):
     """
     Form used to create a school.
 
-    **School_name:**
-        Name of the school.
-    **School_address:**
-        Address of the school.
-    **School_administrator:**
-        Person responsible for the school.
-    **Is_active:**
-        Decides if the School is active or not. Used instead of deleting the School.
+    :School_name: Name of the school.
+    :School_address: Address of the school.
+    :School_administrator: Person responsible for the school.
+    :Is_active: Decides if the School is active or not. Used instead of deleting the School.
 
     """
+
     class Meta:
         """
         Bases the form on the School model.
@@ -108,20 +94,19 @@ class SchoolForm(forms.ModelForm):
 class SchoolAdministrator(forms.ModelForm):
     """
     Form used to create a school administrator.
-    **First_name:**
-        The school administrators first name.
-    **Last_name:**
-        The school administrators last name.
-    **Email:**
-        The school administrators email.
-    **Date_of_birth:**
-        The school administrators date of birth.
-    **Sex:**
-        The school administrators sex.
+
+    :First_name: The school administrators first name.
+    :Last_name: The school administrators last name.
+    :Email: The school administrators email.
+    :Date_of_birth: The school administrators date of birth.
+    :Sex: The school administrators sex.
     """
     first_name = forms.CharField(required=True, label='Fornavn')
     last_name = forms.CharField(required=True, label='Etternavn')
 
     class Meta:
+        """
+            Bases the form on the Person model.
+        """
         model = Person
         fields = ['email', 'date_of_birth', 'sex']
