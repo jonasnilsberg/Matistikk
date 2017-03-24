@@ -402,6 +402,11 @@ class PersonCreateView(RoleCheck, generic.CreateView):
         if self.request.user.role == 3:
             if person.role > 3 or person.role < 1:
                 return super(PersonCreateView, self).form_invalid(form)
+        if person.role == 4:
+            person.is_staff = True
+            person.is_superuser = True
+        elif person.role == 3 or person.role == 2:
+            person.is_staff = True
         username = Person.create_username(person)
         person.username = username
         person.set_password('ntnu123')
