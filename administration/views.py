@@ -11,8 +11,8 @@ from django.http import JsonResponse
 from django.utils.safestring import mark_safe
 from django.views import View, generic
 
-from .forms import (ChangePassword, FileUpload, PersonForm,
-                    SchoolAdministrator, SchoolForm)
+from .forms import (ChangePasswordForm, FileUploadForm, PersonForm,
+                    SchoolAdministratorForm, SchoolForm)
 from .models import Grade, Person, School, Gruppe
 
 
@@ -281,7 +281,7 @@ class PersonDisplayView(generic.DetailView):
         if self.kwargs.get('grade_pk'):
             context['grade_pk'] = self.kwargs['grade_pk']
             context['school_pk'] = self.kwargs['school_pk']
-        context['form'] = ChangePassword()
+        context['form'] = ChangePasswordForm()
         return context
 
 
@@ -328,7 +328,7 @@ class ChangePasswordView(generic.FormView):
         A view that displays a form
     """
     template_name = 'administration/person_detail.html'
-    form_class = ChangePassword
+    form_class = ChangePasswordForm
     model = Person
     slug_field = 'username'
 
@@ -646,7 +646,7 @@ class SchoolCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Crea
         :return: The updated context
         """
         context = super(SchoolCreateView, self).get_context_data(**kwargs)
-        context['administratorForm'] = SchoolAdministrator()
+        context['administratorForm'] = SchoolAdministratorForm()
         return context
 
 
@@ -675,7 +675,7 @@ class SchoolUpdateView(SchoolCheck, generic.UpdateView):
         :return: The updated context
         """
         context = super(SchoolUpdateView, self).get_context_data(**kwargs)
-        context['administratorForm'] = SchoolAdministrator()
+        context['administratorForm'] = SchoolAdministratorForm()
         return context
 
 
@@ -727,7 +727,7 @@ class GradeDisplay(generic.DetailView):
             grades__id=self.kwargs['grade_pk'])
         context['existingTeachers'] = Person.objects.filter(role=2, is_active=1).exclude(
             grades__id=self.kwargs['grade_pk'])
-        context['form'] = FileUpload()
+        context['form'] = FileUploadForm()
         return context
 
 
@@ -737,7 +737,7 @@ class FileUploadView(generic.FormView):
     """
 
     template_name = 'administration/grade_detail.html'
-    form_class = FileUpload
+    form_class = FileUploadForm
     model = Person
 
     def post(self, request, *args, **kwargs):

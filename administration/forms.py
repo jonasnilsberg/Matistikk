@@ -27,7 +27,7 @@ class PersonForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'email', 'date_of_birth', 'sex', 'is_active', 'grades', 'role']
 
 
-class FileUpload(forms.Form):
+class FileUploadForm(forms.Form):
     """
     Form used to upload excel file with Person information.
 
@@ -40,11 +40,11 @@ class FileUpload(forms.Form):
         """
             Adds help text to the file field when initiated.
         """
-        super(FileUpload, self).__init__(*args, **kwargs)
+        super(FileUploadForm, self).__init__(*args, **kwargs)
         self.fields['file'].help_text = 'Aksepterte filformat: .xls, .xlsx, .ods, .csv'
 
 
-class ChangePassword(forms.ModelForm):
+class ChangePasswordForm(forms.ModelForm):
     """
     Form used to change the password to a Person.
 
@@ -91,7 +91,7 @@ class SchoolForm(forms.ModelForm):
         self.fields['school_administrator'].queryset = Person.objects.filter(role=3)
 
 
-class SchoolAdministrator(forms.ModelForm):
+class SchoolAdministratorForm(forms.ModelForm):
     """
     Form used to create a school administrator.
 
