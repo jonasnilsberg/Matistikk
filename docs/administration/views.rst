@@ -47,6 +47,12 @@
     :members: PersonDisplayView
     :show-inheritance:
 
+*PersonDetailView*
++++++++++++++
+.. automodule:: administration.views
+    :members: PersonDetailView
+    :show-inheritance:
+
 *ChangePasswordView*
 +++++++++++++++++
 .. automodule:: administration.views
