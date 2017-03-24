@@ -6,87 +6,92 @@
 {% block body %}
     <p hidden id="userRole">{{ request.user.role }}</p>
 
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h2>Brukeradministrasjon</h2>
-                </div>
-                <div class="panel-body">
-                    <form class="form-horizontal form-margin" action="" method="post">
-                        {% csrf_token %}
-                        {% bootstrap_messages %}
-                        {% bootstrap_field form.first_name addon_before='<span class="glyphicon glyphicon-user"></span>' %}
-                        {% bootstrap_field form.last_name addon_before='<span class="glyphicon glyphicon-user"></span>' %}
-                        {% bootstrap_field form.email addon_before='<span class=""><strong>@</strong></span>' %}
-                        {% bootstrap_field form.date_of_birth addon_before='<span class="glyphicon glyphicon-calendar"></span>' placeholder="dd.mm.yyyy" %}
-                        {% bootstrap_field form.sex addon_before='<span class="fa fa-venus-mars"></span>' %}
-                        {% bootstrap_field form.grades field_class='hidden' show_label=False %}
-                        {% if not request.user.role == 2 %}
-                            {% bootstrap_field form.role %}
-                        {% endif %}
-                        <div class="row" id="gradeList">
-                            <label for="schools">Velg Skole</label>
-                            <select id="schools" class="form-control" onchange="changeClassList()">
-                                <option value="allschools">
-                                    Alle Skoler
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2>Brukeradministrasjon</h2>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal form-margin" action="" method="post">
+                {% csrf_token %}
+                {% bootstrap_messages %}
+                {% bootstrap_field form.first_name addon_before='<span class="glyphicon glyphicon-user"></span>' %}
+                {% bootstrap_field form.last_name addon_before='<span class="glyphicon glyphicon-user"></span>' %}
+                {% bootstrap_field form.email addon_before='<span class=""><strong>@</strong></span>' %}
+                {% bootstrap_field form.date_of_birth addon_before='<span class="glyphicon glyphicon-calendar"></span>' placeholder="dd.mm.yyyy" %}
+                {% bootstrap_field form.sex addon_before='<span class="fa fa-venus-mars"></span>' %}
+                {% bootstrap_field form.grades field_class='hidden' show_label=False %}
+                {% if not request.user.role == 2 %}
+                    {% bootstrap_field form.role %}
+                {% endif %}
+                <div class="row" id="gradeList">
+                    <label for="schools">Velg Skole</label>
+                    <select id="schools" class="form-control" onchange="changeClassList()">
+                        <option value="allschools">
+                            Alle Skoler
+                        </option>
+                        {% for school in schools %}
+                            <option value="{{ school.school_name }}">
+                                {{ school.school_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <div class="col-xs-5">
+                        <label for="grades">Velg Klasse</label>
+                        <select id="grades" class="form-control" multiple="multiple">
+                            {% for grade in gradesInfo %}
+                                <option value="{{ grade.id }}">
+                                    {{ grade }}
                                 </option>
-                                {% for school in schools %}
-                                    <option value="{{ school.school_name }}">
-                                        {{ school.school_name }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                            <br>
-                            <div class="col-xs-5">
-                                <label for="grades">Velg Klasse</label>
-                                <select id="grades" class="form-control" multiple="multiple">
-                                    {% for grade in gradesInfo %}
-                                        <option value="{{ grade.id }}">
-                                            {{ grade }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-xs-1">
-                                <br><br>
-                                <button type="button" onclick="chooseGrades()"><span
-                                        class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
-                                <button type="button" onclick="removeGrades()"><span
-                                        class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button>
-                            </div>
-                            <div class="col-xs-5">
-                                <label for="chosengrades">Valgte Klasser</label>
-                                <select title="chosengrades" id="chosengrades" class="form-control"
-                                        multiple="multiple">
-                                    {% if fromGrade %}
-                                        <option value="{{ fromGrade.id }}">{{ fromGrade }}</option>
-                                    {% endif %}
-                                    {% for grade in person.grades.all %}
-                                        <option value="{{ grade.id }}">{{ grade }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        {% bootstrap_field form.is_active %}
-
-                            <button type="submit" class="btn btn-success">
-                                {% bootstrap_icon "check" %} Lagre
-                            </button>
-
-                    </form>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-xs-1">
+                        <br><br>
+                        <button type="button" onclick="chooseGrades()"><span
+                                class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
+                        <button type="button" onclick="removeGrades()"><span
+                                class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button>
+                    </div>
+                    <div class="col-xs-5">
+                        <label for="chosengrades">Valgte Klasser</label>
+                        <select title="chosengrades" id="chosengrades" class="form-control"
+                                multiple="multiple">
+                            {% if fromGrade %}
+                                <option value="{{ fromGrade.id }}">{{ fromGrade }}</option>
+                            {% endif %}
+                            {% for grade in person.grades.all %}
+                                <option value="{{ grade.id }}">{{ grade }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
+                {% bootstrap_field form.is_active %}
 
+                <button type="submit" class="btn btn-success">
+                    {% bootstrap_icon "check" %} Lagre
+                </button>
 
+            </form>
+        </div>
+    </div>
 
     <script>
+        /**
+         * This function hides the 'Skoleadministratior' and 'Administrator' options if the user is not an admin
+         * himself.
+         */
         jQuery(document).ready(function ($) {
             var role = $("#userRole").text();
-            if (role != 4){
+            if (role != 4) {
                 $('#id_role').children('option[value="4"]').hide();
                 $('#id_role').children('option[value="3"]').hide();
-
             }
         });
 
+        /**
+         * This function hides the gradelist if the role selected is 'Administrator' or 'Skoleadministrator'.
+         */
         $('#id_role').change(function () {
             var userType = this.value;
             if (userType == 4 || userType == 3) {
@@ -95,7 +100,6 @@
                 $("#gradeList").show();
             }
         });
-
 
         /**
          * This function changes the visible grades in the "Choose Grade"-select
@@ -152,7 +156,6 @@
         function removeGrades() {
             var grades = document.getElementById("grades");
             var chosengrades = document.getElementById("chosengrades");
-
             $("#chosengrades option:selected").each(function () {
                 $('#id_grades').find('option[value="' + this.value + '"]').prop("selected", false);
                 $(this).remove();

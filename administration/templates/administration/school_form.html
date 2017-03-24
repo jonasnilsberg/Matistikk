@@ -59,8 +59,8 @@
                             'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
                         },
                         dataType: 'json',
-                        success: searchSuccess,
-                        error: searchError
+                        success: success,
+                        error: error
                     });
                 }
                 else if (!testEmail.test(email) && first_name && last_name && date_of_birth && sex){
@@ -73,10 +73,10 @@
                 }
             })
         });
-        function searchSuccess(data) {
+        function success(data) {
             var field = $('#id_school_administrator');
             if (data.message){
-                Errormessage(data.message);
+                errorMessage(data.message);
             }
             else{
                field.append($("<option></option>").attr("value", data.id).text(data.first_name + " " + data.last_name + " - " + data.username));
@@ -87,11 +87,11 @@
                 $("#modalError").hide();
             }
         }
-        function searchError(xhr) {
+        function error(xhr) {
             alert(xhr.responseText)
         }
 
-        function Errormessage(message) {
+        function errorMessage(message) {
             $("#modalError").show();
             $('#liError').remove();
             $('#errorMessage').append("<li id='liError'>" + message + "</li>")
