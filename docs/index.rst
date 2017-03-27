@@ -6,6 +6,9 @@
 Welcome to matistikk's documentation!
 =====================================
 
+Skriv intro her.
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -13,10 +16,16 @@ Welcome to matistikk's documentation!
    administration/administration
    maths/maths
 
+.. toctree::
+   :maxdepth: 1
+
+   thirdpartyapps
+
+
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`
+

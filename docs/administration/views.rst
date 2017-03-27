@@ -1,6 +1,6 @@
 **Views**
 ==================================
-**Permissions**
+*Permissions*
 -------------------------------
 *AdministratorCheck*
 ++++++++++++++++
@@ -27,7 +27,7 @@
     :show-inheritance:
 
 
-**Person**
+*Person*
 ----------------------------
 *MyPageDetailView*
 +++++++++++++++
@@ -77,7 +77,7 @@
     :members: PersonDeleteView
     :show-inheritance:
 
-**School**
+*School*
 --------------------
 
 *SchoolListView*
@@ -104,7 +104,7 @@
     :members: SchoolUpdateView
     :show-inheritance:
    
-**Grade**
+*Grade*
 ------------------------
 *GradeListView*
 +++++++++++++
@@ -142,7 +142,7 @@
     :members: GradeUpdateView
     :show-inheritance:
    
-**Group**
+*Group*
 ---------------------
 *GroupListView*
 +++++++++++++
