@@ -207,7 +207,7 @@ class PersonListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
     :func:`RoleCheck`:
         Permission check, only allows teachers, administrators and school administrators.
     **AjaxResponseMixin**
-        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **ListView:**
         Inherits generic.ListView that makes a page representing a list of objects.
 
@@ -385,8 +385,7 @@ class PersonCreateView(RoleCheck, generic.CreateView):
     :func:`RoleCheck`:
         Permission check, only allows teachers, administrators and school administrators.
     **CreateView:**
-        Inherits Django's CreateView that displays a form for creating a object and
-        saving the form when validated
+        get
     """
 
     login_url = reverse_lazy('login')
@@ -467,7 +466,7 @@ class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView)
     :func:`SchoolCheck`:
         Permission check.
     **AjaxResponseMixin**
-        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **UpdateView:**
         Inherits Django's UpdateView that displays a form for updating a specific object and
         saving the form when validated.
@@ -610,7 +609,7 @@ class SchoolCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Crea
     :func:`AdministratorCheck`:
         inherited permission check
     **AjaxResponseMixin**
-        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **CreateView:**
         Inherits generic.CreateView that displays a form for creating a object and
         saving the form when validated
@@ -946,7 +945,7 @@ class GroupDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.Detai
     :func:`AdministratorCheck`:
         Inherited permission check
     **AjaxResponseMixin:**
-        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **DetailView:**
         Inherits generic.DetailView that makes a page representing a specific object.
     """
@@ -984,7 +983,7 @@ class GroupCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Creat
     :func:`AdministratorCheck`:
         Inherited permission check
     **AjaxResponseMixin:**
-        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **CreateView:**
         Inherits generic.CreateView that displays a form for creating a object and
         saving the form when validated

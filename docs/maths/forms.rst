@@ -1,4 +1,7 @@
 **Forms**
 ===========
+*CreateTaskForm*
+--------------
 .. automodule:: maths.forms
-    :members:
+    :members: CreateTaskForm
+    :show-inheritance:
