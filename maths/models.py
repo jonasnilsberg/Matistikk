@@ -7,6 +7,8 @@ from django.db import models
 
 class Category(models.Model):
     """
+    A category
+
     :category: The name of the category
     """
     category = models.CharField(max_length=50, verbose_name="kategori")
@@ -39,6 +41,13 @@ class Task(models.Model):
 
 
 class MultipleChoiceTask(models.Model):
+    """
+    Multiple choice options for a task
+
+    :task: The task that the multiple choice options are for.
+    :option: The multiple choice options
+    :correct: The correct answer
+    """
     task = models.ForeignKey(Task)
     option = models.CharField(max_length=500)
     correct = models.BooleanField()
@@ -48,6 +57,12 @@ class MultipleChoiceTask(models.Model):
 
 
 class GeogebraTask(models.Model):
+    """
+    Geogebra extension for a task
+
+    :task: The task the geogebra extension belongs to.
+    :base64: The geogebra string.
+    """
     task = models.ForeignKey(Task)
     base64 = models.CharField(max_length=32700)
 
