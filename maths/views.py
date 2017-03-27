@@ -71,3 +71,21 @@ class TaskListView(generic.ListView):
     login_url = reverse_lazy('login')
     template_name = 'maths/task_list.html'
     model = Task
+
+
+class TaskUpdateView(generic.UpdateView):
+    login_url = reverse_lazy('login')
+    template_name = 'maths/task_update.html'
+    model = Task
+    form_class = CreateTaskForm
+    pk_url_kwarg = 'task_pk'
+    success_url = reverse_lazy('maths:taskList')
+
+    def get_context_data(self, **kwargs):
+        context = super(TaskUpdateView, self).get_context_data(**kwargs)
+        if GeogebraTask.objects.filter(task=self.kwargs.get("task_pk")):
+            context['geogebra'] = GeogebraTask.objects.filter(task=self.kwargs.get("task_pk"))
+        if MultipleChoiceTask.objects.filter(task=self.kwargs.get("task_pk")):
+            context['options'] = MultipleChoiceTask.objects.filter(task=self.kwargs.get("task_pk"))
+        return context
+
