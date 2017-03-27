@@ -1,4 +1,4 @@
 Views
 ===========
-.. automodule:: administration.views
+.. automodule:: maths.views
     :members:

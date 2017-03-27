@@ -25,8 +25,8 @@
                     <span class="input-group-addon"><i class="fa fa-tasks"></i></span>
                     <input type="text" class="form-control input-lg" id="taskname" placeholder="Oppgavenavn">
                 </div>
-                <label for="choosetype">Velg tema</label><br>
-                <select id="choosetype" class="selectpicker form-control" multiple>
+                <label for="choosetype">Velg kategori</label><br>
+                <select id="choosetype" class="selectpicker form-control" multiple data-noneSelectedText="test">
                     {% for category in categories %}
                         <option value="{{ forloop.counter }}">{{ category }}</option>
                     {% endfor %}
@@ -190,6 +190,9 @@
     </script>
 
     <script>
+        $('.selectpicker').selectpicker({
+            noneSelectedText: 'Velg kategori'
+        });
         /**
          * This function changes the color of the "choose answertype"-panel
          * when the user change option.

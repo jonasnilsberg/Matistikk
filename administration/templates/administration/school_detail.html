@@ -14,7 +14,7 @@
                 <span class="input-group-addon">
                         <i class="fa fa-search"></i>
                     </span>
-                <input type="text" class="form-control" id="search" onkeyup="gradeSearch(); inactiveSearch();"
+                <input type="text" class="form-control" id="search" onkeyup="gradeSearch('gradetable'); gradeSearch('inactivetable');"
                        placeholder="Søk etter klasse">
             </div>
         </div>
@@ -110,34 +110,11 @@
          * This function matches the text in the search field with the content in the table with all grades
          * and removes rows that don't match the search criteria.
          */
-        function gradeSearch() {
+        function gradeSearch(inputTable) {
             var input, filter, table, tr, td, i;
             input = document.getElementById("search");
             filter = input.value.toUpperCase();
-            table = document.getElementById("gradetable");
-            tr = table.getElementsByTagName("tr");
-
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0];
-                if (td) {
-                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-
-        /**
-         * This function matches the text in the search field with the content in the table with all
-         * inactive grades and removes rows that don't match the search criteria.
-         */
-        function inactiveSearch() {
-            var input, filter, table, tr, td, i;
-            input = document.getElementById("search");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("inactivetable");
+            table = document.getElementById(inputTable);
             tr = table.getElementsByTagName("tr");
 
             for (i = 0; i < tr.length; i++) {
