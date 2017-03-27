@@ -1,4 +1,4 @@
-Administration
+**Administration**
 =================
 .. toctree::
    :maxdepth: 2

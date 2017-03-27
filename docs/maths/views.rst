@@ -1,4 +1,4 @@
-Views
+**Views**
 ===========
 .. automodule:: maths.views
     :members:

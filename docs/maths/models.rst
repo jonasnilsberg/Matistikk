@@ -1,4 +1,4 @@
-Models
+**Models**
 ===========
 .. automodule:: maths.models
     :members:
