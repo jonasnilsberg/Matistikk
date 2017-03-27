@@ -194,7 +194,8 @@
             noneSelectedText: 'Velg kategori'
         });
         /**
-         * Metoden setter farger for panelet ved valg av svarform
+         * This function changes the color of the "choose answertype"-panel
+         * when the user change option.
          */
         function radioClick(myRadio) {
             var valg = myRadio.value;
@@ -213,6 +214,10 @@
             }
         }
 
+        /**
+         * This function parse data from custom input fields into the hidden django-form
+         * and clicks the submit-button in the django-form when its done.
+         */
         function onSubmit() {
             var taskname1 = document.getElementById('taskname');
             var taskname2 = document.getElementById('id_title');
