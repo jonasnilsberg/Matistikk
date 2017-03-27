@@ -203,7 +203,7 @@ class PersonListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
     """
     Class that returns all the users that the logged in user has permission to see.
 
-    **RoleCheck:**
+    :func:`RoleCheck`:
         Permission check, only allows teachers, administrators and school administrators.
     **AjaxResponseMixin**
         This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
@@ -306,7 +306,7 @@ class PersonDetailView(SchoolCheck, View):
     """
     View that handles PersonDisplayView (HTTP GET) and the ChangePasswordView (HTTP POST), this view is not displayed
 
-    **SchoolCheck:**
+    :func:`SchoolCheck`:
         Permission check
     **View**
         Intentionally simple parent class for all views.
@@ -381,7 +381,7 @@ class PersonCreateView(RoleCheck, generic.CreateView):
     """
     Creates a Person object
 
-    **RoleCheck:**
+    :func:`RoleCheck`:
         Permission check, only allows teachers, administrators and school administrators.
     **CreateView:**
         Inherits Django's CreateView that displays a form for creating a object and
@@ -463,7 +463,7 @@ class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView)
     """
     Class that updates a Person object
 
-    **SchoolCheck:**
+    :func:`SchoolCheck`:
         Permission check.
     **AjaxResponseMixin**
         This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
@@ -524,7 +524,7 @@ class PersonDeleteView(SchoolAdministratorCheck, generic.DeleteView):
     """
     Class that updates a Person object
 
-    **SchoolCheck:**
+    :func:`SchoolCheck`:
         Permission check.
     **UpdateView:**
         Inherits Django's UpdateView that displays a form for updating a specific object and
@@ -551,7 +551,7 @@ class SchoolListView(SchoolAdministratorCheck, generic.ListView):
     """
     Class to list out all School objects
 
-    **SchoolAdministratorCheck:**
+    :func:`SchoolAdministratorCheck`:
         Permission check
     **ListView:**
         Inherits Django's ListView that represents a page containing a list of objects
@@ -580,7 +580,7 @@ class SchoolDetailView(SchoolCheck, generic.DetailView):
     """
     Class that displays information about a specific school based on the school_id.
 
-    **SchoolCheck:**
+    :func:`SchoolCheck`:
         Inherited permission check
     **DetailView**
         Inherits Django's DetailView displaying a single School Object
@@ -606,7 +606,7 @@ class SchoolCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Crea
     """
     Class to create a School object
 
-    **AdministratorCheck:**
+    :func:`AdministratorCheck`:
         inherited permission check
     **AjaxResponseMixin**
         This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
@@ -671,7 +671,7 @@ class SchoolUpdateView(SchoolCheck, generic.UpdateView):
     """
     Class to update information about a school object based on the school_id.
 
-    **SchoolCheck:**
+    :func:`SchoolCheck`:
         Permission check
     **UpdateView:**
         Inherits Django's Update that displays a form for updating a specific object and
@@ -700,7 +700,7 @@ class GradeListView(RoleCheck, generic.ListView):
     """
     Class that displays a list of grade objects
 
-    **RoleCheck**
+    :func:`RoleCheck`:
         Permission check, only allows teachers, administrators and school administrators.
     **ListView**
         Inherits Django's ListView that represents a page containing a list of objects.
@@ -839,7 +839,7 @@ class GradeDetailView(SchoolCheck, View):
     """
     View that handles GradeDisplay and the FileUploadView, this view is not displayed
 
-    **SchoolCheck:**
+    :func:`SchoolCheck`:
         Permission check
     """
 
@@ -872,7 +872,7 @@ class GradeCreateView(SchoolCheck, generic.CreateView):
     """
     Class to create a Grade object
 
-    **ScoolCheck:**
+    :func:`SchoolCheck`:
         Inherited permission check
     **CreateView:**
         Inherits generic.CreateView that displays a form for creating a object and
@@ -903,7 +903,7 @@ class GradeUpdateView(SchoolCheck, generic.UpdateView):
     """
     Class to update a Grade object
 
-    **SchoolCheck:**
+    :func:`SchoolCheck`:
         Inherited permission check
     **UpdateView:**
         Inherits generic.UpdateView that displays a form for updating a specific object and
@@ -929,7 +929,7 @@ class GroupListView(AdministratorCheck, generic.ListView):
     """
     Class that displays a list of group objects.
 
-    **AdministratorCheck:**
+    :func:`AdministratorCheck`:
         Inherited permission check
     **ListView:**
         Inherits Django's ListView that represents a page containing a list of objects.
@@ -942,7 +942,7 @@ class GroupDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.Detai
     """
     Class that displays information about a single grade object based on the grade_id
 
-    **AdministratorCheck:**
+    :func:`AdministratorCheck`:
         Inherited permission check
     **AjaxResponseMixin:**
         This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
@@ -980,7 +980,7 @@ class GroupCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Creat
     """
     Class that displays information about a single grade object based on the grade_id
 
-    **AdministratorCheck:**
+    :func:`AdministratorCheck`:
         Inherited permission check
     **AjaxResponseMixin:**
         This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
@@ -1063,7 +1063,7 @@ class GroupUpdateView(AdministratorCheck, generic.UpdateView):
     """
     Class to update a specific group object bases on the group_id
 
-    **AdministratorCheck:**
+    :func:`AdministratorCheck`:
         Inherited permission check
     **UpdateView:**
         Inherits generic.UpdateView that displays a form for updating a specific object and
