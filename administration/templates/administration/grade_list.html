@@ -16,7 +16,8 @@
             <table class="table table-hover table-striped table-responsive" id="gradetable">
                 <thead>
                 <tr>
-                    <th>Klasse</th>
+                    <th>Klassenavn</th>
+                    <th>Skole</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -24,7 +25,8 @@
                     <tr class="clickable-row"
                         data-href="{% url 'administration:gradeDetail' school_pk=grade.school_id grade_pk=grade.id %}"
                         style="cursor: pointer">
-                        <td>{{ grade }}</td>
+                        <td>{{ grade.grade_name }}</td>
+                        <td>{{ grade.school }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
