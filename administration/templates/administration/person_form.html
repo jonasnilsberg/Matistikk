@@ -20,7 +20,9 @@
                 {% bootstrap_field form.date_of_birth addon_before='<span class="glyphicon glyphicon-calendar"></span>' placeholder="dd.mm.yyyy" %}
                 {% bootstrap_field form.sex addon_before='<span class="fa fa-venus-mars"></span>' %}
                 {% bootstrap_field form.grades field_class='hidden' show_label=False %}
-                {% if not request.user.role == 2 %}
+                {% if request.user.role == 2 %}
+                    {% bootstrap_field form.role field_class='hidden' show_label=False %}
+                {% else %}
                     {% bootstrap_field form.role %}
                 {% endif %}
                 <div class="row" id="gradeList">
