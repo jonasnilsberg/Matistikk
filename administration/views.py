@@ -324,6 +324,12 @@ class PersonDisplayView(generic.DetailView):
         if self.kwargs.get('grade_pk'):
             context['grade_pk'] = self.kwargs['grade_pk']
             context['school_pk'] = self.kwargs['school_pk']
+        groups = Gruppe.objects.filter(is_active=1, persons__username=self.kwargs['slug'])
+        groups_creator = Gruppe.objects.filter(is_active=1, creator__username=self.kwargs['slug'])
+        if groups:
+            context['groups'] = groups
+        if groups_creator:
+            context['groups'] = groups_creator
         context['form'] = ChangePasswordForm()
         return context
 

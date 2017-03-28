@@ -126,6 +126,11 @@ class TaskListView(generic.ListView):
     template_name = 'maths/task_list.html'
     model = Task
 
+    def get_context_data(self, **kwargs):
+        context = super(TaskListView, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
 
 class TaskUpdateView(generic.UpdateView):
     """

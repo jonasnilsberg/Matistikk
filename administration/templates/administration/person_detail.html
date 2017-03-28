@@ -7,109 +7,98 @@
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h2>Brukerprofil - {{ person.first_name }} {{ person.last_name }}</h2>
+            <h2><i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ person.get_full_name }}</h2>
+            <div class="row">
+                <div class="col-md-2">
+                    <h5><i class="fa fa-user" aria-hidden="true"></i> Brukernavn - {{ person.username }}</h5>
+                    <h5><i class="fa fa-user-o" aria-hidden="true"></i> Brukertype - {% if person.role == 4 %}
+                        Administrator
+                    {% elif person.role == 3 %}
+                        Skoleadministrator
+                    {% elif person.role == 2 %}
+                        Lærer
+                    {% else %}
+                        Elev
+                    {% endif %}</h5>
+                    <h5><i class="fa fa-sign-in" aria-hidden="true"></i> Sist innlogget - {{ person.last_login }}</h5>
+                </div>
+                <div class="col-md-3">
+                    <h5><i class="fa fa-calendar" aria-hidden="true"></i> Fødselsdato - {{ person.date_of_birth }}</h5>
+                    {% if person.email %}
+                        <h5><i class="fa fa-envelope-o" aria-hidden="true"></i> Epost - {{ person.email }}</h5>
+                    {% endif %}
+                    <h5><i class="fa fa-venus-mars" aria-hidden="true"></i> Kjønn - {% if person.sex == 'M' %}
+                        Gutt
+                    {% else %}
+                        Jente
+                    {% endif %}</h5>
+                </div>
+            </div>
         </div>
         <div class="panel-body">
-            <div class="col-xs-12 col-md-6">
-
-                <i class="fa fa-user-circle-o" aria-hidden="true" style="font-size: 15em;"></i><br>
-                <p style="font-size: 3em;">{{ person.first_name }} {{ person.last_name }}</p>
-
-                {% if not person.is_active %}
-                    <div class="alert alert-warning" role="alert">Denne brukeren er ikke aktiv</div>
+            <ul class="nav nav-tabs">
+                <li class="nav active"><a href="#A" data-toggle="tab">Klasser</a></li>
+                {% if groups %}
+                    <li class="nav"><a href="#B" data-toggle="tab">Grupper</a></li>
                 {% endif %}
-                <table class="table table-hover table-striped table-responsive" id="persontable">
-                    <tbody>
-                    <tr>
-                        <td>
-                            <i class="fa fa-user" aria-hidden="true"></i>
-                            <b>Brukernavn</b>
-                        </td>
-                        <td>
-                            {{ person.username }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <i class="fa fa-user-circle" aria-hidden="true"></i>
-                            <b>Brukertype</b>
-                        </td>
-                        <td>
-                            {% if person.role == 1 %}
-                                Elev
-                            {% elif person.role == 2 %}
-                                Lærer
-                            {% elif person.role == 3 %}
-                                Skoleadministrator
-                            {% else %}
-                                Administrator
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <i class="fa fa-calendar" aria-hidden="true"></i>
-                            <b>Fødselsdato</b>
-                        </td>
-                        <td>
-                            {{ person.date_of_birth }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                            <b>E-post</b>
-                        </td>
-                        <td>
-                            {{ person.email }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <i class="fa fa-graduation-cap" aria-hidden="true"></i>
-                            <b>Klasser</b>
-                        </td>
-                        <td>
-                            {% if person.grades %}
-                                {% for grade in person.grades.all %}
-                                    <a href="{% url 'administration:gradeDetail' grade.school_id grade.id %}">{{ grade }}</a>
-                                    <br>
-                                {% endfor %}
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <i class="fa fa-venus-mars" aria-hidden="true"></i>
-                            <b>Kjønn</b>
-                        </td>
-                        <td>
-                            {% if person.sex == 'M' %}
-                                Gutt
-                            {% else %}
-                                Jente
-                            {% endif %}
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <i class="fa fa-sign-in" aria-hidden="true"></i>
-                            <b>Sist Innlogget</b>
-                        </td>
-                        <td>
-                            {{ person.last_login }}
-                        </td>
-                    </tr>
-
-                    </tbody>
-                </table>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="A">
+                    <table class="table table-hover table-striped table-responsive" id="schooltable">
+                        <thead>
+                        <tr>
+                            <th>Klassenavn</th>
+                            <th>Skole</th>
+                            <th>Kontaktperson</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for grade in person.grades.all %}
+                            <tr>
+                                <td>{{ grade.grade_name }}</td>
+                                <td>{{ grade.school }}</td>
+                                <td>
+                                    {{ grade.school.school_administrator.get_full_name }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if groups %}
+                    <div class="tab-pane fade" id="B">
+                        <table class="table table-hover table-striped table-responsive" id="inactivetable">
+                            <thead>
+                            <tr>
+                                <th>Gruppenavn</th>
+                                <th>Ansvarlig</th>
+                                <th>Se medlemmer</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for group in groups %}
+                                <tr>
+                                    <td>{{ group.group_name }}</td>
+                                    <td>{{ group.creator.get_full_name }}</td>
+                                    <td>
+                                        <button id="{{ group.id }}" value="{{ group.group_name }}"
+                                                class='btn btn-default'
+                                                data-toggle='modal'
+                                                data-target='#groupMemberModal' onclick="groupMemberBtn(this)">
+                                            <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
+                                            Medlemmer
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
             </div>
-            <div class="col-xs-12">
-                {% bootstrap_messages %}
-            </div>
-
+            {% bootstrap_messages %}
         </div>
+
         <div class="panel-footer">
             {% if request.user.role == 4 %}
                 <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}" id="editUserBtn"><span
@@ -139,9 +128,34 @@
                         <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
                 {% endif %}
             {% endif %}
+        {% endif %}
 
-        </div>
     </div>
+
+    <script>
+        function groupMemberBtn(group) {
+            $("#groupMemberTable tr").remove();
+            var group_id = group.id;
+            var group_name = group.value;
+            $('#groupMemberHeader').text(group_name);
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'administration:groupDetail' group_pk=12345 %}".replace(/12345/, group_id),
+                dataType: 'json',
+                success: function (data) {
+                    var students = (data.persons);
+                    $.each(students, function (index, value) {
+                        var email = value.email;
+                        $('#groupMemberTable').append('<tr><td>' + value.first_name + '</td><td>' + value.last_name + '</td><td>' + email + '</td></tr>');
+                    })
+                },
+                error: function (xhr) {
+                    alert('error')
+                    alert(xhr.responseText)
+                }
+            });
+        }
+    </script>
 {% endblock %}
 
 {% block modal %}
@@ -197,14 +211,44 @@
                 </div>
                 <div class="modal-footer">
                     {% if grade_pk and school_pk %}
-                        <a class="btn btn-danger" href="{% url 'administration:personDeleteGrade' school_pk grade_pk person.username %}"><span
-                            class="glyphicon glyphicon-trash" aria-hidden="true"></span>Slett bruker</a>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Avbryt</button>
+                        <a class="btn btn-danger"
+                           href="{% url 'administration:personDeleteGrade' school_pk grade_pk person.username %}"><span
+                                class="glyphicon glyphicon-trash" aria-hidden="true"></span>Slett bruker</a>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Avbryt</button>
                     {% else %}
                         <a class="btn btn-danger" href="{% url 'administration:personDelete' person.username %}"><span
                                 class="glyphicon glyphicon-trash" aria-hidden="true"></span>Slett bruker</a>
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Avbryt</button>
                     {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="modal fade" id="groupMemberModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 id="groupMemberHeader">Gruppe</h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-striped table-responsive table-condensed"
+                           id="addtable2">
+                        <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Epost</th>
+                        </tr>
+                        </thead>
+                        <tbody id="groupMemberTable">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    {% buttons %}
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    {% endbuttons %}
                 </div>
             </div>
         </div>

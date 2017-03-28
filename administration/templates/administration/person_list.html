@@ -14,7 +14,7 @@
             </div>
         </div> <!-- #Panel-heading -->
 
-        <div class="panel-body" style="max-height: 10px"><!-- #Panel-body -->
+        <div class="panel-body"><!-- #Panel-body -->
             <ul class="nav nav-tabs">
                 <li class="nav active"><a href="#A" data-toggle="tab">Alle brukere</a></li>
                 <li class="nav"><a href="#B" data-toggle="tab">Elever</a></li>
@@ -214,14 +214,12 @@
                     </table>
                 </div>
             </div> <!-- #Panel-body -->
-            <div class="panel-footer">
-                <a class="btn btn-primary" href="{% url 'administration:personCreate' %}"><span
-                        class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til bruker</a>
-            </div>
         </div>
-
-    </div> <!-- #Panel -->
-
+        <div class="panel-footer">
+            <a class="btn btn-primary" href="{% url 'administration:personCreate' %}"><span
+                    class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til bruker</a>
+        </div>
+    </div>
 
 
 
