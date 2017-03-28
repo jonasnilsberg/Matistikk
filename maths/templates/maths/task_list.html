@@ -1,66 +1,166 @@
 {% extends 'matistikk/base.html' %}
 {% load bootstrap3 %}
 {% load staticfiles %}
+{% load static %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
-{% block head %}
-{% endblock %}
 
+{% block head %}
+    <script type="text/javascript" src="{% static 'maths/js/bootstrap-multiselect.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'maths/css/bootstrap-multiselect.css' %}" type="text/css"/>
+{% endblock %}
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
             <h2>Oppgaveoversikt</h2>
-            <div class="input-group">
+            <div class="row">
+                <div class="col-md-10" style="padding-right: 10px">
+                    <div class="input-group">
                     <span class="input-group-addon">
                         <i class="fa fa-search"></i>
                     </span>
-                <input type="text" class="form-control" id="search"
-                       onkeyup=""
-                       placeholder="Søk etter oppgave...">
+                        <input type="text" class="form-control" id="search"
+                               onkeyup="taskSearch('tasktable')"
+                               placeholder="Søk etter oppgave...">
+                    </div>
+                </div>
+                <div class="col-md-2" style="padding-left: 10px;">
+                    <select class="hidden" id="selectCategory" multiple="multiple">
+                        {% for category in categories %}
+                            <option id="{{ category.id }}" value="{{ category }}">{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
-        </div> <!-- #Panel-heading -->
-        <div class="panel-body">
-            <div id="tableCont" class="tab-content">
-                <table class="table table-hover table-striped table-responsive" id="tasktable">
-                    <thead>
-                    <tr>
-                        <th class="col-sm-1">ID</th>
-                        <th class="col-sm-2">Oppgavenavn</th>
-                        <th class="col-sm-2">Kategori</th>
-                        <th class="col-sm-2">Laget av</th>
-                        <th class="col-sm-5">Alternativer</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for task in object_list %}
-                        <tr class="clickable-row" data-href="" style="cursor: pointer">
-                            <td>{{ task.id }}</td>
-                            <td>{{ task.title }}</td>
-                            <td>
-                                {% for category in task.category.all %}
-                                    {{ category }},
-                                {% endfor %}
-                            </td>
-                            <td>{{ task.author.first_name }} {{ task.author.last_name }}</td>
-                            <td>
-                                <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                    <a class="btn btn-default"
-                                           href="{% url 'maths:taskUpdate' task.id %}" style="background-color: inherit"><span
-                                            class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater
-                                        </a>
-                                    <button type="button" class="btn btn-info">Forhåndsvis</button>
-                                    <button type="button" class="btn btn-info">Slett</button>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div> <!-- #Panel-body -->
-        <div class="panel-footer">
+        </div>
+    </div> <!-- #Panel-heading -->
+    <div class="panel-body">
+        <div id="tableCont" class="tab-content">
+            <table class="table table-hover table-striped table-responsive" id="tasktable">
+                <thead>
+                <tr>
+                    <th class="col-sm-1">ID</th>
+                    <th class="col-sm-2">Oppgavenavn</th>
+                    <th class="col-sm-2">Kategori</th>
+                    <th class="col-sm-2">Laget av</th>
+                    <th class="col-sm-5">Alternativer</th>
+                </tr>
 
-        </div> <!-- #Panel-footer -->
+                </thead>
+                <tbody>
+                {% for task in object_list %}
+                    <tr id="task{{ task.id }}" class="clickable-row" data-href="" style="cursor: pointer">
+                        <td>{{ task.id }}</td>
+                        <td>{{ task.title }}</td>
+                        <td>
+                            {% for category in task.category.all %}
+                                {% if forloop.last %}
+                                    {{ category }}
+                                {% else %}
+                                    {{ category }} -
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ task.author.first_name }} {{ task.author.last_name }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                                <a class="btn btn-default"
+                                   href="{% url 'maths:taskUpdate' task.id %}"
+                                   style="background-color: inherit"><span
+                                        class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater
+                                </a>
+                                <button type="button" class="btn btn-info">Forhåndsvis</button>
+                                <button type="button" class="btn btn-danger">Slett</button>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div> <!-- #Panel-body -->
+    <div class="panel-footer">
+        <a class="btn btn-primary" href="{% url 'maths:createTask' %}"><span
+                class="glyphicon glyphicon-plus" aria-hidden="true"></span> Opprett ny oppgave</a>
+    </div> <!-- #Panel-footer -->
     </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#selectCategory').multiselect({
+                buttonClass: 'form-control',
+                onChange: function (option, checked, select) {
+                    var category = $(option).val();
+                    var selected = checked;
+                    $('#tasktable > tbody  > tr').each(function () {
+                        var show = true;
+                        var taskCategory = $(this).find("td:eq(2)").html();
+                        $('#selectCategory option:selected').map(function (a, item) {
+                            if (taskCategory.indexOf(item.value) == -1){
+                                show = false
+                            }
+                        });
+                        if (show == false){
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+
+                },
+                buttonText: function (options, select) {
+                    if (options.length === 0) {
+                        return 'Sorter oppgaver etter kategori';
+                    }
+                    else if (options.length > 3) {
+                        return 'Mer enn 3 alternativer valgt';
+                    }
+                    else {
+                        var labels = [];
+                        options.each(function () {
+                            if ($(this).attr('label') !== undefined) {
+                                labels.push($(this).attr('label'));
+                            }
+                            else {
+                                labels.push($(this).html());
+                            }
+                        });
+                        return labels.join(', ') + '';
+                    }
+                }
+
+
+            });
+        });
+
+        /**
+         * This function matches the text in the search field with the content in the table given in the parameter.
+         * and removes rows that don't match the search criteria.
+         */
+        function taskSearch(inputTable) {
+            var input, filter, table, tr, td, i, td1, td2, td3;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById(inputTable);
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
+                td3 = tr[i].getElementsByTagName("td")[3];
+
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1
+                        || td2.innerHTML.toUpperCase().indexOf(filter) > -1 || td3.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+    </script>
 {% endblock %}
