@@ -259,9 +259,9 @@ class MyPageDetailViewTestCase(LiveServerTestCase):
         password = self.selenium.find_element_by_id('id_password')
         password.send_keys("schooladmin")
         self.selenium.find_element_by_id('logInBtn').click()
-        self.selenium.implicitly_wait(5)
         self.selenium.find_element_by_id('myPageBtn').click()
         self.selenium.find_element_by_id('changePasswordModalBtn').click()
+        self.selenium.implicitly_wait(2)
         self.selenium.find_element_by_id('id_old_password').send_keys('schooladmin')
         self.selenium.find_element_by_id('id_new_password1').send_keys('ntnu1234')
         self.selenium.find_element_by_id('id_new_password2').send_keys('ntnu1234')
@@ -276,3 +276,39 @@ class MyPageDetailViewTestCase(LiveServerTestCase):
             'Login should not be in the url if the user was logged in successfully using the new password'
 
 
+class PersonCreateViewTestCase(LiveServerTestCase):
+    def setUp(self):
+        obj = mixer.blend('administration.Person', role=4, username='admin')
+        obj.set_password('admin')  # Password has to be set like this because of the hash-function
+        obj.save()
+        #  Webdriver setup
+        server_url = "http://%s:%s/wd/hub" % ('127.0.0.1', '4455')  # ip address and port
+        dc = DesiredCapabilities.HTMLUNITWITHJS
+        self.selenium = webdriver.Remote(server_url, dc)
+        self.selenium.maximize_window()
+        super(PersonCreateViewTestCase, self).setUp()
+
+    def tearDown(self):
+        self.selenium.quit()
+        super(PersonCreateViewTestCase, self).tearDown()
+
+    def test_admin_can_create_all_usertypes(self):
+        self.selenium.get(
+            '%s%s' % (self.live_server_url, "/")
+        )
+        username = self.selenium.find_element_by_id('id_username')
+        username.send_keys("admin")
+        password = self.selenium.find_element_by_id('id_password')
+        password.send_keys("admin")
+        self.selenium.find_element_by_id('logInBtn').click()
+        self.selenium.get(
+            '%s%s' % (self.live_server_url, "/administrasjon/nybruker")
+        )
+        self.selenium.find_element_by_id('id_first_name').send_keys('testName')
+        self.selenium.find_element_by_id('id_last_name').send_keys('testSurname')
+        self.selenium.find_element_by_id('id_email').send_keys('test@email.com')
+        self.selenium.find_element_by_id('id_date_of_birth').send_keys('10.10.1997')
+        self.selenium.find_element_by_id('id_sex').send_keys('M')
+        self.selenium.find_element_by_id('id_role').send_keys('1')
+        self.selenium.find_element_by_id('saveNewInfoBtn').click()
+        self.assertEqual(1, len(Person.objects.all()))
