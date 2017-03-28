@@ -27,6 +27,17 @@ class TestPersonForm:
         assert form.is_valid() is True, 'Should be valid when all fields in the form are given'
 
 
+class TestChangePassword:
+    def test_empty(self):
+        form = forms.ChangePasswordForm(data={})
+        assert form.is_valid() is False, 'Should return false when given no data'
+
+    def test_all_values(self):
+        data = {'password': 'testpassord', 'password2': 'testpassord'}
+        form = forms.ChangePasswordForm(data=data)
+        assert form.is_valid() is True, 'Should be true when given two identical paswords'
+
+
 class TestSchoolForm:
     def test_empty(self):
         form = forms.SchoolForm(data={})
@@ -40,12 +51,14 @@ class TestSchoolForm:
         assert form.is_valid() is True, 'Should be true when given all fields'
 
 
-class TestChangePassword:
+class TestSchoolAdministrator:
     def test_empty(self):
-        form = forms.ChangePassword(data={})
+        form = forms.SchoolAdministratorForm(data={})
         assert form.is_valid() is False, 'Should return false when given no data'
 
     def test_all_values(self):
-        data = {'password': 'testpassord', 'password2': 'testpassord'}
-        form = forms.ChangePassword(data=data)
-        assert form.is_valid() is True, 'Should be true when given two identical paswords'
+        obj = mixer.blend('administration.Person')
+        data = {'first_name': obj.first_name, 'last_name': obj.last_name, 'email': obj.email,
+                'date_of_birth': obj.date_of_birth, 'sex': obj.sex}
+        form = forms.SchoolAdministratorForm(data=data)
+        assert form.is_valid() is True
