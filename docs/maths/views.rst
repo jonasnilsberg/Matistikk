@@ -45,3 +45,4 @@
 .. automodule:: maths.views
     :members: CategoryUpdateView
     :show-inheritance:
+

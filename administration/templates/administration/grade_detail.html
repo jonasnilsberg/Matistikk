@@ -201,43 +201,43 @@
             </div>
         </div>
     </div>
-        <div class="panel-footer">
-            {% if request.user.role == 4 or request.user.role == 3 %}
-                <a class="btn btn-primary"
-                   href="{% url 'administration:gradeUpdate' grade.school_id grade.id %}"><span
-                        class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
-            {% endif %}
+    <div class="panel-footer">
+        {% if request.user.role == 4 or request.user.role == 3 %}
+            <a class="btn btn-primary"
+               href="{% url 'administration:gradeUpdate' grade.school_id grade.id %}"><span
+                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
+        {% endif %}
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-plus"
+                                                                     aria-hidden="true"></span>
+                Legg til elev <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+                <li><a href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}">Opprett ny
+                    elev</a></li>
+                <li><a data-toggle='modal' href='#AddStudentModal'>Legg til eksisterende elev</a></li>
+                <li><a data-toggle='modal' href='#masseregModal'>Masseregistrering av elever</a></li>
+            </ul>
+        </div>
+        {% if request.user.role == 4 or request.user.role == 3 %}
             <div class="btn-group">
                 <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-plus"
                                                                          aria-hidden="true"></span>
-                    Legg til elev <span class="caret"></span></button>
+                    Legg til lærer <span class="caret"></span></button>
                 <ul class="dropdown-menu">
-                    <li><a href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}">Opprett ny
-                        elev</a></li>
-                    <li><a data-toggle='modal' href='#AddStudentModal'>Legg til eksisterende elev</a></li>
-                    <li><a data-toggle='modal' href='#masseregModal'>Masseregistrering av elever</a></li>
+                    <li><a href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}">Opprett ny
+                        lærer</a></li>
+                    <li><a data-toggle='modal' href='#AddTeacherModal'>Legg til eksisterende lærer</a></li>
                 </ul>
             </div>
-            {% if request.user.role == 4 or request.user.role == 3 %}
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-plus"
-                                                                             aria-hidden="true"></span>
-                        Legg til lærer <span class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        <li><a href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}">Opprett ny
-                            lærer</a></li>
-                        <li><a data-toggle='modal' href='#AddTeacherModal'>Legg til eksisterende lærer</a></li>
-                    </ul>
-                </div>
 
-                <a class="btn btn-primary"
-                   href="{% url 'administration:gradeGroupCreate' grade.school_id grade.id %}"><span
-                        class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til gruppe</a>
-            {% endif %}
+            <a class="btn btn-primary"
+               href="{% url 'administration:gradeGroupCreate' grade.school_id grade.id %}"><span
+                    class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til gruppe</a>
+        {% endif %}
 
-        </div>
+    </div>
     </div>
 
     <script>
@@ -255,15 +255,15 @@
              */
             $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
                 var tab = $(e.target).attr('href');
-                if (tab == '#A'){
+                if (tab == '#A') {
                     $('#search').attr("placeholder", "Søk etter brukere");
                 } else if (tab == '#B') {
                     $('#search').attr("placeholder", "Søk etter elever");
                 } else if (tab == '#C') {
                     $('#search').attr("placeholder", "Søk etter lærere");
-                } else if (tab == '#D'){
+                } else if (tab == '#D') {
                     $('#search').attr("placeholder", "Søk etter inaktive");
-                } else if (tab == '#E'){
+                } else if (tab == '#E') {
                     $('#search').attr("placeholder", "Søk etter grupper");
                 }
 
@@ -613,7 +613,7 @@
             var group_id = btn.id;
             var group_name = btn.value;
             $('#memberHeader').text("Medlemmer - " + group_name);
-
+            $("#memberTable tr").remove();
             $.ajax({
                 type: 'GET',
                 url: "{% url 'administration:groupDetail' group_pk=12345 %}".replace(/12345/, group_id),

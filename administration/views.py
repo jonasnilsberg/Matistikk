@@ -125,7 +125,7 @@ class SchoolAdministratorCheck(views.UserPassesTestMixin):
         return False
 
 
-class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
+class MyPageDetailView(views.UserPassesTestMixin, views.AjaxResponseMixin, generic.FormView):
     """
     View that shows a user information about itself and allows them to change their password.
 
@@ -136,7 +136,6 @@ class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
     **FormView :**
         A view that displays a form
 
-
     :return: Own Person object and PasswordChangeForm
     """
 
@@ -144,14 +143,36 @@ class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
     slug_field = 'username'
     template_name = 'administration/mypage.html'
 
+    def get_ajax(self, request, *args, **kwargs):
+        students = []
+        teachers = []
+        grade_id = request.GET['grade_id']
+        student_list = Person.objects.filter(role=1, grades__id=grade_id)
+        teacher_list = Person.objects.filter(role=2, grades__id=grade_id)
+        for student in student_list:
+            students.append({
+                "first_name": student.first_name,
+                "last_name": student.last_name,
+                "email": student.email
+            })
+        for teacher in teacher_list:
+            teachers.append({
+                "first_name": teacher.first_name,
+                "last_name": teacher.last_name,
+                "email": teacher.email
+            })
+        data = {
+            'students': students,
+            'teachers': teachers
+        }
+        return JsonResponse(data)
+
     def test_func(self, user):
         """
         Checks if the logged in user is the same as the requested
 
         :param user: The logged in user
         :return: True or false depending on the user
-
-
         """
         return user.username == self.kwargs.get('slug')
 
@@ -197,6 +218,10 @@ class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
         """
         context = super(MyPageDetailView, self).get_context_data(**kwargs)
         context['person'] = Person.objects.get(username=self.kwargs.get('slug'))
+        if self.request.user.role == 1:
+            context['groups'] = Gruppe.objects.filter(is_active=1, visible=True, persons__username=self.request.user.username)
+        elif self.request.user.role == 4:
+            context['groups'] = Gruppe.objects.filter(is_active=1, visible=True, creator=self.request.user)
         return context
 
 
@@ -419,6 +444,9 @@ class PersonCreateView(RoleCheck, generic.CreateView):
         if self.request.user.role == 3:
             if person.role > 3 or person.role < 1:
                 return super(PersonCreateView, self).form_invalid(form)
+        elif self.request.user.role == 2:
+            if person.role != 1:
+                return super(PersonCreateView, self).form_invalid(form)
         if person.role == 4:
             person.is_staff = True
             person.is_superuser = True
@@ -477,6 +505,23 @@ class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView)
     form_class = PersonForm
     model = Person
     slug_field = "username"
+
+    def form_valid(self, form):
+        """
+            Function that validates and saves the updated Person object.
+
+            :param form: References to the model form.
+            :return: Validated form
+        """
+        person = form.save(commit=False)
+        if self.request.user.role == 3:
+            if person.role > 3 or person.role < 1:
+                return super(PersonUpdateView, self).form_invalid(form)
+        elif self.request.user.role == 2:
+            if person.role != 1:
+                return super(PersonUpdateView, self).form_invalid(form)
+        person.save()
+        return super(PersonUpdateView, self).form_valid(form)
 
     def post_ajax(self, request, *args, **kwargs):
         """
@@ -717,7 +762,7 @@ class GradeListView(RoleCheck, generic.ListView):
         return Grade.objects.filter(person__username=self.request.user.username)
 
 
-class GradeDisplay(generic.DetailView):
+class GradeDisplay(views.AjaxResponseMixin, generic.DetailView):
     """
     Class that displays information about a single grade object based on the grade_id
 
@@ -938,7 +983,7 @@ class GroupListView(AdministratorCheck, generic.ListView):
     model = Gruppe
 
 
-class GroupDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.DetailView):
+class GroupDetailView(views.AjaxResponseMixin, generic.DetailView):
     """
     Class that displays information about a single grade object based on the grade_id
 
@@ -969,6 +1014,7 @@ class GroupDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.Detai
                 "first_name": person.first_name,
                 "last_name": person.last_name,
                 "username": person.username,
+                "email": person.email
             })
         data = {
             'persons': persons
