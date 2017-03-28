@@ -87,5 +87,7 @@ class TaskUpdateView(generic.UpdateView):
             context['geogebra'] = GeogebraTask.objects.filter(task=self.kwargs.get("task_pk"))
         if MultipleChoiceTask.objects.filter(task=self.kwargs.get("task_pk")):
             context['options'] = MultipleChoiceTask.objects.filter(task=self.kwargs.get("task_pk"))
+
+        context['categories'] = Category.objects.all()
         return context
 

@@ -29,13 +29,11 @@
                     {% bootstrap_icon "check" %} Lagre
                 </button>
             </form>
-            {% if task.extra %} <!-- If the task contains extras (Geogebra etc..) -->
-                <div class="col-sm-7" id="extradiv">
-                    <input type="hidden" id="hiddenbase64"
-                           value="{% for geo in geogebra %}{{ geo.base64 }}{% endfor %}">
-                    <div id="applet_container"></div>
-                </div>
-            {% endif %}
+            <div class="col-sm-7 hidden" id="extradiv">
+                <input type="hidden" id="hiddenbase64"
+                       value="{% for geo in geogebra %}{{ geo.base64 }}{% endfor %}">
+                <div id="applet_container"></div>
+            </div>
             <div class="col-sm-5">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -45,12 +43,16 @@
                                 style="font-size:1em;" class="glyphicon glyphicon-pencil"></span> </a></h4>
                     </div> <!-- #inner panel-heading -->
                     <div class="panel-body">
+
                         {% if task.category %}
-                            {% for category in task.category.all %}
-                                <span class="label label-info">{{ category }}</span>
-                            {% endfor %}
-                            <a class="btn btn-default" href=""><i class="fa fa-exchange" aria-hidden="true"
-                                                                  style="font-size: 1em"></i> Endre tema</a>
+                            <span id="categorydiv">
+                                {% for category in task.category.all %}
+                                    <span class="label label-info" id="list{{ category }}">{{ category }}</span>
+                                {% endfor %}
+                            </span>
+                            <a class="btn btn-default" data-toggle='modal' href='#changeCategoryModal'><i
+                                    class="fa fa-exchange" aria-hidden="true"
+                                    style="font-size: 1em; display: inline-block"></i> Endre kategorier</a>
                             <br>
                         {% endif %}
                         {% if options %} <!-- If the task contains multiple choice options -->
@@ -73,14 +75,11 @@
                                           placeholder="Skriv svaret ditt her..."></textarea>
                             </div>
                         {% endif %}
-
-                        {% if task.reasoning %} <!-- If the task contains an explanation-field -->
-                            <div class="form-group">
-                                <label for="reasoning" style="margin-top: 10px">Begrunnelse</label>
-                                <textarea class="form-control" id="reasoning" rows="6" style="resize:vertical"
-                                          placeholder="Begrunn svaret ditt..."></textarea>
-                            </div>
-                        {% endif %}
+                        <div class="form-group" id="reasoningdiv">
+                            <label for="reasoning" style="margin-top: 10px">Begrunnelse</label>
+                            <textarea class="form-control" id="reasoning" rows="6" style="resize:vertical"
+                                      placeholder="Begrunn svaret ditt..."></textarea>
+                        </div>
                         <ul class="list-group">
                             <li class="list-group-item">
                                 Felt for begrunnelse
@@ -114,11 +113,19 @@
             </div>
         </div> <!-- #panel-body -->
         <div class="panel-footer">
-
+            <button type="button" onclick="test()">Klikk</button>
         </div> <!-- #panel-footer-->
     </div> <!-- #panel -->
 
     <script>
+
+        function test() {
+            ggbApplet.reset();
+        }
+
+        function ggbOnInit(param) {
+
+        }
         var viewPortWidth = 1200;
         var viewPortHeight = 750;
         var base64 = document.getElementById('hiddenbase64').value;
@@ -143,7 +150,7 @@
             "errorDialogsActive": true,
             "showTutorialLink": false,
             "showLogging": false,
-            "useBrowserForJS": false,
+            "useBrowserForJS": true,
             "ggbBase64": base64
         };
 
@@ -161,13 +168,20 @@
         if (document.getElementById('hiddenbase64')) {
             var geobase64 = document.getElementById('hiddenbase64').value;
         }
+
         jQuery(document).ready(function ($) {
-            if (geobase64 != null) {
+            $('#reasoning').hide();
+            $('label[for=reasoning]').hide();
+
+            if (geobase64 != null && geobase64 != "") {
                 $('#id_base64').val(geobase64);
+                $('#extradiv').removeClass('hidden');
             }
 
             if (document.getElementById('id_reasoning').checked) {
                 $('#reason').prop('checked', true);
+                $('#reasoning').show();
+                $('label[for=reasoning]').show();
             }
 
             if (document.getElementById('id_extra').checked) {
@@ -188,10 +202,11 @@
 
         $('#extra').change(function () {
             if (document.getElementById('extra').checked) {
-                $('#extradiv').show();
+                $('#extradiv').removeClass('hidden');
+                test();
             }
             else {
-                $('#extradiv').hide();
+                $('#extradiv').addClass('hidden');
             }
         });
     </script>
@@ -218,10 +233,60 @@
         </div>
     </div>
 
+    <div class="modal fade" id="changeCategoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Endre kategorier</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        {% for category in categories %}
+                            {% if category in task.category.all %}
+                                <li class="list-group-item">
+                                    {{ category }}
+                                    <div class="material-switch pull-right">
+                                        <input id="category{{ forloop.counter }}" name="{{ category }}"
+                                               type="checkbox" onchange="changeCategory(this.name, this.checked)"
+                                               checked/>
+                                        <label for="category{{ forloop.counter }}" class="label-success"></label>
+                                    </div>
+                                </li>
+                            {% else %}
+                                <li class="list-group-item">
+                                    {{ category }}
+                                    <div class="material-switch pull-right">
+                                        <input id="category{{ forloop.counter }}" name="{{ category }}"
+                                               type="checkbox" onchange="changeCategory(this.name, this.checked)"/>
+                                        <label for="category{{ forloop.counter }}" class="label-success"></label>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         $('#changeTextModal').on('hide.bs.modal', function () {
             var modaltext = $('#modalText').val();
             document.getElementById('tasktext').innerHTML = modaltext;
         });
+
+        function changeCategory(category, check) {
+            if (check == true) {
+                document.getElementById('categorydiv').innerHTML += '<span class="label label-info" style="margin-left: 1px">' + category + '</span>';
+            }
+            else {
+                alert(category + " not checked");
+            }
+        }
     </script>
 {% endblock %}
