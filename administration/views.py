@@ -21,7 +21,7 @@ class AdministratorCheck(views.UserPassesTestMixin):
     Checks if the logged in user has administrator privileges.
 
      **UserPassesTestMixin:**
-        Mixin that check is the logged in user passes the test given in :func:`test_func`
+        Mixin from :ref:`Django braces` that check is the logged in user passes the test given in :func:`test_func`.
     """
 
     def test_func(self, user):
@@ -29,8 +29,8 @@ class AdministratorCheck(views.UserPassesTestMixin):
             :param user: Person that has to pass the test.
             :return: True if the user logged in as an administrator.
         """
-        if self.request.user.is_authenticated():
-            if self.request.user.role == 4:
+        if user.is_authenticated():
+            if user.role == 4:
                 return True
         return False
 
@@ -40,7 +40,7 @@ class RoleCheck(views.UserPassesTestMixin):
     Checks if the logged in user is either a teacher, school administrator or an administrator.
 
      **UserPassesTestMixin:**
-        Mixin that check is the logged in user passes the test given in :func:`test_func`
+        Mixin from :ref:`Django braces` that check is the logged in user passes the test given in :func:`test_func`
     """
 
     def test_func(self, user):
@@ -49,8 +49,8 @@ class RoleCheck(views.UserPassesTestMixin):
             :return: True if the user is an administrator, school administrator or a teacher.
         """
         role = [2, 3, 4]
-        if self.request.user.is_authenticated():
-            if self.request.user.role in role:
+        if user.is_authenticated():
+            if user.role in role:
                 return True
         return False
 
@@ -60,7 +60,7 @@ class SchoolCheck(views.UserPassesTestMixin):
     Checks if the logged in user has sufficient access privileges to view or alter an object.
 
     **UserPassesTestMixin:**
-        Mixin that check is the logged in user passes the test given in :func:`test_func`
+        Mixin from :ref:`Django braces` that check is the logged in user passes the test given in :func:`test_func`
 
     """
 
@@ -70,21 +70,21 @@ class SchoolCheck(views.UserPassesTestMixin):
             :return: True if the user is an administrator, school-administrator or is a teacher in one of the grades
                 the relevant person object is in.
         """
-        if self.request.user.is_authenticated():
-            if self.request.user.role == 4:
+        if user.is_authenticated():
+            if user.role == 4:
                 return True
-            elif self.request.user.role == 3:
+            elif user.role == 3:
                 if self.kwargs.get('school_pk'):
                     school = School.objects.get(id=self.kwargs.get('school_pk'))
-                    if self.request.user.id == school.school_administrator.id:
+                    if user.id == school.school_administrator.id:
                         return True
                 if self.kwargs.get('slug'):
-                    schools = School.objects.filter(school_administrator=self.request.user.id)
+                    schools = School.objects.filter(school_administrator=user.id)
                     persons = Person.objects.filter(grades__school_id__in=schools)
                     for person in persons:
                         if person.username == self.kwargs.get('slug'):
                             return True
-            elif self.request.user.role == 2:
+            elif user.role == 2:
                 if self.kwargs.get('grade_pk'):
                     grades_teacher = Grade.objects.filter(person__username=self.request.user.username)
                     grades = Grade.objects.filter(id=self.kwargs.get('grade_pk'))
@@ -93,7 +93,7 @@ class SchoolCheck(views.UserPassesTestMixin):
                             if grade_teacher == grade:
                                 return True
                 elif self.kwargs.get('slug'):
-                    grades = self.request.user.grades.all()
+                    grades = user.grades.all()
                     persons = Person.objects.filter(grades__in=grades).distinct()
                     for person in persons:
                         if person.username == self.kwargs.get('slug'):
@@ -110,7 +110,7 @@ class SchoolAdministratorCheck(views.UserPassesTestMixin):
     Checks if the logged in user is an administrator or school administrator.
 
     **UserPassesTestMixin:**
-        Mixin that check is the logged in user passes the test given in :func:`test_func`
+        Mixin from :ref:`Django braces` that check is the logged in user passes the test given in :func:`test_func`
 
     """
 
@@ -119,8 +119,8 @@ class SchoolAdministratorCheck(views.UserPassesTestMixin):
         :param user: Person that has to pass the test.
         :return: True if user is either a school administrator or administrator
         """
-        if self.request.user.is_authenticated():
-            if self.request.user.role == 3 or self.request.user.role == 4:
+        if user.is_authenticated():
+            if user.role == 3 or user.role == 4:
                 return True
         return False
 
@@ -131,7 +131,8 @@ class MyPageDetailView(views.UserPassesTestMixin, generic.FormView):
 
 
     **UserPassesTestMixin :**
-        Checks if the logged in user passes a given test. The test is given in **test_func()**.
+        Mixin from :ref:`Django braces`
+        Checks if the logged in user passes a given test. The test is given in :func:`test_func`.
     **FormView :**
         A view that displays a form
 
@@ -206,7 +207,7 @@ class PersonListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
     :func:`RoleCheck`:
         Permission check, only allows teachers, administrators and school administrators.
     **AjaxResponseMixin**
-        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **ListView:**
         Inherits generic.ListView that makes a page representing a list of objects.
 
@@ -384,8 +385,7 @@ class PersonCreateView(RoleCheck, generic.CreateView):
     :func:`RoleCheck`:
         Permission check, only allows teachers, administrators and school administrators.
     **CreateView:**
-        Inherits Django's CreateView that displays a form for creating a object and
-        saving the form when validated
+        get
     """
 
     login_url = reverse_lazy('login')
@@ -466,7 +466,7 @@ class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView)
     :func:`SchoolCheck`:
         Permission check.
     **AjaxResponseMixin**
-        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **UpdateView:**
         Inherits Django's UpdateView that displays a form for updating a specific object and
         saving the form when validated.
@@ -609,7 +609,7 @@ class SchoolCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Crea
     :func:`AdministratorCheck`:
         inherited permission check
     **AjaxResponseMixin**
-        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **CreateView:**
         Inherits generic.CreateView that displays a form for creating a object and
         saving the form when validated
@@ -750,7 +750,7 @@ class GradeDisplay(generic.DetailView):
 
 class FileUploadView(generic.FormView):
     """
-    Class that handles uploading excel files and creating Person objects from them
+    Class that handles uploading excel files using :ref:`Django-excel` and creates Person objects from them.
     """
 
     template_name = 'administration/grade_detail.html'
@@ -945,7 +945,7 @@ class GroupDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.Detai
     :func:`AdministratorCheck`:
         Inherited permission check
     **AjaxResponseMixin:**
-        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **DetailView:**
         Inherits generic.DetailView that makes a page representing a specific object.
     """
@@ -983,7 +983,7 @@ class GroupCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Creat
     :func:`AdministratorCheck`:
         Inherited permission check
     **AjaxResponseMixin:**
-        This mixin provides hooks for altenate processing of AJAX requests based on HTTP verb.
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **CreateView:**
         Inherits generic.CreateView that displays a form for creating a object and
         saving the form when validated

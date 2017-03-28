@@ -1,4 +1,4 @@
-Maths
+**Maths**
 =================
 .. toctree::
    :maxdepth: 2
