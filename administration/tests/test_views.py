@@ -1,5 +1,5 @@
 from django.test import LiveServerTestCase
-from ..models import Person
+from ..models import Person, School, Grade
 from mixer.backend.django import mixer
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -12,27 +12,35 @@ class PersonDetailViewTestCase(LiveServerTestCase):
         obj = mixer.blend('administration.Person', role=4, username='admin')
         obj.set_password('admin')  # Password has to be set like this because of the hash-function
         obj.save()
+
         schooladminobj = mixer.blend('administration.Person', role=3, username='schooladmin')
         schooladminobj.set_password('schooladmin')
         schooladminobj.save()
+
         schoolobj = mixer.blend('administration.School', school_administrator=schooladminobj)
         schoolobj.save()
+
         gradeobj = mixer.blend('administration.Grade', school=schoolobj)
         gradeobj.save()
+
         teacherobj = mixer.blend('administration.Person', role=2, grades=gradeobj, username='teacher')
         teacherobj.set_password('teacher')
         teacherobj.save()
+
         studentobj = mixer.blend('administration.Person', role=1, grades=gradeobj, username='student')
         studentobj.set_password('student')
         studentobj.save()
+
         schooladminobj2 = mixer.blend('administration.Person', role=3, username='schooladmin2')
         schooladminobj2.set_password('schooladmin2')
         schooladminobj2.save()
+
         teacherobj2 = mixer.blend('administration.Person', role=2, username='teacher2')
         teacherobj2.set_password('teacher2')
         teacherobj2.save()
+
         #  Webdriver setup
-        server_url = "http://%s:%s/wd/hub" % ('127.0.0.1', '4455')  # ip address and port
+        server_url = "http://%s:%s/wd/hub" % ('127.0.0.1', '4444')  # ip address and port
         dc = DesiredCapabilities.HTMLUNITWITHJS
         self.selenium = webdriver.Remote(server_url, dc)
         super(PersonDetailViewTestCase, self).setUp()
@@ -235,11 +243,13 @@ class MyPageDetailViewTestCase(LiveServerTestCase):
         obj = mixer.blend('administration.Person', role=4, username='admin')
         obj.set_password('admin')
         obj.save()
+
         schooladminobj = mixer.blend('administration.Person', role=3, username='schooladmin')
         schooladminobj.set_password('schooladmin')
         schooladminobj.save()
+
         #  Webdriver setup
-        server_url = "http://%s:%s/wd/hub" % ('127.0.0.1', '4455')  # ip address and port
+        server_url = "http://%s:%s/wd/hub" % ('127.0.0.1', '4444')  # ip address and port
         dc = DesiredCapabilities.HTMLUNITWITHJS
         self.selenium = webdriver.Remote(server_url, dc)
         self.selenium.maximize_window()
@@ -281,10 +291,21 @@ class PersonCreateViewTestCase(LiveServerTestCase):
         obj = mixer.blend('administration.Person', role=4, username='admin')
         obj.set_password('admin')  # Password has to be set like this because of the hash-function
         obj.save()
+
+        schooladminobj = mixer.blend('administration.Person', role=3, username='schooladmin')
+        schooladminobj.set_password('schooladmin')
+        schooladminobj.save()
+
+        schoolobj = mixer.blend('administration.School', school_administrator=schooladminobj, school_name='testSchool')
+        schoolobj.save()
+
+        gradeobj = mixer.blend('administration.Grade', grade_name='testGrade', school=schoolobj)
+        gradeobj.save()
         #  Webdriver setup
-        server_url = "http://%s:%s/wd/hub" % ('127.0.0.1', '4455')  # ip address and port
+        """server_url = "http://%s:%s/wd/hub" % ('127.0.0.1', '4444')  # ip address and port
         dc = DesiredCapabilities.HTMLUNITWITHJS
-        self.selenium = webdriver.Remote(server_url, dc)
+        self.selenium = webdriver.Remote(server_url, dc)"""
+        self.selenium = webdriver.PhantomJS()
         self.selenium.maximize_window()
         super(PersonCreateViewTestCase, self).setUp()
 
@@ -292,7 +313,7 @@ class PersonCreateViewTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(PersonCreateViewTestCase, self).tearDown()
 
-    def test_admin_can_create_all_usertypes(self):
+    def test_admin_can_create_all_usertypes_without_school(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
         )
@@ -304,11 +325,225 @@ class PersonCreateViewTestCase(LiveServerTestCase):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/administrasjon/nybruker")
         )
+
         self.selenium.find_element_by_id('id_first_name').send_keys('testName')
         self.selenium.find_element_by_id('id_last_name').send_keys('testSurname')
-        self.selenium.find_element_by_id('id_email').send_keys('test@email.com')
+        self.selenium.find_element_by_id('id_email').send_keys('test@test.com')
         self.selenium.find_element_by_id('id_date_of_birth').send_keys('10.10.1997')
-        self.selenium.find_element_by_id('id_sex').send_keys('M')
-        self.selenium.find_element_by_id('id_role').send_keys('1')
+        sex = self.selenium.find_element_by_id('id_sex')
+        for option in sex.find_elements_by_tag_name('option'):
+            if option.text == 'Gutt':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                sex.send_keys(ARROW_DOWN)
+        role = self.selenium.find_element_by_id('id_role')
+        for option in role.find_elements_by_tag_name('option'):
+            if option.text == 'Elev':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                role.send_keys(ARROW_DOWN)
         self.selenium.find_element_by_id('saveNewInfoBtn').click()
-        self.assertEqual(1, len(Person.objects.all()))
+
+        self.assertEqual(1, len(Person.objects.filter(role=1, first_name='testName'))),\
+            'Should be a student object saved in the database'
+        # Teacher
+        self.selenium.get(
+            '%s%s' % (self.live_server_url, "/administrasjon/nybruker")
+        )
+        self.selenium.find_element_by_id('id_first_name').send_keys('testNameTeacher')
+        self.selenium.find_element_by_id('id_last_name').send_keys('testSurnameTeacher')
+        self.selenium.find_element_by_id('id_email').send_keys('testTeacher@email.com')
+        self.selenium.find_element_by_id('id_date_of_birth').send_keys('10.10.1982')
+        sex = self.selenium.find_element_by_id('id_sex')
+        for option in sex.find_elements_by_tag_name('option'):
+            if option.text == 'Jente':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                sex.send_keys(ARROW_DOWN)
+        role = self.selenium.find_element_by_id('id_role')
+        for option in role.find_elements_by_tag_name('option'):
+            if option.text == 'Lærer':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                role.send_keys(ARROW_DOWN)
+        self.selenium.find_element_by_id('saveNewInfoBtn').click()
+
+        self.assertEqual(1, len(Person.objects.filter(role=2, first_name='testNameTeacher'))),\
+            'Should be a Teacher object saved in the database'
+
+        self.selenium.get(
+            '%s%s' % (self.live_server_url, "/administrasjon/nybruker")
+        )
+        # Schooladmin
+        self.selenium.find_element_by_id('id_first_name').send_keys('testNameSAdmin')
+        self.selenium.find_element_by_id('id_last_name').send_keys('testSurnameSAdmin')
+        self.selenium.find_element_by_id('id_email').send_keys('testSAdmin@email.com')
+        self.selenium.find_element_by_id('id_date_of_birth').send_keys('10.10.1973')
+        sex = self.selenium.find_element_by_id('id_sex')
+        for option in sex.find_elements_by_tag_name('option'):
+            if option.text == 'Jente':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                sex.send_keys(ARROW_DOWN)
+        role = self.selenium.find_element_by_id('id_role')
+        for option in role.find_elements_by_tag_name('option'):
+            if option.text == 'Skoleadministrator':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                role.send_keys(ARROW_DOWN)
+        self.selenium.find_element_by_id('saveNewInfoBtn').click()
+        self.assertEqual(1, len(Person.objects.filter(role=3, first_name='testNameSAdmin'))), \
+        'Should be a schooladministrator object saved in the database'
+
+    def test_schooladmin_can_create_teacher_student_without_school(self):
+        self.selenium.get(
+            '%s%s' % (self.live_server_url, "/")
+        )
+        username = self.selenium.find_element_by_id('id_username')
+        username.send_keys("schooladmin")
+        password = self.selenium.find_element_by_id('id_password')
+        password.send_keys("schooladmin")
+        self.selenium.find_element_by_id('logInBtn').click()
+        # Student
+        self.selenium.get(
+            '%s%s' % (self.live_server_url, "/administrasjon/nybruker")
+        )
+        self.selenium.find_element_by_id('id_first_name').send_keys('testName')
+        self.selenium.find_element_by_id('id_last_name').send_keys('testSurname')
+        self.selenium.find_element_by_id('id_email').send_keys('test@test.com')
+        self.selenium.find_element_by_id('id_date_of_birth').send_keys('10.10.1997')
+        sex = self.selenium.find_element_by_id('id_sex')
+        for option in sex.find_elements_by_tag_name('option'):
+            if option.text == 'Gutt':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                sex.send_keys(ARROW_DOWN)
+        role = self.selenium.find_element_by_id('id_role')
+        for option in role.find_elements_by_tag_name('option'):
+            if option.text == 'Elev':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                role.send_keys(ARROW_DOWN)
+        self.selenium.find_element_by_id('saveNewInfoBtn').click()
+        self.assertEqual(1, len(Person.objects.filter(role=1, first_name='testName'))),\
+            'Should be a student object saved in the database'
+        # Teacher
+        self.selenium.get(
+            '%s%s' % (self.live_server_url, "/administrasjon/nybruker")
+        )
+        self.selenium.find_element_by_id('id_first_name').send_keys('testTeacher')
+        self.selenium.find_element_by_id('id_last_name').send_keys('testTeacherSurname')
+        self.selenium.find_element_by_id('id_email').send_keys('test@test.com')
+        self.selenium.find_element_by_id('id_date_of_birth').send_keys('10.10.1997')
+        sex = self.selenium.find_element_by_id('id_sex')
+        for option in sex.find_elements_by_tag_name('option'):
+            if option.text == 'Gutt':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                sex.send_keys(ARROW_DOWN)
+        role = self.selenium.find_element_by_id('id_role')
+        for option in role.find_elements_by_tag_name('option'):
+            if option.text == 'Lærer':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                role.send_keys(ARROW_DOWN)
+        self.selenium.find_element_by_id('saveNewInfoBtn').click()
+        self.assertEqual(1, len(Person.objects.filter(role=2, first_name='testTeacher'))),\
+            'Should be a teacher object saved in the database'
+"""
+    def test_schooladmin_can_create_teacher_student_with_school(self):
+        self.selenium.get(
+            '%s%s' % (self.live_server_url, "/")
+        )
+        username = self.selenium.find_element_by_id('id_username')
+        username.send_keys("schooladmin")
+        password = self.selenium.find_element_by_id('id_password')
+        password.send_keys("schooladmin")
+        self.selenium.find_element_by_id('logInBtn').click()
+        # Student
+        import time
+        time.sleep(0.5)
+        self.selenium.get(
+            '%s%s' % (self.live_server_url, "/administrasjon/nybruker")
+        )
+        time.sleep(0.5)
+        self.selenium.find_element_by_id('id_first_name').send_keys('testNameGrade')
+        self.selenium.find_element_by_id('id_last_name').send_keys('testSurnameGrade')
+        self.selenium.find_element_by_id('id_email').send_keys('test@test.com')
+        self.selenium.find_element_by_id('id_date_of_birth').send_keys('10.10.1997')
+        sex = self.selenium.find_element_by_id('id_sex')
+        for option in sex.find_elements_by_tag_name('option'):
+            if option.text == 'Gutt':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                sex.send_keys(ARROW_DOWN)
+        role = self.selenium.find_element_by_id('id_role')
+        for option in role.find_elements_by_tag_name('option'):
+            if option.text == 'Elev':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                role.send_keys(ARROW_DOWN)
+
+        schools = self.selenium.find_element_by_id('schools')
+        for option in schools.find_elements_by_tag_name('option'):
+            if option.text == 'testSchool':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                schools.send_keys(ARROW_DOWN)
+        grades = self.selenium.find_element_by_id('grades')
+        for option in grades.find_elements_by_tag_name('option'):
+            if option.text == 'testGrade':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                grades.send_keys(ARROW_DOWN)
+        self.selenium.find_element_by_id('selectClassButton').click()
+        import time
+        time.sleep(2)
+        self.selenium.find_element_by_id('saveNewInfoBtn').click()
+        import pdb;pdb.set_trace()
+        self.assertEqual(1, len(Person.objects.filter(role=1, first_name='testNameGrade'))), \
+        'Should be a student object saved in the database'
+        
+        # Teacher
+        
+        self.selenium.get(
+            '%s%s' % (self.live_server_url, "/administrasjon/nybruker")
+        )
+        self.selenium.find_element_by_id('id_first_name').send_keys('testTeacher')
+        self.selenium.find_element_by_id('id_last_name').send_keys('testTeacherSurname')
+        self.selenium.find_element_by_id('id_email').send_keys('test@test.com')
+        self.selenium.find_element_by_id('id_date_of_birth').send_keys('10.10.1997')
+        sex = self.selenium.find_element_by_id('id_sex')
+        for option in sex.find_elements_by_tag_name('option'):
+            if option.text == 'Gutt':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                sex.send_keys(ARROW_DOWN)
+        role = self.selenium.find_element_by_id('id_role')
+        for option in role.find_elements_by_tag_name('option'):
+            if option.text == 'Lærer':
+                break
+            else:
+                ARROW_DOWN = u'\ue015'
+                role.send_keys(ARROW_DOWN)
+        self.selenium.find_element_by_id('saveNewInfoBtn').click()
+        import pdb;
+        pdb.set_trace()
+        self.assertEqual(1, len(Person.objects.filter(role=2, first_name='testTeacher'))), \
+        'Should be a teacher object saved in the database'
+        """
