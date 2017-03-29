@@ -5,7 +5,8 @@
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
 {% block head %}
-    <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
+    <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"
+            xmlns:cursor="http://www.w3.org/1999/xhtml"></script>
 {% endblock %}
 
 {% block body %}
@@ -70,6 +71,17 @@
                                                 class="glyphicon glyphicon-pencil"></span> </a>
                                         <input type="radio" id="option{{ forloop.counter }}" name="options">
                                         <span id="option{{ forloop.counter }}value">{{ option }}</span>
+                                        {% if option.correct %}
+                                            <a class="btn btn-default" onclick="changeCorrect({{ forloop.counter }})"><i
+                                                    class="fa fa-check" id="correct{{ forloop.counter }}"
+                                                    aria-hidden="true"
+                                                    style="font-size: 1.5em; color: #00A000" ;></i></a>
+                                        {% else %}
+                                            <a class="btn btn-default" onclick="changeCorrect({{ forloop.counter }})"><i
+                                                    class="fa fa-times" id="correct{{ forloop.counter }}"
+                                                    aria-hidden="true"
+                                                    style="font-size: 1.5em; color: #A00000"></i></a>
+                                        {% endif %}
                                         <br>
                                     {% endfor %}
                                 {% endif %}
@@ -138,13 +150,17 @@
     </div> <!-- #panel -->
 
     <script>
+        var ggbOnInitCounter = 1;
         function ggbOnInit(param) {
-            if (geobase64 == null || geobase64 == "") {
-                $('#extradiv').hide();
+            if (ggbOnInitCounter == 1) {
+                if (geobase64 == null || geobase64 == "") {
+                    $('#extradiv').hide();
+                }
+                else {
+                    $('#id_base64').val(geobase64);
+                }
             }
-            else {
-                $('#id_base64').val(geobase64);
-            }
+            ggbOnInitCounter++;
         }
         var viewPortWidth = 1200;
         var viewPortHeight = 750;
@@ -206,6 +222,12 @@
             var categories = document.getElementById('id_category');
             var spans = document.getElementById('categorydiv').getElementsByTagName('span');
             var categoryoptions = categories.getElementsByTagName('option');
+            var optionsdiv = document.getElementById('optionsdiv');
+            var optionsi = optionsdiv.getElementsByTagName('i');
+            var optionsspan = optionsdiv.getElementsByTagName('span');
+            var options = document.getElementById('id_options');
+
+            options.value = "";
 
             if (reasoning.checked) {
                 reasoning2.checked = true;
@@ -237,6 +259,16 @@
                         categoryoptions[k].selected = true;
                     }
                 }
+            }
+
+            for (var z = 0; z < optionsi.length; z++) {
+                if (optionsi[z].className == 'fa fa-check') {
+                    options.value += z + 1;
+                }
+            }
+
+            for (var x = 1; x < optionsspan.length; x += 2) {
+                options.value += "|||||" + optionsspan[x].innerHTML;
             }
 
             document.getElementById('submitbutton').click();
@@ -289,7 +321,24 @@
             var div = document.getElementById('optionsdiv');
             var inputCount = div.getElementsByTagName('input').length;
             var n = inputCount + 1;
-            div.innerHTML += '<a class="btn btn-default" id="option' + n + 'button" onclick="saveUpdatedOption(' + n + ');"><span style="font-size:1em;" id="option' + n + 'span" class="glyphicon glyphicon-plus"></span> </a> <input type="text" id="option' + n + '" name="options"> <span id="option' + n + 'value"></span> <br>';
+            div.innerHTML += '<a class="btn btn-default" id="option' + n + 'button" onclick="saveUpdatedOption(' + n + ');"><span style="font-size:1em;" id="option' + n + 'span" class="glyphicon glyphicon-plus"></span> </a> <input type="text" id="option' + n + '" name="options"> <span id="option' + n + 'value"></span> <a class="btn btn-default" onclick="changeCorrect(' + n + ')"><i class="fa fa-times" aria-hidden="true" id="correct' + n + '" style="font-size: 1.5em; color: #A00000"></i></a><br>';
+        }
+
+        function changeCorrect(e) {
+            var div = document.getElementById('optionsdiv');
+            var i = div.getElementsByTagName('i');
+            var span = div.getElementsByTagName('span');
+
+            for (var k = 0; k < i.length; k++) {
+                if (k + 1 == e) {
+                    i[k].className = 'fa fa-check';
+                    i[k].style.color = '#00A000';
+                }
+                else {
+                    i[k].className = 'fa fa-times';
+                    i[k].style.color = '#A00000';
+                }
+            }
         }
 
         /**
