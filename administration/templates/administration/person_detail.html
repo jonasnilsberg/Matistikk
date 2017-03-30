@@ -99,37 +99,35 @@
             {% bootstrap_messages %}
         </div>
 
-    </div>
-    <div class="panel-footer">
-        {% if request.user.role == 4 %}
-            <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}"><span
-                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Rediger bruker</a>
-            <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal'>
-                <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
-            {% if person.last_login is None %}
-                <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
-                    <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
+        <div class="panel-footer">
+            {% if request.user.role == 4 %}
+                <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}" id="editUserBtn"><span
+                        class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Rediger bruker</a>
+                <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal' id="updatePasswordModalBtn">
+                    <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
+                {% if person.last_login is None %}
+                    <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
+                        <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
+                {% endif %}
+            {% elif request.user.role == 3 and person.role == 2 or person.role == 1 %}
+                <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}" id="editUserBtn"><span
+                        class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Rediger bruker</a>
+                <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal' id="updatePasswordModalBtn">
+                    <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
+                {% if person.last_login is None %}
+                    <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
+                        <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
+                {% endif %}
+            {% elif request.user.role == 2 and person.role == 1 %}
+                <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}" id="editUserBtn"><span
+                        class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Rediger bruker</a>
+                <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal' id="updatePasswordModalBtn">
+                    <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
+                {% if person.last_login is None %}
+                    <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
+                        <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
+                {% endif %}
             {% endif %}
-        {% elif request.user.role == 3 and person.role == 2 or person.role == 1 %}
-            <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}"><span
-                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Rediger bruker</a>
-            <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal'>
-                <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
-            {% if person.last_login is None %}
-                <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
-                    <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
-            {% endif %}
-        {% elif request.user.role == 2 and person.role == 1 %}
-            <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}"><span
-                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Rediger bruker</a>
-            <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal'>
-                <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
-            {% if person.last_login is None %}
-                <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
-                    <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
-            {% endif %}
-        {% endif %}
-
     </div>
 
     <script>
@@ -177,7 +175,7 @@
                             {% bootstrap_label 'Gjenta Passord' %}
                             {% bootstrap_field form.password2 placeholder='Gjenta Passord' addon_before='<span class="fa fa-key"></span>' show_label=False %}
                             {% buttons %}
-                                <button type="submit" class="btn btn-success form-control">
+                                <button type="submit" class="btn btn-success form-control" id="updatePasswordBtn">
                                     {% bootstrap_icon "check" %} Oppdater passord
                                 </button>
                             {% endbuttons %}

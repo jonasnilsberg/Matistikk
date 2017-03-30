@@ -85,3 +85,13 @@ class TestBase(models.Model):
 
 
 
+
+class Test(models.Model):
+    """
+    A test is a collection of tasks.
+
+    :tasks: The tasks.
+    :test_name: The name of the test.
+    """
+    test_name = models.CharField(max_length=100)
+    tasks = models.ManyToManyField(Task)

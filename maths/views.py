@@ -1,7 +1,7 @@
 from django.views import generic
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
-from .forms import CreateTaskForm, CreateTestForm
+from .forms import CreateTaskForm
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, TestBase
 
 
@@ -164,6 +164,49 @@ class TaskUpdateView(generic.UpdateView):
 
         context['categories'] = Category.objects.all()
         return context
+
+    def form_valid(self, form):
+        task = form.save(commit=False)
+        task.save()
+
+        if task.extra:
+            base64 = self.request.POST['base64']
+            geotask = GeogebraTask.objects.filter(task=task)
+            if geotask.count() > 0:
+                geogebratask = GeogebraTask.objects.get(task=task)
+                geogebratask.base64 = base64
+                geogebratask.save()
+            else:
+                geogebratask = GeogebraTask(task=task, base64=base64)
+                geogebratask.save()
+
+        if task.answertype == 2:
+            options = self.request.POST['options']
+            optiontable = options.split('|||||')
+            correct = optiontable[0]
+            taskoptions = MultipleChoiceTask.objects.filter(task=task)
+            newoptions = (len(optiontable)-1) - len(taskoptions)
+
+            x = 1
+            for taskoption in taskoptions:
+                if int(correct) == x:
+                    taskoption.correct = True
+                    taskoption.option = optiontable[x]
+                else:
+                    taskoption.correct = False
+                    taskoption.option = optiontable[x]
+                taskoption.save()
+                x += 1
+
+            if newoptions > 0:
+                for option in optiontable[len(optiontable)-newoptions:]:
+                    if int(correct) == x:
+                        multiplechoice = MultipleChoiceTask(task=task, option=option, correct=True)
+                    else:
+                        multiplechoice = MultipleChoiceTask(task=task, option=option, correct=False)
+                    multiplechoice.save()
+                    x += 1
+        return super(TaskUpdateView, self).form_valid(form)
 
 
 class TestCreateView(generic.CreateView):
