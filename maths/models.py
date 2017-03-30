@@ -65,6 +65,25 @@ class GeogebraTask(models.Model):
     """
     task = models.ForeignKey(Task)
     base64 = models.CharField(max_length=32700)
+    preview = models.CharField(max_length=32700, null=True)
+
+
+class TestBase(models.Model):
+    """
+    A test is a collection of tasks.
+
+    :tasks: The tasks.
+    :test_name: The name of the test.
+    """
+    tasks = models.ManyToManyField(Task, verbose_name='oppgaver')
+    test_name = models.CharField(max_length=100, verbose_name='test navn')
+    author = models.ForeignKey(Person)
+
+
+
+
+
+
 
 
 class Test(models.Model):

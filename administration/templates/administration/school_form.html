@@ -29,6 +29,7 @@
         </div>
     </div>
 
+
     <script>
         $(document).ready(function () {
             $("#modalError").hide();
@@ -63,7 +64,7 @@
                         error: error
                     });
                 }
-                else if (!testEmail.test(email) && first_name && last_name && date_of_birth && sex){
+                else if (!testEmail.test(email) && first_name && last_name && date_of_birth && sex) {
                     message = "Epost er ikke gyldig!";
                     Errormessage(message)
                 }
@@ -75,11 +76,11 @@
         });
         function success(data) {
             var field = $('#id_school_administrator');
-            if (data.message){
+            if (data.message) {
                 errorMessage(data.message);
             }
-            else{
-               field.append($("<option></option>").attr("value", data.id).text(data.first_name + " " + data.last_name + " - " + data.username));
+            else {
+                field.append($("<option></option>").attr("value", data.id).text(data.first_name + " " + data.last_name + " - " + data.username));
                 field.find('option[value="' + data.id + '"]').prop("selected", true);
                 $('#successMessageDiv').append(data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username)
                 $('#addAdministrator').modal('hide');
