@@ -29,7 +29,7 @@
                     {% bootstrap_icon "check" %} Lagre
                 </button>
             </form>
-            <div class="col-sm-7 hidden" id="extradiv">
+            <div class="col-sm-7" id="extradiv">
                 <input type="hidden" id="hiddenbase64"
                        value="{% for geo in geogebra %}{{ geo.base64 }}{% endfor %}">
                 <div id="applet_container"></div>
@@ -55,26 +55,46 @@
                                     style="font-size: 1em; display: inline-block"></i> Endre kategorier</a>
                             <br>
                         {% endif %}
-                        {% if options %} <!-- If the task contains multiple choice options -->
-                            <label style="margin-top: 10px">Svaralternativer</label>
-                            <a class="btn btn-default" href=""><i class="fa fa-exchange" aria-hidden="true"
-                                                                  style="font-size: 1em"></i> Endre svarmåte</a><br>
-                            {% for option in options %}
-                                <a class="btn btn-default" href=""><span
-                                        style="font-size:1em;" class="glyphicon glyphicon-pencil"></span> </a>
-                                <input type="radio" id="option{{ forloop.counter }}" name="options"> {{ option }}<br>
-                            {% endfor %}
-                        {% endif %}
+                        <div class="form-group" id="multiplechoicediv">
 
-                        {% if task.answertype == 1 %} <!-- If the task has text as answertype -->
-                            <div class="form-group">
-                                <label for="answer" style="margin-top: 10px">Tekstsvar</label>
-                                <a class="btn btn-default" href=""><i class="fa fa-exchange" aria-hidden="true"
-                                                                      style="font-size: 1em"></i> Endre svarmåte</a><br>
-                                <textarea class="form-control" id="answer" rows="6" style="resize:vertical"
-                                          placeholder="Skriv svaret ditt her..."></textarea>
+                            <label style="margin-top: 10px">Svaralternativer</label>
+                            <a class="btn btn-default" data-toggle='modal' href='#changeAnswerTypeModal'><i
+                                    class="fa fa-exchange" aria-hidden="true"
+                                    style="font-size: 1em"></i> Endre svarmåte</a><br>
+                            <div class="form-group" id="optionsdiv">
+                                {% if options %} <!-- If the task contains multiple choice options -->
+                                    {% for option in options %}
+                                        <a class="btn btn-default" id="option{{ forloop.counter }}button"
+                                           onclick="updateOption({{ forloop.counter }});"><span
+                                                style="font-size:1em;" id="option{{ forloop.counter }}span"
+                                                class="glyphicon glyphicon-pencil"></span> </a>
+                                        <input type="radio" id="option{{ forloop.counter }}" name="options">
+                                        <span id="option{{ forloop.counter }}value">{{ option }}</span>
+                                        <br>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
-                        {% endif %}
+                            <a class="btn btn-default" onclick="addOption()"><i
+                                    class="fa fa-plus" aria-hidden="true"
+                                    style="font-size: 1em"></i> Legg til alternativ</a><br>
+                        </div>
+
+                        <div class="form-group" id="textanswerdiv">
+                            <label for="answer" style="margin-top: 10px">Tekstsvar</label>
+                            <a class="btn btn-default" data-toggle='modal' href='#changeAnswerTypeModal'><i
+                                    class="fa fa-exchange" aria-hidden="true"
+                                    style="font-size: 1em"></i> Endre svarmåte</a><br>
+                            <textarea class="form-control" id="answer" rows="6" style="resize:vertical"
+                                      placeholder="Skriv svaret ditt her..."></textarea>
+                        </div>
+
+                        <div class="form-group" id="extraanswerdiv">
+                            <label style="margin-top: 10px">Valgt svarmåte er 'kun tillegg'</label>
+                            <a class="btn btn-default" data-toggle='modal' href='#changeAnswerTypeModal'><i
+                                    class="fa fa-exchange" aria-hidden="true"
+                                    style="font-size: 1em"></i> Endre svarmåte</a><br>
+                        </div>
+
                         <div class="form-group" id="reasoningdiv">
                             <label for="reasoning" style="margin-top: 10px">Begrunnelse</label>
                             <textarea class="form-control" id="reasoning" rows="6" style="resize:vertical"
@@ -103,7 +123,7 @@
                                     class="glyphicon glyphicon-check"
                                     aria-hidden="true"></span> Lagre som ny oppgave
                             </button>
-                            <button type="button" class="btn btn-warning"><span
+                            <button type="button" class="btn btn-warning" onclick="updateTask()"><span
                                     class="glyphicon glyphicon-refresh"
                                     aria-hidden="true"></span> Oppdater eksisterende
                             </button>
@@ -113,18 +133,18 @@
             </div>
         </div> <!-- #panel-body -->
         <div class="panel-footer">
-            <button type="button" onclick="test()">Klikk</button>
+
         </div> <!-- #panel-footer-->
     </div> <!-- #panel -->
 
     <script>
-
-        function test() {
-            ggbApplet.reset();
-        }
-
         function ggbOnInit(param) {
-
+            if (geobase64 == null || geobase64 == "") {
+                $('#extradiv').hide();
+            }
+            else {
+                $('#id_base64').val(geobase64);
+            }
         }
         var viewPortWidth = 1200;
         var viewPortHeight = 750;
@@ -169,14 +189,119 @@
             var geobase64 = document.getElementById('hiddenbase64').value;
         }
 
+        /**
+         * This function parse data from custom input fields into the hidden django-form
+         * and clicks the submit-button in the django-form when its done.
+         */
+        function updateTask() {
+            var tasktext = document.getElementById('tasktext').innerHTML;
+            var tasktext2 = document.getElementById('id_text');
+            var answertype = $('input[name=answer_type]:checked').val();
+            var answertype2 = document.getElementById('id_answertype');
+            var reasoning = document.getElementById('reason');
+            var reasoning2 = document.getElementById('id_reasoning');
+            var extra = document.getElementById('extra');
+            var extra2 = document.getElementById('id_extra');
+            var base64 = document.getElementById('id_base64');
+            var categories = document.getElementById('id_category');
+            var spans = document.getElementById('categorydiv').getElementsByTagName('span');
+            var categoryoptions = categories.getElementsByTagName('option');
+
+            if (reasoning.checked) {
+                reasoning2.checked = true;
+            }
+            else {
+                reasoning2.checked = false;
+            }
+
+            if (extra.checked) {
+                extra2.checked = true;
+                base64.value = ggbApplet.getBase64();
+            }
+            else {
+                extra2.checked = false;
+                base64.value = null;
+            }
+            tasktext2.value = tasktext;
+            if (answertype) {
+                answertype2.value = answertype;
+            }
+
+            for (var s = 0; s < categoryoptions.length; s++) {
+                categoryoptions[s].selected = false;
+            }
+
+            for (var i = 0; i < spans.length; i++) {
+                for (var k = 0; k < categoryoptions.length; k++) {
+                    if (spans[i].innerHTML == categoryoptions[k].innerHTML) {
+                        categoryoptions[k].selected = true;
+                    }
+                }
+            }
+
+            document.getElementById('submitbutton').click();
+        }
+
+        /**
+         * This function changes the "option"-radio-button with associated text to an
+         * text input fields so that the user can update the text of a multiple choice-option.
+         * The function runs when the user clicks the "change option"-button.
+         * The function also changes the icon and the onclick attribute of the button
+         * associated with the option in the view.
+         * @param e
+         */
+        function updateOption(e) {
+            var input = document.getElementById('option' + e);
+            var option = document.getElementById('option' + e + 'value');
+            var button = document.getElementById('option' + e + 'button');
+            var span = document.getElementById('option' + e + 'span');
+            $(input).prop('type', 'text');
+            $(input).val(option.innerHTML);
+            option.innerHTML = '';
+            button.setAttribute('onclick', 'saveUpdatedOption(' + e + ')');
+            span.className = 'glyphicon glyphicon-refresh';
+        }
+
+        /**
+         * This function is called when the user has updated the text of a multiple choice option
+         * and then clicks the refresh-button. The function changes the input field back
+         * to a radio input, and adds the text to the span associated with the input field.
+         * The function also changes the icon and the onclick attribute of the button
+         * associated with the option in the view.
+         * @param e
+         */
+        function saveUpdatedOption(e) {
+            var input = document.getElementById('option' + e);
+            var option = document.getElementById('option' + e + 'value');
+            var button = document.getElementById('option' + e + 'button');
+            var span = document.getElementById('option' + e + 'span');
+            $(input).prop('type', 'radio');
+            option.innerHTML = input.value;
+            button.setAttribute('onclick', 'updateOption(' + e + ')');
+            span.className = 'glyphicon glyphicon-pencil';
+        }
+
+        /**
+         * This function adds a input field to the div that contaions the multiple choice options
+         * for the task. The function gets called when the user clicks the "add option"-button.
+         */
+        function addOption() {
+            var div = document.getElementById('optionsdiv');
+            var inputCount = div.getElementsByTagName('input').length;
+            var n = inputCount + 1;
+            div.innerHTML += '<a class="btn btn-default" id="option' + n + 'button" onclick="saveUpdatedOption(' + n + ');"><span style="font-size:1em;" id="option' + n + 'span" class="glyphicon glyphicon-plus"></span> </a> <input type="text" id="option' + n + '" name="options"> <span id="option' + n + 'value"></span> <br>';
+        }
+
+        /**
+         * This function hides all the parts of the task when the document get loaded,
+         * then it shows the parts of the task that is chosen to be seen.
+         */
         jQuery(document).ready(function ($) {
             $('#reasoning').hide();
             $('label[for=reasoning]').hide();
-
-            if (geobase64 != null && geobase64 != "") {
-                $('#id_base64').val(geobase64);
-                $('#extradiv').removeClass('hidden');
-            }
+            $('#textanswerdiv').hide();
+            $('#multiplechoicediv').hide();
+            $('#extraanswerdiv').hide();
 
             if (document.getElementById('id_reasoning').checked) {
                 $('#reason').prop('checked', true);
@@ -187,8 +312,28 @@
             if (document.getElementById('id_extra').checked) {
                 $('#extra').prop('checked', true);
             }
+
+            if (document.getElementById('id_answertype').value == 1) {
+                $('#textanswerdiv').show();
+                $('#multiplechoicediv').hide();
+                $('#extraanswerdiv').hide();
+            }
+            else if (document.getElementById('id_answertype').value == 2) {
+                $('#textanswerdiv').hide();
+                $('#multiplechoicediv').show();
+                $('#extraanswerdiv').hide();
+            }
+            else if (document.getElementById('id_answertype').value == 3) {
+                $('#textanswerdiv').hide();
+                $('#multiplechoicediv').hide();
+                $('#extraanswerdiv').show();
+            }
         });
 
+        /**
+         * This function changes the visibility of the reasoning-div when the user
+         * changes the boolean value of the "Field for reasoning"-switch.
+         */
         $('#reason').change(function () {
             if (document.getElementById('reason').checked) {
                 $('#reasoning').show();
@@ -200,13 +345,16 @@
             }
         });
 
+        /**
+         * This function changes the visibility of the extra-div when the user
+         * changes the boolean value of the "Use extra"-switch.
+         */
         $('#extra').change(function () {
             if (document.getElementById('extra').checked) {
-                $('#extradiv').removeClass('hidden');
-                test();
+                $('#extradiv').show();
             }
             else {
-                $('#extradiv').addClass('hidden');
+                $('#extradiv').hide();
             }
         });
     </script>
@@ -274,18 +422,129 @@
         </div>
     </div>
 
+    <div class="modal fade" id="changeAnswerTypeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Endre Svarmåte</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="accordion" class="panel-group" role="tablist">
+                        <div class="panel panel-default" id="tekstRadio">
+                            <div class=" panel-heading" role="tab">
+                                <h4 class="panel-title">
+                                    <label><input type="radio" name="answer_type" value="1" data-toggle="collapse"
+                                                  data-parent="#accordion" data-target="#collapse5" required> Tekstsvar</label>
+                                </h4>
+                            </div>
+                            <div id="collapse5" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Hvis dette alternativet velges, vil eleven svare med tekst.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default" id="flervalgRadio">
+                            <div class="panel-heading" role="tab">
+                                <p class="panel-title">
+                                    <label><input type="radio" name="answer_type" value="2" data-toggle="collapse"
+                                                  data-parent="#accordion" data-target="#collapse6">
+                                        Flervalgstest</label>
+                                </p>
+                            </div>
+                            <div id="collapse6" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Hvis dette alternativet velges, vil eleven kunne svare i en flervalgsprøve.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default" id="geoRadio">
+                            <div class=" panel-heading" role="tab">
+                                <p class="panel-title">
+                                    <label><input type="radio" name="answer_type" value="3" data-toggle="collapse"
+                                                  data-parent="#accordion" data-target="#collapse7"> Kun tillegg</label>
+                                </p>
+                            </div>
+                            <div id="collapse7" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Hvis dette alternativet velges, vil eleven kunne svare kun med tillegg.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        /**
+         * This function changes the innerHTML of the tasktext-span when the user
+         * has updated the task text and closes the changeTextModal.
+         */
         $('#changeTextModal').on('hide.bs.modal', function () {
             var modaltext = $('#modalText').val();
             document.getElementById('tasktext').innerHTML = modaltext;
         });
 
+        /**
+         * This function fills the text input field in the changeTextModal when the
+         * user clicks the "Change task text"-button and the changeTextModal opens.
+         */
+        $('#changeTextModal').on('show.bs.modal', function () {
+            var tasktext = $('#tasktext').html();
+            $('#modalText').val(tasktext);
+        });
+
+        /**
+         * This function selects the already chosen answertype when the user opens the
+         * changeAnswerTypeModal
+         */
+        $('#changeAnswerTypeModal').on('show.bs.modal', function () {
+            $("input[name=answer_type][value=" + {{ task.answertype }} +"]").prop('checked', true);
+        });
+
+        /**
+         * This function changes the visibility of the answer type-divs when the user closes the
+         * changeAnswerTypeModal and has changed the answer type for the task.
+         */
+        $('#changeAnswerTypeModal').on('hide.bs.modal', function () {
+            var answervalue = $('input[name=answer_type]:checked').val();
+
+            if (answervalue == 1) {
+                $('#textanswerdiv').show();
+                $('#multiplechoicediv').hide();
+                $('#extraanswerdiv').hide();
+            }
+            else if (answervalue == 2) {
+                $('#textanswerdiv').hide();
+                $('#multiplechoicediv').show();
+                $('#extraanswerdiv').hide();
+            }
+            else if (answervalue == 3) {
+                $('#textanswerdiv').hide();
+                $('#multiplechoicediv').hide();
+                $('#extraanswerdiv').show();
+            }
+        });
+
+        /**
+         * This function adds and removes categories in the view when the user has changed the
+         * selected categories for the task.
+         * @param category
+         * @param check
+         */
         function changeCategory(category, check) {
             if (check == true) {
-                document.getElementById('categorydiv').innerHTML += '<span class="label label-info" style="margin-left: 1px">' + category + '</span>';
+                document.getElementById('categorydiv').innerHTML += '<span class="label label-info" style="margin-left: 1px" id="list' + category + '">' + category + '</span>';
             }
             else {
-                alert(category + " not checked");
+                $('#list' + category).remove();
             }
         }
     </script>

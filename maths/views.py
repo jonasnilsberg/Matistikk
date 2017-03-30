@@ -1,8 +1,10 @@
 from django.views import generic
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
-from .forms import CreateTaskForm
-from .models import Task, MultipleChoiceTask, Category, GeogebraTask
+from .forms import CreateTaskForm, CreateTestForm
+from .models import Task, MultipleChoiceTask, Category, GeogebraTask, TestBase
+
+
 # Create your views here.
 
 
@@ -30,7 +32,7 @@ class CreateTaskView(generic.CreateView):
     login_url = reverse_lazy('login')
     template_name = 'maths/task_form.html'
     form_class = CreateTaskForm
-    success_url = '/'
+    success_url = reverse_lazy('maths:taskList')
 
     def get_context_data(self, **kwargs):
         """
@@ -162,4 +164,42 @@ class TaskUpdateView(generic.UpdateView):
 
         context['categories'] = Category.objects.all()
         return context
+
+
+class TestCreateView(generic.CreateView):
+    template_name = 'maths/test_form.html'
+    model = TestBase
+    fields = ['test_name', 'tasks']
+    success_url = reverse_lazy('maths:testList')
+
+    def get_context_data(self, **kwargs):
+        context = super(TestCreateView, self).get_context_data(**kwargs)
+        context['tasks'] = Task.objects.all()
+        context['categories'] = Category.objects.all()
+        return context
+
+    def form_valid(self, form):
+        testBase = form.save(commit=False)
+        testBase.author = self.request.user
+        testBase.save()
+        return super(TestCreateView, self).form_valid(form)
+
+
+class TestListView(generic.ListView):
+    template_name = 'maths/test_list.html'
+    model = TestBase
+
+
+class TestDetailView(generic.DetailView):
+    template_name = 'maths/test_detail.html'
+    model = TestBase
+    pk_url_kwarg = 'test_pk'
+
+    def get_context_data(self, **kwargs):
+        context = super(TestDetailView, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
+
+
 

@@ -248,3 +248,7 @@ html, body {
 .panel {
     margin-bottom: 0px;
 }
+
+.test {
+    width: 10px;
+}

@@ -4,30 +4,28 @@
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
 {% block body %}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h2>Skoleadministrasjon</h2>
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2>Skoleadministrasjon</h2>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal form-margin" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% bootstrap_field form.school_name addon_before='<span class="glyphicon glyphicon-home"></span>' %}
+                {% bootstrap_field form.school_address addon_before='<span class="fa fa-map-marker"></span>' %}
+                {% bootstrap_field form.school_administrator addon_before='<span class="glyphicon glyphicon-user"></span>' addon_after='<a data-toggle="modal" data-target="#addAdministrator" style="cursor: pointer;"><span id="createPerson" class="glyphicon glyphicon-plus"></span></a>' %}
+                <div class="alert alert-success" id="successMessageDiv">
+                    <strong>Fullført!</strong>
                 </div>
-                <div class="panel-body">
-                    <form class="form-horizontal form-margin" action="" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {% bootstrap_field form.school_name addon_before='<span class="glyphicon glyphicon-home"></span>' %}
-                        {% bootstrap_field form.school_address addon_before='<span class="fa fa-map-marker"></span>' %}
-                        {% bootstrap_field form.school_administrator addon_before='<span class="glyphicon glyphicon-user"></span>' addon_after='<a data-toggle="modal" data-target="#addAdministrator" style="cursor: pointer;"><span id="createPerson" class="glyphicon glyphicon-plus"></span></a>' %}
-                        <div class="alert alert-success" id="successMessageDiv">
-                            <strong>Fullført!</strong>
-                        </div>
-                        {% bootstrap_field form.is_active %}
-                        <button type="submit" class="btn btn-success">
-                            {% bootstrap_icon "check" %} Lagre
-                        </button>
-                    </form>
-                </div>
-            </div>
+                {% bootstrap_field form.is_active %}
+                <button type="submit" class="btn btn-success">
+                    {% bootstrap_icon "check" %} Lagre
+                </button>
+            </form>
         </div>
     </div>
+
 
     <script>
         $(document).ready(function () {
@@ -63,7 +61,7 @@
                         error: error
                     });
                 }
-                else if (!testEmail.test(email) && first_name && last_name && date_of_birth && sex){
+                else if (!testEmail.test(email) && first_name && last_name && date_of_birth && sex) {
                     message = "Epost er ikke gyldig!";
                     Errormessage(message)
                 }
@@ -75,11 +73,11 @@
         });
         function success(data) {
             var field = $('#id_school_administrator');
-            if (data.message){
+            if (data.message) {
                 errorMessage(data.message);
             }
-            else{
-               field.append($("<option></option>").attr("value", data.id).text(data.first_name + " " + data.last_name + " - " + data.username));
+            else {
+                field.append($("<option></option>").attr("value", data.id).text(data.first_name + " " + data.last_name + " - " + data.username));
                 field.find('option[value="' + data.id + '"]').prop("selected", true);
                 $('#successMessageDiv').append(data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username)
                 $('#addAdministrator').modal('hide');
