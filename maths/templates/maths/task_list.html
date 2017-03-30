@@ -62,7 +62,7 @@
                                 {% endif %}
                             {% endfor %}
                         </td>
-                        <td>{{ task.author.first_name }} {{ task.author.last_name }}</td>
+                        <td>{{ task.author.get_full_name }}</td>
                         <td>
                             <div class="btn-group btn-group-sm" role="group" aria-label="...">
                                 <a class="btn btn-default"
@@ -113,7 +113,7 @@
                 },
                 buttonText: function (options, select) {
                     if (options.length === 0) {
-                        return 'Sorter oppgaver etter kategori';
+                        return 'Filtrer oppgaver etter kategori';
                     }
                     else if (options.length > 3) {
                         return 'Mer enn 3 alternativer valgt';

@@ -35,7 +35,7 @@ class CreateTaskView(generic.CreateView):
     login_url = reverse_lazy('login')
     template_name = 'maths/task_form.html'
     form_class = CreateTaskForm
-    success_url = '/'
+    success_url = reverse_lazy('maths:taskList')
 
     def get_context_data(self, **kwargs):
         """
@@ -46,6 +46,7 @@ class CreateTaskView(generic.CreateView):
         """
         context = super(CreateTaskView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
+        context['categoryForm'] = CreateCategoryFrom()
         return context
 
     def form_valid(self, form):
@@ -92,7 +93,7 @@ class CategoryListView(generic.ListView):
     template_name = 'maths/category_list.html'
 
 
-class CategoryCreateView(generic.CreateView):
+class CategoryCreateView(views.AjaxResponseMixin, generic.CreateView):
     """
     Class that creates a category.
 
@@ -101,9 +102,18 @@ class CategoryCreateView(generic.CreateView):
         saving the form when validated.
     """
     model = Category
-    fields = ['category']
+    fields = ['category_title']
     template_name = 'maths/category_form.html'
     success_url = reverse_lazy('maths:categoryList')
+
+    def post_ajax(self, request, *args, **kwargs):
+        category_title = request.POST['category']
+        category = Category(category_title=category_title)
+        category.save()
+        data = {
+            'category': category.category
+        }
+        return JsonResponse(data)
 
 
 class CategoryUpdateView(generic.UpdateView):
@@ -115,7 +125,7 @@ class CategoryUpdateView(generic.UpdateView):
         saving the form when validated.
     """
     model = Category
-    fields = ['category']
+    fields = ['category_title']
     template_name = 'maths/category_form.html'
     success_url = reverse_lazy('maths:categoryList')
     pk_url_kwarg = 'category_pk'
@@ -238,3 +248,42 @@ class TaskUpdateView(generic.UpdateView):
                     multiplechoice.save()
                     x += 1
         return super(TaskUpdateView, self).form_valid(form)
+
+
+class TestCreateView(generic.CreateView):
+    template_name = 'maths/test_form.html'
+    model = TestBase
+    fields = ['test_name', 'tasks']
+    success_url = reverse_lazy('maths:testList')
+
+    def get_context_data(self, **kwargs):
+        context = super(TestCreateView, self).get_context_data(**kwargs)
+        context['tasks'] = Task.objects.all()
+        context['categories'] = Category.objects.all()
+        return context
+
+    def form_valid(self, form):
+        testBase = form.save(commit=False)
+        testBase.author = self.request.user
+        testBase.save()
+        return super(TestCreateView, self).form_valid(form)
+
+
+class TestListView(generic.ListView):
+    template_name = 'maths/test_list.html'
+    model = TestBase
+
+
+class TestDetailView(generic.DetailView):
+    template_name = 'maths/test_detail.html'
+    model = TestBase
+    pk_url_kwarg = 'test_pk'
+
+    def get_context_data(self, **kwargs):
+        context = super(TestDetailView, self).get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
+
+
+
+

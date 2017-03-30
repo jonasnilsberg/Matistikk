@@ -50,7 +50,7 @@
                     </div>
                     <div class="col-xs-1">
                         <br><br>
-                        <button type="button" onclick="chooseGrades()"><span
+                        <button type="button" onclick="chooseGrades()" id="selectClassButton"><span
                                 class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
                         <button type="button" onclick="removeGrades()"><span
                                 class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button>
@@ -88,6 +88,10 @@
             if (role != 4) {
                 $('#id_role').children('option[value="4"]').hide();
                 $('#id_role').children('option[value="3"]').hide();
+            }
+            var roleSelected = $('#id_role').find(":selected").val();
+            if (roleSelected == 4 || roleSelected == 3){
+                $("#gradeList").hide();
             }
         });
 
