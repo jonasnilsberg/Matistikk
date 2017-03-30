@@ -103,10 +103,11 @@ class SchoolAdministratorForm(forms.ModelForm):
     """
     first_name = forms.CharField(required=True, label='Fornavn')
     last_name = forms.CharField(required=True, label='Etternavn')
+    email = forms.EmailField(required=True, label='Epost')
 
     class Meta:
         """
             Bases the form on the Person model.
         """
         model = Person
-        fields = ['email', 'date_of_birth', 'sex']
+        fields = ['date_of_birth', 'sex']
