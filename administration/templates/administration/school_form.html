@@ -15,7 +15,7 @@
                 {% bootstrap_field form.school_name addon_before='<span class="glyphicon glyphicon-home"></span>' %}
                 {% bootstrap_field form.school_address addon_before='<span class="fa fa-map-marker"></span>' %}
                 {% bootstrap_field form.school_administrator addon_before='<span class="glyphicon glyphicon-user"></span>' addon_after='<a data-toggle="modal" data-target="#addAdministrator" style="cursor: pointer;"><span id="createPerson" class="glyphicon glyphicon-plus"></span></a>' %}
-                <div class="alert alert-success" id="successMessageDiv">
+                <div class="alert alert-success hidden" id="successMessageDiv">
                     <strong>Fullført!</strong>
                 </div>
                 {% bootstrap_field form.is_active %}
@@ -30,47 +30,34 @@
     <script>
         $(document).ready(function () {
             $("#modalError").hide();
-            $("#successMessageDiv").hide();
-        });
-
-        $(function () {
-            $('#administratorCreate').click(function () {
-                var message;
-
+            $('#schoolAdministratorForm').submit(function (e) {
+                e.preventDefault();
                 var first_name = $.trim($('#id_first_name').val());
                 var last_name = $.trim($('#id_last_name').val());
-                var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
                 var email = $.trim($('#id_email').val());
                 var date_of_birth = $.trim($('#id_date_of_birth').val());
                 var sex = $.trim($('#id_sex').val());
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'administration:schoolCreate' %}',
+                    data: {
+                        'first_name': first_name,
+                        'last_name': last_name,
+                        'email': email,
+                        'date_of_birth': date_of_birth,
+                        'sex': sex,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    dataType: 'json',
+                    success: success,
+                    error: error
+                });
+            });
 
-                if (first_name && last_name && testEmail.test(email) && date_of_birth && sex) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '{% url 'administration:schoolCreate' %}',
-                        data: {
-                            'first_name': first_name,
-                            'last_name': last_name,
-                            'email': email,
-                            'date_of_birth': date_of_birth,
-                            'sex': sex,
-                            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
-                        },
-                        dataType: 'json',
-                        success: success,
-                        error: error
-                    });
-                }
-                else if (!testEmail.test(email) && first_name && last_name && date_of_birth && sex) {
-                    message = "Epost er ikke gyldig!";
-                    Errormessage(message)
-                }
-                else {
-                    message = "Vennligst fyll ut alle feltene korrekt";
-                    Errormessage(message)
-                }
-            })
         });
+        function submit() {
+            $('#administratorCreate').click();
+        }
         function success(data) {
             var field = $('#id_school_administrator');
             if (data.message) {
@@ -81,7 +68,10 @@
                 field.find('option[value="' + data.id + '"]').prop("selected", true);
                 $('#successMessageDiv').append(data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username)
                 $('#addAdministrator').modal('hide');
-                $("#successMessageDiv").show();
+                $("#successMessageDiv").removeClass("hidden");
+                $("#successMessageDiv").fadeTo(5000, 500).slideUp(500, function () {
+                    $("#selectTaskWarning").slideUp(500);
+                });
                 $("#modalError").hide();
             }
         }
@@ -93,11 +83,10 @@
             $("#modalError").show();
             $('#liError').remove();
             $('#errorMessage').append("<li id='liError'>" + message + "</li>")
-
-
+            $("#modalError").fadeTo(5000, 500).slideUp(500, function () {
+                $("#modalError").slideUp(500);
+            });
         }
-
-
     </script>
 {% endblock %}
 {% block modal %}
@@ -116,20 +105,23 @@
                         <ul id="errorMessage"></ul>
                     </div>
                     <div class="form-margin">
-                        <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
+                        <form id='schoolAdministratorForm' class="form-horizontal" action="" method="POST"
+                              enctype="multipart/form-data">
                             {% csrf_token %}
                             {% bootstrap_field administratorForm.first_name addon_before='<span class="glyphicon glyphicon-user"></span>' %}
                             {% bootstrap_field administratorForm.last_name addon_before='<span class="glyphicon glyphicon-user"></span>' %}
                             {% bootstrap_field administratorForm.email addon_before='<span class=""><strong>@</strong></span>' %}
                             {% bootstrap_field administratorForm.date_of_birth addon_before='<span class="glyphicon glyphicon-calendar"></span>' placeholder='dd.mm.yyyy' %}
                             {% bootstrap_field administratorForm.sex addon_before='<span class="fa fa-venus-mars"></span>' %}
-                            <button id='administratorCreate' type="button" class="btn btn-success">
-                                {% bootstrap_icon "check" %} Lagre
+                            <button id='administratorCreate' type="submit" class="hidden">
                             </button>
                         </form>
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button id='administratorCreate' type="button" class="btn btn-success" onclick="submit()">
+                        {% bootstrap_icon "check" %} Lagre
+                    </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                 </div>
             </div>

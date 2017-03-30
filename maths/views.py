@@ -107,9 +107,10 @@ class CategoryCreateView(views.AjaxResponseMixin, generic.CreateView):
     def post_ajax(self, request, *args, **kwargs):
         category_title = request.POST['category']
         category = Category(category_title=category_title)
+        print(category)
         category.save()
         data = {
-            'category': category.category
+            'category_id': category.id
         }
         return JsonResponse(data)
 
