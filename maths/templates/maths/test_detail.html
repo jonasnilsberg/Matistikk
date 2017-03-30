@@ -1,11 +1,5 @@
 {% extends 'matistikk/base.html' %}
-{% load bootstrap3 %}
-{% load staticfiles %}
 {% load static %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
-{% bootstrap_messages %}
-
 {% block head %}
     <script type="text/javascript" src="{% static 'maths/js/bootstrap-multiselect.js' %}"></script>
     <link rel="stylesheet" href="{% static 'maths/css/bootstrap-multiselect.css' %}" type="text/css"/>
@@ -13,7 +7,9 @@
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h2>Oppgaveoversikt</h2>
+            <h2>Oppgavenavn: {{ testbase.test_name }}</h2>
+            <h5>ID: {{ testbase.id }}</h5>
+            <h5>Laget av: {{ testbase.author.get_full_name }}</h5>
             <div class="row">
                 <div class="col-md-10" style="padding-right: 10px">
                     <div class="input-group">
@@ -34,58 +30,62 @@
                 </div>
             </div>
         </div>
-    </div> <!-- #Panel-heading -->
-    <div class="panel-body">
-        <div id="tableCont" class="tab-content">
-            <table class="table table-hover table-striped table-responsive" id="tasktable">
-                <thead>
-                <tr>
-                    <th class="col-sm-1">ID</th>
-                    <th class="col-sm-2">Oppgavenavn</th>
-                    <th class="col-sm-2">Kategori</th>
-                    <th class="col-sm-2">Laget av</th>
-                    <th class="col-sm-5">Alternativer</th>
-                </tr>
-
-                </thead>
-                <tbody>
-                {% for task in object_list %}
-                    <tr id="task{{ task.id }}" class="clickable-row" data-href="" style="cursor: pointer">
-                        <td>{{ task.id }}</td>
-                        <td>{{ task.title }}</td>
-                        <td>
-                            {% for category in task.category.all %}
-                                {% if forloop.last %}
-                                    {{ category }}
-                                {% else %}
-                                    {{ category }} -
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                        <td>{{ task.author.get_full_name }}</td>
-                        <td>
-                            <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                <a class="btn btn-default"
-                                   href="{% url 'maths:taskUpdate' task.id %}"
-                                   style="background-color: inherit"><span
-                                        class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater
-                                </a>
-                                <button type="button" class="btn btn-info">Forhåndsvis</button>
-                                <button type="button" class="btn btn-danger">Slett</button>
-                            </div>
-                        </td>
+        <div class="panel-body">
+            <div class="tab-content">
+                <table class="table table-hover table-striped table-responsive" id="tasktable">
+                    <thead>
+                    <tr>
+                        <th class="col-md-1">ID</th>
+                        <th>Oppgavenavn</th>
+                        <th>Kategori</th>
+                        <th>Laget av:</th>
+                        <th>Alternativer</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {% for task in testbase.tasks.all %}
+                        <tr class="clickable-row"
+                            data-href="#"
+                            style="cursor: pointer">
+                            <td>
+                                {{ task.id }}
+                            </td>
+                            <td>
+                                {{ task.title }}
+                            </td>
+                            <td>
+                                {% for category in task.category.all %}
+                                    {% if forloop.last %}
+                                        {{ category }}
+                                    {% else %}
+                                        {{ category }} -
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {{ task.author.get_full_name }}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                                    <a class="btn btn-default"
+                                       href="{% url 'maths:taskUpdate' task.id %}"
+                                       style="background-color: inherit"><span
+                                            class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater
+                                    </a>
+                                    <button type="button" class="btn btn-info">Forhåndsvis</button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div> <!-- #Panel-body -->
-    <div class="panel-footer">
-        <a class="btn btn-primary" href="{% url 'maths:createTask' %}"><span
-                class="glyphicon glyphicon-plus" aria-hidden="true"></span> Opprett ny oppgave</a>
-    </div> <!-- #Panel-footer -->
+        <div class="panel-footer">
+            <a class="btn btn-primary" href="#"><span
+                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater test</a>
+        </div>
     </div>
-
     <script>
         $(document).ready(function () {
             $('#selectCategory').multiselect({
@@ -97,11 +97,11 @@
                         var show = true;
                         var taskCategory = $(this).find("td:eq(2)").html();
                         $('#selectCategory option:selected').map(function (a, item) {
-                            if (taskCategory.indexOf(item.value) == -1){
+                            if (taskCategory.indexOf(item.value) == -1) {
                                 show = false
                             }
                         });
-                        if (show == false){
+                        if (show == false) {
                             $(this).hide();
                         } else {
                             $(this).show();
@@ -133,7 +133,6 @@
 
             });
         });
-
         /**
          * This function matches the text in the search field with the content in the table given in the parameter.
          * and removes rows that don't match the search criteria.
@@ -161,6 +160,5 @@
                 }
             }
         }
-
     </script>
 {% endblock %}

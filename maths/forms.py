@@ -1,6 +1,5 @@
 from django import forms
-from .models import Task, Category, MultipleChoiceTask, GeogebraTask
-
+from .models import Task, Category, MultipleChoiceTask, GeogebraTask, TestBase
 
 class CreateTaskForm(forms.ModelForm):
     """
@@ -25,3 +24,11 @@ class CreateTaskForm(forms.ModelForm):
         """
         model = Task
         fields = ['title', 'text', 'answertype', 'extra', 'reasoning', 'category']
+
+
+class CreateTestForm(forms.ModelForm):
+    order = forms.CharField(max_length=100)
+
+    class Meta:
+        model = TestBase
+        fields = ['test_name', 'tasks']
