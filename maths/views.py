@@ -1,8 +1,10 @@
 from django.views import generic
+from braces import views
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
-from .forms import CreateTaskForm
+from .forms import CreateTaskForm, CreateCategoryFrom
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, TestBase
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -43,6 +45,7 @@ class CreateTaskView(generic.CreateView):
         """
         context = super(CreateTaskView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
+        context['categoryForm'] = CreateCategoryFrom()
         return context
 
     def form_valid(self, form):
@@ -88,7 +91,7 @@ class CategoryListView(generic.ListView):
     template_name = 'maths/category_list.html'
 
 
-class CategoryCreateView(generic.CreateView):
+class CategoryCreateView(views.AjaxResponseMixin, generic.CreateView):
     """
     Class that creates a category.
 
@@ -97,9 +100,18 @@ class CategoryCreateView(generic.CreateView):
         saving the form when validated.
     """
     model = Category
-    fields = ['category']
+    fields = ['category_title']
     template_name = 'maths/category_form.html'
     success_url = reverse_lazy('maths:categoryList')
+
+    def post_ajax(self, request, *args, **kwargs):
+        category_title = request.POST['category']
+        category = Category(category_title=category_title)
+        category.save()
+        data = {
+            'category': category.category
+        }
+        return JsonResponse(data)
 
 
 class CategoryUpdateView(generic.UpdateView):
@@ -111,7 +123,7 @@ class CategoryUpdateView(generic.UpdateView):
         saving the form when validated.
     """
     model = Category
-    fields = ['category']
+    fields = ['category_title']
     template_name = 'maths/category_form.html'
     success_url = reverse_lazy('maths:categoryList')
     pk_url_kwarg = 'category_pk'

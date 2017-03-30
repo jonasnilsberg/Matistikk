@@ -26,12 +26,17 @@
                     <input type="text" class="form-control input-lg" id="taskname" placeholder="Oppgavenavn">
                 </div>
                 <label for="choosetype">Velg kategori</label><br>
-                <select id="choosetype" class="selectpicker form-control" multiple data-noneSelectedText="test">
-                    {% for category in categories %}
-                        <option value="{{ forloop.counter }}">{{ category }}</option>
-                    {% endfor %}
-                </select>
-
+                <div class="input-group">
+                    <select id="choosetype" class="selectpicker form-control" multiple data-noneSelectedText="test">
+                        {% for category in categories %}
+                            <option value="{{ forloop.counter }}">{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#addCategory"><i
+                                class="fa fa-plus"></i></button>
+                    </span>
+                </div>
                 <div class="form-group">
                     <label for="tasktext">Oppgavetekst</label>
                     <textarea class="form-control" id="tasktext" rows="6" style="resize:vertical"
@@ -138,6 +143,7 @@
                     {% bootstrap_field form.options %}
                     {% bootstrap_field form.category %}
                     {% bootstrap_field form.base64 %}
+                    {% bootstrap_field form.preview %}
                     <button type="submit" id="submitbutton" class="btn btn-success">
                         {% bootstrap_icon "check" %} Lagre
                     </button>
@@ -324,4 +330,53 @@
             }
         }
     </script>
+    <script>
+        $(document).ready(function () {
+            $('#categoryForm').submit(function (e) {
+                e.preventDefault();
+                var category = $.trim($('#id_category_title').val());
+                alert(category);
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'maths:categoryCreate' %}',
+                    data: {
+                        'category': category,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    dataType: 'json',
+                    success: success,
+                    error: error
+                });
+            });
+        });
+    </script>
+{% endblock %}
+{% block modal %}
+    <!-- Modal -->
+    <div class="modal fade" id="addCategory" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Opprett ny kategori</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="categoryForm" class="form-horizontal form-margin" action="" method="POST"
+                          enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% bootstrap_form categoryForm %}
+                        {% buttons %}
+                            <button type="submit" class="btn btn-primary">
+                                {% bootstrap_icon "check" %} Lagre
+                            </button>
+                        {% endbuttons %}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
