@@ -15,7 +15,7 @@
                         {% csrf_token %}
                         {% bootstrap_field form.school_name addon_before='<span class="glyphicon glyphicon-home"></span>' %}
                         {% bootstrap_field form.school_address addon_before='<span class="fa fa-map-marker"></span>' %}
-                        {% bootstrap_field form.school_administrator addon_before='<span class="glyphicon glyphicon-user"></span>' addon_after='<a data-toggle="modal" data-target="#addAdministrator" style="cursor: pointer;"><span id="createPerson" class="glyphicon glyphicon-plus"></span></a>' %}
+                        {% bootstrap_field form.school_administrator addon_before='<span class="glyphicon glyphicon-user"></span>' addon_after='<a data-toggle="modal" data-target="#addAdministrator" style="cursor: pointer;" id="addNewSchoolAdministratorBtn"><span id="createPerson" class="glyphicon glyphicon-plus"></span></a>' %}
                         <div class="alert alert-success" id="successMessageDiv">
                             <strong>Fullført!</strong>
                         </div>

@@ -89,7 +89,8 @@
                 $('#id_role').children('option[value="4"]').hide();
                 $('#id_role').children('option[value="3"]').hide();
             }
-            if (role == 4 || role == 3){
+            var roleSelected = $('#id_role').find(":selected").val();
+            if (roleSelected == 4 || roleSelected == 3){
                 $("#gradeList").hide();
             }
         });
