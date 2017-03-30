@@ -1,6 +1,7 @@
 from django import forms
 from .models import Task, Category, MultipleChoiceTask, GeogebraTask, TestBase
 
+
 class CreateTaskForm(forms.ModelForm):
     """
     Form used to create a new task.
@@ -17,6 +18,7 @@ class CreateTaskForm(forms.ModelForm):
     """
     options = forms.CharField(max_length=10000, required=False)
     base64 = forms.CharField(max_length=32700, required=False)
+    preview = forms.CharField(max_length=100000)
 
     class Meta:
         """
@@ -32,3 +34,10 @@ class CreateTestForm(forms.ModelForm):
     class Meta:
         model = TestBase
         fields = ['test_name', 'tasks']
+
+
+class CreateCategoryFrom(forms.ModelForm):
+
+    class Meta:
+        model = Category
+        fields = ['category_title']
