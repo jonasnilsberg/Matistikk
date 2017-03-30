@@ -1,8 +1,8 @@
 from django.views import generic
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
-from .forms import CreateTaskForm
-from .models import Task, MultipleChoiceTask, Category, GeogebraTask
+from .forms import CreateTaskForm, CreateCategoryFrom
+from .models import Task, MultipleChoiceTask, Category, GeogebraTask, TestBase
 from braces import views
 from django.http import JsonResponse
 
