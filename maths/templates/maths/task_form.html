@@ -127,17 +127,18 @@
                     <option>Rekkefølge</option>
                 </select>
                 <div id="applet_container"></div>
-                <form class="form-horizontal form-margin hidden" action="" method="POST"
+                <form class="form-horizontal form-margin" action="" method="POST"
                       enctype="multipart/form-data">
                     {% csrf_token %}
-                    {% bootstrap_field form.title addon_before='<span class="glyphicon glyphicon-home"></span>' %}
-                    {% bootstrap_field form.text addon_before='<span class="fa fa-map-marker"></span>' %}
+                    {% bootstrap_field form.title %}
+                    {% bootstrap_field form.text %}
                     {% bootstrap_field form.answertype %}
                     {% bootstrap_field form.reasoning %}
                     {% bootstrap_field form.extra %}
                     {% bootstrap_field form.options %}
                     {% bootstrap_field form.category %}
                     {% bootstrap_field form.base64 %}
+                    {% bootstrap_field form.preview %}
                     <button type="submit" id="submitbutton" class="btn btn-success">
                         {% bootstrap_icon "check" %} Lagre
                     </button>
@@ -234,6 +235,7 @@
             var categoryselect1 = document.getElementById('choosetype');
             var categoryselect2 = document.getElementById('id_category');
             var base64 = document.getElementById('id_base64');
+            var preview = document.getElementById('id_preview');
 
             taskname2.value = taskname1.value;
             tasktext2.value = tasktext1.value;
@@ -249,6 +251,7 @@
             if (extra1.checked) {
                 extra2.checked = true;
                 base64.value = ggbApplet.getBase64();
+                preview.value = ggbApplet.getPNGBase64(1, false);
             }
             else {
                 extra2.checked = false;

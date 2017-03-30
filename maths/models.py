@@ -65,6 +65,7 @@ class GeogebraTask(models.Model):
     """
     task = models.ForeignKey(Task)
     base64 = models.CharField(max_length=32700)
+    preview = models.TextField()
 
 
 class Test(models.Model):

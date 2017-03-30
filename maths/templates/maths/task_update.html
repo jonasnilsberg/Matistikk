@@ -5,8 +5,7 @@
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
 {% block head %}
-    <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"
-            xmlns:cursor="http://www.w3.org/1999/xhtml"></script>
+    <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -26,6 +25,7 @@
                 {% bootstrap_field form.options %}
                 {% bootstrap_field form.category %}
                 {% bootstrap_field form.base64 %}
+                {% bootstrap_field form.preview %}
                 <button type="submit" id="submitbutton" class="btn btn-success">
                     {% bootstrap_icon "check" %} Lagre
                 </button>
@@ -57,7 +57,6 @@
                             <br>
                         {% endif %}
                         <div class="form-group" id="multiplechoicediv">
-
                             <label style="margin-top: 10px">Svaralternativer</label>
                             <a class="btn btn-default" data-toggle='modal' href='#changeAnswerTypeModal'><i
                                     class="fa fa-exchange" aria-hidden="true"
@@ -219,6 +218,7 @@
             var extra = document.getElementById('extra');
             var extra2 = document.getElementById('id_extra');
             var base64 = document.getElementById('id_base64');
+            var preview = document.getElementById('id_preview');
             var categories = document.getElementById('id_category');
             var spans = document.getElementById('categorydiv').getElementsByTagName('span');
             var categoryoptions = categories.getElementsByTagName('option');
@@ -239,6 +239,7 @@
             if (extra.checked) {
                 extra2.checked = true;
                 base64.value = ggbApplet.getBase64();
+                preview.value = ggbApplet.getPNGBase64(1, false);
             }
             else {
                 extra2.checked = false;
@@ -275,8 +276,8 @@
         }
 
         /**
-         * This function changes the "option"-radio-button with associated text to an
-         * text input fields so that the user can update the text of a multiple choice-option.
+         * This function changes the "option"-radio-button with associated text to a
+         * text input field so that the user can update the text of a multiple choice-option.
          * The function runs when the user clicks the "change option"-button.
          * The function also changes the icon and the onclick attribute of the button
          * associated with the option in the view.

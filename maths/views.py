@@ -3,6 +3,9 @@ from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask
+from braces import views
+from django.http import JsonResponse
+
 
 
 # Create your views here.
@@ -72,7 +75,8 @@ class CreateTaskView(generic.CreateView):
 
         if task.extra:
             base64 = self.request.POST['base64']
-            geogebratask = GeogebraTask(base64=base64, task=task)
+            preview = self.request.POST['preview']
+            geogebratask = GeogebraTask(base64=base64, preview=preview, task=task)
             geogebratask.save()
         return super(CreateTaskView, self).form_valid(form)
 
@@ -117,7 +121,7 @@ class CategoryUpdateView(generic.UpdateView):
     pk_url_kwarg = 'category_pk'
 
 
-class TaskListView(generic.ListView):
+class TaskListView(views.AjaxResponseMixin, generic.ListView):
     """
     Class that displays a template containing all task objects.
 
@@ -128,9 +132,34 @@ class TaskListView(generic.ListView):
     template_name = 'maths/task_list.html'
     model = Task
 
+    def get_ajax(self, request, *args, **kwargs):
+        multiplechoice = []
+        task_id = request.GET['task_id']
+        task = Task.objects.get(id=task_id)
+        data = {
+            'task_title': task.title,
+            'task_text': task.text,
+            'task_reasoning': task.reasoning,
+            'task_extra': task.extra,
+            'task_answertype': task.answertype,
+            'options': multiplechoice
+        }
+        if task.extra:
+            geogebra = GeogebraTask.objects.get(task_id=task_id)
+            data['geogebra_preview'] = geogebra.preview
+        if task.answertype == 2:
+            multiplechoice_list = MultipleChoiceTask.objects.filter(task_id=task_id)
+            for option in multiplechoice_list:
+                multiplechoice.append({
+                    "option": option.option,
+                    "correct": option.correct,
+                })
+        return JsonResponse(data)
+
     def get_context_data(self, **kwargs):
         context = super(TaskListView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
+        context['geogebratask'] = GeogebraTask.objects.all()
         return context
 
 
@@ -171,13 +200,15 @@ class TaskUpdateView(generic.UpdateView):
 
         if task.extra:
             base64 = self.request.POST['base64']
+            preview = self.request.POST['preview']
             geotask = GeogebraTask.objects.filter(task=task)
             if geotask.count() > 0:
                 geogebratask = GeogebraTask.objects.get(task=task)
                 geogebratask.base64 = base64
+                geogebratask.preview = preview
                 geogebratask.save()
             else:
-                geogebratask = GeogebraTask(task=task, base64=base64)
+                geogebratask = GeogebraTask(task=task, base64=base64, preview=preview)
                 geogebratask.save()
 
         if task.answertype == 2:
