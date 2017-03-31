@@ -94,13 +94,17 @@ class PersonDetailViewTestCase(LiveServerTestCase):
         password = self.selenium.find_element_by_id('id_password')
         password.send_keys("schooladmin")
         self.selenium.find_element_by_id('logInBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "logout")))
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/administrasjon/brukere/student")
         )
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "editUserBtn")))
         self.selenium.find_element_by_id('editUserBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_last_name")))
         self.selenium.find_element_by_id('id_last_name').clear()
         self.selenium.find_element_by_id('id_last_name').send_keys('student')
         self.selenium.find_element_by_id('saveNewInfoBtn').click()
+        time.sleep(0.1)
         self.assertEqual('student', Person.objects.filter(role=1)[0].last_name), \
         'Schooladministrator should be able to change the information of a student in a class at their school'
 
@@ -108,10 +112,13 @@ class PersonDetailViewTestCase(LiveServerTestCase):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/administrasjon/brukere/teacher")
         )
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "editUserBtn")))
         self.selenium.find_element_by_id('editUserBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_last_name")))
         self.selenium.find_element_by_id('id_last_name').clear()
         self.selenium.find_element_by_id('id_last_name').send_keys('teacher')
         self.selenium.find_element_by_id('saveNewInfoBtn').click()
+        time.sleep(0.1)
         self.assertEqual('teacher', Person.objects.filter(role=2)[0].last_name), \
         'Schooladministrator should be able to change the information of a teacher in a class at their school'
 
@@ -121,20 +128,22 @@ class PersonDetailViewTestCase(LiveServerTestCase):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
         )
-
-        # Fill login information of admin
         username = self.selenium.find_element_by_id('id_username')
         username.send_keys("admin")
         password = self.selenium.find_element_by_id('id_password')
         password.send_keys("admin")
         self.selenium.find_element_by_id('logInBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "logout")))
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/administrasjon/brukere/student")
         )
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "editUserBtn")))
         self.selenium.find_element_by_id('editUserBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_last_name")))
         self.selenium.find_element_by_id('id_last_name').clear()
         self.selenium.find_element_by_id('id_last_name').send_keys('studsurname')
         self.selenium.find_element_by_id('saveNewInfoBtn').click()
+        time.sleep(0.1)
         self.assertEqual('studsurname', Person.objects.filter(role=1)[0].last_name), \
         'Admin should be able to change the information about a student'
 
@@ -142,10 +151,13 @@ class PersonDetailViewTestCase(LiveServerTestCase):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/administrasjon/brukere/teacher")
         )
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "editUserBtn")))
         self.selenium.find_element_by_id('editUserBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_last_name")))
         self.selenium.find_element_by_id('id_last_name').clear()
         self.selenium.find_element_by_id('id_last_name').send_keys('teachersurname')
         self.selenium.find_element_by_id('saveNewInfoBtn').click()
+        time.sleep(0.1)
         self.assertEqual('teachersurname', Person.objects.filter(role=2)[0].last_name), \
         'Admin should be able to change the information about a teacher'
 
@@ -153,10 +165,13 @@ class PersonDetailViewTestCase(LiveServerTestCase):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/administrasjon/brukere/schooladmin")
         )
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "editUserBtn")))
         self.selenium.find_element_by_id('editUserBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_last_name")))
         self.selenium.find_element_by_id('id_last_name').clear()
         self.selenium.find_element_by_id('id_last_name').send_keys('schooladmin')
         self.selenium.find_element_by_id('saveNewInfoBtn').click()
+        time.sleep(0.5)  # Wait for db
         self.assertEqual('schooladmin', Person.objects.filter(role=3)[0].last_name), \
         'Admin should be able to change the information about a schooladmin'
 
@@ -225,25 +240,31 @@ class PersonDetailViewTestCase(LiveServerTestCase):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
         )
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_username")))
         username = self.selenium.find_element_by_id('id_username')
         username.send_keys("teacher")
         password = self.selenium.find_element_by_id('id_password')
         password.send_keys("teacher")
         self.selenium.find_element_by_id('logInBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "logout")))
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/administrasjon/brukere/student")
         )
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "logout")))
         self.selenium.find_element_by_id('updatePasswordModalBtn').click()
-        self.selenium.implicitly_wait(2)
+        time.sleep(0.2)  # waiting for modal to open
         self.selenium.find_element_by_id('id_password').send_keys('studentpassword')
         self.selenium.find_element_by_id('id_password2').send_keys('studentpassword')
         self.selenium.find_element_by_id('updatePasswordBtn').click()
+        time.sleep(0.2) # waiting for modal to close
         self.selenium.find_element_by_id('logout').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_username")))
         username = self.selenium.find_element_by_id('id_username')
         username.send_keys("student")
         password = self.selenium.find_element_by_id('id_password')
         password.send_keys("studentpassword")
         self.selenium.find_element_by_id('logInBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "logout")))
         self.assertNotIn('login', self.selenium.current_url), \
         'Login should not be in the url if the user was logged in successfully using the new password'
 
