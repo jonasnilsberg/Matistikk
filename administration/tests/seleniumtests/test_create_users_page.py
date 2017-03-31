@@ -158,7 +158,7 @@ class PersonCreateViewTestCase(LiveServerTestCase):
                 ARROW_DOWN = u'\ue015'
                 role.send_keys(ARROW_DOWN)
         self.selenium.find_element_by_id('saveNewInfoBtn').click()
-        time.sleep(0.1)
+        time.sleep(0.2)
         self.assertEqual(1, len(Person.objects.filter(role=1, first_name='testName'))), \
             'Should be a student object saved in the database'
         # Teacher
