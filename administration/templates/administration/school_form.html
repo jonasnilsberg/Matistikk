@@ -14,29 +14,21 @@
                 {% csrf_token %}
                 {% bootstrap_field form.school_name addon_before='<span class="glyphicon glyphicon-home"></span>' %}
                 {% bootstrap_field form.school_address addon_before='<span class="fa fa-map-marker"></span>' %}
-                {% bootstrap_field form.school_administrator addon_before='<span class="glyphicon glyphicon-user"></span>' addon_after='<a data-toggle="modal" data-target="#addAdministrator" style="cursor: pointer;"><span id="createPerson" class="glyphicon glyphicon-plus"></span></a>' %}
+                {% bootstrap_field form.school_administrator addon_before='<span class="glyphicon glyphicon-user"></span>' addon_after='<a data-toggle="modal" data-target="#addAdministrator" style="cursor: pointer;" id="addNewSchoolAdministratorBtn"><span id="createPerson" class="glyphicon glyphicon-plus"></span></a>' %}
                 <div class="alert alert-success hidden" id="successMessageDiv">
                     <strong>Fullført!</strong>
                 </div>
-                <div class="panel-body">
-                    <form class="form-horizontal form-margin" action="" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {% bootstrap_field form.school_name addon_before='<span class="glyphicon glyphicon-home"></span>' %}
-                        {% bootstrap_field form.school_address addon_before='<span class="fa fa-map-marker"></span>' %}
-                        {% bootstrap_field form.school_administrator addon_before='<span class="glyphicon glyphicon-user"></span>' addon_after='<a data-toggle="modal" data-target="#addAdministrator" style="cursor: pointer;" id="addNewSchoolAdministratorBtn"><span id="createPerson" class="glyphicon glyphicon-plus"></span></a>' %}
-                        <div class="alert alert-success" id="successMessageDiv">
-                            <strong>Fullført!</strong>
-                        </div>
-                        {% bootstrap_field form.is_active %}
-                        <button type="submit" class="btn btn-success" id="saveNewSchoolBtn">
-                            {% bootstrap_icon "check" %} Lagre
-                        </button>
-                    </form>
-                </div>
-            </div>
+                {% bootstrap_field form.is_active %}
+                <button type="submit" class="btn btn-success hidden" id="saveNewSchoolBtn">
+                </button>
+            </form>
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-success" onclick="submit()">
+                    {% bootstrap_icon "check" %} Lagre
+                </button>
         </div>
     </div>
-
 
     <script>
         $(document).ready(function () {
@@ -67,6 +59,10 @@
 
         });
         function submit() {
+            $('#saveNewSchoolBtn').click();
+        }
+
+        function modalsubmit() {
             $('#administratorCreate').click();
         }
         function success(data) {
@@ -130,7 +126,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id='administratorCreate' type="button" class="btn btn-success" onclick="submit()">
+                    <button id='administratorCreate' type="button" class="btn btn-success" onclick="modalsubmit()">
                         {% bootstrap_icon "check" %} Lagre
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
