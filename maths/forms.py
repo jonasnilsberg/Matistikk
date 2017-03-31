@@ -28,16 +28,16 @@ class CreateTaskForm(forms.ModelForm):
         fields = ['title', 'text', 'answertype', 'extra', 'reasoning', 'category']
 
 
-class CreateTestForm(forms.ModelForm):
-    order = forms.CharField(max_length=100)
+class CreateCategoryForm(forms.ModelForm):
+    """
+    Form used to create a new category.
+
+    :category_title: Title of the category.
+    """
 
     class Meta:
-        model = TestBase
-        fields = ['test_name', 'tasks']
-
-
-class CreateCategoryFrom(forms.ModelForm):
-
-    class Meta:
+        """
+           Bases the form on the Category model
+        """
         model = Category
         fields = ['category_title']
