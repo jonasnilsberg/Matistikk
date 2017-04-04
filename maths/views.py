@@ -356,7 +356,7 @@ class TestDetailView(generic.DetailView):
         return context
 
 
-class TestDisplayCreateView(generic.FormView):
+class TestDisplayCreateView(generic.CreateView):
     form_class = CreateTestForm
     template_name = 'maths/testdisplay_form.html'
     success_url = reverse_lazy('maths:index')
@@ -367,7 +367,7 @@ class TestDisplayCreateView(generic.FormView):
 
         :return: List of the preset values.
         """
-        return {'test_id': self.kwargs.get('test_pk')}
+        return {'test': self.kwargs.get('test_pk')}
 
     def get_context_data(self, **kwargs):
         context = super(TestDisplayCreateView, self).get_context_data(**kwargs)

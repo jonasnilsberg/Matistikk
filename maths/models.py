@@ -79,6 +79,9 @@ class Test(models.Model):
     test_name = models.CharField(max_length=100, verbose_name='test navn')
     author = models.ForeignKey(Person)
 
+    def __str__(self):
+        return self.test_name + " - " + self.author.get_full_name()
+
 
 class TestDisplay(models.Model):
     test = models.ForeignKey(Test)
