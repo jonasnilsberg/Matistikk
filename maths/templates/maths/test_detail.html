@@ -83,11 +83,16 @@
         </div>
         <div class="panel-footer">
             <a class="btn btn-primary" href="#"><span
+                    class="fa fa-book" aria-hidden="true"></span> Publiser test</a>
+            <a class="btn btn-primary" href="#"><span
                     class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater test</a>
         </div>
     </div>
     <script>
         $(document).ready(function () {
+            /**
+             * Sets up the multiselect widget for the category filtering.
+             */
             $('#selectCategory').multiselect({
                 buttonClass: 'form-control',
                 onChange: function (option, checked, select) {
@@ -136,6 +141,7 @@
         /**
          * This function matches the text in the search field with the content in the table given in the parameter.
          * and removes rows that don't match the search criteria.
+         * @param inputTable
          */
         function taskSearch(inputTable) {
             var input, filter, table, tr, td, i, td1, td2, td3;

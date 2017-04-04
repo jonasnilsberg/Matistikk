@@ -102,6 +102,8 @@ class SchoolCheck(views.UserPassesTestMixin):
                 school_admin = School.objects.filter(school_administrator__username__exact=self.kwargs.get('slug'))
                 if school_admin:
                     return True
+                if self.kwargs.get('slug') == user.username:
+                    return True
         return False
 
 
@@ -510,7 +512,15 @@ class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView)
     login_url = reverse_lazy('login')
     form_class = PersonForm
     model = Person
+    my_page = False
     slug_field = "username"
+
+    def get_success_url(self):
+        if self.request.user.username == self.kwargs.get('slug'):
+            url = reverse_lazy('administration:myPage', kwargs={'slug': self.kwargs.get('slug')})
+        else:
+            url = super(PersonUpdateView, self).get_success_url(self)
+        return url
 
     def form_valid(self, form):
         """
@@ -520,12 +530,13 @@ class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView)
             :return: Validated form
         """
         person = form.save(commit=False)
-        if self.request.user.role == 3:
-            if person.role > 3 or person.role < 1:
-                return super(PersonUpdateView, self).form_invalid(form)
-        elif self.request.user.role == 2:
-            if person.role != 1:
-                return super(PersonUpdateView, self).form_invalid(form)
+        if self.kwargs.get('slug') != self.request.user.username:
+            if self.request.user.role == 3:
+                if person.role > 3 or person.role < 1:
+                    return super(PersonUpdateView, self).form_invalid(form)
+            elif self.request.user.role == 2:
+                if person.role != 1:
+                    return super(PersonUpdateView, self).form_invalid(form)
         person.save()
         return super(PersonUpdateView, self).form_valid(form)
 

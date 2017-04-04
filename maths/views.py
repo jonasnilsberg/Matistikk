@@ -282,7 +282,7 @@ class TaskUpdateView(generic.UpdateView):
         return super(TaskUpdateView, self).form_valid(form)
 
 
-class TestCreateView(generic.CreateView):
+class TestBaseCreateView(generic.CreateView):
     """
     Class that creates a test.
 
@@ -290,7 +290,7 @@ class TestCreateView(generic.CreateView):
         Inherits Django's CreateView that displays a form for creating a object and
         saving the form when validated.
     """
-    template_name = 'maths/test_form.html'
+    template_name = 'maths/testbase_form.html'
     model = TestBase
     fields = ['test_name', 'tasks']
     success_url = reverse_lazy('maths:testList')
@@ -302,7 +302,7 @@ class TestCreateView(generic.CreateView):
             :param kwargs: Keyword arguments
             :return: Returns the updated context
         """
-        context = super(TestCreateView, self).get_context_data(**kwargs)
+        context = super(TestBaseCreateView, self).get_context_data(**kwargs)
         context['tasks'] = Task.objects.all()
         context['categories'] = Category.objects.all()
         return context
@@ -318,7 +318,7 @@ class TestCreateView(generic.CreateView):
         testBase = form.save(commit=False)
         testBase.author = self.request.user
         testBase.save()
-        return super(TestCreateView, self).form_valid(form)
+        return super(TestBaseCreateView, self).form_valid(form)
 
 
 class TestListView(generic.ListView):
@@ -353,3 +353,4 @@ class TestDetailView(generic.DetailView):
         context = super(TestDetailView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         return context
+

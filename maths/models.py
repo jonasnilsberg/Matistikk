@@ -80,4 +80,3 @@ class TestBase(models.Model):
     author = models.ForeignKey(Person)
 
 
-
