@@ -11,7 +11,7 @@
                 <div class="col-lg-12">
                     <a class="btn btn-default" href="{% url 'administration:myPage' request.user.username %}" id="myPageBtn"><span
                             style="font-size:10em; color: #ff9933;" class="glyphicon glyphicon-user"></span><br>Min Side</a>
-                    <a class="btn btn-default"><span style="font-size:10em; color: #ff9933"
+                    <a class="btn btn-default" href="{% url 'maths:testCreate' %}"><span style="font-size:10em; color: #ff9933"
                                                      class="glyphicon glyphicon-book"></span><br>Lag
                         Test</a>
                     <a class="btn btn-default" href="statisticview"><span style="font-size:10em; color: #ff9933"
@@ -57,7 +57,7 @@
                 <div class="col-lg-12">
                     <a class="btn btn-default" href="{% url 'administration:myPage' request.user.username %}" id="myPageBtn"><span
                             style="font-size:10em; color: #ff9933" class="glyphicon glyphicon-user"></span><br>Min Side</a>
-                    <a class="btn btn-default" href="createtestview"><span style="font-size:10em; color: #ff9933"
+                    <a class="btn btn-default" href="{% url 'maths:testCreate' %}"><span style="font-size:10em; color: #ff9933"
                                                                            class="glyphicon glyphicon-book"></span><br>Lag
                         Test</a>
                     <a class="btn btn-default" href="statisticview"><span style="font-size:10em; color: #ff9933"

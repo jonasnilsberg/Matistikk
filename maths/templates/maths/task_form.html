@@ -334,6 +334,11 @@
     </script>
     <script>
         $(document).ready(function () {
+            /**
+             * This function prevents the default submit routine and sends a ajax Post request to create the
+             * new category instead.
+             *
+             */
             $('#categoryForm').submit(function (e) {
                 e.preventDefault();
                 var category = $.trim($('#id_category_title').val());
