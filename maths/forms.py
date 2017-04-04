@@ -1,5 +1,6 @@
 from django import forms
-from .models import Task, Category, MultipleChoiceTask, GeogebraTask
+from .models import Task, Category, MultipleChoiceTask, GeogebraTask, TestDisplay
+from administration.models import Person, Grade, School, Gruppe
 
 
 class CreateTaskForm(forms.ModelForm):
@@ -43,5 +44,12 @@ class CreateCategoryForm(forms.ModelForm):
         fields = ['category_title']
 
 
-class CreateTestForm(forms.Form):
-    test_id = forms.IntegerField()
+class CreateTestForm(forms.ModelForm):
+    persons = forms.ModelMultipleChoiceField(queryset=Person.objects.filter(role__in=[1, 2]))
+    grades = forms.ModelMultipleChoiceField(queryset=Grade.objects.all())
+    schools = forms.ModelMultipleChoiceField(queryset=School.objects.all())
+    groups = forms.ModelMultipleChoiceField(queryset=Gruppe.objects.all())
+    
+    class Meta:
+        model = TestDisplay
+        fields = ['test']
