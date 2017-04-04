@@ -1,5 +1,5 @@
 from django import forms
-from .models import Task, Category, MultipleChoiceTask, GeogebraTask, TestBase
+from .models import Task, Category, MultipleChoiceTask, GeogebraTask
 
 
 class CreateTaskForm(forms.ModelForm):
@@ -41,3 +41,7 @@ class CreateCategoryForm(forms.ModelForm):
         """
         model = Category
         fields = ['category_title']
+
+
+class CreateTestForm(forms.Form):
+    test_id = forms.IntegerField()

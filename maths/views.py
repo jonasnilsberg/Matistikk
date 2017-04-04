@@ -1,10 +1,11 @@
 from django.views import generic
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
-from .forms import CreateTaskForm, CreateCategoryForm
-from .models import Task, MultipleChoiceTask, Category, GeogebraTask, TestBase
+from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm
+from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test
 from braces import views
 from django.http import JsonResponse
+from administration.models import Grade, Person, Gruppe, School
 
 
 class IndexView(LoginRequiredMixin, generic.TemplateView):
@@ -282,7 +283,7 @@ class TaskUpdateView(generic.UpdateView):
         return super(TaskUpdateView, self).form_valid(form)
 
 
-class TestBaseCreateView(generic.CreateView):
+class TestCreateView(generic.CreateView):
     """
     Class that creates a test.
 
@@ -290,8 +291,8 @@ class TestBaseCreateView(generic.CreateView):
         Inherits Django's CreateView that displays a form for creating a object and
         saving the form when validated.
     """
-    template_name = 'maths/testbase_form.html'
-    model = TestBase
+    template_name = 'maths/test_form.html'
+    model = Test
     fields = ['test_name', 'tasks']
     success_url = reverse_lazy('maths:testList')
 
@@ -302,7 +303,7 @@ class TestBaseCreateView(generic.CreateView):
             :param kwargs: Keyword arguments
             :return: Returns the updated context
         """
-        context = super(TestBaseCreateView, self).get_context_data(**kwargs)
+        context = super(TestCreateView, self).get_context_data(**kwargs)
         context['tasks'] = Task.objects.all()
         context['categories'] = Category.objects.all()
         return context
@@ -315,10 +316,10 @@ class TestBaseCreateView(generic.CreateView):
             :param form: References to the filled out model form.
             :return: calls super with the new form.
         """
-        testBase = form.save(commit=False)
-        testBase.author = self.request.user
-        testBase.save()
-        return super(TestBaseCreateView, self).form_valid(form)
+        test = form.save(commit=False)
+        test.author = self.request.user
+        test.save()
+        return super(TestCreateView, self).form_valid(form)
 
 
 class TestListView(generic.ListView):
@@ -329,7 +330,7 @@ class TestListView(generic.ListView):
            Inherits Django's ListView that makes a page representing a list of objects.
     """
     template_name = 'maths/test_list.html'
-    model = TestBase
+    model = Test
 
 
 class TestDetailView(generic.DetailView):
@@ -340,7 +341,7 @@ class TestDetailView(generic.DetailView):
         Inherits generic.DetailView that makes a page representing a specific object.
     """
     template_name = 'maths/test_detail.html'
-    model = TestBase
+    model = Test
     pk_url_kwarg = 'test_pk'
 
     def get_context_data(self, **kwargs):
@@ -354,3 +355,26 @@ class TestDetailView(generic.DetailView):
         context['categories'] = Category.objects.all()
         return context
 
+
+class TestDisplayCreateView(generic.FormView):
+    form_class = CreateTestForm
+    template_name = 'maths/testdisplay_form.html'
+    success_url = reverse_lazy('maths:index')
+
+    def get_initial(self):
+        """
+        Function that checks for preset values and sets them to the fields.
+
+        :return: List of the preset values.
+        """
+        return {'test_id': self.kwargs.get('test_pk')}
+
+    def get_context_data(self, **kwargs):
+        context = super(TestDisplayCreateView, self).get_context_data(**kwargs)
+        context['test'] = Test.objects.get(id=self.kwargs.get('test_pk'))
+        context['grades'] = Grade.objects.all()
+        context['teachers'] = Person.objects.filter(role=2)
+        context['students'] = Person.objects.filter(role=1)
+        context['schools'] = School.objects.all()
+        context['groups'] = Gruppe.objects.all()
+        return context
