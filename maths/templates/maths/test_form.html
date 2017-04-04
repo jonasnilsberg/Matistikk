@@ -1,5 +1,195 @@
 {% extends 'matistikk/base.html' %}
-
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% load static %}
+{% block head %}
+    <script type="text/javascript" src="{% static 'maths/js/bootstrap-multiselect.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'maths/css/bootstrap-multiselect.css' %}" type="text/css"/>
+{% endblock %}
 {% block body %}
-    test
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2>Lag test</h2>
+        </div>
+        <div class="panel-body">
+            <form class="form-margin" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% bootstrap_field form.test_name addon_before='<i class="fa fa-book" aria-hidden="true"></i>' %}
+                {% bootstrap_field form.tasks field_class='hidden' %}
+                <div id="selectTaskWarning" class="alert alert-warning hidden">
+                    <strong>Ikke lagret!</strong> Vennligst velg noen oppgaver.
+                </div>
+                <div class="row">
+                    <div class="col-md-9" style="padding-right: 10px; margin-bottom: 10px;">
+                        <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                            <input type="text" class="form-control" id="search"
+                                   onkeyup="taskSearch('table')"
+                                   placeholder="Søk etter oppgave...">
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="padding-left: 20px;">
+                        <select class="hidden" id="selectCategory" multiple="multiple">
+                            {% for category in categories %}
+                                <option id="{{ category.id }}" value="{{ category }}">{{ category }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div id="tableDiv"
+                     style="min-height: 20vh; border: 1px solid; border-color: lightgray; overflow: auto; max-height: 47vh; max-width: 100%">
+                    <table id="table" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th class="col-sm-1">Legg til</th>
+                            <th class="col-sm-1">ID</th>
+                            <th class="col-sm-4">Oppgavenavn</th>
+                            <th class="col-sm-3">Kategori</th>
+                            <th class="col-sm-3"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for task in tasks %}
+                            <tr>
+                                <td class="test"><input type="checkbox" value="{{ task.id }}"
+                                                        onclick="check(this)"></label></td>
+                                <td>{{ task.id }}</td>
+                                <td>{{ task.title }}</td>
+                                <td>{% for category in task.category.all %}
+                                    {% if forloop.last %}
+                                        {{ category }}
+                                    {% else %}
+                                        {{ category }} -
+                                    {% endif %}
+                                {% endfor %}
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-info btn-sm">Forhåndsvis</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <button id='submitPasswordBtn' type="submit" class="hidden"></button>
+            </form>
+        </div>
+        <div class="panel-footer">
+            <button type="button" onclick="submitForm()" class="btn btn-success">
+                {% bootstrap_icon "check" %} Lagre test
+            </button>
+        </div>
+    </div>
+    <script>
+        /**
+         * Functions that selects and deselects options in the form based on which task gets checked / unchecked.
+         */
+        function check(check) {
+            if ($(check).is(':checked'))
+                $('#id_tasks option[value=' + check.value + ']').attr('selected', true);
+            else
+                $('#id_tasks option[value=' + check.value + ']').attr('selected', false);
+        }
+        /**
+         * Function that tries to submit the form and gives feedback in form of a success or error message depending
+         * ot how it goes.
+         */
+        function submitForm() {
+            $('#submitPasswordBtn').click();
+            var taskCheck = false;
+            $('#id_tasks option').each(function () {
+                if (this.selected)
+                    taskCheck = true;
+            });
+            if (taskCheck == true) {
+                $('#submitPasswordBtn').click();
+            } else {
+                $("#selectTaskWarning").removeClass("hidden");
+                $("#selectTaskWarning").fadeTo(5000, 500).slideUp(500, function () {
+                    $("#selectTaskWarning").slideUp(500);
+                });
+
+            }
+        }
+        $(document).ready(function () {
+            /**
+             * Sets up the multiselect widget for the category filtering.
+             */
+            $('#selectCategory').multiselect({
+                buttonClass: 'form-control',
+                onChange: function (option, checked, select) {
+                    var category = $(option).val();
+                    var selected = checked;
+                    $('#table > tbody  > tr').each(function () {
+                        var show = true;
+                        var taskCategory = $(this).find("td:eq(3)").html();
+                        $('#selectCategory option:selected').map(function (a, item) {
+                            if (taskCategory.indexOf(item.value) == -1) {
+                                show = false
+                            }
+                        });
+                        if (show == false) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+
+                },
+                buttonText: function (options, select) {
+                    if (options.length === 0) {
+                        return 'Filtrer oppgaver etter kategori';
+                    }
+                    else if (options.length > 3) {
+                        return 'Mer enn 3 alternativer valgt';
+                    }
+                    else {
+                        var labels = [];
+                        options.each(function () {
+                            if ($(this).attr('label') !== undefined) {
+                                labels.push($(this).attr('label'));
+                            }
+                            else {
+                                labels.push($(this).html());
+                            }
+                        });
+                        return labels.join(', ') + '';
+                    }
+                }
+
+
+            });
+        });
+        /**
+         * This function matches the text in the search field with the content in the table given in the parameter.
+         * and removes rows that don't match the search criteria.
+         * @param inputTable
+         */
+        function taskSearch(inputTable) {
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById(inputTable);
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                td1 = tr[i].getElementsByTagName("td")[2];
+                td2 = tr[i].getElementsByTagName("td")[3];
+
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1
+                        || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
 {% endblock %}

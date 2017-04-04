@@ -68,7 +68,7 @@ class GeogebraTask(models.Model):
     preview = models.TextField(null=True)
 
 
-class TestBase(models.Model):
+class Test(models.Model):
     """
     A test is a collection of tasks.
 
@@ -79,4 +79,14 @@ class TestBase(models.Model):
     test_name = models.CharField(max_length=100, verbose_name='test navn')
     author = models.ForeignKey(Person)
 
+
+class TestDisplay(models.Model):
+    test = models.ForeignKey(Test)
+    published = models.DateField(verbose_name='Publisert')
+
+
+class TaskOrder(models.Model):
+    test_display = models.ForeignKey(TestDisplay)
+    task = models.ForeignKey(Task)
+    order = models.IntegerField()
 
