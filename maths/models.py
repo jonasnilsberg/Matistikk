@@ -1,6 +1,8 @@
 from administration.models import Person
 from django.db import models
 
+from ckeditor.fields import RichTextField
+
 
 # Create your models here.
 
@@ -29,7 +31,7 @@ class Task(models.Model):
     :author: The person that made the task
     """
     title = models.CharField(max_length=100, default="")
-    text = models.TextField(max_length=32700, blank=True)
+    text = RichTextField(config_name='eksempelFull', max_length=32700, blank=True)
     answertype = models.IntegerField()
     reasoning = models.BooleanField()
     extra = models.BooleanField()
