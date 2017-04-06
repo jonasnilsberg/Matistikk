@@ -1,10 +1,11 @@
 from django.views import generic
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
-from .forms import CreateTaskForm, CreateCategoryFrom
-from .models import Task, MultipleChoiceTask, Category, GeogebraTask, TestBase
+from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm
+from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test
 from braces import views
 from django.http import JsonResponse
+from administration.models import Grade, Person, Gruppe, School
 
 
 class IndexView(LoginRequiredMixin, generic.TemplateView):
@@ -35,14 +36,15 @@ class CreateTaskView(generic.CreateView):
 
     def get_context_data(self, **kwargs):
         """
-            Function that adds all category objects to the context without overriding it.
+            Function that adds all category objects and a form to create a new category to the context without
+            overriding it.
 
             :param kwargs: Keyword arguments
             :return: Returns the updated context
         """
         context = super(CreateTaskView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
-        context['categoryForm'] = CreateCategoryFrom()
+        context['categoryForm'] = CreateCategoryForm()
         return context
 
     def form_valid(self, form):
@@ -51,7 +53,7 @@ class CreateTaskView(generic.CreateView):
         the author and creates the task with its extra information.
 
         :param form: References to the filled out model form.
-        :return: calls super with the new form
+        :return: calls super with the new form.
         """
         task = form.save(commit=False)
         task.author = self.request.user
@@ -93,6 +95,8 @@ class CategoryCreateView(views.AjaxResponseMixin, generic.CreateView):
     """
     Class that creates a category.
 
+    **AjaxResponseMixin:**
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **CreateView:**
         Inherits Django's CreateView that displays a form for creating a object and
         saving the form when validated.
@@ -103,9 +107,17 @@ class CategoryCreateView(views.AjaxResponseMixin, generic.CreateView):
     success_url = reverse_lazy('maths:categoryList')
 
     def post_ajax(self, request, *args, **kwargs):
+        """
+            Function that checks if the post request is an ajax request, creates a new category and returns the
+            category_id.
+
+            :param request: Request that was sent to CategoryCreateView.
+            :param args:  Arguments that were sent with the request.
+            :param kwargs: Keyword-arguments.
+            :return: JsonResponse containing the category id.
+        """
         category_title = request.POST['category']
         category = Category(category_title=category_title)
-        print(category)
         category.save()
         data = {
             'category_id': category.id
@@ -132,6 +144,8 @@ class TaskListView(views.AjaxResponseMixin, generic.ListView):
     """
     Class that displays a template containing all task objects.
 
+    **AjaxResponseMixin:**
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **ListView:**
         Inherits Django's ListView that makes a page representing a list of objects.
     """
@@ -140,6 +154,15 @@ class TaskListView(views.AjaxResponseMixin, generic.ListView):
     model = Task
 
     def get_ajax(self, request, *args, **kwargs):
+        """
+            Function that checks if the get request is an ajax request and returns the all the necessary information
+            around a specific task.
+
+            :param request: Request that was sent to TaskListView.
+            :param args:  Arguments that were sent with the request.
+            :param kwargs: Keyword-arguments.
+            :return: JsonResponse containing the necessary Task information.
+        """
         multiplechoice = []
         task_id = request.GET['task_id']
         task = Task.objects.get(id=task_id)
@@ -164,6 +187,12 @@ class TaskListView(views.AjaxResponseMixin, generic.ListView):
         return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
+        """
+            Function that adds all category and geogebratask objects to the context.
+
+            :param kwargs: Keyword arguments
+            :return: Returns the updated context
+        """
         context = super(TaskListView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         context['geogebratask'] = GeogebraTask.objects.all()
@@ -202,6 +231,13 @@ class TaskUpdateView(generic.UpdateView):
         return context
 
     def form_valid(self, form):
+        """
+            Function that checks if the submitted :ref:`CreateTaskForm` is correct. If correct it updates the task with
+            the new values and creates new multiple choice options or geogebra if it's added.
+
+            :param form: References to the filled out model form.
+            :return: calls super with the new form.
+        """
         task = form.save(commit=False)
         task.save()
 
@@ -223,7 +259,7 @@ class TaskUpdateView(generic.UpdateView):
             optiontable = options.split('|||||')
             correct = optiontable[0]
             taskoptions = MultipleChoiceTask.objects.filter(task=task)
-            newoptions = (len(optiontable)-1) - len(taskoptions)
+            newoptions = (len(optiontable) - 1) - len(taskoptions)
 
             x = 1
             for taskoption in taskoptions:
@@ -237,7 +273,7 @@ class TaskUpdateView(generic.UpdateView):
                 x += 1
 
             if newoptions > 0:
-                for option in optiontable[len(optiontable)-newoptions:]:
+                for option in optiontable[len(optiontable) - newoptions:]:
                     if int(correct) == x:
                         multiplechoice = MultipleChoiceTask(task=task, option=option, correct=True)
                     else:
@@ -248,39 +284,97 @@ class TaskUpdateView(generic.UpdateView):
 
 
 class TestCreateView(generic.CreateView):
+    """
+    Class that creates a test.
+
+    **CreateView:**
+        Inherits Django's CreateView that displays a form for creating a object and
+        saving the form when validated.
+    """
     template_name = 'maths/test_form.html'
-    model = TestBase
+    model = Test
     fields = ['test_name', 'tasks']
     success_url = reverse_lazy('maths:testList')
 
     def get_context_data(self, **kwargs):
+        """
+            Function that adds the tasks and categories to the context.
+
+            :param kwargs: Keyword arguments
+            :return: Returns the updated context
+        """
         context = super(TestCreateView, self).get_context_data(**kwargs)
         context['tasks'] = Task.objects.all()
         context['categories'] = Category.objects.all()
         return context
 
     def form_valid(self, form):
-        testBase = form.save(commit=False)
-        testBase.author = self.request.user
-        testBase.save()
+        """
+            Function that checks if the submitted modelform is correct. If correct it adds the logged in user as author
+            of the test and saves it.
+
+            :param form: References to the filled out model form.
+            :return: calls super with the new form.
+        """
+        test = form.save(commit=False)
+        test.author = self.request.user
+        test.save()
         return super(TestCreateView, self).form_valid(form)
 
 
 class TestListView(generic.ListView):
+    """
+       Class that displays a template containing all test objects.
+
+       **ListView:**
+           Inherits Django's ListView that makes a page representing a list of objects.
+    """
     template_name = 'maths/test_list.html'
-    model = TestBase
+    model = Test
 
 
 class TestDetailView(generic.DetailView):
+    """
+    Class that displays information about a single test object based on the test_id
+
+    **DetailView:**
+        Inherits generic.DetailView that makes a page representing a specific object.
+    """
     template_name = 'maths/test_detail.html'
-    model = TestBase
+    model = Test
     pk_url_kwarg = 'test_pk'
 
     def get_context_data(self, **kwargs):
+        """
+            Function that adds all the categories to the context.
+
+            :param kwargs: Keyword arguments
+            :return: Returns the updated context
+        """
         context = super(TestDetailView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         return context
 
 
+class TestDisplayCreateView(generic.CreateView):
+    form_class = CreateTestForm
+    template_name = 'maths/testdisplay_form.html'
+    success_url = reverse_lazy('maths:index')
 
+    def get_initial(self):
+        """
+        Function that checks for preset values and sets them to the fields.
 
+        :return: List of the preset values.
+        """
+        return {'test': self.kwargs.get('test_pk')}
+
+    def get_context_data(self, **kwargs):
+        context = super(TestDisplayCreateView, self).get_context_data(**kwargs)
+        context['test'] = Test.objects.get(id=self.kwargs.get('test_pk'))
+        context['grades'] = Grade.objects.all()
+        context['teachers'] = Person.objects.filter(role=2)
+        context['students'] = Person.objects.filter(role=1)
+        context['schools'] = School.objects.all()
+        context['groups'] = Gruppe.objects.all()
+        return context

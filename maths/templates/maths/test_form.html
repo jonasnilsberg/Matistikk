@@ -82,18 +82,25 @@
             </form>
         </div>
         <div class="panel-footer">
-            <button id="changePasswordBtn" type="button" onclick="submitForm()" class="btn btn-success">
+            <button type="button" onclick="submitForm()" class="btn btn-success">
                 {% bootstrap_icon "check" %} Lagre test
             </button>
         </div>
     </div>
     <script>
+        /**
+         * Functions that selects and deselects options in the form based on which task gets checked / unchecked.
+         */
         function check(check) {
             if ($(check).is(':checked'))
                 $('#id_tasks option[value=' + check.value + ']').attr('selected', true);
             else
                 $('#id_tasks option[value=' + check.value + ']').attr('selected', false);
         }
+        /**
+         * Function that tries to submit the form and gives feedback in form of a success or error message depending
+         * ot how it goes.
+         */
         function submitForm() {
             $('#submitPasswordBtn').click();
             var taskCheck = false;
@@ -112,6 +119,9 @@
             }
         }
         $(document).ready(function () {
+            /**
+             * Sets up the multiselect widget for the category filtering.
+             */
             $('#selectCategory').multiselect({
                 buttonClass: 'form-control',
                 onChange: function (option, checked, select) {
@@ -157,7 +167,11 @@
 
             });
         });
-
+        /**
+         * This function matches the text in the search field with the content in the table given in the parameter.
+         * and removes rows that don't match the search criteria.
+         * @param inputTable
+         */
         function taskSearch(inputTable) {
             var input, filter, table, tr, td, i, td1, td2;
             input = document.getElementById("search");

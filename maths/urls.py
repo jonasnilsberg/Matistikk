@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'lagtest/$', views.TestCreateView.as_view(), name='testCreate'),
     url(r'tester/$', views.TestListView.as_view(), name='testList'),
     url(r'tester/(?P<test_pk>[0-9]+)/$', views.TestDetailView.as_view(), name='testDetail'),
+    url(r'tester/(?P<test_pk>[0-9]+)/publiser/$', views.TestDisplayCreateView.as_view(), name='testDisplayCreate')
 ]

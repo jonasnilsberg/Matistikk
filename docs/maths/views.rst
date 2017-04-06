@@ -26,6 +26,26 @@
     :members: TaskUpdateView
     :show-inheritance:
 
+*Test*
+-------------
+*TestListView*
+++++++++++++
+.. automodule:: maths.views
+    :members: TestListView
+    :show-inheritance:
+
+*TestDetailView*
+++++++++++++++
+.. automodule:: maths.views
+    :members: TestDetailView
+    :show-inheritance:
+
+*TestCreateView*
+++++++++++++++
+.. automodule:: maths.views
+    :members: TestCreateView
+    :show-inheritance:
+
 *Category*
 ----------------------------
 *CategoryListView*

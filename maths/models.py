@@ -1,6 +1,8 @@
 from administration.models import Person
 from django.db import models
 
+from ckeditor.fields import RichTextField
+
 
 # Create your models here.
 
@@ -29,7 +31,7 @@ class Task(models.Model):
     :author: The person that made the task
     """
     title = models.CharField(max_length=100, default="")
-    text = models.TextField(max_length=32700, blank=True)
+    text = RichTextField(config_name='eksempelFull', max_length=32700, blank=True)
     answertype = models.IntegerField()
     reasoning = models.BooleanField()
     extra = models.BooleanField()
@@ -68,7 +70,7 @@ class GeogebraTask(models.Model):
     preview = models.TextField(null=True)
 
 
-class TestBase(models.Model):
+class Test(models.Model):
     """
     A test is a collection of tasks.
 
@@ -79,5 +81,17 @@ class TestBase(models.Model):
     test_name = models.CharField(max_length=100, verbose_name='test navn')
     author = models.ForeignKey(Person)
 
+    def __str__(self):
+        return self.test_name + " - " + self.author.get_full_name()
 
+
+class TestDisplay(models.Model):
+    test = models.ForeignKey(Test)
+    published = models.DateField(verbose_name='Publisert')
+
+
+class TaskOrder(models.Model):
+    test_display = models.ForeignKey(TestDisplay)
+    task = models.ForeignKey(Task)
+    order = models.IntegerField()
 

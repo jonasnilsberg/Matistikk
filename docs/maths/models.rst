@@ -24,3 +24,9 @@
 .. automodule:: maths.models
     :members: GeogebraTask
     :show-inheritance:
+
+*TestBase*
+--------
+.. automodule:: maths.models
+    :members: TestBase
+    :show-inheritance:

@@ -216,7 +216,7 @@
                href="{% url 'administration:gradeUpdate' grade.school_id grade.id %}"><span
                     class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
         {% endif %}
-        <div class="btn-group">
+        <div class="btn-group dropup">
             <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-plus"
                                                                      aria-hidden="true"></span>
@@ -229,7 +229,7 @@
             </ul>
         </div>
         {% if request.user.role == 4 or request.user.role == 3 %}
-            <div class="btn-group">
+            <div class="btn-group dropup">
                 <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-plus"
                                                                          aria-hidden="true"></span>

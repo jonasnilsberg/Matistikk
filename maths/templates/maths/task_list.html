@@ -90,6 +90,9 @@
 
     <script>
         $(document).ready(function () {
+            /**
+             * Sets up the multiselect widget for the category filtering.
+             */
             $('#selectCategory').multiselect({
                 buttonClass: 'form-control',
                 onChange: function (option, checked, select) {
@@ -131,14 +134,13 @@
                         return labels.join(', ') + '';
                     }
                 }
-
-
             });
         });
 
         /**
          * This function matches the text in the search field with the content in the table given in the parameter.
          * and removes rows that don't match the search criteria.
+         * @param inputTable
          */
         function taskSearch(inputTable) {
             var input, filter, table, tr, td, i, td1, td2, td3;
@@ -219,6 +221,9 @@
         </div>
     </div>
     <script>
+        /**
+         * This function sets up the taskinformation gotten inside a modal from the ajax GET request.
+         */
         $('#previewTaskModal').on('show.bs.modal', function (e) {
             var id = $(e.relatedTarget).data('id');
             $('#geogebradiv').hide();

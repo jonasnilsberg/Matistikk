@@ -134,6 +134,7 @@
                 <div id="applet_container"></div>
                 <form class="form-horizontal form-margin hidden" action="" method="POST"
                       enctype="multipart/form-data">
+                    {{ form.media }}
                     {% csrf_token %}
                     {% bootstrap_field form.title %}
                     {% bootstrap_field form.text %}
@@ -336,6 +337,11 @@
     </script>
     <script>
         $(document).ready(function () {
+            /**
+             * This function prevents the default submit routine and sends a ajax Post request to create the
+             * new category instead.
+             *
+             */
             $('#categoryForm').submit(function (e) {
                 e.preventDefault();
                 var category = $.trim($('#id_category_title').val());

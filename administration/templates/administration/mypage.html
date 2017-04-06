@@ -89,9 +89,19 @@
                     </div>
                 {% endif %}
             </div>
-            {% bootstrap_messages %}
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p id="passwordChangeError" class="hidden">{{ error|escape }}</p>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
         </div>
         <div class="panel-footer">
+            {% if person.role != 1 %}
+                <a id="changePasswordModalBtn" class='btn btn-primary' href="{% url 'administration:personUpdate' person.username %}">
+                    <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Oppdater dine opplysninger</a>
+            {% endif %}
             <a id="changePasswordModalBtn" class='btn btn-primary' data-toggle='modal'
                data-target='#updatePasswordModal'>
                 <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
@@ -99,6 +109,12 @@
     </div>
 
     <script>
+        $(document).ready(function () {
+            if ($("#passwordChangeError").length) {
+                $('#updatePasswordModal').modal('show');
+            }
+        });
+
 
         function groupMemberBtn(group) {
             $("#groupMemberTable tr").remove();
@@ -169,15 +185,18 @@
                 <div class="modal-body">
                     <form class="form-horizontal form-margin" action="" id="changePasswordForm" method="post">
                         {% csrf_token %}
-                        {% bootstrap_form form %}
+                        {% bootstrap_form_errors form %}
+                        {% bootstrap_field form.old_password %}
+                        {% bootstrap_field form.new_password1 %}
+                        {% bootstrap_field form.new_password2 %}
                         <button id='submitPasswordBtn' type="submit" class="hidden"></button>
                     </form>
                 </div>
                 <div class="modal-footer">
-                        <button id="changePasswordBtn" type="button" onclick="submitForm()" class="btn btn-success">
-                            {% bootstrap_icon "check" %} Oppdater passord
-                        </button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Avbryt</button>
+                    <button id="changePasswordBtn" type="button" onclick="submitForm()" class="btn btn-success">
+                        {% bootstrap_icon "check" %} Oppdater passord
+                    </button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Avbryt</button>
                 </div>
             </div>
         </div>
