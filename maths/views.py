@@ -7,10 +7,6 @@ from braces import views
 from django.http import JsonResponse
 
 
-
-# Create your views here.
-
-
 class IndexView(LoginRequiredMixin, generic.TemplateView):
     """
     Class that displays the home page if logged in.
