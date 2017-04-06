@@ -84,15 +84,15 @@
                                 </thead>
                                 <tbody>
                                 {% for student in students %}
-                                    <tr id="student{{ student.id }}">
+                                    <tr id="student{{ student.id }}" style="cursor: pointer">
                                         <td><input type="checkbox"
-                                                   value="{{ student.id }}" onclick="personCheck(this)">
+                                                   value="{{ student.id }}">
                                         </td>
                                         <td>{{ student.first_name }}</td>
                                         <td>{{ student.last_name }}</td>
                                         <td>{{ student.username }}</td>
                                         <td>
-                                            <button id="{{ student.username }}"
+                                            <button id="{{ student.username }}" value="{{ student.username }}"
                                                     class='btn btn-default'>
                                                 <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
                                                 Se brukerinfo
@@ -116,15 +116,14 @@
                                 </thead>
                                 <tbody>
                                 {% for teacher in teachers %}
-                                    <tr id="teacher{{ teacher.id }}">
-                                        <td class="test"><input type="checkbox" value="{{ teacher.id }}"
-                                                                onclick="personCheck(this)"></td>
+                                    <tr id="teacher{{ teacher.id }}" style="cursor: pointer">
+                                        <td><input type="checkbox" value="{{ teacher.id }}"></td>
                                         <td>{{ teacher.first_name }}</td>
                                         <td>{{ teacher.last_name }}</td>
                                         <td>{{ teacher.username }}</td>
                                         <td>
-                                            <button id="{{ group.id }}" value="{{ group.group_name }}"
-                                                    class='btn btn-default'>
+                                            <button id="{{ teacher.username }}" value="{{ teacher.username }}"
+                                                    class="btn btn-default">
                                                 <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
                                                 Se brukerinfo
                                             </button>
@@ -146,13 +145,13 @@
                                 </thead>
                                 <tbody>
                                 {% for grade in grades %}
-                                    <tr>
-                                        <td class="test"><input type="checkbox" value="{{ grade.id }}"
-                                                                onclick="gradeCheck(this)"></td>
+                                    <tr style="cursor: pointer">
+                                        <td><input type="checkbox" value="{{ grade.id }}"></td>
                                         <td>{{ grade.grade_name }}</td>
                                         <td>{{ grade.school.school_name }}</td>
                                         <td>
-                                            <button class='btn btn-default'>
+                                            <button id="grade{{ grade.id }}" value="{{ grade.id }}"
+                                                    class='btn btn-default'>
                                                 <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
                                                 Se klasseinfo
                                             </button>
@@ -175,15 +174,14 @@
                                 </thead>
                                 <tbody>
                                 {% for group in groups %}
-                                    <tr>
-                                        <td class="test"><input type="checkbox" value="{{ group.id }}"
-                                                                onclick="groupCheck(this)"></td>
+                                    <tr style="cursor: pointer">
+                                        <td class="test"><input type="checkbox" value="{{ group.id }}"></td>
                                         <td>{{ group.group_name }}</td>
                                         <td>{% if group.grade %}{{ group.grade }}{% else %} - {% endif %}</td>
                                         <td>{{ group.creator.get_full_name }}</td>
                                         <td>
-                                            <button class='btn btn-default'>
-                                                <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
+                                            <button class='btn btn-default' type="button" value="{{ group.id }}">
+                                                <i class="fa fa-users" aria-hidden="true"></i>
                                                 Se medlemmer
                                             </button>
                                         </td>
@@ -205,15 +203,14 @@
                                 </thead>
                                 <tbody>
                                 {% for school in schools %}
-                                    <tr>
-                                        <td class="test"><input type="checkbox" value="{{ school.id }}"
-                                                                onclick="schoolCheck(this)"></td>
+                                    <tr style="cursor: pointer">
+                                        <td class="test"><input type="checkbox" value="{{ school.id }}"></td>
                                         <td>{{ school.school_name }}</td>
                                         <td>{{ school.school_address }}</td>
                                         <td>{{ school.school_administrator.get_full_name }}</td>
                                         <td>
-                                            <button class='btn btn-default'>
-                                                <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
+                                            <button class='btn btn-default' type="button">
+                                                <i class="fa fa-building" aria-hidden="true"></i>
                                                 Se medlemmer
                                             </button>
                                         </td>
@@ -300,7 +297,7 @@
             </div>
         </div>
     </div>
-    <form class="form-horizontal form-margin" action="" method="POST" enctype="multipart/form-data">
+    <form class="form-horizontal form-margin hidden" action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {% bootstrap_form form %}
         {% buttons %}
@@ -330,14 +327,21 @@
             var orderField = document.getElementById('id_order');
             orderField.value = string.slice(0, -4);
         }
+
+        $(document).on('keyup', function (e) {
+            if (e.keyCode == 37) {
+                $('.pagination > .active').prev('li').find('a').trigger('click');
+            }
+            if (e.keyCode == 39) {
+                $('.pagination > .active').next('li').find('a').trigger('click');
+            }
+        });
         $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
             var tab = $(e.target).attr('href');
             if (tab == '#students') {
                 $('#search').attr("placeholder", "Søk etter elever");
                 $('#schoolDropList').attr("disabled", false);
                 $('#gradeDropList').attr("disabled", false);
-
-
             } else if (tab == '#teachers') {
                 $('#search').attr("placeholder", "Søk etter lærere");
                 $('#schoolDropList').attr("disabled", false);
@@ -381,46 +385,180 @@
             $('.pagination > .active').next('li').find('a').trigger('click');
         }
 
+        function personDetail(button) {
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'administration:personDetail' slug=12345 %}'.replace(/12345/, button.val()),
+                dataType: 'json',
+                success: function (json) {
+                    $('#first_name').text(json.first_name);
+                    $('#last_name').text(json.last_name);
+                    $('#username').text(button.val());
+                    $('#email').text(json.email);
+                    $('#date_of_birth').text(json.date_of_birth);
+                    var grades = json.grades;
+                    $("#personGrades").empty();
+                    $.each(grades, function (index, value) {
+                        var grade = value.grade;
+                        $("#personGrades").append($("<li>").text(grade));
+                    });
+                    var last_login = $('#last_login');
+                    if (json.last_login == null) {
+                        last_login.text("Brukeren har aldri vært i bruk.");
+                    } else {
+                        last_login.text(json.last_login);
+                    }
+                    $('#goToUserBtn').attr("href", '{% url 'administration:personDetail' slug=12345 %}'.replace(/12345/, button.val()));
+                },
+                error: function (xhr) {
+                    alert('error');
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
         $("#studenttable tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
-            if (e.target.type == "checkbox") {
+            var $button = $(this).find(':button');
+            if ($(e.target).is(":button")) {
+                personDetail($button)
+                $('#personModal').modal('show');
+            }
+            else if (e.target.type == "checkbox") {
                 e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $('#id_persons option[value=' + $checkbox.val() + ']').attr('selected', true);
+                    $(this).addClass('success');
+                } else {
+                    $('#id_persons option[value=' + $checkbox.val() + ']').attr('selected', false);
+                    $(this).removeClass('success');
+                }
             } else {
-                personCheck($checkbox);
+                $checkbox.click();
             }
         });
 
-        function personCheck(check) {
-            if ($(check).is(':checked')) {
-                $('#id_persons option[value=' + check.value + ']').attr('selected', true);
-                $(check).attr('checked', true);
-            } else {
-                $('#id_persons option[value=' + check.value + ']').attr('selected', false);
-                $(check).attr('checked', false);
+        $("#teachertable tbody tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            var $button = $(this).find(':button');
+            if ($(e.target).is(":button")) {
+                personDetail($button)
+                $('#personModal').modal('show');
+
             }
-        }
+            else if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $('#id_persons option[value=' + $checkbox.val() + ']').attr('selected', true);
+                    $(this).addClass('success');
+                } else {
+                    $('#id_persons option[value=' + $checkbox.val() + ']').attr('selected', false);
+                    $(this).removeClass('success');
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
 
+        $("#gradetable tbody tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            var $button = $(this).find(':button');
+            if ($(e.target).is(":button")) {
+                $.ajax({
+                    type: 'GET',
+                    url: "{% url 'administration:myPage' "admin" %}",
+                    data: {
+                        "grade_id": $button.val()
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        var students = (data.students);
+                        var teachers = (data.teachers);
+                        $('#gradeMemberTable').empty();
+                        $.each(teachers, function (index, value) {
+                            $('#gradeMemberTable').append('<tr><td>' + value.first_name + '</td><td>' + value.last_name + '</td><td>' + value.email + '</td><td>Lærer</td></tr>');
+                        });
+                        $.each(students, function (index, value) {
+                            $('#gradeMemberTable').append('<tr><td>' + value.first_name + '</td><td>' + value.last_name + '</td><td>' + value.email + '</td><td>Elev</td></tr>');
+                        });
+                        $('#gradeMemberModal').modal('show');
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                        alert(xhr.responseText);
+                    }
+                });
+            }
+            else if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $('#id_grades option[value=' + $checkbox.val() + ']').attr('selected', true);
+                    $(this).addClass('success');
+                } else {
+                    $('#id_grades option[value=' + $checkbox.val() + ']').attr('selected', false);
+                    $(this).removeClass('success');
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
+        $("#grouptable tbody tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            var $button = $(this).find(':button');
+            if (e.target.type == "button") {
+                $.ajax({
+                    type: 'GET',
+                    url: "{% url 'administration:groupDetail' group_pk=12345 %}".replace(/12345/, $button.val()),
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#groupMemberTable').empty();
+                        var students = (data.persons);
+                        $.each(students, function (index, value) {
+                            var email = value.email;
+                            $('#groupMemberTable').append('<tr><td>' + value.first_name + '</td><td>' + value.last_name + '</td><td>' + email + '</td></tr>');
+                        });
+                        $('#groupMemberModal').modal('show');
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                        alert(xhr.responseText);
+                    }
+                });
+            }
+            else if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $('#id_groups option[value=' + $checkbox.val() + ']').attr('selected', true);
+                    $(this).addClass('success');
+                } else {
+                    $('#id_groups option[value=' + $checkbox.val() + ']').attr('selected', false);
+                    $(this).removeClass('success');
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
 
-        function gradeCheck(check) {
-            if ($(check).is(':checked'))
-                $('#id_grades option[value=' + check.value + ']').attr('selected', true);
-            else
-                $('#id_grades option[value=' + check.value + ']').attr('selected', false);
-        }
+        $("#schooltable tbody tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            if (e.target.type == "button") {
+                e.stopPropagation();
+                alert('knapp');
+            }
+            else if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $('#id_schools option[value=' + $checkbox.val() + ']').attr('selected', true);
+                    $(this).addClass('success');
+                } else {
+                    $('#id_schools option[value=' + $checkbox.val() + ']').attr('selected', false);
+                    $(this).removeClass('success');
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
 
-        function groupCheck(check) {
-            if ($(check).is(':checked'))
-                $('#id_groups option[value=' + check.value + ']').attr('selected', true);
-            else
-                $('#id_groups option[value=' + check.value + ']').attr('selected', false);
-        }
-
-        function schoolCheck(check) {
-            if ($(check).is(':checked'))
-                $('#id_schools option[value=' + check.value + ']').attr('selected', true);
-            else
-                $('#id_schools option[value=' + check.value + ']').attr('selected', false);
-        }
 
         /**
          * This function matches the text in the search field with the content in the table given in the parameter.
@@ -481,7 +619,7 @@
                     url: '{% url 'administration:personList' %}',
                     data: {
                         'type': 'grade',
-                        'grade_id': grade_id,
+                        'grade_id': grade_id
                     },
                     dataType: 'json',
                     success: function (json) {
@@ -580,5 +718,117 @@
         }
 
     </script>
+{% endblock %}
 
+{% block modal %}
+    <div class="modal fade" id="personModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 id="personMemberHeader">Brukerinformasjon</h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped" id="personInfoTable">
+                        <tbody>
+                        <tr>
+                            <td>Fornavn:</td>
+                            <td id="first_name"></td>
+                        </tr>
+                        <tr>
+                            <td>Etternavn:</td>
+                            <td id="last_name"></td>
+                        </tr>
+                        <tr>
+                            <td>Brukernavn:</td>
+                            <td id="username"></td>
+                        </tr>
+                        <tr>
+                            <td>Epost:</td>
+                            <td id="email"></td>
+                        </tr>
+                        <tr>
+                            <td>Fødselsdag:</td>
+                            <td id="date_of_birth"></td>
+                        </tr>
+                        <tr>
+                            <td>Klasser:</td>
+                            <td>
+                                <ul id="personGrades"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Sist innlogget:</td>
+                            <td id="last_login"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <a id="goToUserBtn" href="#" type="button" class="btn btn-primary">Gå til bruker</a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="gradeMemberModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 id="gradeMemberHeader">Klasse</h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-striped table-responsive table-condensed"
+                           id="addtable2">
+                        <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Epost</th>
+                            <th>Brukertype</th>
+                        </tr>
+                        </thead>
+                        <tbody id="gradeMemberTable">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    {% buttons %}
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    {% endbuttons %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="groupMemberModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 id="groupMemberHeader">Gruppe</h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-striped table-responsive table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Epost</th>
+                        </tr>
+                        </thead>
+                        <tbody id="groupMemberTable">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    {% buttons %}
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    {% endbuttons %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
