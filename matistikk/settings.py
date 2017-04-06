@@ -135,7 +135,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
 AUTH_USER_MODEL = 'administration.Person'
 
@@ -149,3 +150,23 @@ HAYSTACK_CONNECTIONS = {
         'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
     },
 }
+
+CKEDITOR_CONFIGS = {
+    'eksempelSimpel': {
+        'toolbar': 'eksempelSimpel',
+        'toolbar_eksempelSimpel': [["Format", "Bold", "Italic", "Underline", "Strike", "SpellChecker"],
+                ['NumberedList', 'BulletedList', "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
+                 'JustifyRight', 'JustifyBlock'],
+                ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink", "Subscript", "Superscript"], ['Undo', 'Redo'], ["Source"],
+                ["Maximize"]],
+        'height': 100,
+        'width': 600,
+        'toolbarCanCollapse': True,
+    },
+    'eksempelFull': {
+        'toolbar': 'Full',
+        'height': 300,
+        'width': 300,
+    }
+}
+
