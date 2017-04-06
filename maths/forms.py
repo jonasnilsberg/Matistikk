@@ -49,7 +49,8 @@ class CreateTestForm(forms.ModelForm):
     grades = forms.ModelMultipleChoiceField(queryset=Grade.objects.all())
     schools = forms.ModelMultipleChoiceField(queryset=School.objects.all())
     groups = forms.ModelMultipleChoiceField(queryset=Gruppe.objects.all())
-    
+    order = forms.CharField(max_length=100)
+
     class Meta:
         model = TestDisplay
         fields = ['test']
