@@ -31,7 +31,7 @@ class Task(models.Model):
     :author: The person that made the task
     """
     title = models.CharField(max_length=100, default="")
-    text = RichTextField(config_name='eksempelFull', max_length=32700, blank=True)
+    text = RichTextField(config_name='eksempelSimpel', max_length=32700, blank=True)
     answertype = models.IntegerField()
     reasoning = models.BooleanField()
     extra = models.BooleanField()
