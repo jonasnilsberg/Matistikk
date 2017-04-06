@@ -19,7 +19,7 @@ class CreateTaskForm(forms.ModelForm):
     """
     options = forms.CharField(max_length=10000, required=False)
     base64 = forms.CharField(max_length=32700, required=False)
-    preview = forms.CharField(max_length=500000)
+    preview = forms.CharField(max_length=500000, required=False)
 
     class Meta:
         """
