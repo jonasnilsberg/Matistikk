@@ -53,4 +53,4 @@ class CreateTestForm(forms.ModelForm):
 
     class Meta:
         model = TestDisplay
-        fields = ['test']
+        fields = ['test', 'randomOrder']
