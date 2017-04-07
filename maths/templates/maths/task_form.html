@@ -10,6 +10,10 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/i18n/defaults-*.min.js"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor.js' %}"></script>
+    <script src="http://www.wiris.net/demo/editor/editor"></script>
+    <script>UPLOADCARE_PUBLIC_KEY = '255bcffadf120c92a388';</script>
+
 {% endblock %}
 
 
@@ -41,8 +45,10 @@
                     <label for="tasktext">Oppgavetekst</label>
                     <textarea class="form-control" id="tasktext" rows="6" style="resize:vertical"
                               placeholder="Skriv oppgavetekst her..."></textarea>
+                    <script>CKEDITOR.replace('tasktext', {'toolbar': 'teacher'})</script>
                 </div>
-
+                <div id="editorContainer" style="height: 300px; width: 500px">
+                </div>
                 <label for="accordion">Velg svartype</label>
                 <div id="accordion" class="panel-group" role="tablist">
                     <div class="panel panel-default" id="tekstRadio">
@@ -134,7 +140,6 @@
                 <div id="applet_container"></div>
                 <form class="form-horizontal form-margin hidden" action="" method="POST"
                       enctype="multipart/form-data">
-                    {{ form.media }}
                     {% csrf_token %}
                     {% bootstrap_field form.title %}
                     {% bootstrap_field form.text %}
@@ -195,6 +200,9 @@
         // Metoden benyttes til å legge GeoGebra med forhåndsvalgt konfigurasjon inn i en applet
         window.onload = function () {
             applet.inject('applet_container', 'preferhtml5');
+            var editor;
+            editor = com.wiris.jsEditor.JsEditor.newInstance({'language': 'en'});
+            editor.insertInto(document.getElementById('editorContainer'));
         };
     </script>
 
@@ -230,7 +238,7 @@
         function onSubmit() {
             var taskname1 = document.getElementById('taskname');
             var taskname2 = document.getElementById('id_title');
-            var tasktext1 = document.getElementById('tasktext');
+            var tasktext1 = CKEDITOR.instances.tasktext.getData();
             var tasktext2 = document.getElementById('id_text');
             var reasoning1 = document.getElementById('reasoning');
             var reasoning2 = document.getElementById('id_reasoning');
@@ -246,7 +254,7 @@
             var preview = document.getElementById('id_preview');
 
             taskname2.value = taskname1.value;
-            tasktext2.value = tasktext1.value;
+            tasktext2.value = tasktext1;
             answertype2.value = answertype1;
 
             if (reasoning1.checked) {

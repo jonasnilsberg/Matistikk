@@ -6,6 +6,7 @@
 {% bootstrap_messages %}
 {% block head %}
     <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -38,7 +39,7 @@
             <div class="col-sm-5">
                 <div class="panel panel-default">
                     <div class="panel-heading" id="tasktextdiv">
-                        <h4><span id="tasktext">{{ task.text }}</span><a class="btn btn-default" data-toggle='modal'
+                        <h4><span id="tasktext">{{ task.text | safe}}</span><a class="btn btn-default" data-toggle='modal'
                                                                          href='#changeTextModal'
                                                                          style="background-color: inherit;"><span
                                 style="font-size:1em;" class="glyphicon glyphicon-pencil"></span> </a></h4>
@@ -445,6 +446,7 @@
                 <div class="modal-body">
                     <textarea class="form-control" id="modalText" rows="6" style="resize:vertical"
                               placeholder="Skriv oppgavetekst her..."></textarea>
+                    <script>CKEDITOR.replace('modalText', {'toolbar': 'teacher'})</script>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>

@@ -44,6 +44,7 @@ class MyPageDetailViewTestCase(LiveServerTestCase):
         WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "changePasswordModalBtn")))
         self.selenium.find_element_by_id('changePasswordModalBtn').click()
         time.sleep(0.2)  # wait for modal to open
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_old_password")))
         self.selenium.find_element_by_id('id_old_password').send_keys('schooladmin')
         self.selenium.find_element_by_id('id_new_password1').send_keys('ntnu1234')
         self.selenium.find_element_by_id('id_new_password2').send_keys('ntnu1234')
@@ -59,3 +60,24 @@ class MyPageDetailViewTestCase(LiveServerTestCase):
         WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "logout")))
         self.assertNotIn('login', self.selenium.current_url), \
             'Login should not be in the url if the user was logged in successfully using the new password'
+
+    def test_edit_information(self):
+        self.selenium.get(
+            '%s%s' % (self.live_server_url, "/")
+        )
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_username")))
+        username = self.selenium.find_element_by_id('id_username')
+        username.send_keys("schooladmin")
+        password = self.selenium.find_element_by_id('id_password')
+        password.send_keys("schooladmin")
+        self.selenium.find_element_by_id('logInBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "myPageBtn")))
+        self.selenium.find_element_by_id('myPageBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "updateInformationBtn")))
+        self.selenium.find_element_by_id('updateInformationBtn').click()
+        time.sleep(0.2)  # waiting for modal to open
+        self.selenium.find_element_by_id('id_first_name').clear()
+        self.selenium.find_element_by_id('id_first_name').send_keys('nyttNavn')
+        self.selenium.find_element_by_id('id_last_name').clear()
+        self.selenium.find_element_by_id('id_last_name').send_keys('nyttEtternavn')
+        self.selenium.find_element_by_id('id_')
