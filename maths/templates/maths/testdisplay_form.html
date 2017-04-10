@@ -70,7 +70,7 @@
                                 <input type="text" class="form-control" id="search"
                                        onkeyup="searchTable('studenttable'); searchTable('teachertable');
                                        searchTable('grouptable'); searchTable('schooltable'); searchGradeTable('gradetable');"
-                                       placeholder="Søk etter oppgave...">
+                                       placeholder="Søk etter elever">
                             </div>
                         </div>
                     </ul>
@@ -277,8 +277,9 @@
                                 <li class="list-group-item">
                                     Tilfeldig rekkefølge
                                     <div class="material-switch pull-right">
-                                        <input id="reasoning" name="reasoning1" type="checkbox"/>
-                                        <label for="reasoning" class="label-success"></label>
+                                        <input id="randomOrderCheckbox" name="randomOrderCheckbox" type="checkbox"
+                                               onclick="randomOrder()"/>
+                                        <label for="randomOrderCheckbox" class="label-success"></label>
                                     </div>
                                 </li>
                             </ul>
@@ -400,24 +401,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <p> Tilfeldig rekkefølge:</p>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="material-switch center-text">
-                                    <input id="randomOverview" name="randomOverview" type="checkbox"/>
-                                    <label for="randomOverview" class="label-success"></label>
-                                </div>
+                        <div id="randomOverview" class="hidden">
+                            <div class="alert alert-warning">
+                                <strong>Tilfeldig rekkefølge</strong> er valgt.
                             </div>
                         </div>
-                        <button class="btn btn-success" onclick="submit()">Publiser</button>
+                        <div id="errorNoSelectedUsers" class="alert alert-danger hidden"><strong>Ingen brukere lagt
+                            til.</strong> Vennligst velg hvem testen skal publiseres til.
+                        </div>
+                        <button class="btn btn-success" id="submitBtn" onclick="submit()">Publiser</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="panel-footer">
+    <div class="panel-footer navbar-fixed-bottom">
         <div class="text-center">
             <nav aria-label="Page navigation">
                 <ul class="pagination">
@@ -439,7 +437,7 @@
         </div>
     </div>
     </div>
-    <form class="form-control form-margin" action="" method="POST" enctype="multipart/form-data">
+    <form class="form-control form-margin hidden" action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {% bootstrap_form form %}
         {% buttons %}
@@ -494,11 +492,23 @@
             var string = "";
             $('#sortable tr').each(function () {
                 var id = this.id;
-                var taskOrder = id + "||||";
+                var taskOrder = id + "|||||";
                 string += taskOrder;
             });
             var orderField = document.getElementById('id_order');
-            orderField.value = string.slice(0, -4);
+            orderField.value = string.slice(0, -5);
+        }
+
+
+        function randomOrder() {
+            if ($('#id_randomOrder').attr('checked')) {
+                $('#id_randomOrder').attr('checked', false);
+                $('#randomOverview').addClass('hidden');
+            } else {
+                $('#id_randomOrder').attr('checked', true);
+                $('#randomOverview').removeClass('hidden');
+
+            }
         }
 
         function submit() {
@@ -517,7 +527,16 @@
                 var dueDateForm = document.getElementById('id_dueDate');
                 dueDateForm.value = dueDateAndTime;
             }
-            //$('#createTestDisplayView').click();
+            var rowCount = $('#selectedUserTable tr').length;
+            if (rowCount == 0) {
+                $('#errorNoSelectedUsers').removeClass('hidden');
+                $("#errorNoSelectedUsers").fadeTo(5000, 500).slideUp(500, function () {
+                    $("#errorNoSelectedUsers").slideUp(500);
+                });
+                $("#submitBtn").effect("shake");
+            } else {
+                $('#createTestDisplayView').click();
+            }
         }
 
         function updateSelectedTasks() {
@@ -537,7 +556,6 @@
                 $('.pagination > .active').next('li').find('a').trigger('click');
             }
         });
-
 
 
         $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
@@ -623,6 +641,7 @@
                 }
             });
         }
+
 
         $("#studenttable tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');

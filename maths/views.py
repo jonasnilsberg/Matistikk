@@ -2,7 +2,7 @@ from django.views import generic
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm
-from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test
+from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
@@ -385,5 +385,17 @@ class TestDisplayCreateView(generic.CreateView):
         data = form.cleaned_data
         for person in data['persons']:
             person.tests.add(testdisplay)
-        persons = data['persons']
+        for grade in data['grades']:
+            grade.tests.add(testdisplay)
+        for group in data['groups']:
+            group.tests.add(testdisplay)
+        if not data['randomOrder']:
+            order_list = data['order']
+            order_table = order_list.split('|||||')
+            x = 1
+            for order in order_table:
+                print(order)
+                taskorder = TaskOrder(test_display=testdisplay, task_id=order, order=x)
+                taskorder.save()
+                x += 1
         return super(TestDisplayCreateView, self).form_valid(form)
