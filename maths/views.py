@@ -20,6 +20,16 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
     login_url = '/login/'
     template_name = 'maths/index.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['tasks'] = Task.objects.count()
+        context['users'] = Person.objects.count()
+        context['tests'] = Test.objects.count()
+        context['schools'] = School.objects.count()
+        context['grades'] = Grade.objects.count()
+        context['groups'] = Gruppe.objects.count()
+        return context
+
 
 class CreateTaskView(generic.CreateView):
     """
