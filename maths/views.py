@@ -369,7 +369,7 @@ class TestDetailView(generic.DetailView):
 class TestDisplayCreateView(generic.CreateView):
     form_class = CreateTestForm
     template_name = 'maths/testdisplay_form.html'
-    success_url = reverse_lazy('maths:index')
+    success_url = reverse_lazy('maths:testList')
 
     def get_initial(self):
         """
@@ -388,3 +388,12 @@ class TestDisplayCreateView(generic.CreateView):
         context['schools'] = School.objects.all()
         context['groups'] = Gruppe.objects.all()
         return context
+
+    def form_valid(self, form):
+        testdisplay = form.save(commit=False)
+        testdisplay.save()
+        data = form.cleaned_data
+        for person in data['persons']:
+            person.tests.add(testdisplay)
+        persons = data['persons']
+        return super(TestDisplayCreateView, self).form_valid(form)

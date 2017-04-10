@@ -99,7 +99,7 @@
         </div>
         <div class="panel-footer">
             {% if person.role != 1 %}
-                <a id="changePasswordModalBtn" class='btn btn-primary' href="{% url 'administration:personUpdate' person.username %}">
+                <a id="updateInformationBtn" class='btn btn-primary' href="{% url 'administration:personUpdate' person.username %}">
                     <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Oppdater dine opplysninger</a>
             {% endif %}
             <a id="changePasswordModalBtn" class='btn btn-primary' data-toggle='modal'
@@ -162,8 +162,8 @@
                     });
                 },
                 error: function (xhr) {
-                    alert('error')
-                    alert(xhr.responseText)
+                    alert('error');
+                    alert(xhr.responseText);
                 }
             });
         }

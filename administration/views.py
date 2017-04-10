@@ -302,7 +302,7 @@ class PersonListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
         return context
 
 
-class PersonDisplayView(generic.DetailView):
+class PersonDisplayView(views.AjaxResponseMixin, generic.DetailView):
     """
     Class to get a specific Person object based on the username.
 
@@ -314,6 +314,25 @@ class PersonDisplayView(generic.DetailView):
     model = Person
     template_name = 'administration/person_detail.html'
     slug_field = "username"
+
+    def get_ajax(self, request, *args, **kwargs):
+        username = self.kwargs.get('slug')
+        person = Person.objects.get(username=username)
+        grades = []
+        for grade in person.grades.all():
+            grades.append({
+                'grade': grade.grade_name + " - " + grade.school.school_name
+            })
+        data = {
+            'first_name': person.first_name,
+            'last_name': person.last_name,
+            'date_of_birth': person.date_of_birth,
+            'sex': person.sex,
+            'grades': grades,
+            'last_login': person.last_login,
+            'email': person.email,
+        }
+        return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         """

@@ -1,7 +1,6 @@
 from administration.models import Person
 from django.db import models
 
-from ckeditor.fields import RichTextField
 
 
 # Create your models here.
@@ -31,7 +30,7 @@ class Task(models.Model):
     :author: The person that made the task
     """
     title = models.CharField(max_length=100, default="")
-    text = RichTextField(config_name='eksempelFull', max_length=32700, blank=True)
+    text = models.TextField(max_length=32700, blank=True)
     answertype = models.IntegerField()
     reasoning = models.BooleanField()
     extra = models.BooleanField()
@@ -87,7 +86,10 @@ class Test(models.Model):
 
 class TestDisplay(models.Model):
     test = models.ForeignKey(Test)
-    published = models.DateField(verbose_name='Publisert')
+    published = models.DateTimeField(verbose_name='Publisert')
+    dueDate = models.DateTimeField(verbose_name='Siste frist for besvarelse', null=True, blank=True)
+    randomOrder = models.BooleanField(default=False, verbose_name='Tilfeldig rekkefølge',
+                                      help_text='Vist avkrysset vil testen bli gitt i tilfeldig rekkefølge.')
 
 
 class TaskOrder(models.Model):
