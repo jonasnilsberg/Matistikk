@@ -123,14 +123,18 @@
                     <li class="list-group-item">
                         Bruk tillegg (Geogebra, puslespill, rekkefølge etc..)
                         <div class="material-switch pull-right">
-                            <input id="extra" name="extra1" type="checkbox"/>
+                            <input id="extra" name="extra1" type="checkbox" checked/>
                             <label for="extra" class="label-success"></label>
                         </div>
                     </li>
                 </ul>
+                <div id="feedback">
+
+                </div>
+
             </div>
 
-            <div class="col-md-4 form-margin">
+            <div class="col-md-4 form-margin" id="extradiv">
                 <label for="choosetask">Velg oppgavetype</label>
                 <select class="form-control input-lg" id="choosetask">
                     <option>Geogebra</option>
@@ -161,10 +165,11 @@
             <div class="btn-group" role="group" aria-label="...">
                 <button type="button" onclick="onSubmit()" class="btn btn-success"><span
                         class="glyphicon glyphicon-check"
-                        aria-hidden="true"></span> Send Inn
+                        aria-hidden="true"></span> Lagre Oppgave
                 </button>
-                <button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-eye-open"
-                                                                    aria-hidden="true"></span> Forhåndsvis
+                <button type="button" class="btn btn-warning" data-toggle="modal" href="#previewTaskModal"><span
+                        class="glyphicon glyphicon-eye-open"
+                        aria-hidden="true"></span> Forhåndsvis
                 </button>
             </div>
         </div>
@@ -210,6 +215,20 @@
         $('.selectpicker').selectpicker({
             noneSelectedText: 'Velg kategori'
         });
+
+        /**
+         * This function changes the visibility of the extra-div when the user
+         * changes the boolean value of the "Use extra"-switch.
+         */
+        $('#extra').change(function () {
+            if (document.getElementById('extra').checked) {
+                $('#extradiv').show();
+            }
+            else {
+                $('#extradiv').hide();
+            }
+        });
+
         /**
          * This function changes the color of the "choose answertype"-panel
          * when the user change option.
@@ -252,10 +271,19 @@
             var categoryselect2 = document.getElementById('id_category');
             var base64 = document.getElementById('id_base64');
             var preview = document.getElementById('id_preview');
+            var feedback = document.getElementById('feedback');
 
             taskname2.value = taskname1.value;
             tasktext2.value = tasktext1;
+            if (taskname1.value == null || taskname1.value == "") {
+                feedback.innerHTML = '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops!</strong> Du må legge til et oppgavenavn før du sender inn oppgaven </div>';
+                return 0;
+            }
             answertype2.value = answertype1;
+            if (answertype1 == null) {
+                feedback.innerHTML = '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops!</strong> Du må velge en svartype før du sender inn oppgaven </div>';
+                return 0;
+            }
 
             if (reasoning1.checked) {
                 reasoning2.checked = true;
@@ -289,14 +317,20 @@
             }
 
             var z = categoryselect1.length;
-
+            var categoryflag = false;
             for (var y = 0; y < z; y++) {
                 if (categoryselect1.options[y].selected) {
                     categoryselect2.options[y].selected = true;
+                    categoryflag = true;
                 }
                 else {
                     categoryselect2.options[y].selected = false;
                 }
+            }
+
+            if (categoryflag == false) {
+                feedback.innerHTML = '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops!</strong> Du må velge minst en kategori før du sender inn oppgaven </div>';
+                return 0;
             }
 
             document.getElementById('submitbutton').click();
@@ -412,4 +446,97 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="previewTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" style="width: 95%" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Forhåndsvis oppgave</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6" id="geogebradiv">
+                            <img id='previewbilde' alt='' width="100%"/>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4><span id="previewtasktext"></span></h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div id="textanswerdiv">
+                                        <label for="answer">Tekstsvar</label>
+                                        <textarea class="form-control" id="previewanswer" rows="6"
+                                                  style="resize:vertical"
+                                                  placeholder="Skriv svaret ditt her..."></textarea>
+                                    </div>
+
+                                    <div id="multiplechoicediv">
+                                        <label for="reasoning">Svaralternativer</label>
+                                        <div id="optionsdiv">
+
+                                        </div>
+                                    </div>
+
+                                    <div id="reasoningdiv">
+                                        <label for="reasoning">Begrunnelse</label>
+                                        <textarea class="form-control" id="reasoning" rows="6" style="resize:vertical"
+                                                  placeholder="Begrunn svaret ditt..."></textarea>
+                                    </div>
+
+                                </div>
+                                <div class="panel-footer">
+                                    <button type="button" class="btn btn-success">Svar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#previewTaskModal').on('show.bs.modal', function () {
+            $('#geogebradiv').hide();
+            $('#textanswerdiv').hide();
+            $('#reasoningdiv').hide();
+            $('#multiplechoicediv').hide();
+            var answertype = $("input[type='radio'][name='answer_type']:checked").val();
+            var tasktext = document.getElementById('tasktext').value;
+
+            document.getElementById('previewtasktext').innerHTML = tasktext;
+
+            if (document.getElementById('extra').checked) {
+                $('#geogebradiv').show();
+                var geogebrapreview = ggbApplet.getPNGBase64(1, false);
+                $("#previewbilde").attr("src", 'data:image/png;base64,' + (geogebrapreview));
+            }
+
+            if (answertype == 1) {
+                $('#textanswerdiv').show();
+            }
+            else if (answertype == 2) {
+                $('#multiplechoicediv').show();
+
+                var inputCount = document.getElementById('fields').getElementsByTagName('input').length;
+                var optionsdiv = document.getElementById('optionsdiv');
+                optionsdiv.innerHTML = "";
+
+                for (var i = 0; i < inputCount; i++) {
+                    optionsdiv.innerHTML += '<input type="radio" name="previewoptions"> ' + document.getElementById('alternativ' + (i + 1)).value + '<br>';
+                }
+            }
+
+            if (document.getElementById('reasoning').checked) {
+                $('#reasoningdiv').show();
+            }
+
+
+        });
+    </script>
 {% endblock %}
