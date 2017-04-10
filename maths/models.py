@@ -86,8 +86,8 @@ class Test(models.Model):
 
 class TestDisplay(models.Model):
     test = models.ForeignKey(Test)
-    published = models.DateField(verbose_name='Publisert')
-    dueDate = models.DateField(verbose_name='Siste frist for besvarelse', null=True, blank=True)
+    published = models.DateTimeField(verbose_name='Publisert')
+    dueDate = models.DateTimeField(verbose_name='Siste frist for besvarelse', null=True, blank=True)
     randomOrder = models.BooleanField(default=False, verbose_name='Tilfeldig rekkefølge',
                                       help_text='Vist avkrysset vil testen bli gitt i tilfeldig rekkefølge.')
 

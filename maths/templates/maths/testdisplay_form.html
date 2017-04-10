@@ -373,7 +373,7 @@
                             <div class="panel panel-default">
                                 <div class=" panel-heading" role="tab">
                                     <h4 class="panel-title">
-                                        <label><input type="checkbox" name="answer_type" value="1"
+                                        <label><input id="dueDateCheck" type="checkbox" name="answer_type" value="1"
                                                       data-toggle="collapse"
                                                       data-parent="#accordion" data-target="#collapse7">
                                             Legg til tidsfrist for besvarelse (Valgfritt)</label>
@@ -383,14 +383,16 @@
                                     <div class="panel-body">
                                         <div class="input-group">
                                             <input id="datepickerTimeLimit" type="text" class="form-control"
-                                                   aria-describedby="basic-addon1" placeholder="Velg dato for tidsfrist" style="position: relative; z-index: 9999;">
+                                                   aria-describedby="basic-addon1" placeholder="Velg dato for tidsfrist"
+                                                   style="position: relative; z-index: 9999;">
                                             <span class="input-group-addon" id="basic-addon1"><i
                                                     class="fa fa-calendar" aria-hidden="true"></i></span>
                                         </div>
                                         <div class="input-group" style="margin-top: 10px;">
                                             <input id="timepickerTimeLimit" type="text" class="form-control"
                                                    placeholder="Velg klokkeslett for tidsfrist - HH:mm"
-                                                   aria-describedby="basic-addon1" style="position: relative; z-index: 9998;">
+                                                   aria-describedby="basic-addon1"
+                                                   style="position: relative; z-index: 9998;">
                                             <span class="input-group-addon" id="basic-addon1"><i
                                                     class="fa fa-clock-o" aria-hidden="true"></i></span>
                                         </div>
@@ -409,13 +411,13 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-success">Publiser</button>
+                        <button class="btn btn-success" onclick="submit()">Publiser</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="panel-footer navbar-fixed-bottom">
+    <div class="panel-footer">
         <div class="text-center">
             <nav aria-label="Page navigation">
                 <ul class="pagination">
@@ -437,11 +439,11 @@
         </div>
     </div>
     </div>
-    <form class="form-horizontal form-margin hidden" action="" method="POST" enctype="multipart/form-data">
+    <form class="form-control form-margin" action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {% bootstrap_form form %}
         {% buttons %}
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-success" id="createTestDisplayView">
                 {% bootstrap_icon "check" %} Lagre
             </button>
         {% endbuttons %}
@@ -499,6 +501,25 @@
             orderField.value = string.slice(0, -4);
         }
 
+        function submit() {
+            getOrder();
+            var publishedDate = new Date($("#datepickerPublish").datepicker("getDate"));
+            var strPublishedDate = publishedDate.getDate() + "." + (publishedDate.getMonth() + 1) + "." + publishedDate.getFullYear();
+            var publishedTime = $('#timepickerPublish').val();
+            var publishedDateAndTime = strPublishedDate + " " + publishedTime;
+            var published = document.getElementById('id_published');
+            published.value = publishedDateAndTime;
+            if ($("#dueDateCheck").is(':checked')) {
+                var dueDate = new Date($("#datepickerTimeLimit").datepicker("getDate"));
+                var strDueDate = dueDate.getDate() + "." + (dueDate.getMonth() + 1) + "." + dueDate.getFullYear();
+                var dueDateTime = $('#timepickerTimeLimit').val();
+                var dueDateAndTime = strDueDate + " " + dueDateTime;
+                var dueDateForm = document.getElementById('id_dueDate');
+                dueDateForm.value = dueDateAndTime;
+            }
+            //$('#createTestDisplayView').click();
+        }
+
         function updateSelectedTasks() {
             $("#taskOverview").find("tr:gt(0)").remove();
             $('#sortable tr').each(function () {
@@ -516,6 +537,8 @@
                 $('.pagination > .active').next('li').find('a').trigger('click');
             }
         });
+
+
 
         $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
             var search = $('#search');
