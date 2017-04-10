@@ -87,6 +87,8 @@ class Test(models.Model):
 class TestDisplay(models.Model):
     test = models.ForeignKey(Test)
     published = models.DateField(verbose_name='Publisert')
+    randomOrder = models.BooleanField(default=False, verbose_name='Tilfeldig rekkefølge',
+                                      help_text='Vist avkrysset vil testen bli gitt i tilfeldig rekkefølge.')
 
 
 class TaskOrder(models.Model):
