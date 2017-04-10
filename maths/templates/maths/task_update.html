@@ -565,7 +565,7 @@
          * has updated the task text and closes the changeTextModal.
          */
         $('#changeTextModal').on('hide.bs.modal', function () {
-            var modaltext = $('#modalText').val();
+            var modaltext = CKEDITOR.instances.modalText.getData();
             document.getElementById('tasktext').innerHTML = modaltext;
         });
 
