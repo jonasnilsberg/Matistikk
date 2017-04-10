@@ -45,12 +45,12 @@ class CreateCategoryForm(forms.ModelForm):
 
 
 class CreateTestForm(forms.ModelForm):
-    persons = forms.ModelMultipleChoiceField(queryset=Person.objects.filter(role__in=[1, 2]))
-    grades = forms.ModelMultipleChoiceField(queryset=Grade.objects.all())
-    schools = forms.ModelMultipleChoiceField(queryset=School.objects.all())
-    groups = forms.ModelMultipleChoiceField(queryset=Gruppe.objects.all())
+    persons = forms.ModelMultipleChoiceField(queryset=Person.objects.filter(role__in=[1, 2]), required=False)
+    grades = forms.ModelMultipleChoiceField(queryset=Grade.objects.all(), required=False)
+    schools = forms.ModelMultipleChoiceField(queryset=School.objects.all(), required=False)
+    groups = forms.ModelMultipleChoiceField(queryset=Gruppe.objects.all(), required=False)
     order = forms.CharField(max_length=100)
 
     class Meta:
         model = TestDisplay
-        fields = ['test', 'randomOrder']
+        fields = ['test', 'randomOrder', 'published', 'dueDate']
