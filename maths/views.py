@@ -2,7 +2,7 @@ from django.views import generic
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm
-from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder
+from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TestDisplay
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
@@ -363,6 +363,7 @@ class TestDetailView(generic.DetailView):
         """
         context = super(TestDetailView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
+        context['publishedTests'] = TestDisplay.objects.filter(test_id=self.kwargs.get('test_pk'))
         return context
 
 

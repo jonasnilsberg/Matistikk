@@ -31,57 +31,101 @@
             </div>
         </div>
         <div class="panel-body">
+            <ul class="nav nav-tabs">
+                <li class="nav active"><a href="#A" data-toggle="tab">Oppgaver</a></li>
+                <li class="nav"><a href="#B" data-toggle="tab">Publiserte tester</a></li>
+            </ul>
             <div class="tab-content">
-                <table class="table table-hover table-striped table-responsive" id="tasktable">
-                    <thead>
-                    <tr>
-                        <th class="col-md-1">ID</th>
-                        <th>Oppgavenavn</th>
-                        <th>Kategori</th>
-                        <th>Laget av</th>
-                        <th>Alternativer</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for task in test.tasks.all %}
-                        <tr class="clickable-row"
-                            data-href="#"
-                            style="cursor: pointer">
-                            <td>
-                                {{ task.id }}
-                            </td>
-                            <td>
-                                {{ task.title }}
-                            </td>
-                            <td>
-                                {% for category in task.category.all %}
-                                    {% if forloop.last %}
-                                        {{ category }}
-                                    {% else %}
-                                        {{ category }} -
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
-                            <td>
-                                {{ task.author.get_full_name }}
-                            </td>
-                            <td>
-                                <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                    <a class="btn btn-default"
-                                       href="{% url 'maths:taskUpdate' task.id %}"
-                                       style="background-color: inherit"><span
-                                            class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater
-                                    </a>
+                <div class="tab-pane fade in active" id="A">
+                    <table class="table table-hover table-striped table-responsive" id="tasktable">
+                        <thead>
+                        <tr>
+                            <th class="col-md-1">ID</th>
+                            <th>Oppgavenavn</th>
+                            <th>Kategori</th>
+                            <th>Laget av</th>
+                            <th>Alternativer</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for task in test.tasks.all %}
+                            <tr class="clickable-row"
+                                data-href="#">
+                                <td>
+                                    {{ task.id }}
+                                </td>
+                                <td>
+                                    {{ task.title }}
+                                </td>
+                                <td>
+                                    {% for category in task.category.all %}
+                                        {% if forloop.last %}
+                                            {{ category }}
+                                        {% else %}
+                                            {{ category }} -
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {{ task.author.get_full_name }}
+                                </td>
+                                <td>
                                     <button value="{{ task.id }}" type="button" onclick="preview(this)"
-                                                class="btn btn-default"><span
+                                            class="btn btn-default btn-sm"><span
+                                            class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="B">
+                    <table class="table table-hover table-striped table-responsive" id="tasktable">
+                        <thead>
+                        <tr>
+                            <th class="col-md-1">ID</th>
+                            <th>Oppgavenavn</th>
+                            <th>Publisert</th>
+                            <th>Svarfrist</th>
+                            <th>Alternativer</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for test in publishedTests %}
+                            <tr class="clickable-row"
+                                data-href="#">
+                                <td>
+                                    {{ test.id }}
+                                </td>
+                                <td>
+                                    {{ test.test.test_name }}
+                                </td>
+                                <td>
+                                    {{ test.published }}
+                                </td>
+                                <td>
+                                    {% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen svarfrist{% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                                        <a class="btn btn-default"
+                                           href="#"
+                                           style="background-color: inherit"><span
+                                                class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater
+                                        </a>
+                                        <button type="button" class="btn btn-default" data-toggle="modal"
+                                                data-id="{{ task.id }}"
+                                                href="#previewTaskModal"><span
                                                 class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
                                         </button>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div class="panel-footer">
@@ -273,7 +317,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                 </div>
             </div>
         </div>
