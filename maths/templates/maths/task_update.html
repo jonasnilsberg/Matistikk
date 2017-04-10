@@ -7,6 +7,9 @@
 {% block head %}
     <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
     <script type="text/javascript" src="{% static 'ckeditor/ckeditor.js' %}"></script>
+    <script>
+        UPLOADCARE_PUBLIC_KEY = '255bcffadf120c92a388';
+    </script>
 {% endblock %}
 
 {% block body %}
@@ -435,8 +438,8 @@
 {% endblock %}
 
 {% block modal %}
-    <div class="modal fade" id="changeTextModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
+    <div  class="modal fade" id="changeTextModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div id = "changeTextModal2" class="modal-dialog"  role="document" style="width: 90%; ">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -562,7 +565,7 @@
          * has updated the task text and closes the changeTextModal.
          */
         $('#changeTextModal').on('hide.bs.modal', function () {
-            var modaltext = $('#modalText').val();
+            var modaltext = CKEDITOR.instances.modalText.getData();
             document.getElementById('tasktext').innerHTML = modaltext;
         });
 
@@ -572,7 +575,10 @@
          */
         $('#changeTextModal').on('show.bs.modal', function () {
             var tasktext = $('#tasktext').html();
-            $('#modalText').val(tasktext);
+            var height = window.innerHeight * 0.9;
+            document.getElementById('changeTextModal2').style += "height:"+ height +"px";
+            CKEDITOR.instances.modalText.setData(tasktext, function()
+                { });
         });
 
         /**
