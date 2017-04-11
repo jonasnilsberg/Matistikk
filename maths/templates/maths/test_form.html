@@ -3,176 +3,846 @@
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
-{% load static %}
 {% block head %}
-    <script type="text/javascript" src="{% static 'maths/js/bootstrap-multiselect.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'maths/css/bootstrap-multiselect.css' %}" type="text/css"/>
+    <style>
+        #sortable {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        .ui-sortable-helper {
+            display: table;
+        }
+
+    </style>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 {% endblock %}
+
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h2>Lag test</h2>
+            <div class="text-center">
+                <h2>{{ taskcollection.test_name }}</h2>
+                <h5 id="headingText">Vennligst velg hvem testen skal publiseres til</h5>
+            </div>
         </div>
-        <div class="panel-body">
-            <form class="form-margin" action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% bootstrap_field form.test_name addon_before='<i class="fa fa-book" aria-hidden="true"></i>' %}
-                {% bootstrap_field form.tasks field_class='hidden' %}
-                <div id="selectTaskWarning" class="alert alert-warning hidden">
-                    <strong>Ikke lagret!</strong> Vennligst velg noen oppgaver.
-                </div>
-                <div class="row">
-                    <div class="col-md-9" style="padding-right: 10px; margin-bottom: 10px;">
-                        <div class="input-group">
+        <div class="tab-content" id="tabs" style="max-height: 100vh">
+            <div class="tab-pane active" id="users">
+                <div class="panel-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav active"><a href="#students" data-toggle="tab">Elever</a></li>
+                        <li class="nav"><a href="#teachers" data-toggle="tab">Lærere</a></li>
+                        <li class="nav"><a href="#grades" data-toggle="tab">Klasse</a></li>
+                        <li class="nav"><a href="#groups" data-toggle="tab">Gruppe</a></li>
+                        <li class="nav"><a href="#schools" data-toggle="tab">Skole</a></li>
+                        <div class="col-sm-3" style="float: right">
+                            <div class="form-group" id="gradeDropDown">
+                                <select class="form-control" id="gradeDropList">
+                                    <option id="allschools" value="">Velg Klasse</option>
+                                    {% for grade in grades %}
+                                        <option value="{{ grade.id }}">{{ grade }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group" id="schoolDropDown">
+                                <select class="form-control" id="schoolDropList">
+                                    <option id="allgrades" value="">Velg Skole
+                                    </option>
+                                    {% for school in schools %}
+                                        <option value="{{ school.id }}">{{ school }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="float: right">
+                            <div class="input-group">
+
                     <span class="input-group-addon">
                         <i class="fa fa-search"></i>
                     </span>
-                            <input type="text" class="form-control" id="search"
-                                   onkeyup="taskSearch('table')"
-                                   placeholder="Søk etter oppgave...">
+                                <input type="text" class="form-control" id="search"
+                                       onkeyup="searchTable('studenttable'); searchTable('teachertable');
+                                       searchTable('grouptable'); searchTable('schooltable'); searchGradeTable('gradetable');"
+                                       placeholder="Søk etter elever">
+                            </div>
+                        </div>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="students">
+                            <table class="table table-hover table-striped table-responsive" id="studenttable">
+                                <thead>
+                                <tr>
+                                    <th class="col-sm-1">Legg til</th>
+                                    <th>Fornavn</th>
+                                    <th>Etternavn</th>
+                                    <th>Brukernavn</th>
+                                    <th>Brukerinfo</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for student in students %}
+                                    <tr id="user{{ student.id }}" style="cursor: pointer">
+                                        <td><input type="checkbox"
+                                                   value="{{ student.id }}">
+                                        </td>
+                                        <td>{{ student.first_name }}</td>
+                                        <td>{{ student.last_name }}</td>
+                                        <td>{{ student.username }}</td>
+                                        <td>
+                                            <button id="{{ student.username }}" value="{{ student.username }}"
+                                                    class='btn btn-default'>
+                                                <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
+                                                Se brukerinfo
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="teachers">
+                            <table class="table table-hover table-striped table-responsive" id="teachertable">
+                                <thead>
+                                <tr>
+                                    <th class="col-sm-1">Legg til</th>
+                                    <th>Fornavn</th>
+                                    <th>Etternavn</th>
+                                    <th>Brukernavn</th>
+                                    <th>Brukerinfo</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for teacher in teachers %}
+                                    <tr id="user{{ teacher.id }}" style="cursor: pointer">
+                                        <td><input type="checkbox" value="{{ teacher.id }}"></td>
+                                        <td>{{ teacher.first_name }}</td>
+                                        <td>{{ teacher.last_name }}</td>
+                                        <td>{{ teacher.username }}</td>
+                                        <td>
+                                            <button id="{{ teacher.username }}" value="{{ teacher.username }}"
+                                                    class="btn btn-default">
+                                                <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
+                                                Se brukerinfo
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="grades">
+                            <table class="table table-hover table-striped table-responsive" id="gradetable">
+                                <thead>
+                                <tr>
+                                    <th class="col-sm-1">Legg til</th>
+                                    <th>Klasse</th>
+                                    <th>Skole</th>
+                                    <th>Medlemmer</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for grade in grades %}
+                                    <tr id="grade{{ grade.id }}" style="cursor: pointer">
+                                        <td><input type="checkbox" value="{{ grade.id }}"></td>
+                                        <td>{{ grade.grade_name }}</td>
+                                        <td>{{ grade.school.school_name }}</td>
+                                        <td>
+                                            <button id="grade{{ grade.id }}" value="{{ grade.id }}"
+                                                    class='btn btn-default'>
+                                                <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                                                Se klasseinfo
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="groups">
+                            <table class="table table-hover table-striped table-responsive" id="grouptable">
+                                <thead>
+                                <tr>
+                                    <th class="col-sm-1">Legg til</th>
+                                    <th>Gruppenavn</th>
+                                    <th>Klasse</th>
+                                    <th>Ansvarlig</th>
+                                    <th>Medlemmer</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for group in groups %}
+                                    <tr id="group{{ group.id }}" style="cursor: pointer">
+                                        <td class="test"><input type="checkbox" value="{{ group.id }}"></td>
+                                        <td>{{ group.group_name }}</td>
+                                        <td>{% if group.grade %}{{ group.grade }}{% else %} - {% endif %}</td>
+                                        <td>{{ group.creator.get_full_name }}</td>
+                                        <td>
+                                            <button class='btn btn-default' type="button" value="{{ group.id }}">
+                                                <i class="fa fa-users" aria-hidden="true"></i>
+                                                Se medlemmer
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="schools">
+                            <table class="table table-hover table-striped table-responsive" id="schooltable">
+                                <thead>
+                                <tr class="click">
+                                    <th class="col-sm-1">Legg til</th>
+                                    <th>Skole</th>
+                                    <th>Adresse</th>
+                                    <th>Kontaktperson</th>
+                                    <th>Skoleinfo</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for school in schools %}
+                                    <tr id="school{{ school.id }}" style="cursor: pointer">
+                                        <td class="test"><input type="checkbox" value="{{ school.id }}"></td>
+                                        <td>{{ school.school_name }}</td>
+                                        <td>{{ school.school_address }}</td>
+                                        <td>{{ school.school_administrator.get_full_name }}</td>
+                                        <td>
+                                            <button class='btn btn-default' type="button">
+                                                <i class="fa fa-building" aria-hidden="true"></i>
+                                                Se medlemmer
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="col-md-3" style="padding-left: 20px;">
-                        <select class="hidden" id="selectCategory" multiple="multiple">
-                            {% for category in categories %}
-                                <option id="{{ category.id }}" value="{{ category }}">{{ category }}</option>
+                </div>
+            </div>
+            <div class="tab-pane" id="order">
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <table class="table table-hover table-striped table-responsive" id="tasktable">
+                            <thead>
+                            <tr>
+                                <th class="col-md-1">ID</th>
+                                <th>Oppgavenavn</th>
+                                <th>Kategori</th>
+                                <th>Laget av</th>
+                                <th>Alternativer</th>
+                            </tr>
+                            </thead>
+                            <tbody id="sortable">
+                            {% for task in taskcollection.tasks.all %}
+                                <tr id="{{ task.id }}" class="clickable-row"
+                                    data-href="#"
+                                    style="cursor: pointer">
+                                    <td>
+                                        {{ task.id }}
+                                    </td>
+                                    <td>
+                                        {{ task.title }}
+                                    </td>
+                                    <td>
+                                        {% for category in task.category.all %}
+                                            {% if forloop.last %}
+                                                {{ category }}
+                                            {% else %}
+                                                {{ category }} -
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {{ task.author.get_full_name }}
+                                    </td>
+                                    <td>
+                                        <button value="{{ task.id }}" type="button" onclick="preview(this)"
+                                                class="btn btn-default"><span
+                                                class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
+                                        </button>
+                                    </td>
+                                </tr>
                             {% endfor %}
-                        </select>
+                            </tbody>
+                        </table>
+                        <div class="col-md-2">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    Tilfeldig rekkefølge
+                                    <div class="material-switch pull-right">
+                                        <input id="randomOrderCheckbox" name="randomOrderCheckbox" type="checkbox"
+                                               onclick="randomOrder()"/>
+                                        <label for="randomOrderCheckbox" class="label-success"></label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div id="tableDiv"
-                     style="min-height: 20vh; border: 1px solid; border-color: lightgray; overflow: auto; max-height: 47vh; max-width: 100%">
-                    <table id="table" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th class="col-sm-1">Legg til</th>
-                            <th class="col-sm-1">ID</th>
-                            <th class="col-sm-4">Oppgavenavn</th>
-                            <th class="col-sm-3">Kategori</th>
-                            <th class="col-sm-3"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for task in tasks %}
-                            <tr>
-                                <td class="test"><input type="checkbox" value="{{ task.id }}"
-                                                        onclick="check(this)"></label></td>
-                                <td>{{ task.id }}</td>
-                                <td>{{ task.title }}</td>
-                                <td>{% for category in task.category.all %}
-                                    {% if forloop.last %}
-                                        {{ category }}
-                                    {% else %}
-                                        {{ category }} -
-                                    {% endif %}
-                                {% endfor %}
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-default btn-sm"><span
-                                            class="glyphicon glyphicon-eye-open"
-                                            aria-hidden="true"></span> Forhåndsvis
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+            </div>
+            <div class="tab-pane" id="publish">
+                <div class="col-sm-3 col-md-6 col-lg-6">
+                    <div class="panel-body">
+                        <ul class="nav nav-tabs center-text">
+                            <li class="nav active"><a href="#selected" data-toggle="tab">Valgte brukere</a></li>
+                            <li class="nav"><a href="#tasks" data-toggle="tab">Oppgaver</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade in active" id="selected">
+                                <table class="table table-striped table-condensed">
+                                    <thead>
+                                    <tr>
+                                        <th>Navn</th>
+                                        <th class="col-md-1"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="selectedUserTable">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="tasks">
+                                <table class="table table-striped" id="taskOverview">
+                                    <thead>
+                                    <tr>
+                                        <th class="col-md-1">ID</th>
+                                        <th>Oppgavenavn</th>
+                                        <th>Kategori</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for task in taskcollection.tasks.all %}
+                                        <tr id="overview{{ task.id }}" class="clickable-row"
+                                            data-href="#"
+                                            style="cursor: pointer">
+                                            <td>
+                                                {{ task.id }}
+                                            </td>
+                                            <td>
+                                                {{ task.title }}
+                                            </td>
+                                            <td>
+                                                {% for category in task.category.all %}
+                                                    {% if forloop.last %}
+                                                        {{ category }}
+                                                    {% else %}
+                                                        {{ category }} -
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <button id='submitPasswordBtn' type="submit" class="hidden"></button>
-            </form>
-        </div>
-        <div class="panel-footer">
-            <button type="button" onclick="submitForm()" class="btn btn-success">
-                {% bootstrap_icon "check" %} Lagre test
-            </button>
+                <div class="col-sm-9 col-md-6 col-lg-6" style="padding-left: 10px; padding-right: 20px;">
+                    <div class="well well-lg" style="margin-top: 20px">
+                        <div id="datelimits" class="panel-group">
+                            <div class="panel panel-primary">
+                                <div class=" panel-heading" role="tab">
+                                    <h4 class="panel-title">
+                                        Legg til publiseringsdato
+                                    </h4>
+                                </div>
+
+                                <div class="panel-body">
+                                    <div class="input-group">
+                                        <input id="datepickerPublish" type="text" class="form-control"
+                                               aria-describedby="basic-addon1">
+                                        <span class="input-group-addon" id="basic-addon1"><i
+                                                class="fa fa-calendar" aria-hidden="true"></i></span>
+                                    </div>
+                                    <div class="input-group" style="margin-top: 10px;">
+                                        <input id="timepickerPublish" type="text" class="form-control"
+                                               placeholder="Velg klokkeslett for publisering"
+                                               aria-describedby="basic-addon1">
+                                        <span class="input-group-addon" id="basic-addon1"><i
+                                                class="fa fa-clock-o" aria-hidden="true"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class=" panel-heading" role="tab">
+                                    <h4 class="panel-title">
+                                        <label><input id="dueDateCheck" type="checkbox" name="answer_type" value="1"
+                                                      data-toggle="collapse"
+                                                      data-parent="#accordion" data-target="#collapse7">
+                                            Legg til tidsfrist for besvarelse (Valgfritt)</label>
+                                    </h4>
+                                </div>
+                                <div id="collapse7" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div class="input-group">
+                                            <input id="datepickerTimeLimit" type="text" class="form-control"
+                                                   aria-describedby="basic-addon1" placeholder="Velg dato for tidsfrist"
+                                                   style="position: relative; z-index: 9999;">
+                                            <span class="input-group-addon" id="basic-addon1"><i
+                                                    class="fa fa-calendar" aria-hidden="true"></i></span>
+                                        </div>
+                                        <div class="input-group" style="margin-top: 10px;">
+                                            <input id="timepickerTimeLimit" type="text" class="form-control"
+                                                   placeholder="Velg klokkeslett for tidsfrist - HH:mm"
+                                                   aria-describedby="basic-addon1"
+                                                   style="position: relative; z-index: 9998;">
+                                            <span class="input-group-addon" id="basic-addon1"><i
+                                                    class="fa fa-clock-o" aria-hidden="true"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="randomOverview" class="hidden">
+                            <div class="alert alert-warning">
+                                <strong>Tilfeldig rekkefølge</strong> er valgt.
+                            </div>
+                        </div>
+                        <div id="errorNoSelectedUsers" class="alert alert-danger hidden"><strong>Ingen brukere lagt
+                            til.</strong> Vennligst velg hvem testen skal publiseres til.
+                        </div>
+                        <button class="btn btn-success" id="submitBtn" onclick="submit()">Publiser</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="panel-footer navbar-fixed-bottom">
+        <div class="text-center">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="prev">
+                        <a href="#" aria-label="Previous" id="prev" onclick="previusTab()">
+                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                    <li class="active"><a href="#users" data-toggle="tab">Brukere</a></li>
+                    <li><a href="#order" data-toggle="tab">Rekkefølge</a></li>
+                    <li><a href="#publish" data-toggle="tab">Oversikt</a></li>
+                    <li class="next">
+                        <a href="#" aria-label="Next" class="next" onclick="nextTab()">
+                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    </div>
+    <form class="form-control form-margin hidden" action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-success" id="createTestDisplayView">
+                {% bootstrap_icon "check" %} Lagre
+            </button>
+        {% endbuttons %}
+    </form>
     <script>
-        /**
-         * Functions that selects and deselects options in the form based on which task gets checked / unchecked.
-         */
-        function check(check) {
-            if ($(check).is(':checked'))
-                $('#id_tasks option[value=' + check.value + ']').attr('selected', true);
-            else
-                $('#id_tasks option[value=' + check.value + ']').attr('selected', false);
-        }
-        /**
-         * Function that tries to submit the form and gives feedback in form of a success or error message depending
-         * ot how it goes.
-         */
-        function submitForm() {
-            $('#submitPasswordBtn').click();
-            var taskCheck = false;
-            $('#id_tasks option').each(function () {
-                if (this.selected)
-                    taskCheck = true;
+        $(function () {
+            $("#sortable").sortable({
+                helper: "original",
+                deactivate: function (event, ui) {
+                    updateSelectedTasks();
+                }
             });
-            if (taskCheck == true) {
-                $('#submitPasswordBtn').click();
+            $("#sortable").disableSelection();
+        });
+
+        $(function () {
+            $("#datepickerPublish").datepicker($.datepicker.regional["no"]);
+            $("#datepickerPublish").datepicker("option", "showButtonPanel", true);
+            $("#datepickerPublish").datepicker({dateFormat: "dd.mm.yy"}).datepicker("setDate", "0");
+            $("#datepickerPublish").datepicker("option", "dateFormat", "DD, d MM, yy");
+            $("#datepickerPublish").datepicker("option", "minDate", "0");
+        });
+
+        $(function () {
+            $('#timepickerPublish').timepicker({
+                timeFormat: 'HH:mm',
+                startHour: 8,
+                minTime: new Date(),
+                defaultTime: 'now'
+            });
+        });
+
+        $(function () {
+            $("#datepickerTimeLimit").datepicker($.datepicker.regional["no"]);
+            $("#datepickerTimeLimit").datepicker("option", "showButtonPanel", true);
+            $("#datepickerTimeLimit").datepicker("option", "dateFormat", "DD, d MM, yy");
+            $("#datepickerTimeLimit").datepicker("option", "minDate", "0");
+        });
+
+        $(function () {
+            $('#timepickerTimeLimit').timepicker({
+                timeFormat: 'HH:mm',
+                startHour: 8
+            });
+        });
+
+        function getOrder() {
+            var string = "";
+            $('#sortable tr').each(function () {
+                var id = this.id;
+                var taskOrder = id + "|||||";
+                string += taskOrder;
+            });
+            var orderField = document.getElementById('id_order');
+            orderField.value = string.slice(0, -5);
+        }
+
+
+        function randomOrder() {
+            if ($('#id_randomOrder').attr('checked')) {
+                $('#id_randomOrder').attr('checked', false);
+                $('#randomOverview').addClass('hidden');
             } else {
-                $("#selectTaskWarning").removeClass("hidden");
-                $("#selectTaskWarning").fadeTo(5000, 500).slideUp(500, function () {
-                    $("#selectTaskWarning").slideUp(500);
-                });
+                $('#id_randomOrder').attr('checked', true);
+                $('#randomOverview').removeClass('hidden');
 
             }
         }
-        $(document).ready(function () {
-            /**
-             * Sets up the multiselect widget for the category filtering.
-             */
-            $('#selectCategory').multiselect({
-                buttonClass: 'form-control',
-                onChange: function (option, checked, select) {
-                    var category = $(option).val();
-                    var selected = checked;
-                    $('#table > tbody  > tr').each(function () {
-                        var show = true;
-                        var taskCategory = $(this).find("td:eq(3)").html();
-                        $('#selectCategory option:selected').map(function (a, item) {
-                            if (taskCategory.indexOf(item.value) == -1) {
-                                show = false
-                            }
-                        });
-                        if (show == false) {
-                            $(this).hide();
-                        } else {
-                            $(this).show();
-                        }
-                    });
 
-                },
-                buttonText: function (options, select) {
-                    if (options.length === 0) {
-                        return 'Filtrer oppgaver etter kategori';
-                    }
-                    else if (options.length > 3) {
-                        return 'Mer enn 3 alternativer valgt';
-                    }
-                    else {
-                        var labels = [];
-                        options.each(function () {
-                            if ($(this).attr('label') !== undefined) {
-                                labels.push($(this).attr('label'));
-                            }
-                            else {
-                                labels.push($(this).html());
-                            }
-                        });
-                        return labels.join(', ') + '';
-                    }
-                }
+        function submit() {
+            getOrder();
+            var publishedDate = new Date($("#datepickerPublish").datepicker("getDate"));
+            var strPublishedDate = publishedDate.getDate() + "." + (publishedDate.getMonth() + 1) + "." + publishedDate.getFullYear();
+            var publishedTime = $('#timepickerPublish').val();
+            var publishedDateAndTime = strPublishedDate + " " + publishedTime;
+            var published = document.getElementById('id_published');
+            published.value = publishedDateAndTime;
+            if ($("#dueDateCheck").is(':checked')) {
+                var dueDate = new Date($("#datepickerTimeLimit").datepicker("getDate"));
+                var strDueDate = dueDate.getDate() + "." + (dueDate.getMonth() + 1) + "." + dueDate.getFullYear();
+                var dueDateTime = $('#timepickerTimeLimit').val();
+                var dueDateAndTime = strDueDate + " " + dueDateTime;
+                var dueDateForm = document.getElementById('id_dueDate');
+                dueDateForm.value = dueDateAndTime;
+            }
+            var rowCount = $('#selectedUserTable tr').length;
+            if (rowCount == 0) {
+                $('#errorNoSelectedUsers').removeClass('hidden');
+                $("#errorNoSelectedUsers").fadeTo(7500, 500).slideUp(500, function () {
+                    $("#errorNoSelectedUsers").slideUp(500);
+                });
+                $("#submitBtn").effect("shake");
+            } else {
+                $('#createTestDisplayView').click();
+            }
+        }
 
-
+        function updateSelectedTasks() {
+            $("#taskOverview").find("tr:gt(0)").remove();
+            $('#sortable tr').each(function () {
+                var taskName = $(this).find("td").eq(1).html();
+                var categories = $(this).find("td").eq(2).html();
+                $('#taskOverview').append('<tr><td>' + this.id + '</td><td>' + taskName + '</td><td>' + categories + '</td>');
             });
+        }
+
+        $(document).on('keyup', function (e) {
+            if (e.keyCode == 37) {
+                $('.pagination > .active').prev('li').find('a').trigger('click');
+            }
+            if (e.keyCode == 39) {
+                $('.pagination > .active').next('li').find('a').trigger('click');
+            }
         });
+
+
+        $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+            var search = $('#search');
+            var schoolDrop = $('#schoolDropList');
+            var gradeDrop = $('#gradeDropList');
+            var tab = $(e.target).attr('href');
+            if (tab == '#students') {
+                search.attr("placeholder", "Søk etter elever");
+                schoolDrop.attr("disabled", false);
+                $('#gradeDropList').attr("disabled", false);
+            } else if (tab == '#teachers') {
+                search.attr("placeholder", "Søk etter lærere");
+                schoolDrop.attr("disabled", false);
+                gradeDrop.attr("disabled", false);
+            } else if (tab == '#grades') {
+                search.attr("placeholder", "Søk etter klasser");
+                gradeDrop.attr("disabled", true);
+                schoolDrop.attr("disabled", false);
+                gradeDrop.val("").change();
+            } else if (tab == '#groups') {
+                search.attr("placeholder", "Søk etter grupper");
+                schoolDrop.attr("disabled", true);
+                gradeDrop.attr("disabled", false);
+                var grade = $("#gradeDropList :selected").val();
+                schoolDrop.val("").change();
+                gradeDrop.val(grade).change();
+
+            } else if (tab == '#schools') {
+                search.attr("placeholder", "Søk etter skoler");
+                schoolDrop.attr("disabled", true);
+                gradeDrop.attr("disabled", true);
+                gradeDrop.val("").change();
+                schoolDrop.val("").change();
+            } else if (tab == '#users') {
+                $('#headingText').text('Vennligst velg hvem testen skal publiseres til');
+            } else if (tab == '#order') {
+                $('#headingText').text('Vennligst velg rekkefølgen til oppgavene. Dra oppgavene i den rekkefølgen som passer.');
+            } else if (tab == '#publish') {
+                $('#headingText').text('Publiser test.');
+            }
+        });
+        $('a[data-toggle="tab"]').on('shown', function (e) {
+            e.target // activated tab
+            e.relatedTarget // previous tab
+        });
+
+        function previusTab() {
+            $('.pagination > .active').prev('li').find('a').trigger('click');
+        }
+        function nextTab() {
+            $('.pagination > .active').next('li').find('a').trigger('click');
+        }
+
+        function personDetail(button) {
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'administration:personDetail' slug=12345 %}'.replace(/12345/, button.val()),
+                dataType: 'json',
+                success: function (json) {
+                    $('#first_name').text(json.first_name);
+                    $('#last_name').text(json.last_name);
+                    $('#username').text(button.val());
+                    $('#email').text(json.email);
+                    $('#date_of_birth').text(json.date_of_birth);
+                    var grades = json.grades;
+                    $("#personGrades").empty();
+                    $.each(grades, function (index, value) {
+                        var grade = value.grade;
+                        $("#personGrades").append($("<li>").text(grade));
+                    });
+                    var last_login = $('#last_login');
+                    if (json.last_login == null) {
+                        last_login.text("Brukeren har aldri vært i bruk.");
+                    } else {
+                        last_login.text(json.last_login);
+                    }
+                    $('#goToUserBtn').attr("href", '{% url 'administration:personDetail' slug=12345 %}'.replace(/12345/, button.val()));
+                },
+                error: function (xhr) {
+                    alert('error');
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+
+        $("#studenttable tbody tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            var $button = $(this).find(':button');
+            if ($(e.target).is(":button")) {
+                personDetail($button)
+                $('#personModal').modal('show');
+            }
+            else if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $('#id_persons option[value=' + $checkbox.val() + ']').attr('selected', true);
+                    $(this).addClass('success');
+                    var text = $("#id_persons option[value=" + $checkbox.val() + "]").text();
+                    $('#selectedUserTable').append('<tr id="selected' + $checkbox.val() + '"><td>' + text +
+                        '</td><td><button type="button" class="btn btn-default btn-sm" onclick="removeUser(this)" value=' + $checkbox.val() + '>' +
+                        '<i class="fa fa-trash-o" aria-hidden="true"></i></td></tr>');
+                } else {
+                    $('#id_persons option[value=' + $checkbox.val() + ']').attr('selected', false);
+                    $(this).removeClass('success');
+                    $('#selected' + $checkbox.val()).remove()
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
+
+        $("#teachertable tbody tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            var $button = $(this).find(':button');
+            if ($(e.target).is(":button")) {
+                personDetail($button)
+                $('#personModal').modal('show');
+
+            }
+            else if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $('#id_persons option[value=' + $checkbox.val() + ']').attr('selected', true);
+                    $(this).addClass('success');
+                    var text = $("#id_persons option[value=" + $checkbox.val() + "]").text();
+                    $('#selectedUserTable').append('<tr id="selected' + $checkbox.val() + '"><td>' + text +
+                        '</td><td><button type="button" class="btn btn-default btn-sm" onclick="removeUser(this)" value=' + $checkbox.val() + '>' +
+                        '<i class="fa fa-trash-o" aria-hidden="true"></i></td></tr>');
+                } else {
+                    $('#id_persons option[value=' + $checkbox.val() + ']').attr('selected', false);
+                    $(this).removeClass('success');
+                    $('#selected' + $checkbox.val()).remove()
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
+
+        function removeUser(elem) {
+            $('#id_persons option[value=' + elem.value + ']').attr('selected', false);
+            $('#selected' + elem.value).remove();
+            $('#user' + elem.value).find(':checkbox').click();
+        }
+
+        $("#gradetable tbody tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            var $button = $(this).find(':button');
+            if ($(e.target).is(":button")) {
+                $.ajax({
+                    type: 'GET',
+                    url: "{% url 'administration:myPage' "admin" %}",
+                    data: {
+                        "grade_id": $button.val()
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        var students = (data.students);
+                        var teachers = (data.teachers);
+                        $('#gradeMemberTable').empty();
+                        $.each(teachers, function (index, value) {
+                            $('#gradeMemberTable').append('<tr><td>' + value.first_name + '</td><td>' + value.last_name + '</td><td>' + value.email + '</td><td>Lærer</td></tr>');
+                        });
+                        $.each(students, function (index, value) {
+                            $('#gradeMemberTable').append('<tr><td>' + value.first_name + '</td><td>' + value.last_name + '</td><td>' + value.email + '</td><td>Elev</td></tr>');
+                        });
+                        $('#gradeMemberModal').modal('show');
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                        alert(xhr.responseText);
+                    }
+                });
+            }
+            else if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $('#id_grades option[value=' + $checkbox.val() + ']').attr('selected', true);
+                    $(this).addClass('success');
+                    var text = $("#id_grades option[value=" + $checkbox.val() + "]").text();
+                    $('#selectedUserTable').append('<tr id="selectedGrade' + $checkbox.val() + '"><td>' + text + '</td>' +
+                        '<td><button type="button" class="btn btn-default btn-sm" onclick="removeGrade(this)" value=' + $checkbox.val() + '>' +
+                        '<i class="fa fa-trash-o" aria-hidden="true"></i></td></tr>');
+                } else {
+                    $('#id_grades option[value=' + $checkbox.val() + ']').attr('selected', false);
+                    $(this).removeClass('success');
+                    $('#selectedGrade' + $checkbox.val()).remove()
+
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
+
+        function removeGrade(elem) {
+            $('#id_grades option[value=' + elem.value + ']').attr('selected', false);
+            $('#selectedGrade' + elem.value).remove();
+            $('#grade' + elem.value).find(':checkbox').click();
+        }
+
+        $("#grouptable tbody tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            var $button = $(this).find(':button');
+            if (e.target.type == "button") {
+                $.ajax({
+                    type: 'GET',
+                    url: "{% url 'administration:groupDetail' group_pk=12345 %}".replace(/12345/, $button.val()),
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#groupMemberTable').empty();
+                        var students = (data.persons);
+                        $.each(students, function (index, value) {
+                            var email = value.email;
+                            $('#groupMemberTable').append('<tr><td>' + value.first_name + '</td><td>' + value.last_name + '</td><td>' + email + '</td></tr>');
+                        });
+                        $('#groupMemberModal').modal('show');
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                        alert(xhr.responseText);
+                    }
+                });
+            }
+            else if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $('#id_groups option[value=' + $checkbox.val() + ']').attr('selected', true);
+                    $(this).addClass('success');
+                    var text = $("#id_groups option[value=" + $checkbox.val() + "]").text();
+                    $('#selectedUserTable').append('<tr id="selectedGroup' + $checkbox.val() + '"><td>' + text + '</td>' +
+                        '<td><button type="button" class="btn btn-default btn-sm" onclick="removeGroup(this)" value=' + $checkbox.val() + '>' +
+                        '<i class="fa fa-trash-o" aria-hidden="true"></i></td></tr>');
+                } else {
+                    $('#id_groups option[value=' + $checkbox.val() + ']').attr('selected', false);
+                    $(this).removeClass('success');
+                    $('#selectedGroup' + $checkbox.val()).remove()
+
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
+
+        function removeGroup(elem) {
+            $('#id_groups option[value=' + elem.value + ']').attr('selected', false);
+            $('#selectedGroup' + elem.value).remove();
+            $('#group' + elem.value).find(':checkbox').click();
+        }
+
+        $("#schooltable tbody tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            if (e.target.type == "button") {
+                e.stopPropagation();
+                alert('knapp');
+            }
+            else if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $('#id_schools option[value=' + $checkbox.val() + ']').attr('selected', true);
+                    $(this).addClass('success');
+                    var text = $("#id_schools option[value=" + $checkbox.val() + "]").text();
+                    $('#selectedUserTable').append('<tr id="selectedSchool' + $checkbox.val() + '"><td>' + text + '</td>' +
+                        '<td><button type="button" class="btn btn-default btn-sm" onclick="removeSchool(this)" value=' + $checkbox.val() + '>' +
+                        '<i class="fa fa-trash-o" aria-hidden="true"></i></td></tr>');
+                } else {
+                    $('#id_schools option[value=' + $checkbox.val() + ']').attr('selected', false);
+                    $(this).removeClass('success');
+                    $('#selectedSchool' + $checkbox.val()).remove()
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
+        function removeSchool(elem) {
+            $('#id_schools option[value=' + elem.value + ']').attr('selected', false);
+            $('#selectedSchool' + elem.value).remove();
+            $('#school' + elem.value).find(':checkbox').click();
+        }
+
+
         /**
          * This function matches the text in the search field with the content in the table given in the parameter.
          * and removes rows that don't match the search criteria.
          * @param inputTable
          */
-        function taskSearch(inputTable) {
+        function searchTable(inputTable) {
             var input, filter, table, tr, td, i, td1, td2;
             input = document.getElementById("search");
             filter = input.value.toUpperCase();
@@ -194,5 +864,355 @@
                 }
             }
         }
+        function searchGradeTable(inputTable) {
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById(inputTable);
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                td1 = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        /**
+         * This function runs on a change in the gradeDropList, and gets the users in the selected grade. The users
+         * are sorted out in the table.
+         */
+        $("#gradeDropList").change(function () {
+            var grade_id = $(this).val();
+            if (grade_id != "") {
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url 'administration:personList' %}',
+                    data: {
+                        'type': 'grade',
+                        'grade_id': grade_id
+                    },
+                    dataType: 'json',
+                    success: function (json) {
+                        var students = (json.persons);
+                        $("#studenttable tbody tr").hide();
+                        $("#teachertable tbody tr").hide();
+                        $.each(students, function (index, value) {
+                            $("#student" + value.id).show();
+                            $("#teacher" + value.id).show();
+                        })
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                        alert(xhr.responseText);
+                    }
+                });
+                $('#grouptable > tbody  > tr').each(function () {
+                    var grade_name = $("#gradeDropList :selected").text();
+                    var school = $(this).find("td:eq(2)").html();
+                    if (school.indexOf(grade_name) == -1) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            } else {
+                var school_id = $("#schoolDropList :selected").val();
+                personSchoolFilter(school_id);
+            }
+        });
+        /**
+         * This function runs on a change in the schoolDropList, and gets the users in the selected school. The users
+         * are sorted out in the table.
+         */
+        $("#schoolDropList").change(function () {
+            $("#gradeDropList").val('');
+            var school_id = $(this).val();
+            var school_name = $("#schoolDropList :selected").text();
+            personSchoolFilter(school_id);
+            var gradeList = $("#gradeDropList option");
+            gradeList.each(function () {
+                var grade_id = $(this).val();
+                var grade = $(this).text();
+                if (school_id == "") {
+                    $(this).show();
+                }
+                else if (grade.indexOf(school_name) >= 0 || grade_id == "") {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+        /**
+         * Function that gets the userlist with an ajax-call and displays them in the table.
+         */
+        function personSchoolFilter(school) {
+            var school_id = school;
+            var school_name = $("#schoolDropList :selected").text();
+            if (school_id != "") {
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url 'administration:personList' %}',
+                    data: {
+                        'type': 'school',
+                        'school_id': school_id
+                    },
+                    dataType: 'json',
+                    success: function (json) {
+                        var students = (json.persons);
+                        $("#studenttable tbody tr").hide();
+                        $("#teachertable tbody tr").hide();
+                        $.each(students, function (index, value) {
+                            $("#student" + value.id).show();
+                            $("#teacher" + value.id).show();
+                        })
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+                $('#gradetable > tbody  > tr').each(function () {
+                    var school = $(this).find("td:eq(2)").html();
+                    if (school.indexOf(school_name) == -1) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            } else {
+                $("#studenttable tr").show();
+                $("#teachertable tr").show();
+                $("#gradetable tr").show();
+                $('#grouptable tr').show();
+            }
+        }
+
+        /**
+         * This function sets up the taskinformation gotten inside a modal from the ajax GET request.
+         */
+        function preview(e) {
+            var id = e.value;
+            $('#geogebradiv').hide();
+            $('#textanswerdiv').hide();
+            $('#reasoningdiv').hide();
+            $('#multiplechoicediv').hide();
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'maths:taskList' %}',
+                data: {
+                    'task_id': id
+                },
+                dataType: 'json',
+                success: function (json) {
+
+                    var task = (json);
+                    if (task.geogebra_preview != undefined) {
+                        $("#previewbilde").attr("src", 'data:image/png;base64,' + (task.geogebra_preview));
+                        $('#geogebradiv').show();
+                    }
+                    document.getElementById('tasktext').innerHTML = (task.task_text);
+
+                    var answertype = (task.task_answertype);
+                    if (answertype == 1) {
+                        $('#textanswerdiv').show();
+                    }
+
+                    if (task.task_reasoning) {
+                        $('#reasoningdiv').show();
+                    }
+                    if (answertype == 2) {
+                        var options = (task.options);
+                        var div = document.getElementById('optionsdiv');
+                        $('#multiplechoicediv').show();
+                        div.innerHTML = "";
+                        $.each(options, function (index, value) {
+                            div.innerHTML += "<input type='radio' name='optionsradio'> " + (value.option) + "<br>";
+                        });
+                    }
+                    $('#previewTaskModal').modal('show');
+                },
+                error: function (xhr) {
+                    alert('error');
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+
     </script>
+{% endblock %}
+
+{% block modal %}
+    <div class="modal fade" id="personModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 id="personMemberHeader">Brukerinformasjon</h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped" id="personInfoTable">
+                        <tbody>
+                        <tr>
+                            <td>Fornavn:</td>
+                            <td id="first_name"></td>
+                        </tr>
+                        <tr>
+                            <td>Etternavn:</td>
+                            <td id="last_name"></td>
+                        </tr>
+                        <tr>
+                            <td>Brukernavn:</td>
+                            <td id="username"></td>
+                        </tr>
+                        <tr>
+                            <td>Epost:</td>
+                            <td id="email"></td>
+                        </tr>
+                        <tr>
+                            <td>Fødselsdag:</td>
+                            <td id="date_of_birth"></td>
+                        </tr>
+                        <tr>
+                            <td>Klasser:</td>
+                            <td>
+                                <ul id="personGrades"></ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Sist innlogget:</td>
+                            <td id="last_login"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <a id="goToUserBtn" href="#" type="button" class="btn btn-primary">Gå til bruker</a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="gradeMemberModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 id="gradeMemberHeader">Klasse</h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-striped table-responsive table-condensed"
+                           id="addtable2">
+                        <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Epost</th>
+                            <th>Brukertype</th>
+                        </tr>
+                        </thead>
+                        <tbody id="gradeMemberTable">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    {% buttons %}
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    {% endbuttons %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="groupMemberModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 id="groupMemberHeader">Gruppe</h3>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-striped table-responsive table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Epost</th>
+                        </tr>
+                        </thead>
+                        <tbody id="groupMemberTable">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    {% buttons %}
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    {% endbuttons %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="previewTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" style="width: 95%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Forhåndsvis oppgave</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
+                            <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
+                        </div>
+                        <div class="col-md-6" style="padding-left: 10px">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4><span id="tasktext"></span></h4>
+                                </div>
+                                <div class="panel-body">
+                                    <div id="textanswerdiv">
+                                        <label for="answer">Tekstsvar</label>
+                                        <textarea class="form-control" id="answer" rows="6" style="resize:vertical"
+                                                  placeholder="Skriv svaret ditt her..."></textarea>
+                                    </div>
+
+                                    <div id="multiplechoicediv">
+                                        <label for="reasoning">Svaralternativer</label>
+                                        <div id="optionsdiv">
+
+                                        </div>
+                                    </div>
+
+                                    <div id="reasoningdiv">
+                                        <label for="reasoning">Begrunnelse</label>
+                                        <textarea class="form-control" id="reasoning" rows="6" style="resize:vertical"
+                                                  placeholder="Begrunn svaret ditt..."></textarea>
+                                    </div>
+
+                                </div>
+                                <div class="panel-footer">
+                                    <button type="button" class="btn btn-success">Svar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {% buttons %}
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    {% endbuttons %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

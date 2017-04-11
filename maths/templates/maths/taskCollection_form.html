@@ -1,4 +1,8 @@
 {% extends 'matistikk/base.html' %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
 {% load static %}
 {% block head %}
     <script type="text/javascript" src="{% static 'maths/js/bootstrap-multiselect.js' %}"></script>
@@ -7,91 +11,124 @@
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h2>Oppgavenavn: {{ test.test_name }}</h2>
-            <h5>ID: {{ test.id }}</h5>
-            <h5>Laget av: {{ test.author.get_full_name }}</h5>
-            <div class="row">
-                <div class="col-md-10" style="padding-right: 10px">
-                    <div class="input-group">
+            <h2>Lag test</h2>
+        </div>
+        <div class="panel-body">
+            <form class="form-margin" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% bootstrap_field form.test_name addon_before='<i class="fa fa-book" aria-hidden="true"></i>' %}
+                {% bootstrap_field form.tasks field_class='hidden' %}
+                <div id="selectTaskWarning" class="alert alert-warning hidden">
+                    <strong>Ikke lagret!</strong> Vennligst velg noen oppgaver.
+                </div>
+                <div class="row">
+                    <div class="col-md-9" style="padding-right: 10px; margin-bottom: 10px;">
+                        <div class="input-group">
                     <span class="input-group-addon">
                         <i class="fa fa-search"></i>
                     </span>
-                        <input type="text" class="form-control" id="search"
-                               onkeyup="taskSearch('tasktable')"
-                               placeholder="Søk etter oppgave...">
+                            <input type="text" class="form-control" id="search"
+                                   onkeyup="taskSearch('table')"
+                                   placeholder="Søk etter oppgave...">
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="padding-left: 20px;">
+                        <select class="hidden" id="selectCategory" multiple="multiple">
+                            {% for category in categories %}
+                                <option id="{{ category.id }}" value="{{ category }}">{{ category }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
-                <div class="col-md-2" style="padding-left: 10px;">
-                    <select class="hidden" id="selectCategory" multiple="multiple">
-                        {% for category in categories %}
-                            <option id="{{ category.id }}" value="{{ category }}">{{ category }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="panel-body">
-            <div class="tab-content">
-                <table class="table table-hover table-striped table-responsive" id="tasktable">
-                    <thead>
-                    <tr>
-                        <th class="col-md-1">ID</th>
-                        <th>Oppgavenavn</th>
-                        <th>Kategori</th>
-                        <th>Laget av</th>
-                        <th>Alternativer</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for task in test.tasks.all %}
-                        <tr class="clickable-row"
-                            data-href="#"
-                            style="cursor: pointer">
-                            <td>
-                                {{ task.id }}
-                            </td>
-                            <td>
-                                {{ task.title }}
-                            </td>
-                            <td>
-                                {% for category in task.category.all %}
+                <div id="tableDiv"
+                     style="min-height: 20vh; border: 1px solid; border-color: lightgray; overflow: auto; max-height: 47vh; max-width: 100%">
+                    <table id="table" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th class="col-sm-1">Legg til</th>
+                            <th class="col-sm-1">ID</th>
+                            <th class="col-sm-4">Oppgavenavn</th>
+                            <th class="col-sm-3">Kategori</th>
+                            <th class="col-sm-3"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for task in tasks %}
+                            <tr style="cursor: pointer">
+                                <td class="test"><input type="checkbox" value="{{ task.id }}"
+                                ></td>
+                                <td>{{ task.id }}</td>
+                                <td>{{ task.title }}</td>
+                                <td>{% for category in task.category.all %}
                                     {% if forloop.last %}
                                         {{ category }}
                                     {% else %}
                                         {{ category }} -
                                     {% endif %}
                                 {% endfor %}
-                            </td>
-                            <td>
-                                {{ task.author.get_full_name }}
-                            </td>
-                            <td>
-                                <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                    <a class="btn btn-default"
-                                       href="{% url 'maths:taskUpdate' task.id %}"
-                                       style="background-color: inherit"><span
-                                            class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater
-                                    </a>
-                                    <button value="{{ task.id }}" type="button" onclick="preview(this)"
-                                                class="btn btn-default"><span
-                                                class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
-                                        </button>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                                </td>
+                                <td>
+                                    <button value="{{ task.id }}" type="button" class="btn btn-default btn-sm"><span
+                                            class="glyphicon glyphicon-eye-open"
+                                            aria-hidden="true"></span> Forhåndsvis
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <button id='submitPasswordBtn' type="submit" class="hidden"></button>
+            </form>
         </div>
         <div class="panel-footer">
-            <a class="btn btn-primary" href="{% url 'maths:testDisplayCreate' test.id %}"><span
-                    class="fa fa-book" aria-hidden="true"></span> Publiser test</a>
-            <a class="btn btn-primary" href="#"><span
-                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater test</a>
+            <button type="button" onclick="submitForm()" class="btn btn-success">
+                {% bootstrap_icon "check" %} Lagre test
+            </button>
         </div>
     </div>
     <script>
+
+        $("#table tbody tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            var $button = $(this).find(':button');
+            if ($(e.target).is(":button")) {
+                preview($button);
+            }
+            else if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $('#id_tasks option[value=' + $checkbox.val() + ']').attr('selected', true);
+                    $(this).addClass('success');
+                } else {
+                    $('#id_tasks option[value=' + $checkbox.val() + ']').attr('selected', false);
+                    $(this).removeClass('success');
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
+        /**
+         * Function that tries to submit the form and gives feedback in form of a success or error message depending
+         * ot how it goes.
+         */
+        function submitForm() {
+            $('#submitPasswordBtn').click();
+            var taskCheck = false;
+            $('#id_tasks option').each(function () {
+                if (this.selected)
+                    taskCheck = true;
+            });
+            if (taskCheck == true) {
+                $('#submitPasswordBtn').click();
+            } else {
+                $("#selectTaskWarning").removeClass("hidden");
+                $("#selectTaskWarning").fadeTo(5000, 500).slideUp(500, function () {
+                    $("#selectTaskWarning").slideUp(500);
+                });
+
+            }
+        }
         $(document).ready(function () {
             /**
              * Sets up the multiselect widget for the category filtering.
@@ -101,9 +138,9 @@
                 onChange: function (option, checked, select) {
                     var category = $(option).val();
                     var selected = checked;
-                    $('#tasktable > tbody  > tr').each(function () {
+                    $('#table > tbody  > tr').each(function () {
                         var show = true;
-                        var taskCategory = $(this).find("td:eq(2)").html();
+                        var taskCategory = $(this).find("td:eq(3)").html();
                         $('#selectCategory option:selected').map(function (a, item) {
                             if (taskCategory.indexOf(item.value) == -1) {
                                 show = false
@@ -147,21 +184,20 @@
          * @param inputTable
          */
         function taskSearch(inputTable) {
-            var input, filter, table, tr, td, i, td1, td2, td3;
+            var input, filter, table, tr, td, i, td1, td2;
             input = document.getElementById("search");
             filter = input.value.toUpperCase();
             table = document.getElementById(inputTable);
             tr = table.getElementsByTagName("tr");
 
             for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0];
-                td1 = tr[i].getElementsByTagName("td")[1];
-                td2 = tr[i].getElementsByTagName("td")[2];
-                td3 = tr[i].getElementsByTagName("td")[3];
+                td = tr[i].getElementsByTagName("td")[1];
+                td1 = tr[i].getElementsByTagName("td")[2];
+                td2 = tr[i].getElementsByTagName("td")[3];
 
                 if (td) {
                     if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1
-                        || td2.innerHTML.toUpperCase().indexOf(filter) > -1 || td3.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
                         tr[i].style.display = "";
                     } else {
                         tr[i].style.display = "none";
@@ -170,12 +206,11 @@
             }
         }
 
-
         /**
          * This function sets up the taskinformation gotten inside a modal from the ajax GET request.
          */
         function preview(e) {
-            var id = e.value;
+            var id = e.val();
             $('#geogebradiv').hide();
             $('#textanswerdiv').hide();
             $('#reasoningdiv').hide();
@@ -222,7 +257,6 @@
             });
         }
     </script>
-
 {% endblock %}
 
 {% block modal %}
@@ -273,7 +307,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                 </div>
             </div>
         </div>

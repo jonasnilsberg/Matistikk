@@ -9,12 +9,12 @@
     <div class="panel panel-info">
         <div class="panel-heading">
             <h2>Klasse: {{ grade.grade_name }}</h2>
-            {% if request.user.role == 3  or request.user.role == 4%}
-            <h5>Skole: <a href="{% url 'administration:schoolDetail' grade.school_id %}">{{ grade.school }}</a></h5>
-                {% else %}
+            {% if request.user.role == 3  or request.user.role == 4 %}
+                <h5>Skole: <a href="{% url 'administration:schoolDetail' grade.school_id %}">{{ grade.school }}</a></h5>
+            {% else %}
                 <h5>Skole: {{ grade.school }}</h5>
             {% endif %}
-        <h5>Kontaktperson: {{ grade.school.school_administrator.get_full_name }}</h5>
+            <h5>Kontaktperson: {{ grade.school.school_administrator.get_full_name }}</h5>
             <div class="input-group">
                 <span class="input-group-addon">
                         <i class="fa fa-search"></i>
@@ -32,6 +32,7 @@
                 <li class="nav"><a href="#C" data-toggle="tab">Lærere</a></li>
                 <li class="nav"><a href="#D" data-toggle="tab">Inaktive</a></li>
                 <li class="nav"><a href="#E" data-toggle="tab">Grupper</a></li>
+                <li class="nav"><a href="#F" data-toggle="tab">Tester</a></li>
             </ul>
             <div class="tab-content">
                 <!-- All Users Tab -->
@@ -177,7 +178,7 @@
                             <th>Gruppenavn</th>
                             <th>Ansvarlig</th>
                             {% if request.user.role == 4 %}
-                            <th>Gruppeinfo</th>
+                                <th>Gruppeinfo</th>
                             {% endif %}
                             <th>Medlemmer</th>
                         </tr>
@@ -189,10 +190,10 @@
                                 <td>{{ group.group_name }}</td>
                                 <td>{{ group.creator.get_full_name }}</td>
                                 {% if request.user.role == 4 %}
-                                <td><a class="btn btn-default"
-                                       href="{% url 'administration:groupDetail' group.id %}"><i class="fa fa-users"
-                                                                                                 aria-hidden="true"></i>
-                                    Se gruppeinfo</a></td>
+                                    <td><a class="btn btn-default"
+                                           href="{% url 'administration:groupDetail' group.id %}"><i class="fa fa-users"
+                                                                                                     aria-hidden="true"></i>
+                                        Se gruppeinfo</a></td>
                                 {% endif %}
                                 <td>
                                     <button id="{{ group.id }}" value="{{ group.group_name }}" class='btn btn-default'
@@ -202,6 +203,30 @@
                                         Medlemmer
                                     </button>
                                 </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="F">
+                    <table class="table table-hover table-striped table-responsive" id="studenttable">
+                        <thead>
+                        <tr>
+                            <th>Navn</th>
+                            <th>Publisert</th>
+                            <th>Laget av:</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for test in grade.tests.all %}
+                            <tr class="clickable-row"
+                                data-href="#"
+                                style="cursor: pointer">
+                                <td>{{ test.test.test_name }}</td>
+                                <td>{{ test.published }}</td>
+                                <td>{{ test.test.author.get_full_name }}</td>
+                                <td><button class="btn btn-default">Oppgaver</button></td>
                             </tr>
                         {% endfor %}
                         </tbody>
