@@ -91,6 +91,9 @@ class TestDisplay(models.Model):
     randomOrder = models.BooleanField(default=False, verbose_name='Tilfeldig rekkefølge',
                                       help_text='Vist avkrysset vil testen bli gitt i tilfeldig rekkefølge.')
 
+    def __str__(self):
+        return self.test.test_name
+
 
 class TaskOrder(models.Model):
     test_display = models.ForeignKey(TestDisplay)
