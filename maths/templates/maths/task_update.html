@@ -6,9 +6,23 @@
 {% bootstrap_messages %}
 {% block head %}
     <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
-    <script type="text/javascript" src="{% static 'ckeditor/ckeditor.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
     <script>
         UPLOADCARE_PUBLIC_KEY = '255bcffadf120c92a388';
+    </script>
+     <script>
+        var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}'
+        tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
+
+        tinymce.init({
+          selector: '#modalText',
+          plugins: 'equationeditor',
+          content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+          toolbar: [
+            'bold italic underline | bullist numlist | subscript superscript | equationeditor'
+          ],
+        });
     </script>
 {% endblock %}
 
@@ -449,7 +463,7 @@
                 <div class="modal-body">
                     <textarea class="form-control" id="modalText" rows="6" style="resize:vertical"
                               placeholder="Skriv oppgavetekst her..."></textarea>
-                    <script>CKEDITOR.replace('modalText', {'toolbar': 'teacher'})</script>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
@@ -565,7 +579,7 @@
          * has updated the task text and closes the changeTextModal.
          */
         $('#changeTextModal').on('hide.bs.modal', function () {
-            var modaltext = CKEDITOR.instances.modalText.getData();
+            var modaltext = tinyMCE.activeEditor.getContent();
             document.getElementById('tasktext').innerHTML = modaltext;
         });
 
@@ -577,8 +591,7 @@
             var tasktext = $('#tasktext').html();
             var height = window.innerHeight * 0.9;
             document.getElementById('changeTextModal2').style += "height:"+ height +"px";
-            CKEDITOR.instances.modalText.setData(tasktext, function()
-                { });
+            tinyMCE.activeEditor.setContent(tasktext);
         });
 
         /**
