@@ -10,10 +10,8 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/i18n/defaults-*.min.js"></script>
-    <script type="text/javascript" src="{% static 'ckeditor/ckeditor.js' %}"></script>
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
-    <script src="http://www.wiris.net/demo/editor/editor"></script>
     <script>UPLOADCARE_PUBLIC_KEY = '255bcffadf120c92a388';</script>
     <script>
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}'
@@ -60,10 +58,7 @@
                     <label for="tasktext">Oppgavetekst</label>
                     <textarea class="form-control" id="tasktext" rows="6" style="resize:vertical"
                               placeholder="Skriv oppgavetekst her..."></textarea>
-                    <!--<script>CKEDITOR.replace('tasktext', {'toolbar': 'teacher'})</script>-->
 
-                </div>
-                <div id="editorContainer" style="height: 300px; width: 500px">
                 </div>
                 <label for="accordion">Velg svartype</label>
                 <div id="accordion" class="panel-group" role="tablist">
@@ -221,9 +216,6 @@
         // Metoden benyttes til å legge GeoGebra med forhåndsvalgt konfigurasjon inn i en applet
         window.onload = function () {
             applet.inject('applet_container', 'preferhtml5');
-            var editor;
-            editor = com.wiris.jsEditor.JsEditor.newInstance({'language': 'en'});
-            editor.insertInto(document.getElementById('editorContainer'));
         };
     </script>
 
@@ -273,7 +265,7 @@
         function onSubmit() {
             var taskname1 = document.getElementById('taskname');
             var taskname2 = document.getElementById('id_title');
-            var tasktext1 = CKEDITOR.instances.tasktext.getData();
+            var tasktext1 = tinyMCE.activeEditor.getContent();
             var tasktext2 = document.getElementById('id_text');
             var reasoning1 = document.getElementById('reasoning');
             var reasoning2 = document.getElementById('id_reasoning');
