@@ -49,7 +49,7 @@ class Grade(models.Model):
     """
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     grade_name = models.CharField(max_length=100, verbose_name='klassenavn')
-    tests = models.ManyToManyField('maths.TestDisplay', blank=True, verbose_name='tester')
+    tests = models.ManyToManyField('maths.Test', blank=True, verbose_name='tester')
     is_active = models.BooleanField(default=True, verbose_name='aktiv',
                                     help_text='Angir at denne klassen er aktiv. Avmerk denne i stedet for å slette klassen.')
 
@@ -84,7 +84,7 @@ class Person(AbstractUser):
     sex = models.CharField(max_length=1, choices=SEX, verbose_name="kjønn", null=True)
     date_of_birth = models.DateField(max_length=8, verbose_name='Fødselsdato', null=True)
     role = models.IntegerField(choices=ROLE, default=1, verbose_name='brukertype')
-    tests = models.ManyToManyField('maths.TestDisplay', blank=True, verbose_name='tester')
+    tests = models.ManyToManyField('maths.Test', blank=True, verbose_name='tester')
 
     class Meta:
         ordering = ['username']
@@ -141,12 +141,10 @@ class Gruppe(models.Model):
     group_name = models.CharField(max_length=100, verbose_name='Gruppenavn')
     is_active = models.BooleanField(default=True, verbose_name='aktiv',
                                     help_text='Angir at denne gruppen er aktiv. Avmerk denne i stedet for å slette gruppen.')
-    # tests = models.ManyToManyField('maths.TestView', blank=True, verbose_name='tester')
     visible = models.BooleanField(default=False, verbose_name="synlig",
                                   help_text='Angir om gruppen skal være synlig for sine medlemmer.')
     grade = models.ForeignKey(Grade, blank=True, null=True, verbose_name='klasse', help_text='Ikke påkrevd.')
-    tests = models.ManyToManyField('maths.TestDisplay', blank=True, verbose_name='tester')
-
+    tests = models.ManyToManyField('maths.Test', blank=True, verbose_name='tester')
 
     class Meta:
         ordering = ['group_name']
