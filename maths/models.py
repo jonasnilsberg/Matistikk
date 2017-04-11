@@ -100,6 +100,9 @@ class Test(models.Model):
     class Meta:
         ordering = ['-published']
 
+    def __str__(self):
+        return self.test.test_name
+
 
 class TaskOrder(models.Model):
     test = models.ForeignKey(Test)
