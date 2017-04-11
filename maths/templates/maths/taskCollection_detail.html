@@ -7,9 +7,9 @@
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h2>{{ test.test_name }}</h2>
-            <h5>ID: {{ test.id }}</h5>
-            <h5>Laget av: {{ test.author.get_full_name }}</h5>
+            <h2>{{ taskcollection.test_name }}</h2>
+            <h5>ID: {{ taskcollection.id }}</h5>
+            <h5>Laget av: {{ taskcollection.author.get_full_name }}</h5>
             <div class="row">
                 <div class="col-md-10" style="padding-right: 10px">
                     <div class="input-group">
@@ -48,7 +48,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for task in test.tasks.all %}
+                        {% for task in taskcollection.tasks.all %}
                             <tr class="clickable-row"
                                 data-href="#">
                                 <td>
@@ -70,7 +70,7 @@
                                     {{ task.author.get_full_name }}
                                 </td>
                                 <td>
-                                    <button value="{{ task.id }}" type="button" onclick="preview(this)"
+                                    <button value="{{ task.id }}" type="button" onclick="previewTask(this)"
                                             class="btn btn-default btn-sm"><span
                                             class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
                                     </button>
@@ -85,9 +85,9 @@
                         <thead>
                         <tr>
                             <th class="col-md-1">ID</th>
-                            <th>Oppgavenavn</th>
                             <th>Publisert</th>
                             <th>Svarfrist</th>
+                            <th>Tilfeldig rekkefølge</th>
                             <th>Alternativer</th>
                         </tr>
                         </thead>
@@ -99,24 +99,18 @@
                                     {{ test.id }}
                                 </td>
                                 <td>
-                                    {{ test.test.test_name }}
-                                </td>
-                                <td>
                                     {{ test.published }}
                                 </td>
                                 <td>
                                     {% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen svarfrist{% endif %}
                                 </td>
                                 <td>
+                                    {% if test.randomOrder %}Ja{% else %}Nei{% endif %}
+                                </td>
+                                <td>
                                     <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                        <a class="btn btn-default"
-                                           href="#"
-                                           style="background-color: inherit"><span
-                                                class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater
-                                        </a>
-                                        <button type="button" class="btn btn-default" data-toggle="modal"
-                                                data-id="{{ task.id }}"
-                                                href="#previewTaskModal"><span
+                                        <button type="button" class="btn btn-default" value="{{ test.id }}"
+                                                onclick="previewPublishedTask(this)"><span
                                                 class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
                                         </button>
                                     </div>
@@ -129,7 +123,7 @@
             </div>
         </div>
         <div class="panel-footer">
-            <a class="btn btn-primary" href="{% url 'maths:testDisplayCreate' test.id %}"><span
+            <a class="btn btn-primary" href="{% url 'maths:testCreate' taskcollection.id %}"><span
                     class="fa fa-book" aria-hidden="true"></span> Publiser test</a>
             <a class="btn btn-primary" href="#"><span
                     class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater test</a>
@@ -218,7 +212,7 @@
         /**
          * This function sets up the taskinformation gotten inside a modal from the ajax GET request.
          */
-        function preview(e) {
+        function previewTask(e) {
             var id = e.value;
             $('#geogebradiv').hide();
             $('#textanswerdiv').hide();
@@ -258,6 +252,40 @@
                         });
                     }
                     $('#previewTaskModal').modal('show');
+                },
+                error: function (xhr) {
+                    alert('error');
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        function previewPublishedTask(elem) {
+            var id = elem.value;
+            alert(id);
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'maths:taskCollectionDetail' 12345 %}'.replace(/12345/, {{ taskcollection.id }}),
+                data: {
+                    'published_id': id
+                },
+                dataType: 'json',
+                success: function (json) {
+                    var students = json.students;
+                    var teachers = json.teachers;
+                    $.each(students, function (index, value) {
+                        $('#studenttable tr:last').after('<tr><td>' + value.first_name + '</td><td>' + value.last_name +
+                            '</td><td>' + value.username + '</td><td><a id=' + value.username + ' type="button" class="btn btn-default btn-sm">' +
+                            '<i class="fa fa-user-circle" aria-hidden="true"></i> Gå til bruker</a></td></tr>');
+                        $('#' + value.username).attr("href", '{% url 'administration:personDetail' slug=12345 %}'.replace(/12345/, value.username));
+                    });
+                    $.each(teachers, function (index, value) {
+                        $('#teachertable tr:last').after('<tr><td>' + value.first_name + '</td><td>' + value.last_name +
+                            '</td><td>' + value.username + '</td><td><a id=' + value.username + ' type="button" class="btn btn-default btn-sm">' +
+                            '<i class="fa fa-user-circle" aria-hidden="true"></i> Gå til bruker</a></td></tr>');
+                        $('#' + value.username).attr("href", '{% url 'administration:personDetail' slug=12345 %}'.replace(/12345/, value.username));
+                    });
+                    $('#previewPublishedTaskModal').modal('show');
                 },
                 error: function (xhr) {
                     alert('error');
@@ -322,4 +350,100 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="previewPublishedTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Forhåndsvis publisert test</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs">
+                        <li id="publishedToStudent" class="nav active"><a href="#students" data-toggle="tab">Elever</a>
+                        </li>
+                        <li id="publishedToTeacher" class="nav"><a href="#teachers" data-toggle="tab">Lærere</a></li>
+                        <li id="publishedToGrades" class="nav"><a href="#grades" data-toggle="tab">Klasse</a></li>
+                        <li id="publishedToGroups" class="nav"><a href="#groups" data-toggle="tab">Gruppe</a></li>
+                        <li id="publishedToSchools" class="nav"><a href="#schools" data-toggle="tab">Skole</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="students">
+                            <table class="table table-hover table-striped table-responsive" id="studenttable">
+                                <thead>
+                                <tr>
+                                    <th>Fornavn</th>
+                                    <th>Etternavn</th>
+                                    <th>Brukernavn</th>
+                                    <th>Brukerinfo</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="teachers">
+                            <table class="table table-hover table-striped table-responsive" id="teachertable">
+                                <thead>
+                                <tr>
+                                    <th>Fornavn</th>
+                                    <th>Etternavn</th>
+                                    <th>Brukernavn</th>
+                                    <th>Brukerinfo</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="grades">
+                            <table class="table table-hover table-striped table-responsive" id="gradetable">
+                                <thead>
+                                <tr>
+                                    <th>Klasse</th>
+                                    <th>Skole</th>
+                                    <th>Klasseinfo</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="groups">
+                            <table class="table table-hover table-striped table-responsive" id="grouptable">
+                                <thead>
+                                <tr>
+                                    <th>Gruppenavn</th>
+                                    <th>Klasse</th>
+                                    <th>Ansvarlig</th>
+                                    <th>Gruppeinfo</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="schools">
+                            <table class="table table-hover table-striped table-responsive" id="schooltable">
+                                <thead>
+                                <tr class="click">
+                                    <th>Skole</th>
+                                    <th>Adresse</th>
+                                    <th>Kontaktperson</th>
+                                    <th>Skoleinfo</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 {% endblock %}

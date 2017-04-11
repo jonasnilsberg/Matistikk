@@ -1,6 +1,6 @@
 from administration.models import Person
 from django.db import models
-
+from django.core.urlresolvers import reverse
 
 
 # Create your models here.
@@ -69,7 +69,7 @@ class GeogebraTask(models.Model):
     preview = models.TextField(null=True)
 
 
-class Test(models.Model):
+class TaskCollection(models.Model):
     """
     A test is a collection of tasks.
 
@@ -83,17 +83,29 @@ class Test(models.Model):
     def __str__(self):
         return self.test_name + " - " + self.author.get_full_name()
 
+    def get_absolute_url(self):
+        """
+            Function that sets the absolute_url.
+        """
+        return reverse('maths:taskCollectionDetail', kwargs={'taskCollection_pk': self.id})
 
-class TestDisplay(models.Model):
-    test = models.ForeignKey(Test)
+
+class Test(models.Model):
+    task_collection = models.ForeignKey(TaskCollection)
     published = models.DateTimeField(verbose_name='Publisert')
     dueDate = models.DateTimeField(verbose_name='Siste frist for besvarelse', null=True, blank=True)
     randomOrder = models.BooleanField(default=False, verbose_name='Tilfeldig rekkefølge',
-                                      help_text='Vist avkrysset vil testen bli gitt i tilfeldig rekkefølge.')
+                                      help_text='Dersom avkrysset vil testen bli gitt i tilfeldig rekkefølge.')
+
+    class Meta:
+        ordering = ['-published']
+
+    def __str__(self):
+        return self.test.test_name
 
 
 class TaskOrder(models.Model):
-    test_display = models.ForeignKey(TestDisplay)
+    test = models.ForeignKey(Test)
     task = models.ForeignKey(Task)
     order = models.IntegerField()
 

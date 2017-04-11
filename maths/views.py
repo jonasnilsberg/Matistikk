@@ -2,7 +2,7 @@ from django.views import generic
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm
-from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TestDisplay
+from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
@@ -24,7 +24,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
         context['tasks'] = Task.objects.count()
         context['users'] = Person.objects.count()
-        context['tests'] = Test.objects.count()
+        context['tests'] = TaskCollection.objects.count()
         context['schools'] = School.objects.count()
         context['grades'] = Grade.objects.count()
         context['groups'] = Gruppe.objects.count()
@@ -306,7 +306,7 @@ class TaskUpdateView(generic.UpdateView):
         return super(TaskUpdateView, self).form_valid(form)
 
 
-class TestCreateView(generic.CreateView):
+class TaskCollectionCreateView(generic.CreateView):
     """
     Class that creates a test.
 
@@ -314,10 +314,9 @@ class TestCreateView(generic.CreateView):
         Inherits Django's CreateView that displays a form for creating a object and
         saving the form when validated.
     """
-    template_name = 'maths/test_form.html'
-    model = Test
+    template_name = 'maths/taskCollection_form.html'
+    model = TaskCollection
     fields = ['test_name', 'tasks']
-    success_url = reverse_lazy('maths:testList')
 
     def get_context_data(self, **kwargs):
         """
@@ -326,7 +325,7 @@ class TestCreateView(generic.CreateView):
             :param kwargs: Keyword arguments
             :return: Returns the updated context
         """
-        context = super(TestCreateView, self).get_context_data(**kwargs)
+        context = super(TaskCollectionCreateView, self).get_context_data(**kwargs)
         context['tasks'] = Task.objects.all()
         context['categories'] = Category.objects.all()
         return context
@@ -339,33 +338,57 @@ class TestCreateView(generic.CreateView):
             :param form: References to the filled out model form.
             :return: calls super with the new form.
         """
-        test = form.save(commit=False)
-        test.author = self.request.user
-        test.save()
-        return super(TestCreateView, self).form_valid(form)
+        task_collection = form.save(commit=False)
+        task_collection.author = self.request.user
+        task_collection.save()
+        return super(TaskCollectionCreateView, self).form_valid(form)
 
 
-class TestListView(generic.ListView):
+class TaskCollectionListView(generic.ListView):
     """
        Class that displays a template containing all test objects.
 
        **ListView:**
            Inherits Django's ListView that makes a page representing a list of objects.
     """
-    template_name = 'maths/test_list.html'
-    model = Test
+    template_name = 'maths/taskCollection_list.html'
+    model = TaskCollection
 
 
-class TestDetailView(generic.DetailView):
+class TaskCollectionDetailView(views.AjaxResponseMixin, generic.DetailView):
     """
     Class that displays information about a single test object based on the test_id
 
     **DetailView:**
         Inherits generic.DetailView that makes a page representing a specific object.
     """
-    template_name = 'maths/test_detail.html'
-    model = Test
-    pk_url_kwarg = 'test_pk'
+    template_name = 'maths/taskCollection_detail.html'
+    model = TaskCollection
+    pk_url_kwarg = 'taskCollection_pk'
+
+    def get_ajax(self, request, *args, **kwargs):
+        students = []
+        teachers = []
+        test = Test.objects.get(id=request.GET['published_id'])
+        student_list = Person.objects.filter(tests__exact=test, role=1)
+        teacher_list = Person.objects.filter(tests__exact=test, role=2)
+        for student in student_list:
+            students.append({
+                'username': student.username,
+                'first_name': student.first_name,
+                'last_name': student.last_name
+            })
+        for teacher in teacher_list:
+            teachers.append({
+                'username': teacher.username,
+                'first_name': teacher.first_name,
+                'last_name': teacher.last_name
+            })
+        data = {
+            'students': students,
+            'teachers': teachers
+        }
+        return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         """
@@ -374,16 +397,16 @@ class TestDetailView(generic.DetailView):
             :param kwargs: Keyword arguments
             :return: Returns the updated context
         """
-        context = super(TestDetailView, self).get_context_data(**kwargs)
+        context = super(TaskCollectionDetailView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
-        context['publishedTests'] = TestDisplay.objects.filter(test_id=self.kwargs.get('test_pk'))
+        context['publishedTests'] = Test.objects.filter(task_collection_id=self.kwargs.get('taskCollection_pk'))
         return context
 
 
-class TestDisplayCreateView(generic.CreateView):
+class TestCreateView(generic.CreateView):
     form_class = CreateTestForm
-    template_name = 'maths/testdisplay_form.html'
-    success_url = reverse_lazy('maths:testList')
+    template_name = 'maths/test_form.html'
+    success_url = reverse_lazy('maths:taskCollectionList')
 
     def get_initial(self):
         """
@@ -391,11 +414,11 @@ class TestDisplayCreateView(generic.CreateView):
 
         :return: List of the preset values.
         """
-        return {'test': self.kwargs.get('test_pk')}
+        return {'task_collection': self.kwargs.get('taskCollection_pk')}
 
     def get_context_data(self, **kwargs):
-        context = super(TestDisplayCreateView, self).get_context_data(**kwargs)
-        context['test'] = Test.objects.get(id=self.kwargs.get('test_pk'))
+        context = super(TestCreateView, self).get_context_data(**kwargs)
+        context['taskcollection'] = TaskCollection.objects.get(id=self.kwargs.get('taskCollection_pk'))
         context['grades'] = Grade.objects.all()
         context['teachers'] = Person.objects.filter(role=2)
         context['students'] = Person.objects.filter(role=1)
@@ -404,22 +427,23 @@ class TestDisplayCreateView(generic.CreateView):
         return context
 
     def form_valid(self, form):
-        testdisplay = form.save(commit=False)
-        testdisplay.save()
+        test = form.save(commit=False)
+        test.save()
         data = form.cleaned_data
         for person in data['persons']:
-            person.tests.add(testdisplay)
+            person.tests.add(test)
         for grade in data['grades']:
-            grade.tests.add(testdisplay)
+            grade.tests.add(test)
         for group in data['groups']:
-            group.tests.add(testdisplay)
+            group.tests.add(test)
         if not data['randomOrder']:
             order_list = data['order']
             order_table = order_list.split('|||||')
             x = 1
             for order in order_table:
                 print(order)
-                taskorder = TaskOrder(test_display=testdisplay, task_id=order, order=x)
+                taskorder = TaskOrder(test=test, task_id=order, order=x)
                 taskorder.save()
                 x += 1
-        return super(TestDisplayCreateView, self).form_valid(form)
+        return super(TestCreateView, self).form_valid(form)
+
