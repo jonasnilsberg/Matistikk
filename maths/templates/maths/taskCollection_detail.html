@@ -17,8 +17,8 @@
                         <i class="fa fa-search"></i>
                     </span>
                         <input type="text" class="form-control" id="search"
-                               onkeyup="taskSearch('tasktable')"
-                               placeholder="Søk etter oppgave...">
+                               onkeyup="taskSearch('tasktable'); taskSearch('publishedtable')"
+                               placeholder="Søk etter publisert test...">
                     </div>
                 </div>
                 <div class="col-md-2" style="padding-left: 10px;">
@@ -32,11 +32,50 @@
         </div>
         <div class="panel-body">
             <ul class="nav nav-tabs">
-                <li class="nav active"><a href="#A" data-toggle="tab">Oppgaver</a></li>
-                <li class="nav"><a href="#B" data-toggle="tab">Publiserte tester</a></li>
+                <li class="nav active"><a href="#A" data-toggle="tab">Publiserte tester</a></li>
+                <li class="nav"><a href="#B" data-toggle="tab">Oppgaver</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="A">
+                    <table class="table table-hover table-striped table-responsive" id="publishedtable">
+                        <thead>
+                        <tr>
+                            <th class="col-md-1">ID</th>
+                            <th>Publisert</th>
+                            <th>Svarfrist</th>
+                            <th>Tilfeldig rekkefølge</th>
+                            <th>Alternativer</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for test in publishedTests %}
+                            <tr class="clickable-row" style="cursor: pointer"
+                                data-href="{% url 'maths:testDetail' test_pk=test.id %}">
+                                <td>
+                                    {{ test.id }}
+                                </td>
+                                <td>
+                                    {{ test.published }}
+                                </td>
+                                <td>
+                                    {% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen svarfrist{% endif %}
+                                </td>
+                                <td>
+                                    {% if test.randomOrder %}Ja{% else %}Nei{% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                                        <button type="button" class="btn btn-default" value="{{ test.id }}"><span
+                                                class="glyphicon glyphicon-eye-open"></span> Publisert til
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="B">
                     <table class="table table-hover table-striped table-responsive" id="tasktable">
                         <thead>
                         <tr>
@@ -80,46 +119,6 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="tab-pane fade" id="B">
-                    <table class="table table-hover table-striped table-responsive" id="tasktable">
-                        <thead>
-                        <tr>
-                            <th class="col-md-1">ID</th>
-                            <th>Publisert</th>
-                            <th>Svarfrist</th>
-                            <th>Tilfeldig rekkefølge</th>
-                            <th>Alternativer</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for test in publishedTests %}
-                            <tr class="clickable-row"
-                                data-href="#">
-                                <td>
-                                    {{ test.id }}
-                                </td>
-                                <td>
-                                    {{ test.published }}
-                                </td>
-                                <td>
-                                    {% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen svarfrist{% endif %}
-                                </td>
-                                <td>
-                                    {% if test.randomOrder %}Ja{% else %}Nei{% endif %}
-                                </td>
-                                <td>
-                                    <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                        <button type="button" class="btn btn-default" value="{{ test.id }}"
-                                                onclick="previewPublishedTask(this)"><span
-                                                class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
             </div>
         </div>
         <div class="panel-footer">
@@ -130,10 +129,31 @@
         </div>
     </div>
     <script>
+        $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+            var tab = $(e.target).attr('href');
+            if (tab == '#A') {
+                $("#selectCategory").multiselect('disable');
+                $('#search').attr('placeholder', 'Søk etter publisert test...');
+            } else {
+                $("#selectCategory").multiselect('enable');
+                $('#search').attr('placeholder', 'Søk etter oppgave...');
+            }
+            $("#selectCategory").multiselect('refresh');
+        });
+
+        $("#publishedtable tbody tr").click(function (e) {
+            var $button = $(this).find(':button');
+            if ($(e.target).is(":button")) {
+                previewPublishedTask($button);
+            } else {
+                window.document.location = $(this).data("href");
+            }
+        });
         $(document).ready(function () {
             /**
              * Sets up the multiselect widget for the category filtering.
              */
+
             $('#selectCategory').multiselect({
                 buttonClass: 'form-control',
                 onChange: function (option, checked, select) {
@@ -175,9 +195,8 @@
                         return labels.join(', ') + '';
                     }
                 }
-
-
             });
+            $("#selectCategory").multiselect('disable');
         });
         /**
          * This function matches the text in the search field with the content in the table given in the parameter.
@@ -261,8 +280,8 @@
         }
 
         function previewPublishedTask(elem) {
-            var id = elem.value;
-            alert(id);
+            var id = elem.val();
+            $('#publishedHeader').text("{{ taskcollection.test_name }}");
             $.ajax({
                 type: 'GET',
                 url: '{% url 'maths:taskCollectionDetail' 12345 %}'.replace(/12345/, {{ taskcollection.id }}),
@@ -279,30 +298,85 @@
                     $("#teachertable").find("tr:gt(0)").remove();
                     $("#gradetable").find("tr:gt(0)").remove();
                     $("#grouptable").find("tr:gt(0)").remove();
+                    $("#publishedToStudent").removeClass('hidden');
+
+                    $("#publishedToStudent").addClass('active');
+                    $("#students").addClass('active').removeClass('fade');
+                    $("#teachers").removeClass('active').addClass('fade');
+                    $("#grades").removeClass('active').addClass('fade');
+                    $("#groups").removeClass('active').addClass('face');
+                    $("#schools").removeClass('active').addClass('fade');
+                    $("#publishedToTeacher").removeClass('active');
+                    $("#publishedToGroups").removeClass('active');
+                    $("#publishedToGrades").removeClass('active');
+                    $("#publishedToSchools").removeClass('active');
+                    if (students.length == 0) {
+                        $("#publishedToStudent").addClass('hidden');
+                        $("#students").removeClass('active');
+                        $('#teachers').removeClass('fade');
+                        $("#teachers").addClass('active');
+                        $("#publishedToTeacher").addClass('active');
+                        if (teachers.length == 0) {
+                            $("#publishedToTeacher").addClass('hidden');
+                            $("#teachers").removeClass('active');
+                            $('#grades').removeClass('fade');
+                            $("#grades").addClass('active');
+                            $("#publishedToGrades").addClass('active');
+                            if (grades == 0) {
+                                $("#publishedToGrades").addClass('hidden');
+                                $("#grades").removeClass('active');
+                                $('#groups').removeClass('fade');
+                                $("#groups").addClass('active');
+                                $("#publishedToGroups").addClass('active');
+                                if (groups == 0) {
+                                    $("#publishedToGroups").addClass('hidden');
+                                    $("#groups").removeClass('active');
+                                    $('#schools').removeClass('fade');
+                                    $("#schools").addClass('active');
+                                    $("#publishedToSchools").addClass('active');
+                                }
+                            }
+                        }
+                    }
                     $.each(students, function (index, value) {
                         $('#studenttable tr:last').after('<tr><td>' + value.first_name + '</td><td>' + value.last_name +
                             '</td><td>' + value.username + '</td><td><a id=' + value.username + ' type="button" class="btn btn-default btn-sm">' +
                             '<i class="fa fa-user-circle" aria-hidden="true"></i> Gå til bruker</a></td></tr>');
                         $('#' + value.username).attr("href", '{% url 'administration:personDetail' slug=12345 %}'.replace(/12345/, value.username));
                     });
-                    $.each(teachers, function (index, value) {
-                        $('#teachertable tr:last').after('<tr><td>' + value.first_name + '</td><td>' + value.last_name +
-                            '</td><td>' + value.username + '</td><td><a id=' + value.username + ' type="button" class="btn btn-default btn-sm">' +
-                            '<i class="fa fa-user-circle" aria-hidden="true"></i> Gå til bruker</a></td></tr>');
-                        $('#' + value.username).attr("href", '{% url 'administration:personDetail' slug=12345 %}'.replace(/12345/, value.username));
-                    });
-                    $.each(grades, function (index, value) {
-                        $('#gradetable tr:last').after('<tr><td>' + value.grade_name + '</td><td>' + value.school +
-                            '</td><td><a id="grade' + value.id + '" type="button" class="btn btn-default btn-sm">' +
-                            '<i class="fa fa-user-circle" aria-hidden="true"></i> Gå til gruppe</a></td></tr>');
-                        $('#grade' + value.id).attr("href", '{% url 'administration:gradeDetail' grade_pk=12345 school_pk=67899 %}'.replace(/12345/, value.id).replace(/67899/, value.school_id));
-                    });
-                    $.each(groups, function (index, value) {
-                        $('#grouptable tr:last').after('<tr><td>' + value.group_name + '</td><td>' + value.grade +
-                            '</td><td>' + value.creator + '</td><td><a id="group' + value.id + '" type="button" class="btn btn-default btn-sm">' +
-                            '<i class="fa fa-user-circle" aria-hidden="true"></i> Gå til gruppe</a></td></tr>');
-                        $('#group' + value.id).attr("href", '{% url 'administration:groupDetail' group_pk=12345 %}'.replace(/12345/, value.id));
-                    });
+                    if (teachers.length > 0) {
+                        $('#publishedToTeacher').removeClass('hidden');
+                        $.each(teachers, function (index, value) {
+                            $('#teachertable tr:last').after('<tr><td>' + value.first_name + '</td><td>' + value.last_name +
+                                '</td><td>' + value.username + '</td><td><a id=' + value.username + ' type="button" class="btn btn-default btn-sm">' +
+                                '<i class="fa fa-user-circle" aria-hidden="true"></i> Gå til bruker</a></td></tr>');
+                            $('#' + value.username).attr("href", '{% url 'administration:personDetail' slug=12345 %}'.replace(/12345/, value.username));
+                        });
+                    } else {
+                        $('#publishedToTeacher').addClass('hidden');
+                    }
+                    if (grades.length > 0) {
+                        $('#publishedToGrades').removeClass('hidden');
+                        $.each(grades, function (index, value) {
+                            $('#gradetable tr:last').after('<tr><td>' + value.grade_name + '</td><td>' + value.school +
+                                '</td><td><a id="grade' + value.id + '" type="button" class="btn btn-default btn-sm">' +
+                                '<i class="fa fa-user-circle" aria-hidden="true"></i> Gå til gruppe</a></td></tr>');
+                            $('#grade' + value.id).attr("href", '{% url 'administration:gradeDetail' grade_pk=12345 school_pk=67899 %}'.replace(/12345/, value.id).replace(/67899/, value.school_id));
+                        });
+                    } else {
+                        $('#publishedToGrades').addClass('hidden');
+                    }
+                    if (groups.length > 0) {
+                        $('#publishedToGroups').removeClass('hidden');
+                        $.each(groups, function (index, value) {
+                            $('#grouptable tr:last').after('<tr><td>' + value.group_name + '</td><td>' + value.grade +
+                                '</td><td>' + value.creator + '</td><td><a id="group' + value.id + '" type="button" class="btn btn-default btn-sm">' +
+                                '<i class="fa fa-user-circle" aria-hidden="true"></i> Gå til gruppe</a></td></tr>');
+                            $('#group' + value.id).attr("href", '{% url 'administration:groupDetail' group_pk=12345 %}'.replace(/12345/, value.id));
+                        });
+                    } else {
+                        $('#publishedToGroups').addClass('hidden');
+                    }
                     $('#previewPublishedTaskModal').modal('show');
                 },
                 error: function (xhr) {
@@ -376,7 +450,10 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Forhåndsvis publisert test</h4>
+                    <div class="text-center">
+                        <h4 class="modal-title" id="publishedHeader"></h4>
+                        <h5>Denne testen ble publisert til følgende brukere, klasser, grupper og skoler:</h5>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <ul class="nav nav-tabs">
@@ -464,4 +541,5 @@
                 </div>
             </div>
         </div>
+    </div>
 {% endblock %}

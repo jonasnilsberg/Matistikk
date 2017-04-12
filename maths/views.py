@@ -467,3 +467,24 @@ class TestCreateView(generic.CreateView):
                 taskorder.save()
                 x += 1
         return super(TestCreateView, self).form_valid(form)
+
+
+class TestDetailView(views.AjaxResponseMixin, generic.DetailView):
+    model = Test
+    template_name = 'maths/test_detail.html'
+    pk_url_kwarg = 'test_pk'
+
+    def get_ajax(self, request, *args, **kwargs):
+        data = {
+            'test': 'test'
+        }
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super(TestDetailView, self).get_context_data(**kwargs)
+        test = Test.objects.get(id=self.kwargs.get('test_pk'))
+        context['students'] = Person.objects.filter(tests__exact=test, role=1)
+        context['teachers'] = Person.objects.filter(tests__exact=test, role=2)
+        context['grades'] = Grade.objects.filter(tests__exact=test)
+        context['groups'] = Gruppe.objects.filter(tests__exact=test)
+        return context

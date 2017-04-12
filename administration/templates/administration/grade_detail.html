@@ -20,8 +20,8 @@
                         <i class="fa fa-search"></i>
                     </span>
                 <input type="text" class="form-control" id="search"
-                       onkeyup="allSearch('alltable'); allSearch('studenttable'); allSearch('teachertable'); allSearch('inactivetable'); groupSearch('grouptable')"
-                       placeholder="Søk etter bruker">
+                       onkeyup="allSearch('alltable'); allSearch('studenttable'); allSearch('teachertable'); groupSearch('grouptable'); allSearch('testtable')"
+                       placeholder="Søk etter bruker...">
             </div>
         </div>
         <div class="panel-body">
@@ -30,9 +30,8 @@
                 <li class="nav active"><a href="#A" data-toggle="tab">Brukere</a></li>
                 <li class="nav"><a href="#B" data-toggle="tab">Elever</a></li>
                 <li class="nav"><a href="#C" data-toggle="tab">Lærere</a></li>
-                <li class="nav"><a href="#D" data-toggle="tab">Inaktive</a></li>
-                <li class="nav"><a href="#E" data-toggle="tab">Grupper</a></li>
-                <li class="nav"><a href="#F" data-toggle="tab">Tester</a></li>
+                <li class="nav"><a href="#D" data-toggle="tab">Grupper</a></li>
+                <li class="nav"><a href="#E" data-toggle="tab">Tester</a></li>
             </ul>
             <div class="tab-content">
                 <!-- All Users Tab -->
@@ -134,44 +133,7 @@
                         </tbody>
                     </table>
                 </div>
-                <!-- Inactive Users Tab -->
                 <div class="tab-pane fade" id="D">
-                    <table class="table table-hover table-striped table-responsive" id="inactivetable">
-                        <thead>
-                        <tr>
-                            <th>Fornavn</th>
-                            <th>Etternavn</th>
-                            <th>Brukernavn</th>
-                            <th>Brukertype</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for person in persons %}
-                            {% if not person.is_active %}
-                                <tr class="clickable-row"
-                                    data-href="{% url 'administration:PersonDetailFromGrade' grade.school_id grade.id person.username %}"
-                                    style="cursor: pointer">
-                                    <td>{{ person.first_name }}</td>
-                                    <td>{{ person.last_name }}</td>
-                                    <td>{{ person.username }}</td>
-                                    <td>
-                                        {% if person.role == 2 %}
-                                            Lærer
-                                        {% elif person.role == 3 %}
-                                            Skoleadministrator
-                                        {% elif person.role == 4 %}
-                                            Administrator
-                                        {% else %}
-                                            Elev
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="tab-pane fade" id="E">
                     <table class="table table-hover table-striped table-responsive" id="grouptable">
                         <thead>
                         <tr>
@@ -208,8 +170,8 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="tab-pane fade" id="F">
-                    <table class="table table-hover table-striped table-responsive" id="studenttable">
+                <div class="tab-pane fade" id="E">
+                    <table class="table table-hover table-striped table-responsive" id="testtable">
                         <thead>
                         <tr>
                             <th>Navn</th>
@@ -220,13 +182,16 @@
                         </thead>
                         <tbody>
                         {% for test in grade.tests.all %}
-                            <tr class="clickable-row"
-                                data-href="#"
+                            <tr data-href="{% url 'maths:testDetail' test.id %}"
                                 style="cursor: pointer">
-                                <td>{{ test.test.test_name }}</td>
+                                <td>{{ test.task_collection.test_name }}</td>
                                 <td>{{ test.published }}</td>
-                                <td>{{ test.test.author.get_full_name }}</td>
-                                <td><button class="btn btn-default">Oppgaver</button></td>
+                                <td>{{ test.task_collection.author.get_full_name }}</td>
+                                <td>
+                                    <button class="btn btn-default" type="button" value="{{ test.id }}"><i
+                                            class="fa fa-tasks" aria-hidden="true"></i> Oppgaver
+                                    </button>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -290,15 +255,15 @@
             $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
                 var tab = $(e.target).attr('href');
                 if (tab == '#A') {
-                    $('#search').attr("placeholder", "Søk etter brukere");
+                    $('#search').attr("placeholder", "Søk etter brukere...");
                 } else if (tab == '#B') {
-                    $('#search').attr("placeholder", "Søk etter elever");
+                    $('#search').attr("placeholder", "Søk etter elever...");
                 } else if (tab == '#C') {
-                    $('#search').attr("placeholder", "Søk etter lærere");
+                    $('#search').attr("placeholder", "Søk etter lærere...");
                 } else if (tab == '#D') {
-                    $('#search').attr("placeholder", "Søk etter inaktive");
+                    $('#search').attr("placeholder", "Søk etter grupper...");
                 } else if (tab == '#E') {
-                    $('#search').attr("placeholder", "Søk etter grupper");
+                    $('#search').attr("placeholder", "Søk etter tester...");
                 }
 
             });
@@ -437,6 +402,15 @@
                     updateExistingTeacher(school_id);
                 }
             });
+        });
+
+        $("#testtable tbody tr").click(function (e) {
+            var $button = $(this).find(':button');
+            if ($(e.target).is(":button")) {
+                alert('$button');
+            } else {
+                window.document.location = $(this).data("href");
+            }
         });
 
     </script>
@@ -687,7 +661,6 @@
                     <hr>
                     <form action="" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {% bootstrap_messages %}
                         {% bootstrap_field form.file show_label=false %}
                         {% buttons %}
                             <button type="submit" class="btn btn-success">
@@ -784,7 +757,7 @@
                                 <th>Legg til</th>
                             </tr>
                             </thead>
-                            <div class="test">
+                            <div>
                                 <tbody id="existingStudentTable">
                                 {% for existingStudent in existingStudents %}
                                     <tr id="{{ existingStudent.username }}" value="{{ existingStudent.username }}">
