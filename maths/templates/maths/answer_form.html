@@ -1,0 +1,155 @@
+{% extends 'matistikk/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% block head %}
+    <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
+{% endblock %}
+
+
+{% block body %}
+    <div class="row">
+    <nav id="tasknav" class="navbar navbar-default navbar-fixed-bottom" style="margin-top: 50px;">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="taskbar">
+                <ul class="nav navbar-nav">
+                    {% for task in test.task_collection.tasks.all %}
+                        <li><a href="#task{{ forloop.counter }}">Oppgave {{ forloop.counter }}</a></li>
+                        {% if forloop.last %}
+                            <a class="btn btn-success btn-lg" href="#summary">Send Inn</a>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% if test.randomOrder %}
+        Salaam
+    {% else %}
+        {% for taskorder in test.taskorder_set.all %}
+            <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid" style="min-height: 100vh">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3>Oppgave {{ forloop.counter }}</h3>
+                </div>
+                {% if forloop.first %}
+                    <span id="geocount" hidden>{{ geogebratask.count }}</span>
+                    <span id="taskcount" hidden>{{ test.task_collection.tasks.all.count }}</span>
+                {% endif %}
+                {% if taskorder.task.extra %}
+                    <div class="col-sm-6" id="geogebradiv">
+                        {% for geogebra in geogebratask %}
+                            {% if taskorder.task.id == geogebra.task_id %}
+                                <input id="base64{{ forloop.parentloop.counter }}" type="text"
+                                       value="{{ geogebra.base64 }}" hidden>
+                            {% endif %}
+                        {% endfor %}
+                        <div id="applet_container{{ forloop.counter }}"></div>
+                    </div>
+                {% endif %}
+                {% if taskorder.task.extra %}
+                    <div class="col-sm-6">
+                {% else %}
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-8">
+                {% endif %}
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>{{ taskorder.task.text | safe }}</h4>
+                    </div>
+                    <div class="panel-body">
+                        {% if taskorder.task.answertype == 1 %}
+                            <div id="textanswerdiv">
+                                <label for="answer">Tekstsvar</label>
+                                <textarea class="form-control" id="answer" rows="6" style="resize:vertical"
+                                          placeholder="Skriv svaret ditt her..."></textarea>
+                            </div>
+                        {% elif taskorder.task.answertype == 2 %}
+                            <div id="multiplechoicediv">
+                                <label for="reasoning">Svaralternativer</label>
+                                <div id="optionsdiv">
+                                    {% for option in options %}
+                                        {% if option.task_id == taskorder.task.id %}
+                                            <input type="radio" name="multiplechoice{{ taskorder.task.id }}">
+                                            {{ option.option }}<br>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if taskorder.task.reasoning %}
+                            <div id="reasoningdiv">
+                                <label for="reasoning">Begrunnelse</label>
+                                <textarea class="form-control" id="reasoning" rows="6"
+                                          style="resize:vertical"
+                                          placeholder="Begrunn svaret ditt..."></textarea>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+
+    <script>
+        var viewPortWidth = 1200;
+        var viewPortHeight = 750;
+        var geocount = document.getElementById('geocount').innerHTML;
+        var taskcount = document.getElementById('taskcount').innerHTML;
+        var base64;
+        var parameters;
+
+        if (typeof window.innerWidth != 'undefined' && window.innerWidth > 1000) {
+            viewPortWidth = window.innerWidth * 0.49;
+            viewPortHeight = window.innerHeight * 0.7;
+        }
+
+        var applet = [];
+        for (var i = 0; i < taskcount; i++) {
+            if (document.getElementById('base64' + (i + 1)) != null) {
+                base64 = document.getElementById('base64' + (i + 1)).value;
+                parameters = {
+                    "id": "ggbApplet" + i,
+                    "width": viewPortWidth,
+                    "height": viewPortHeight,
+                    "showToolBar": true,
+                    "borderColor": null,
+                    "showMenuBar": false,
+                    "allowStyleBar": true,
+                    "showAlgebraInput": true,
+                    "enableLabelDrags": false,
+                    "enableShiftDragZoom": true,
+                    "capturingThreshold": null,
+                    "showToolBarHelp": false,
+                    "errorDialogsActive": true,
+                    "showTutorialLink": false,
+                    "showLogging": false,
+                    "useBrowserForJS": true,
+                    "ggbBase64": base64,
+                };
+            }
+
+            applet[i] = new GGBApplet(parameters, '5.0', 'applet_container' + (i + 1));
+            applet[i].setPreviewImage('http://bildr.no/image/cEtUd3R6.jpeg', 'https://www.geogebra.org/images/GeoGebra_loading.png?v=1490705653', 'https://www.geogebra.org/images/applet_play.png?v=1490705653');
+        }
+        //  when used with Math Apps Bundle, uncomment this:
+        // applet.setHTML5Codebase('GeoGebra/HTML5/5.0/web3d/');
+
+        // Metoden benyttes til å legge GeoGebra med forhåndsvalgt konfigurasjon inn i en applet
+        window.onload = function () {
+            for (var k = 0; k < taskcount; k++) {
+                if (document.getElementById('applet_container' + (k + 1)) != null) {
+                    applet[k].inject('applet_container' + (k + 1), 'preferhtml5');
+                }
+            }
+        };
+    </script>
+{% endblock %}
+

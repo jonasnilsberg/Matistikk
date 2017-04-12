@@ -215,15 +215,15 @@
                                                     <p><strong>Starttidspunkt: </strong>{{ test.published }}</p>
                                                     <span id="publishdate{{ forloop.counter }}" hidden>{{ test.published.isoformat }}</span>
                                                     <p><strong>Frist: </strong>{{ test.dueDate }}</p>
-                                                    <p><strong>Antall Oppgaver: </strong>{{ test.test.tasks.count }}</p>
+                                                    <p><strong>Antall Oppgaver: </strong>{{ test.task_collection.tasks.count }}</p>
                                                     <p><strong>Laget
-                                                        av: </strong>{{ test.test.author.first_name }} {{ test.test.author.last_name }}
+                                                        av: </strong>{{ test.task_collection.author.first_name }} {{ test.task_collection.author.last_name }}
                                                     </p>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <span id="testinfo{{ forloop.counter }}" ></span>
-                                                    <button id="starttestbutton{{ forloop.counter }}" type="button" class="btn btn-success btn-lg pull-right">Start Aktivitet
-                                                    </button>
+                                                    <a id="starttestbutton{{ forloop.counter }}" type="button" class="btn btn-success btn-lg pull-right" href="{% url 'maths:answerCreate' test.id %}">Start Aktivitet
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
