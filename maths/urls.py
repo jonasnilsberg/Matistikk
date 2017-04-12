@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'tester/$', views.TaskCollectionListView.as_view(), name='taskCollectionList'),
     url(r'tester/(?P<taskCollection_pk>[0-9]+)/$', views.TaskCollectionDetailView.as_view(), name='taskCollectionDetail'),
     url(r'tester/(?P<taskCollection_pk>[0-9]+)/publiser/$', views.TestCreateView.as_view(), name='testCreate'),
+    url(r'test/(?P<test_pk>[0-9]+)/svar/$', views.AnswerCreateView.as_view(), name='answerCreate'),
 ]
