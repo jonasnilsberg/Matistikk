@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %} "></script>
+  <script type="text/javascript" src="{% static 'tinymce/js/tinymce/plugins/equationeditor/equation_editor.js' %} "></script>
+    <script>var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}'</script>
+  <link rel="stylesheet" type="text/css" href="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css' %}">
+  <link rel="stylesheet" type="text/css"     href="{% static 'tinymce/js/tinymce/plugins/equationeditor/equation_editor.css' %}">
+</head>
+<body class="equation-editor">
+  <div class="cols">
+    <div class="math-form col">
+      <div class="button-bar"></div>
+
+      <div class="math"></div>
+    </div>
+    <div class="button-groups col">
+    </div>
+  </div>
+  <script type="text/javascript">
+    var params = top.tinymce.activeEditor.windowManager.getParams();
+    var existingLatex = params['existing_latex'];
+
+    var equationEditor = new EquationEditor.EquationEditorView({
+      $el: $('.equation-editor'),
+      existingLatex: existingLatex,
+      restrictions: top.tinymce.equationEditorRestrictions
+    }).render();
+
+    params['latexInput'] = equationEditor.input();
+    top.tinymce.activeEditor.windowManager.setParams(params);
+  </script>
+</body>
+</html>

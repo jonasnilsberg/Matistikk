@@ -31,6 +31,19 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         return context
 
 
+class equationEditor(LoginRequiredMixin, generic.TemplateView):
+    """
+    Class that displays the home page if logged in.
+
+    **LoginRequiredMixin**
+        Mixin from :ref:`Django braces` that check if the user is logged in.
+    **TemplateView:**
+        Inherits generic.Template that makes a page representing a specific template.
+    """
+    login_url = '/login/'
+    template_name = 'maths/equation_editor.html'
+
+
 class CreateTaskView(generic.CreateView):
     """
     Class that creates a task.
