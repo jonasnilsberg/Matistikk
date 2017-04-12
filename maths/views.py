@@ -369,9 +369,13 @@ class TaskCollectionDetailView(views.AjaxResponseMixin, generic.DetailView):
     def get_ajax(self, request, *args, **kwargs):
         students = []
         teachers = []
+        grades = []
+        groups = []
         test = Test.objects.get(id=request.GET['published_id'])
         student_list = Person.objects.filter(tests__exact=test, role=1)
         teacher_list = Person.objects.filter(tests__exact=test, role=2)
+        grade_list = Grade.objects.filter(tests__exact=test)
+        group_list = Gruppe.objects.filter(tests__exact=test)
         for student in student_list:
             students.append({
                 'username': student.username,
@@ -384,9 +388,26 @@ class TaskCollectionDetailView(views.AjaxResponseMixin, generic.DetailView):
                 'first_name': teacher.first_name,
                 'last_name': teacher.last_name
             })
+        for grade in grade_list:
+            grades.append({
+                'grade_name': grade.grade_name,
+                'school': grade.school.school_name,
+                'id': grade.id,
+                'school_id': grade.school.id
+            })
+        for group in group_list:
+            groups.append({
+                'group_name': group.group_name,
+                'grade': group.grade.school.school_name + " - " + group.grade.grade_name,
+                'creator': group.creator.get_full_name(),
+                'id': group.id
+
+            })
         data = {
             'students': students,
-            'teachers': teachers
+            'teachers': teachers,
+            'grades': grades,
+            'groups': groups
         }
         return JsonResponse(data)
 
@@ -447,6 +468,26 @@ class TestCreateView(generic.CreateView):
                 x += 1
         return super(TestCreateView, self).form_valid(form)
 
+
+class TestDetailView(views.AjaxResponseMixin, generic.DetailView):
+    model = Test
+    template_name = 'maths/test_detail.html'
+    pk_url_kwarg = 'test_pk'
+
+    def get_ajax(self, request, *args, **kwargs):
+        data = {
+            'test': 'test'
+        }
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super(TestDetailView, self).get_context_data(**kwargs)
+        test = Test.objects.get(id=self.kwargs.get('test_pk'))
+        context['students'] = Person.objects.filter(tests__exact=test, role=1)
+        context['teachers'] = Person.objects.filter(tests__exact=test, role=2)
+        context['grades'] = Grade.objects.filter(tests__exact=test)
+        context['groups'] = Gruppe.objects.filter(tests__exact=test)
+        return context
 
 class AnswerCreateView(generic.CreateView):
     model = Answer
