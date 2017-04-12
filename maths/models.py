@@ -101,11 +101,18 @@ class Test(models.Model):
         ordering = ['-published']
 
     def __str__(self):
-        return self.test.test_name
+        return self.task_collection.test_name
 
 
 class TaskOrder(models.Model):
     test = models.ForeignKey(Test)
     task = models.ForeignKey(Task)
     order = models.IntegerField()
+
+
+class Answer(models.Model):
+    task = models.ForeignKey(Task)
+    test = models.ForeignKey(Test)
+    user = models.ForeignKey(Person)
+
 

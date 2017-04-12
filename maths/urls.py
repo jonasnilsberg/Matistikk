@@ -17,5 +17,5 @@ urlpatterns = [
         name='taskCollectionDetail'),
     url(r'tester/publisert/(?P<test_pk>[0-9]+)/$', views.TestDetailView.as_view(), name='testDetail'),
     url(r'tester/(?P<taskCollection_pk>[0-9]+)/publiser/$', views.TestCreateView.as_view(), name='testCreate'),
-
+    url(r'test/(?P<test_pk>[0-9]+)/svar/$', views.AnswerCreateView.as_view(), name='answerCreate'),
 ]
