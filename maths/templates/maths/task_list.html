@@ -89,6 +89,14 @@
     </div> <!-- #Panel-footer -->
 
     <script>
+        $(document).ajaxSend(function (event, request, settings) {
+            $('#loading-indicator').show();
+        });
+
+        $(document).ajaxComplete(function (event, request, settings) {
+            $('#loading-indicator').hide();
+            $('#previewBody').removeClass('hidden');
+        });
         $(document).ready(function () {
             /**
              * Sets up the multiselect widget for the category filtering.
@@ -170,6 +178,8 @@
          * This function sets up the taskinformation gotten inside a modal from the ajax GET request.
          */
         function previewTask(e) {
+            $('#previewBody').addClass('hidden');
+            $('#previewTaskModal').modal('show');
             var id = e.value;
             $('#geogebradiv').hide();
             $('#textanswerdiv').hide();
@@ -208,7 +218,6 @@
                             div.innerHTML += "<input type='radio' name='optionsradio'> " + (value.option) + "<br>";
                         });
                     }
-                    $('#previewTaskModal').modal('show');
                 },
                 error: function (xhr) {
                     alert('error');
@@ -222,15 +231,16 @@
 
 {% block modal %}
     <div class="modal fade" id="previewTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" style="width: 95%">
+        <div class="modal-dialog" style="width: 95%;">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Forhåndsvis oppgave</h4>
                 </div>
-                <div class="modal-body">
-                    <div class="row">
+                <div class="modal-body" style="min-height: 30vh;">
+                    <img src="http://dkclasses.com/images/loading.gif" id="loading-indicator" style="display:none"/>
+                    <div id="previewBody" class="row hidden">
                         <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
                             <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
                         </div>

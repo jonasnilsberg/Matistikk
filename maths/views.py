@@ -6,6 +6,9 @@ from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, Task
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
+import datetime
+
+
 
 
 class IndexView(LoginRequiredMixin, generic.TemplateView):
@@ -424,10 +427,22 @@ class TaskCollectionDetailView(views.AjaxResponseMixin, generic.DetailView):
         return context
 
 
-class TestCreateView(generic.CreateView):
+class TestCreateView(views.AjaxResponseMixin, generic.CreateView):
     form_class = CreateTestForm
     template_name = 'maths/test_form.html'
     success_url = reverse_lazy('maths:taskCollectionList')
+
+    def post_ajax(self, request, *args, **kwargs):
+        test_id = request.POST['id']
+        test = Test.objects.get(id=test_id)
+        new_due = request.POST['dueDate']
+        test.dueDate = new_due
+        test.save()
+        print(test.dueDate)
+        data = {
+            'dueDate': new_due
+        }
+        return JsonResponse(data)
 
     def get_initial(self):
         """

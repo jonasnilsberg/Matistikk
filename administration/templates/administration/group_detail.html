@@ -27,7 +27,7 @@
                 <span class="input-group-addon">
                         <i class="fa fa-search"></i>
                     </span>
-                <input type="text" class="form-control" id="search" onkeyup="gradeSearch(); inactiveSearch();"
+                <input type="text" class="form-control" id="search" onkeyup="allSearch('persontable'); allSearch('testtable')"
                        placeholder="Søk etter bruker">
             </div>
         </div>
@@ -38,12 +38,12 @@
                 </div>
             {% endif %}
             <ul class="nav nav-tabs">
-                <li class="nav active"><a href="#A" data-toggle="tab">Alle elever</a></li>
-                <li class="nav"><a href="#B" data-toggle="tab">Inaktive</a></li>
+                <li class="nav active"><a href="#A" data-toggle="tab">Elever</a></li>
+                <li class="nav"><a href="#C" data-toggle="tab">Tester</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="A">
-                    <table class="table table-hover table-striped table-responsive" id="gradetable">
+                    <table class="table table-hover table-striped table-responsive" id="persontable">
                         <thead>
                         <tr>
                             <th>Fornavn</th>
@@ -72,32 +72,31 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="tab-pane fade" id="B">
-                    <table class="table table-hover table-striped table-responsive" id="inactivetable">
+                <div class="tab-pane fade" id="C">
+                    <table class="table table-hover table-striped table-responsive" id="testtable">
                         <thead>
                         <tr>
-                            <th>Fornavn</th>
-                            <th>Etternavn</th>
-                            <th>Brukernavn</th>
+                            <th>ID</th>
+                            <th>Navn</th>
+                            <th>Publisert</th>
+                            <th>Laget av:</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for person in gruppe.persons.all %}
-                            {% if not person.is_active %}
-                                <tr class="clickable-row"
-                                    data-href="{% url 'administration:personDetail' person.username %}"
-                                    style="cursor: pointer">
-                                    <td>
-                                        {{ person.first_name }}
-                                    </td>
-                                    <td>
-                                        {{ person.last_name }}
-                                    </td>
-                                    <td>
-                                        {{ person.username }}
-                                    </td>
-                                </tr>
-                            {% endif %}
+                        {% for test in gruppe.tests.all %}
+                            <tr data-href="{% url 'maths:testDetail' test.id %}"
+                                style="cursor: pointer">
+                                <td>{{ test.id }}</td>
+                                <td>{{ test.task_collection.test_name }}</td>
+                                <td>{{ test.published }}</td>
+                                <td>{{ test.task_collection.author.get_full_name }}</td>
+                                <td>
+                                    <button class="btn btn-default" type="button" value="{{ test.id }}"><i
+                                            class="fa fa-tasks" aria-hidden="true"></i> Oppgaver
+                                    </button>
+                                </td>
+                            </tr>
                         {% endfor %}
                         </tbody>
                     </table>
@@ -106,7 +105,7 @@
         </div>
         <div class="panel-footer">
             <a class="btn btn-primary" href="{% url 'administration:groupUpdate' group_pk=gruppe.id %}"><span
-                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater gruppe</a
+                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater gruppe</a>
         </div>
     </div>
 
@@ -119,43 +118,36 @@
                 window.document.location = $(this).data("href");
             });
         });
-        function gradeSearch() {
-            var input, filter, table, tr, td, i;
-            input = document.getElementById("search");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("gradetable");
-            tr = table.getElementsByTagName("tr");
 
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0];
-                if (td) {
-                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
+        $("#testtable tbody tr").click(function (e) {
+            var $button = $(this).find(':button');
+            if ($(e.target).is(":button")) {
+                alert('$button');
+            } else {
+                window.document.location = $(this).data("href");
             }
-        }
+        });
         /**
-         * This function matches the text in the search field with the content in the table with all inactive users
-         * and removes rows that don't match the search criteria.
+         * This function matches the text in the search field with the content in the table with all users, students,
+         * teachers and inactives. Displays them in the suited table.
          */
-        function inactiveSearch() {
+        function allSearch(inputTable) {
             var input, filter, table, tr, td, i, td1, td2;
-            input = document.getElementById("search");
+            input = document.getElementById('search');
             filter = input.value.toUpperCase();
-            table = document.getElementById("inactivetable");
+            table = document.getElementById(inputTable);
             tr = table.getElementsByTagName("tr");
 
             for (i = 0; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td")[0];
                 td1 = tr[i].getElementsByTagName("td")[1];
                 td2 = tr[i].getElementsByTagName("td")[2];
+
                 if (td) {
                     if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
                         tr[i].style.display = "";
-                    } else {
+                    }
+                    else {
                         tr[i].style.display = "none";
                     }
                 }

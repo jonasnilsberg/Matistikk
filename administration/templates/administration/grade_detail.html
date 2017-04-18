@@ -174,9 +174,10 @@
                     <table class="table table-hover table-striped table-responsive" id="testtable">
                         <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Navn</th>
                             <th>Publisert</th>
-                            <th>Laget av:</th>
+                            <th>Laget av</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -184,6 +185,7 @@
                         {% for test in grade.tests.all %}
                             <tr data-href="{% url 'maths:testDetail' test.id %}"
                                 style="cursor: pointer">
+                                <td>{{ test.id }}</td>
                                 <td>{{ test.task_collection.test_name }}</td>
                                 <td>{{ test.published }}</td>
                                 <td>{{ test.task_collection.author.get_full_name }}</td>
@@ -235,6 +237,8 @@
                href="{% url 'administration:gradeGroupCreate' grade.school_id grade.id %}"><span
                     class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til gruppe</a>
         {% endif %}
+        <a type="button" class="btn btn-primary" data-toggle='modal' href='#publishTestModal'>
+            <span class="fa fa-book" aria-hidden="true"></span> Publiser test</a>
 
     </div>
     </div>
@@ -633,10 +637,27 @@
                     })
                 },
                 error: function (xhr) {
-                    alert('error')
-                    alert(xhr.responseText)
+                    alert('error');
+                    alert(xhr.responseText);
                 }
             });
+        }
+
+        $(document).on('keyup', function (e) {
+            if (e.keyCode == 37) {
+                $('.pagination > .active').prev('li').find('a').trigger('click');
+            }
+            if (e.keyCode == 39) {
+                $('.pagination > .active').next('li').find('a').trigger('click');
+            }
+        });
+
+        function previusTab() {
+            $('.pagination > .active').prev('li').find('a').trigger('click');
+        }
+
+        function nextTab() {
+            $('.pagination > .active').next('li').find('a').trigger('click');
         }
 
     </script>
@@ -748,7 +769,6 @@
                         </ul>
                     </div>
                     <div class="modalOverflow">
-
                         <table class="table table-hover table-striped table-responsive table-condensed"
                                id="addtable">
                             <thead>
@@ -895,6 +915,56 @@
                     {% buttons %}
                         <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                     {% endbuttons %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="publishTestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" style="width: 95%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <div class="modal-title">
+                        <h3 class="text-center" style="margin-top: 5px;">Publiser test</h3>
+                        <h5 class="text-center" id="headingText">Velg test.</h5>
+                    </div>
+                </div>
+                <div class="modal-body" style="min-height: 30vh;">
+                    <div class="tab-content">
+
+                        <div class="tab-pane active" id="publishTest">
+                            ok
+                        </div>
+                        <div class="tab-pane" id="order">
+                            ok2
+                        </div>
+                        <div class="tab-pane" id="publish">
+                            ok3
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer navbar-fixed-bottoms" style="padding: 0px;">
+                    <div class="text-center">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li class="prev">
+                                    <a href="#" aria-label="Previous" id="prev" onclick="previusTab()">
+                                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                                <li class="active"><a href="#publishTest" data-toggle="tab">Test</a></li>
+                                <li><a href="#order" data-toggle="tab">Rekkefølge</a></li>
+                                <li><a href="#publish" data-toggle="tab">Oversikt</a></li>
+                                <li class="next">
+                                    <a href="#" aria-label="Next" class="next" onclick="nextTab()">
+                                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>

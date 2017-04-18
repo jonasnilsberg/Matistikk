@@ -129,6 +129,15 @@
         </div>
     </div>
     <script>
+        $(document).ajaxSend(function (event, request, settings) {
+            $('.loading-indicator').show();
+        });
+
+        $(document).ajaxComplete(function (event, request, settings) {
+            $('.loading-indicator').hide();
+            $('#previewBody').removeClass('hidden');
+        });
+
         $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
             var tab = $(e.target).attr('href');
             if (tab == '#A') {
@@ -232,6 +241,8 @@
          * This function sets up the taskinformation gotten inside a modal from the ajax GET request.
          */
         function previewTask(e) {
+            $('#previewBody').addClass('hidden');
+            $('#previewTaskModal').modal('show');
             var id = e.value;
             $('#geogebradiv').hide();
             $('#textanswerdiv').hide();
@@ -270,7 +281,6 @@
                             div.innerHTML += "<input type='radio' name='optionsradio'> " + (value.option) + "<br>";
                         });
                     }
-                    $('#previewTaskModal').modal('show');
                 },
                 error: function (xhr) {
                     alert('error');
@@ -398,8 +408,9 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Forhåndsvis oppgave</h4>
                 </div>
-                <div class="modal-body">
-                    <div class="row">
+                <div class="modal-body" style="min-height: 30vh;">
+                    <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator" style="display:none"/>
+                    <div id="previewBody" class="row hidden">
                         <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
                             <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
                         </div>

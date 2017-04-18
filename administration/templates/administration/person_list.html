@@ -57,7 +57,9 @@
                             <th>Brukerinfo</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator"
+                             style="display:none"/>
+                        <tbody class="tableBody">
                         {% for person in object_list %}
                             {% if person.is_active %}
                                 <tr id="user{{ person.id }}" class="clickable-row"
@@ -88,7 +90,9 @@
                             <th>Brukerinfo</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator"
+                             style="display:none"/>
+                        <tbody class="tableBody">
                         {% for person in object_list %}
                             {% if person.role == 1 and person.is_active %}
                                 <tr id="student{{ person.id }}" class="clickable-row"
@@ -119,7 +123,9 @@
                             <th>Brukerinfo</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator"
+                             style="display:none"/>
+                        <tbody class="tableBody">
                         {% for person in object_list %}
                             {% if person.role == 2 and person.is_active %}
                                 <tr id="teacher{{ person.id }}" class="clickable-row"
@@ -151,7 +157,9 @@
                             <th>Brukerinfo</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator"
+                             style="display:none"/>
+                        <tbody class="tableBody">
                         {% for person in object_list %}
                             {% if person.role == 4 and person.is_active or person.role == 3 and person.is_active %}
                                 <tr id="admin{{ person.id }}" class="clickable-row"
@@ -193,7 +201,9 @@
                             <th>Brukerinfo</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator"
+                             style="display:none"/>
+                        <tbody class="tableBody">
                         {% for person in object_list %}
                             {% if not person.is_active %}
                                 <tr id="inactive{{ person.id }}" class="clickable-row"
@@ -233,6 +243,16 @@
                 $("#schoolDropList").val("");
                 $("#gradeDropList").val("");
 
+            });
+
+            $(document).ajaxSend(function (event, request, settings) {
+                $('.loading-indicator').show();
+                $('.tableBody').addClass('hidden');
+            });
+
+            $(document).ajaxComplete(function (event, request, settings) {
+                $('.loading-indicator').hide();
+                $('.tableBody').removeClass('hidden')
             });
             /**
              * This function runs on a change in the schoolDropList, and gets the users in the selected school. The users
