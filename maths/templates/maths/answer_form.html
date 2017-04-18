@@ -6,6 +6,11 @@
 {% bootstrap_messages %}
 {% block head %}
     <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
+    <script type="text/javascript" src="{% static 'maths/js/jquery.fullPage.min.js' %}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'maths/css/jquery.fullPage.css' %}"/>
+
+
 {% endblock %}
 
 
@@ -14,9 +19,10 @@
     <nav id="tasknav" class="navbar navbar-default navbar-fixed-bottom" style="margin-top: 50px;">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="taskbar">
-                <ul class="nav navbar-nav">
+                <ul id="taskBtnList" class="nav navbar-nav">
                     {% for task in test.task_collection.tasks.all %}
-                        <li><a href="#task{{ forloop.counter }}">Oppgave {{ forloop.counter }}</a></li>
+                        <li data-menuanchor="oppgave{{ forloop.counter }}"><a href="#oppgave{{ forloop.counter }}">Oppgave {{ forloop.counter }}</a>
+                        </li>
                         {% if forloop.last %}
                             <a class="btn btn-success btn-lg" href="#summary">Send Inn</a>
                         {% endif %}
@@ -28,70 +34,76 @@
     {% if test.randomOrder %}
         Salaam
     {% else %}
+        <div id="fullpage">
+
         {% for taskorder in test.taskorder_set.all %}
+            <div class="section" data-anchor="oppgave{{ forloop.counter }}">
             <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid" style="min-height: 100vh">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3>Oppgave {{ forloop.counter }}</h3>
-                </div>
-                {% if forloop.first %}
-                    <span id="geocount" hidden>{{ geogebratask.count }}</span>
-                    <span id="taskcount" hidden>{{ test.task_collection.tasks.all.count }}</span>
-                {% endif %}
-                {% if taskorder.task.extra %}
-                    <div class="col-sm-6" id="geogebradiv">
-                        {% for geogebra in geogebratask %}
-                            {% if taskorder.task.id == geogebra.task_id %}
-                                <input id="base64{{ forloop.parentloop.counter }}" type="text"
-                                       value="{{ geogebra.base64 }}" hidden>
-                            {% endif %}
-                        {% endfor %}
-                        <div id="applet_container{{ forloop.counter }}"></div>
-                    </div>
-                {% endif %}
-                {% if taskorder.task.extra %}
-                    <div class="col-sm-6">
-                {% else %}
-                    <div class="col-sm-2"></div>
-                    <div class="col-sm-8">
-                {% endif %}
-
-                <div class="panel panel-default">
+                <div class="panel panel-info">
                     <div class="panel-heading">
-                        <h4>{{ taskorder.task.text | safe }}</h4>
+                        <h3>Oppgave {{ forloop.counter }}</h3>
                     </div>
-                    <div class="panel-body">
-                        {% if taskorder.task.answertype == 1 %}
-                            <div id="textanswerdiv">
-                                <label for="answer">Tekstsvar</label>
-                                <textarea class="form-control" id="answer" rows="6" style="resize:vertical"
-                                          placeholder="Skriv svaret ditt her..."></textarea>
-                            </div>
-                        {% elif taskorder.task.answertype == 2 %}
-                            <div id="multiplechoicediv">
-                                <label for="reasoning">Svaralternativer</label>
-                                <div id="optionsdiv">
-                                    {% for option in options %}
-                                        {% if option.task_id == taskorder.task.id %}
-                                            <input type="radio" name="multiplechoice{{ taskorder.task.id }}">
-                                            {{ option.option }}<br>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% endif %}
+                    {% if forloop.first %}
+                        <span id="geocount" hidden>{{ geogebratask.count }}</span>
+                        <span id="taskcount" hidden>{{ test.task_collection.tasks.all.count }}</span>
+                    {% endif %}
+                    {% if taskorder.task.extra %}
+                        <div class="col-sm-6" id="geogebradiv">
+                            {% for geogebra in geogebratask %}
+                                {% if taskorder.task.id == geogebra.task_id %}
+                                    <input id="base64{{ forloop.parentloop.counter }}" type="text"
+                                           value="{{ geogebra.base64 }}" hidden>
+                                {% endif %}
+                            {% endfor %}
+                            <div id="applet_container{{ forloop.counter }}"></div>
+                        </div>
+                    {% endif %}
+                    {% if taskorder.task.extra %}
+                        <div class="col-sm-6">
+                    {% else %}
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-8">
+                    {% endif %}
 
-                        {% if taskorder.task.reasoning %}
-                            <div id="reasoningdiv">
-                                <label for="reasoning">Begrunnelse</label>
-                                <textarea class="form-control" id="reasoning" rows="6"
-                                          style="resize:vertical"
-                                          placeholder="Begrunn svaret ditt..."></textarea>
-                            </div>
-                        {% endif %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4>{{ taskorder.task.text | safe }}</h4>
+                        </div>
+                        <div class="panel-body">
+                            {% if taskorder.task.answertype == 1 %}
+                                <div id="textanswerdiv">
+                                    <label for="answer">Tekstsvar</label>
+                                    <textarea class="form-control" id="answer" rows="6" style="resize:vertical"
+                                              placeholder="Skriv svaret ditt her..."></textarea>
+                                </div>
+                            {% elif taskorder.task.answertype == 2 %}
+                                <div id="multiplechoicediv">
+                                    <label for="reasoning">Svaralternativer</label>
+                                    <div id="optionsdiv">
+                                        {% for option in options %}
+                                            {% if option.task_id == taskorder.task.id %}
+                                                <input type="radio" name="multiplechoice{{ taskorder.task.id }}">
+                                                {{ option.option }}<br>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if taskorder.task.reasoning %}
+                                <div id="reasoningdiv">
+                                    <label for="reasoning">Begrunnelse</label>
+                                    <textarea class="form-control" id="reasoning" rows="6"
+                                              style="resize:vertical"
+                                              placeholder="Begrunn svaret ditt..."></textarea>
+                                </div>
+                            {% endif %}
+                        <button class="btn btn-primary btn-lg" style="margin-top: 5px" onclick="nextTask()">
+                            Neste <i class="fa fa-arrow-right" aria-hidden="true"></i></button>
+                        </div>
                     </div>
-                </div>
-                </div>
+                    </div>
+                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -99,6 +111,21 @@
 </div>
 
     <script>
+        $(document).ready(function () {
+            $('#fullpage').fullpage({
+                menu: '#taskBtnList',
+                controlArrows: true,
+                scrollingSpeed: 500,
+                scrollHorizontally: true,
+                fadingEffect: 'slides'
+
+            });
+        });
+
+        function nextTask() {
+            $('#fullpage').fullpage.moveSectionDown();
+
+        }
         var viewPortWidth = 1200;
         var viewPortHeight = 750;
         var geocount = document.getElementById('geocount').innerHTML;

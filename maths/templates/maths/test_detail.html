@@ -1,13 +1,22 @@
 {% extends 'matistikk/base.html' %}
+{% load staticfiles %}
+{% load static %}
 {% block head %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+
+    <script type="text/javascript" src="{% static 'maths/js/bootstrap-clockpicker.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'maths/css/bootstrap-clockpicker.min.css' %}" type="text/css"/>
 {% endblock %}
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
             <h2>{{ test.task_collection.test_name }} - {{ test.id }}</h2>
             <h5><strong>Publisert:</strong> {{ test.published }}</h5>
-            <h5><strong>Frist for besvarelse:</strong> {% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen{% endif %}
+            <h5 id="id_dueDate"><strong>Frist for besvarelse:</strong>
+                {% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen{% endif %}
             </h5>
             <h5><strong>Tilfeldig rekkefølge:</strong> {% if test.randomOrder %}Ja{% else %}Nei{% endif %}</h5>
         </div>
@@ -35,15 +44,16 @@
                             </thead>
                             <tbody>
                             {% for student in students %}
-                                <tr id="user{{ student.id }}" style="cursor: pointer">
+                                <tr id="user{{ student.id }}">
                                     <td>{{ student.first_name }}</td>
                                     <td>{{ student.last_name }}</td>
                                     <td>{{ student.username }}</td>
                                     <td>
-                                        <button id="{{ student.username }}" value="{{ student.username }}"
+                                        <button disabled='disabled' id="{{ student.username }}"
+                                                value="{{ student.username }}"
                                                 class='btn btn-default'>
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
-                                            Gå til retting
+                                            Besvarelse
                                         </button>
                                     </td>
                                 </tr>
@@ -187,7 +197,17 @@
 
             </div>
         </div>
+        <div class="panel-footer">
+            <a class="btn btn-primary"><span
+                    class="glyphicon glyphicon-plus" aria-hidden="true"></span> Publiser </a>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#updateDueDateModal"><i
+                    class="fa fa-clock-o" aria-hidden="true"></i>
+                Oppdater tidsfrist
+            </button>
+        </div> <!-- #Panel-footer -->
     </div>
+    <form action="" method="post">{% csrf_token %}</form>
+
 
     <script>
         $(document).ready(function () {
@@ -209,6 +229,13 @@
                 $(this).find('.label-danger').text(danger);
 
             });
+        });
+
+        $(function () {
+            $("#datepickerUpdateDue").datepicker($.datepicker.regional["no"]);
+            $("#datepickerUpdateDue").datepicker("option", "showButtonPanel", true);
+            $("#datepickerUpdateDue").datepicker("option", "dateFormat", "DD, d MM, yy");
+            $("#datepickerUpdateDue").datepicker("option", "minDate", "0");
         });
 
         $('.list-group-item').not(".small").on('click', function () {
@@ -255,6 +282,38 @@
                 })
             }
         });
+
+
+        function updateDueDate() {
+            var newDueDate = new Date($("#datepickerUpdateDue").datepicker("getDate"));
+            var strNewDueDate = newDueDate.getFullYear() + "-" + (newDueDate.getMonth() + 1) + "-" + newDueDate.getDate();
+            var newDueTime = $('#timepickerUpdateDue').val();
+            var newDueDateAndTime = strNewDueDate + " " + newDueTime;
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'maths:testCreate'  taskCollection_pk=12345%}'.replace(/12345/, {{ test.task_collection.id }}),
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'id': {{ test.id }},
+                    'dueDate': newDueDateAndTime
+                },
+                dataType: 'json',
+                success: function (json) {
+                    var date = $('#datepickerUpdateDue').val();
+                    $('#id_dueDate').html('<strong>Frist for besvarelse: </strong>' + date + " " + newDueTime);
+                    $('#newDate').text('Frist for besvarelse ble oppdatert til ' + date + " " + newDueTime);
+                    $('#successDueDate').removeClass('hidden');
+                    setTimeout(function () {
+                        $('#updateDueDateModal').modal('hide');
+                        $('#successDueDate').addClass('hidden');
+                    }, 2000);
+                },
+                error: function (xhr) {
+                    alert('error');
+                    alert(xhr.responseText);
+                }
+            });
+        }
 
         /**
          * This function sets up the taskinformation gotten inside a modal from the ajax GET request.
@@ -306,7 +365,6 @@
                 }
             });
         }
-
     </script>
 {% endblock %}
 
@@ -363,4 +421,47 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="updateDueDateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Oppdater tidsfrist</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <input id="datepickerUpdateDue" type="text" class="form-control"
+                               placeholder="Velg ny dato for leveringsfrist"
+                               aria-describedby="basic-addon1"
+                               style="position: relative; z-index: 9999;">
+                        <span class="input-group-addon" id="basic-addon1"><i
+                                class="fa fa-calendar" aria-hidden="true"></i></span>
+                    </div>
+                    <div class="input-group clockpicker" style="margin-top: 10px;">
+                        <input id="timepickerUpdateDue" class="form-control"
+                               placeholder="Velg nytt klokkeslett for leveringsfrist"
+                               aria-describedby="basic-addon1" style="position: relative; z-index: 9999 !important;">
+                        <span class="input-group-addon" id="basic-addon1"><i
+                                class="fa fa-clock-o" aria-hidden="true"></i></span>
+                    </div>
+                    <div id="successDueDate" class="alert alert-success hidden" style="margin-top: 10px">
+                        <strong>Fullført!</strong> <h5 id="newDate"></h5>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="updateDueDate()">
+                        <i class="fa fa-check-square-o" aria-hidden="true"></i> Oppdater
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('.clockpicker').clockpicker({
+            autoclose: true
+        });
+    </script>
 {% endblock %}

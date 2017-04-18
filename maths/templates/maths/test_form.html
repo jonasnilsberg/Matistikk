@@ -1,6 +1,8 @@
 {% extends 'matistikk/base.html' %}
 {% load bootstrap3 %}
 {% bootstrap_css %}
+{% load staticfiles %}
+{% load static %}
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
 {% block head %}
@@ -20,11 +22,11 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
+    <script type="text/javascript" src="{% static 'maths/js/bootstrap-clockpicker.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'maths/css/bootstrap-clockpicker.min.css' %}" type="text/css"/>
 {% endblock %}
 
 {% block body %}
@@ -88,7 +90,10 @@
                                     <th>Brukerinfo</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <img src="http://dkclasses.com/images/loading.gif"
+                                     class="loading-indicator loading-filter"
+                                     style="display:none"/>
+                                <tbody class="tableBody">
                                 {% for student in students %}
                                     <tr id="user{{ student.id }}" style="cursor: pointer">
                                         <td><input type="checkbox"
@@ -120,7 +125,10 @@
                                     <th>Brukerinfo</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <img src="http://dkclasses.com/images/loading.gif"
+                                     class="loading-indicator loading-filter"
+                                     style="display:none"/>
+                                <tbody class="tableBody">
                                 {% for teacher in teachers %}
                                     <tr id="user{{ teacher.id }}" style="cursor: pointer">
                                         <td><input type="checkbox" value="{{ teacher.id }}"></td>
@@ -149,7 +157,10 @@
                                     <th>Medlemmer</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <img src="http://dkclasses.com/images/loading.gif"
+                                     class="loading-indicator loading-filter"
+                                     style="display:none"/>
+                                <tbody class="tableBody">
                                 {% for grade in grades %}
                                     <tr id="grade{{ grade.id }}" style="cursor: pointer">
                                         <td><input type="checkbox" value="{{ grade.id }}"></td>
@@ -157,7 +168,7 @@
                                         <td>{{ grade.school.school_name }}</td>
                                         <td>
                                             <button id="grade{{ grade.id }}" value="{{ grade.id }}"
-                                                    class='btn btn-default'>
+                                                    class='btn btn-default' data-target="{{ grade.school_id }}">
                                                 <i class="fa fa-graduation-cap" aria-hidden="true"></i>
                                                 Se klasseinfo
                                             </button>
@@ -178,7 +189,10 @@
                                     <th>Medlemmer</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <img src="http://dkclasses.com/images/loading.gif"
+                                     class="loading-indicator loading-filter"
+                                     style="display:none"/>
+                                <tbody class="tableBody">
                                 {% for group in groups %}
                                     <tr id="group{{ group.id }}" style="cursor: pointer">
                                         <td class="test"><input type="checkbox" value="{{ group.id }}"></td>
@@ -359,16 +373,16 @@
                                 <div class="panel-body">
                                     <div class="input-group">
                                         <input id="datepickerPublish" type="text" class="form-control"
-                                               aria-describedby="basic-addon1"
+                                               aria-describedby="basic-addon1" placeholder="Velg dato for tidsfrist"
                                                style="position: relative; z-index: 9999;">
                                         <span class="input-group-addon" id="basic-addon1"><i
                                                 class="fa fa-calendar" aria-hidden="true"></i></span>
                                     </div>
-                                    <div class="input-group" style="margin-top: 10px;">
+                                    <div class="input-group clockpicker" style="margin-top: 10px;">
                                         <input id="timepickerPublish" type="text" class="form-control"
-                                               placeholder="Velg klokkeslett for publisering"
+                                               placeholder="Velg klokkeslett for tidsfrist - HH:mm"
                                                aria-describedby="basic-addon1"
-                                               style="position: absolute; z-index: 9800;">
+                                               style="position: relative; z-index: 9500;">
                                         <span class="input-group-addon" id="basic-addon1"><i
                                                 class="fa fa-clock-o" aria-hidden="true"></i></span>
                                     </div>
@@ -393,7 +407,7 @@
                                             <span class="input-group-addon" id="basic-addon1"><i
                                                     class="fa fa-calendar" aria-hidden="true"></i></span>
                                         </div>
-                                        <div class="input-group" style="margin-top: 10px;">
+                                        <div class="input-group clockpicker" style="margin-top: 10px;">
                                             <input id="timepickerTimeLimit" type="text" class="form-control"
                                                    placeholder="Velg klokkeslett for tidsfrist - HH:mm"
                                                    aria-describedby="basic-addon1"
@@ -451,6 +465,7 @@
         {% endbuttons %}
     </form>
     <script>
+
         $(function () {
             $("#sortable").sortable({
                 helper: "original",
@@ -470,11 +485,9 @@
         });
 
         $(function () {
-            $('#timepickerPublish').timepicker({
-                timeFormat: 'HH:mm',
-                startHour: 8,
-                minTime: new Date(),
-                defaultTime: 'now',
+            $('.clockpicker').clockpicker({
+                autoclose: true,
+                'default': 'now'
             });
         });
 
@@ -483,13 +496,6 @@
             $("#datepickerTimeLimit").datepicker("option", "showButtonPanel", true);
             $("#datepickerTimeLimit").datepicker("option", "dateFormat", "DD, d MM, yy");
             $("#datepickerTimeLimit").datepicker("option", "minDate", "0");
-        });
-
-        $(function () {
-            $('#timepickerTimeLimit').timepicker({
-                timeFormat: 'HH:mm',
-                startHour: 8
-            });
         });
 
         function getOrder() {
@@ -599,6 +605,9 @@
             } else if (tab == '#order') {
                 $('#headingText').text('Vennligst velg rekkefølgen til oppgavene. Dra oppgavene i den rekkefølgen som passer.');
             } else if (tab == '#publish') {
+                var date = new Date();
+                var time = date.getHours() + ":" + date.getMinutes();
+                $('#timepickerPublish').val(time);
                 $('#headingText').text('Publiser test.');
             }
         });
@@ -610,11 +619,15 @@
         function previusTab() {
             $('.pagination > .active').prev('li').find('a').trigger('click');
         }
+
         function nextTab() {
             $('.pagination > .active').next('li').find('a').trigger('click');
         }
 
         function personDetail(button) {
+            $('#personInfoTable').addClass('hidden');
+            $('#loadingPerson').show();
+            $('#personModal').modal('show');
             $.ajax({
                 type: 'GET',
                 url: '{% url 'administration:personDetail' slug=12345 %}'.replace(/12345/, button.val()),
@@ -638,6 +651,8 @@
                         last_login.text(json.last_login);
                     }
                     $('#goToUserBtn').attr("href", '{% url 'administration:personDetail' slug=12345 %}'.replace(/12345/, button.val()));
+                    $('#loadingPerson').hide();
+                    $('#personInfoTable').removeClass('hidden');
                 },
                 error: function (xhr) {
                     alert('error');
@@ -651,8 +666,7 @@
             var $checkbox = $(this).find(':checkbox');
             var $button = $(this).find(':button');
             if ($(e.target).is(":button")) {
-                personDetail($button)
-                $('#personModal').modal('show');
+                personDetail($button);
             }
             else if (e.target.type == "checkbox") {
                 e.stopPropagation();
@@ -677,9 +691,7 @@
             var $checkbox = $(this).find(':checkbox');
             var $button = $(this).find(':button');
             if ($(e.target).is(":button")) {
-                personDetail($button)
-                $('#personModal').modal('show');
-
+                personDetail($button);
             }
             else if (e.target.type == "checkbox") {
                 e.stopPropagation();
@@ -710,6 +722,9 @@
             var $checkbox = $(this).find(':checkbox');
             var $button = $(this).find(':button');
             if ($(e.target).is(":button")) {
+                $('#loadingGrade').show();
+                $('#gradeInfoTable').addClass('hidden');
+                $('#gradeMemberModal').modal('show');
                 $.ajax({
                     type: 'GET',
                     url: "{% url 'administration:myPage' "admin" %}",
@@ -727,7 +742,10 @@
                         $.each(students, function (index, value) {
                             $('#gradeMemberTable').append('<tr><td>' + value.first_name + '</td><td>' + value.last_name + '</td><td>' + value.email + '</td><td>Elev</td></tr>');
                         });
-                        $('#gradeMemberModal').modal('show');
+                        $('#goToGradeBtn').attr("href", '{% url 'administration:gradeDetail' school_pk=12345 grade_pk=6789 %}'
+                            .replace(/6789/, $button.val()).replace(/12345/, $button.data("target")));
+                        $('#loadingGrade').hide();
+                        $('#gradeInfoTable').removeClass('hidden');
                     },
                     error: function (xhr) {
                         alert('error');
@@ -765,6 +783,9 @@
             var $checkbox = $(this).find(':checkbox');
             var $button = $(this).find(':button');
             if (e.target.type == "button") {
+                $('#loadingGroup').show();
+                $('#groupInfoTable').addClass('hidden');
+                $('#groupMemberModal').modal('show');
                 $.ajax({
                     type: 'GET',
                     url: "{% url 'administration:groupDetail' group_pk=12345 %}".replace(/12345/, $button.val()),
@@ -776,7 +797,9 @@
                             var email = value.email;
                             $('#groupMemberTable').append('<tr><td>' + value.first_name + '</td><td>' + value.last_name + '</td><td>' + email + '</td></tr>');
                         });
-                        $('#groupMemberModal').modal('show');
+                        $('#goToGroupBtn').attr("href", '{% url 'administration:groupDetail' group_pk=12345 %}'.replace(/12345/, $button.val()));
+                        $('#loadingGroup').hide();
+                        $('#groupInfoTable').removeClass('hidden');
                     },
                     error: function (xhr) {
                         alert('error');
@@ -868,6 +891,7 @@
                 }
             }
         }
+
         function searchGradeTable(inputTable) {
             var input, filter, table, tr, td, i, td1, td2;
             input = document.getElementById("search");
@@ -895,6 +919,8 @@
         $("#gradeDropList").change(function () {
             var grade_id = $(this).val();
             if (grade_id != "") {
+                $('.loading-filter').show();
+                $('.tableBody').addClass('hidden');
                 $.ajax({
                     type: 'GET',
                     url: '{% url 'administration:personList' %}',
@@ -909,7 +935,9 @@
                         $("#teachertable tbody tr").hide();
                         $.each(students, function (index, value) {
                             $("#user" + value.id).show();
-                        })
+                        });
+                        $('.loading-filter').hide();
+                        $('.tableBody').removeClass('hidden');
                     },
                     error: function (xhr) {
                         alert('error');
@@ -960,6 +988,8 @@
             var school_id = school;
             var school_name = $("#schoolDropList :selected").text();
             if (school_id != "") {
+                $('.loading-filter').show();
+                $('.tableBody').addClass('hidden');
                 $.ajax({
                     type: 'GET',
                     url: '{% url 'administration:personList' %}',
@@ -974,7 +1004,9 @@
                         $("#teachertable tbody tr").hide();
                         $.each(students, function (index, value) {
                             $("#user" + value.id).show();
-                        })
+                        });
+                        $('.loading-filter').hide();
+                        $('.tableBody').removeClass('hidden');
                     },
                     error: function (xhr) {
                         alert(xhr.responseText);
@@ -1000,6 +1032,9 @@
          * This function sets up the taskinformation gotten inside a modal from the ajax GET request.
          */
         function preview(e) {
+            $('#loadingPreview').show();
+            $('#taskpreview').addClass('hidden');
+            $('#previewTaskModal').modal('show');
             var id = e.value;
             $('#geogebradiv').hide();
             $('#textanswerdiv').hide();
@@ -1038,7 +1073,8 @@
                             div.innerHTML += "<input type='radio' name='optionsradio'> " + (value.option) + "<br>";
                         });
                     }
-                    $('#previewTaskModal').modal('show');
+                    $('#loadingPreview').hide();
+                    $('#taskpreview').removeClass('hidden');
                 },
                 error: function (xhr) {
                     alert('error');
@@ -1059,8 +1095,10 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h3 id="personMemberHeader">Brukerinformasjon</h3>
                 </div>
-                <div class="modal-body">
-                    <table class="table table-striped" id="personInfoTable">
+                <div class="modal-body" style="min-height: 20vh">
+                    <img src="http://dkclasses.com/images/loading.gif" id="loadingPerson" class="loading-indicator"
+                         style="display:none"/>
+                    <table class="table table-striped hidden" id="personInfoTable">
                         <tbody>
                         <tr>
                             <td>Fornavn:</td>
@@ -1110,9 +1148,11 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h3 id="gradeMemberHeader">Klasse</h3>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body modalOverflow" style="min-height: 20vh ">
+                    <img src="http://dkclasses.com/images/loading.gif" id="loadingGrade" class="loading-indicator"
+                         style="display:none"/>
                     <table class="table table-hover table-striped table-responsive table-condensed"
-                           id="addtable2">
+                           id="gradeInfoTable">
                         <thead>
                         <tr>
                             <th>Fornavn</th>
@@ -1127,6 +1167,7 @@
                 </div>
                 <div class="modal-footer">
                     {% buttons %}
+                        <a id="goToGradeBtn" href="#" type="button" class="btn btn-primary">Gå til klasse</a>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                     {% endbuttons %}
                 </div>
@@ -1141,8 +1182,10 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h3 id="groupMemberHeader">Gruppe</h3>
                 </div>
-                <div class="modal-body">
-                    <table class="table table-hover table-striped table-responsive table-condensed">
+                <div class="modal-body modalOverflow" style="min-height: 20vh;">
+                    <img src="http://dkclasses.com/images/loading.gif" id="loadingGroup" class="loading-indicator"
+                         style="display:none"/>
+                    <table class="table table-hover table-striped table-responsive table-condensed" id="groupInfoTable">
                         <thead>
                         <tr>
                             <th>Fornavn</th>
@@ -1156,6 +1199,7 @@
                 </div>
                 <div class="modal-footer">
                     {% buttons %}
+                        <a id="goToGroupBtn" href="#" type="button" class="btn btn-primary">Gå til gruppe</a>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                     {% endbuttons %}
                 </div>
@@ -1171,8 +1215,10 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Forhåndsvis oppgave</h4>
                 </div>
-                <div class="modal-body">
-                    <div class="row">
+                <div class="modal-body" style="min-height: 30vh;">
+                    <img src="http://dkclasses.com/images/loading.gif" id="loadingPreview" class="loading-indicator"
+                         style="display:none"/>
+                    <div id="taskpreview" class="row">
                         <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
                             <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
                         </div>
