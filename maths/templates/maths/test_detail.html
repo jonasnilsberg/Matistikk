@@ -22,12 +22,14 @@
         </div>
         <div class="panel-body">
             <ul class="nav nav-tabs">
-                {% if test.person_set %}
-                    <li class="nav active"><a href="#A" data-toggle="tab">Elever</a></li>{% endif %}
+                {% if students %}
+                    <li id="studentTab" class="nav active"><a href="#A" data-toggle="tab">Elever</a></li>{% endif %}
+                {% if teachers %}
+                    <li id="teacherTab" class="nav"><a href="#B" data-toggle="tab">Lærere</a></li>{% endif %}
                 {% if grades %}
-                    <li class="nav"><a href="#C" data-toggle="tab">Klasser</a></li>{% endif %}
+                    <li id="gradeTab" class="nav"><a href="#C" data-toggle="tab">Klasser</a></li>{% endif %}
                 {% if groups %}
-                    <li class="nav"><a href="#D" data-toggle="tab">Grupper</a></li>{% endif %}
+                    <li id="groupTab" class="nav"><a href="#D" data-toggle="tab">Grupper</a></li>{% endif %}
                 <li class="nav"><a href="#E" data-toggle="tab">Oppgaver</a></li>
             </ul>
             <div class="tab-content">
@@ -51,6 +53,37 @@
                                     <td>
                                         <button disabled='disabled' id="{{ student.username }}"
                                                 value="{{ student.username }}"
+                                                class='btn btn-default'>
+                                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                            Besvarelse
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+                {% if teachers %}
+                    <div class="tab-pane fade" id="B">
+                        <table class="table table-hover table-striped table-responsive" id="teachertable">
+                            <thead>
+                            <tr>
+                                <th>Fornavn</th>
+                                <th>Etternavn</th>
+                                <th>Brukernavn</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for teacher in teachers %}
+                                <tr id="user{{ teacher.id }}">
+                                    <td>{{ teacher.first_name }}</td>
+                                    <td>{{ teacher.last_name }}</td>
+                                    <td>{{ teacher.username }}</td>
+                                    <td>
+                                        <button disabled='disabled' id="{{ teacher.username }}"
+                                                value="{{ teacher.username }}"
                                                 class='btn btn-default'>
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
                                             Besvarelse
@@ -211,6 +244,21 @@
 
     <script>
         $(document).ready(function () {
+            if ($("#studentTab").length == 0) {
+                $('#teacherTab').addClass('active');
+                $('#B').removeClass('fade');
+                $('#B').addClass('active');
+                if ($('#teacherTab').length == 0) {
+                    $('#gradeTab').addClass('active');
+                    $('#C').removeClass('fade');
+                    $('#C').addClass('active');
+                    if ($('#gradeTab').length == 0) {
+                        $('#groupTab').addClass('active');
+                        $('#D').removeClass('fade');
+                        $('#D').addClass('active');
+                    }
+                }
+            }
             var group = $('.list-group-item').not(".small");
             group.each(function (index) {
                 var success = 0;
@@ -227,7 +275,6 @@
                 $(this).find('.label-info').text(items.length);
                 $(this).find('.label-success').text(success);
                 $(this).find('.label-danger').text(danger);
-
             });
         });
 

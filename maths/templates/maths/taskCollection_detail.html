@@ -143,7 +143,7 @@
             if (tab == '#A') {
                 $("#selectCategory").multiselect('disable');
                 $('#search').attr('placeholder', 'Søk etter publisert test...');
-            } else {
+            } else if (tab == '#B'){
                 $("#selectCategory").multiselect('enable');
                 $('#search').attr('placeholder', 'Søk etter oppgave...');
             }

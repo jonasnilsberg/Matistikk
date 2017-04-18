@@ -153,7 +153,7 @@
                     <option>Rekkefølge</option>
                 </select>
                 <div id="applet_container"></div>
-                <form class="form-horizontal form-margin hidden" action="" method="POST"
+                <form class="form-horizontal form-margin" action="" method="POST"
                       enctype="multipart/form-data">
                     {% csrf_token %}
                     {% bootstrap_field form.title %}
@@ -414,7 +414,7 @@
                             .append($("<option></option>")
                                 .attr("value", data.category_id)
                                 .text(category));
-                        $('.selectpicker').selectpicker('val', data.category_id);
+                        $('#choosetype option[value='+data.category_id + ']').attr('selected','selected');
                         $('.selectpicker').selectpicker('refresh');
                         $('#id_category_title').val("");
                     },

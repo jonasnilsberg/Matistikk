@@ -3,6 +3,7 @@ from . import views
 
 app_name = 'maths'
 urlpatterns = [
+
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'nyoppgave/$', views.CreateTaskView.as_view(), name='createTask'),
     url(r'equationEditor/$', views.equationEditor.as_view(), name='equationEditor'),
@@ -15,6 +16,7 @@ urlpatterns = [
     url(r'tester/$', views.TaskCollectionListView.as_view(), name='taskCollectionList'),
     url(r'tester/(?P<taskCollection_pk>[0-9]+)/$', views.TaskCollectionDetailView.as_view(),
         name='taskCollectionDetail'),
+    url(r'minetester/(?P<slug>[\w-]+)', views.TestListView.as_view(), name='testList'),
     url(r'tester/publisert/(?P<test_pk>[0-9]+)/$', views.TestDetailView.as_view(), name='testDetail'),
     url(r'tester/(?P<taskCollection_pk>[0-9]+)/publiser/$', views.TestCreateView.as_view(), name='testCreate'),
     url(r'test/(?P<test_pk>[0-9]+)/svar/$', views.AnswerCreateView.as_view(), name='answerCreate'),

@@ -459,7 +459,7 @@
         {% csrf_token %}
         {% bootstrap_form form %}
         {% buttons %}
-            <button type="submit" class="btn btn-success" id="createTestDisplayView">
+            <button type="submit" class="btn btn-success" id="createTest">
                 {% bootstrap_icon "check" %} Lagre
             </button>
         {% endbuttons %}
@@ -530,12 +530,16 @@
             var published = document.getElementById('id_published');
             published.value = publishedDateAndTime;
             if ($("#dueDateCheck").is(':checked')) {
-                var dueDate = new Date($("#datepickerTimeLimit").datepicker("getDate"));
-                var strDueDate = dueDate.getDate() + "." + (dueDate.getMonth() + 1) + "." + dueDate.getFullYear();
-                var dueDateTime = $('#timepickerTimeLimit').val();
-                var dueDateAndTime = strDueDate + " " + dueDateTime;
-                var dueDateForm = document.getElementById('id_dueDate');
-                dueDateForm.value = dueDateAndTime;
+                var date = $("#datepickerTimeLimit").datepicker("getDate");
+                var time = $('#timepickerTimeLimit').val();
+                if (date && time) {
+                    var dueDate = new Date($("#datepickerTimeLimit").datepicker("getDate"));
+                    var strDueDate = dueDate.getDate() + "." + (dueDate.getMonth() + 1) + "." + dueDate.getFullYear();
+                    var dueDateTime = $('#timepickerTimeLimit').val();
+                    var dueDateAndTime = strDueDate + " " + dueDateTime;
+                    var dueDateForm = document.getElementById('id_dueDate');
+                    dueDateForm.value = dueDateAndTime;
+                }
             }
             var rowCount = $('#selectedUserTable tr').length;
             if (rowCount == 0) {
@@ -545,7 +549,7 @@
                 });
                 $("#submitBtn").effect("shake");
             } else {
-                $('#createTestDisplayView').click();
+                $("#createTest").click();
             }
         }
 

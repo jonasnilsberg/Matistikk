@@ -430,7 +430,11 @@ class TaskCollectionDetailView(views.AjaxResponseMixin, generic.DetailView):
 class TestCreateView(views.AjaxResponseMixin, generic.CreateView):
     form_class = CreateTestForm
     template_name = 'maths/test_form.html'
-    success_url = reverse_lazy('maths:taskCollectionList')
+
+    def get_success_url(self):
+        success = reverse_lazy('maths:taskCollectionDetail',
+                               kwargs={'taskCollection_pk': self.kwargs.get('taskCollection_pk')})
+        return success
 
     def post_ajax(self, request, *args, **kwargs):
         test_id = request.POST['id']
@@ -504,6 +508,7 @@ class TestDetailView(views.AjaxResponseMixin, generic.DetailView):
         context['groups'] = Gruppe.objects.filter(tests__exact=test)
         return context
 
+
 class AnswerCreateView(generic.CreateView):
     model = Answer
     template_name = 'maths/answer_form.html'
@@ -519,4 +524,16 @@ class AnswerCreateView(generic.CreateView):
         context['test'] = test
         context['geogebratask'] = geogebratasks
         context['options'] = options
+        return context
+
+
+class TestListView(generic.ListView):
+    model = Test
+    template_name = 'maths/test_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TestListView, self).get_context_data(**kwargs)
+        user = Person.objects.get(username=self.kwargs.get('slug'))
+        context['object_list'] = Test.objects.filter(person=user)
+        context['grades'] = Grade.objects.filter(person=user)
         return context

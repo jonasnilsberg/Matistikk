@@ -326,7 +326,7 @@
          */
         function updateUsers(school) {
             var school_id = school;
-            if (school_id != "") {
+            if (school_id) {
                 $.ajax({
                     type: 'GET',
                     url: '{% url 'administration:personList' %}',

@@ -110,6 +110,7 @@
                     <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
                     <li><a href="{% url 'administration:myPage' request.user.username %}">Min Side</a></li>
                     <li><a href="{% url 'administration:gradeList' %}">Mine klasser</a></li>
+                    <li><a href="{% url 'maths:testList' request.user.username %}">Tilgjengelige tester</a></li>
                     <li><a href="{% url 'administration:personList' %}">Brukeroversikt</a></li>
                     <li><a href="aboutview">Om</a></li>
                 </ul>
