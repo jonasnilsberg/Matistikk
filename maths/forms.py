@@ -1,6 +1,7 @@
 from django import forms
-from .models import Task, Category, MultipleChoiceTask, GeogebraTask, Test
+from .models import Task, Category, MultipleChoiceTask, GeogebraTask, Test, Answer
 from administration.models import Person, Grade, School, Gruppe
+from django.forms import inlineformset_factory
 
 
 class CreateTaskForm(forms.ModelForm):
@@ -54,3 +55,13 @@ class CreateTestForm(forms.ModelForm):
     class Meta:
         model = Test
         fields = ['task_collection', 'randomOrder', 'published', 'dueDate']
+
+
+class CreateAnswerForm(forms.ModelForm):
+    textanswer = forms.CharField(max_length=32700, required=False)
+    reasoning = forms.CharField(max_length=32700, required=False)
+    base64answer = forms.CharField(max_length=500000, required=False)
+
+    class Meta:
+        model = Answer
+        fields = ['task', 'test', 'user']
