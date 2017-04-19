@@ -1,14 +1,13 @@
 from django.views import generic
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
-from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm
+from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm, AnswerFormset
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
+import json
 import datetime
-
-
 
 
 class IndexView(LoginRequiredMixin, generic.TemplateView):
@@ -511,10 +510,10 @@ class TestDetailView(views.AjaxResponseMixin, generic.DetailView):
 
 class AnswerCreateView(generic.CreateView):
     model = Answer
+    form_class = CreateAnswerForm
     template_name = 'maths/answer_form.html'
     pk_url_kwarg = 'test_pk'
     success_url = '/'
-    fields = ['task', 'test', 'user']
 
     def get_context_data(self, **kwargs):
         context = super(AnswerCreateView, self).get_context_data(**kwargs)
@@ -527,9 +526,17 @@ class AnswerCreateView(generic.CreateView):
         return context
 
 
-class TestListView(generic.ListView):
+class TestListView(views.AjaxResponseMixin, generic.ListView):
     model = Test
     template_name = 'maths/test_list.html'
+
+    def post_ajax(self, request, *args, **kwargs):
+        grades = request.POST['grades']
+        grade_list = json.loads(grades)
+        for grade in grade_list:
+            print(grade)
+        data = {'test': 'test'}
+        return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         context = super(TestListView, self).get_context_data(**kwargs)

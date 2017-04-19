@@ -538,7 +538,7 @@ class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView)
         if self.request.user.username == self.kwargs.get('slug'):
             url = reverse_lazy('administration:myPage', kwargs={'slug': self.kwargs.get('slug')})
         else:
-            url = super(PersonUpdateView, self).get_success_url(self)
+            url = super(PersonUpdateView, self).get_success_url()
         return url
 
     def form_valid(self, form):
