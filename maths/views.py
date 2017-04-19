@@ -1,13 +1,16 @@
 from django.views import generic
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
-from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm, AnswerFormset
+from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
 import json
 import datetime
+
+
+import random
 
 
 class IndexView(LoginRequiredMixin, generic.TemplateView):
@@ -520,7 +523,9 @@ class AnswerCreateView(generic.CreateView):
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
         geogebratasks = GeogebraTask.objects.filter(task__in=test.task_collection.tasks.all())
         options = MultipleChoiceTask.objects.filter(task__in=test.task_collection.tasks.all())
+        randomtest = sorted(test.task_collection.tasks.all(), key=lambda x: random.random())
         context['test'] = test
+        context['randomtest'] = randomtest
         context['geogebratask'] = geogebratasks
         context['options'] = options
         return context

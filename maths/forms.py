@@ -66,5 +66,4 @@ class CreateAnswerForm(forms.ModelForm):
         model = Answer
         fields = ['task', 'test', 'user']
 
-
 AnswerFormset = modelformset_factory(Answer, form=CreateAnswerForm, extra=1)
