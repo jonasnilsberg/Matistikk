@@ -114,5 +114,10 @@ class Answer(models.Model):
     task = models.ForeignKey(Task)
     test = models.ForeignKey(Test)
     user = models.ForeignKey(Person)
+    reasoning = models.CharField(max_length=32700, null=True)
+    text = models.CharField(max_length=32700, null=True)
 
 
+class GeogebraAnswer(models.Model):
+    answer = models.ForeignKey(Answer)
+    base64 = models.CharField(max_length=32700)

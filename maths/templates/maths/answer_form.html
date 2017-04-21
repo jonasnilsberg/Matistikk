@@ -14,7 +14,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'administration/style.css' %}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" type="image/jpeg" href="http://bildr.no/view/WS9ITTNK">
-    <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
+    <script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
+    <script type="text/javascript" src="{% static 'maths/js/scrolloverflow.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'maths/js/jquery.fullPage.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'maths/css/jquery.fullPage.css' %}"/>
 </head>
@@ -397,33 +398,27 @@
 <script>
     var scroll = 0;
     $(document).ready(function () {
+        $('#fullpage').fullpage({
+            menu: '#taskBtnList',
+            scrollingSpeed: 1,
+            scrollBar: false ,
+            scrollOverflow: true
+        });
+        $.fn.fullpage.setAllowScrolling(false);
         for (var k = 0; k < taskcount; k++) {
             if (document.getElementById('applet_container' + (k + 1)) != null) {
                 applet[k].inject('applet_container' + (k + 1), 'preferhtml5');
             }
         }
-        $('#fullpage').fullpage({
-            menu: '#taskBtnList',
-            scrollingSpeed: 1,
-            scrollBar: false,
-            fitToSection: false,
-            touchSensitivity: 20,
-            overflowScroll: true,
-            fitToSectionDelay: 5000,
-            afterSlideLoad: function (anchorLink, index, slideAnchor, slideIndex) {
-                alert('adsad');
-            }
-        });
-        $.fn.fullpage.setAllowScrolling(false);
     });
 
     function ggbOnInit(param) {
     }
     $(window).scroll(function (e) {
-        /* if (scroll < 10) {
-         window.scrollTo(0, 1);
-         scroll++;
-         }*/
+        if (scroll < 5) {
+            window.scrollTo(0, 1);
+            scroll++;
+        }
     });
     function nextTask() {
         $('#fullpage').fullpage.moveSectionDown();
@@ -466,7 +461,8 @@
                 "showTutorialLink": false,
                 "showLogging": false,
                 "useBrowserForJS": true,
-                "ggbBase64": base64
+                "ggbBase64": base64,
+                "preventFocus": true
             };
         }
         var app = new GGBApplet(parameters, '5.0', 'applet_container' + (i + 1));

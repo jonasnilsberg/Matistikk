@@ -9,7 +9,6 @@ from administration.models import Grade, Person, Gruppe, School
 import json
 import datetime
 
-
 import random
 
 
@@ -535,11 +534,57 @@ class TestListView(views.AjaxResponseMixin, generic.ListView):
     model = Test
     template_name = 'maths/test_list.html'
 
-    def post_ajax(self, request, *args, **kwargs):
-        grades = request.POST['grades']
+    def get_ajax(self, request, *args, **kwargs):
+        test = Test.objects.get(id=request.GET['test'])
+        grade_table = []
+        group_table = []
+        student_table = []
+        grades = request.GET['grades']
+        groups = request.GET['groups']
+        students = request.GET['students']
         grade_list = json.loads(grades)
-        for grade in grade_list:
-            print(grade)
+        group_list = json.loads(groups)
+        student_list = json.loads(students)
+        for grade_id in grade_list:
+            if test.grade_set.filter(id=grade_id).exists():
+                grade_table.append(True)
+            else:
+                grade_table.append(False)
+        for group_id in group_list:
+            if test.gruppe_set.filter(id=group_id).exists():
+                group_table.append(True)
+            else:
+                group_table.append(False)
+        for student_id in student_list:
+            if test.person_set.filter(id=student_id).exists() or test.grade_set.filter(
+                    person__id=student_id).exists() or test.gruppe_set.filter(persons__id=student_id).exists():
+                student_table.append(True)
+            else:
+                student_table.append(False)
+        data = {
+            "grades": grade_table,
+            'groups': group_table,
+            'students': student_table
+        }
+        return JsonResponse(data)
+
+    def post_ajax(self, request, *args, **kwargs):
+        test = Test.objects.get(id=request.POST['test'])
+        grades = request.POST['grades']
+        groups = request.POST['groups']
+        students = request.POST['students']
+        grade_list = json.loads(grades)
+        group_list = json.loads(groups)
+        student_list = json.loads(students)
+        for grade_id in grade_list:
+            grade = Grade.objects.get(id=grade_id)
+            grade.tests.add(test)
+        for group_id in group_list:
+            group = Gruppe.objects.get(id=group_id)
+            group.tests.add(test)
+        for student_id in student_list:
+            student = Person.objects.get(id=student_id)
+            student.tests.add(test)
         data = {'test': 'test'}
         return JsonResponse(data)
 

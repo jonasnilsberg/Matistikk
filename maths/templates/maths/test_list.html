@@ -100,6 +100,19 @@
             })
         });
 
+        $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+            var tab = $(e.target).attr('href');
+            if (tab == '#grades') {
+                $('.alert-danger > span').text('klasser');
+            }
+            if (tab == '#groups') {
+                $('.alert-danger > span').text('grupper');
+            }
+            if (tab == '#students') {
+                $('.alert-danger > span').text('studenter');
+            }
+        });
+
         $("#dropList").change(function () {
             var val = $(this).val();
             var rows = $('#publishedtable').find('> tbody > tr');
@@ -143,15 +156,82 @@
         }
 
         function publishTest(elem) {
+            var username = "{{ request.user.username }}";
             var id = elem.value;
             var title = elem.name;
             $('#modalHeading').text('Publiser test - ' + title);
             $('#publishTestBtn').attr('value', id);
+            var grades = [];
+            var groups = [];
+            var students = [];
+            var gradesTable = $('#gradetable tr').not(':first');
+            var groupTable = $('#grouptable tr').not(':first');
+            var studentTable = $('#studenttable tr').not(':first');
+            gradesTable.each(function () {
+                var id = $(this).find(':checkbox').val();
+                grades.push(id);
+            });
+            groupTable.each(function () {
+                var id = $(this).find(':checkbox').val();
+                groups.push(id);
+            });
+            studentTable.each(function () {
+                var id = $(this).find(':checkbox').val();
+                students.push(id);
+            });
+            var grades_id = JSON.stringify(grades);
+            var groups_id = JSON.stringify(groups);
+            var students_id = JSON.stringify(students);
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'maths:testList' slug=12345 %}'.replace(/12345/, username),
+                data: {
+                    'test': id,
+                    'grades': grades_id,
+                    'groups': groups_id,
+                    'students': students_id
+                },
+                dataType: 'json',
+                success: function (data) {
+                    grades = data.grades;
+                    groups = data.groups;
+                    students = data.students;
+                    gradesTable.each(function (index) {
+                        if (grades[index]) {
+                            $(this).addClass('danger');
+                            $(this).css("cursor", "not-allowed");
+                            $(this).find(':checkbox').attr('disabled', 'disabled');
+                        }
+                    });
+                    groupTable.each(function (index) {
+                        if (groups[index]) {
+                            $(this).addClass('danger');
+                            $(this).css("cursor", "not-allowed");
+                            $(this).find(':checkbox').attr('disabled', 'disabled');
+                        }
+                    });
+                    studentTable.each(function (index) {
+                        if (students[index]) {
+                            $(this).addClass('danger');
+                            $(this).css("cursor", "not-allowed");
+                            $(this).find(':checkbox').attr('disabled', 'disabled');
+                        }
+                    });
+
+                },
+                error: function (xhr) {
+                    alert('error');
+                    alert(xhr.responseText);
+                }
+            });
             $('#publishTestModal').modal('show');
         }
 
         function publish(elem) {
+            alert('test');
             var grades = [];
+            var groups = [];
+            var students = [];
             var testID = elem.value;
             var gradesTable = $('#gradetable tr.success');
             gradesTable.each(function () {
@@ -159,17 +239,53 @@
                 grades.push(id);
             });
             var grades_id = JSON.stringify(grades);
+            var groupTable = $('#grouptable tr.success');
+            groupTable.each(function () {
+                var id = $(this).find(':checkbox').val();
+                groups.push(id);
+            });
+            var groups_id = JSON.stringify(groups);
+            var studentTable = $('#studenttable tr.success');
+            studentTable.each(function () {
+                var id = $(this).find(':checkbox').val();
+                students.push(id);
+            });
+            var students_id = JSON.stringify(students);
             var username = "{{ request.user.username }}";
             $.ajax({
                 type: 'POST',
                 url: '{% url 'maths:testList' slug=12345 %}'.replace(/12345/, username),
                 data: {
+                    'test': testID,
                     'grades': grades_id,
+                    'groups': groups_id,
+                    'students': students_id,
                     'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
                 },
                 dataType: 'json',
                 success: function () {
-                    alert('success');
+                    gradesTable.each(function () {
+                        $(this).addClass('danger');
+                        $(this).css("cursor", "not-allowed");
+                        $(this).find(':checkbox').attr('disabled', 'disabled');
+                    });
+                    groupTable.each(function () {
+                        $(this).addClass('danger');
+                        $(this).css("cursor", "not-allowed");
+                        $(this).find(':checkbox').attr('disabled', 'disabled');
+                    });
+                    studentTable.each(function () {
+                        $(this).addClass('danger');
+                        $(this).css("cursor", "not-allowed");
+                        $(this).find(':checkbox').attr('disabled', 'disabled');
+                    });
+                    $('.alert-success').removeClass('hidden');
+                    $('.alert-danger').addClass('hidden');
+                    $(".alert-success").fadeTo(7500, 500).slideUp(500, function () {
+                        $(".alert-success").slideUp(500);
+                        $('.alert-danger').removeClass('hidden');
+                    });
+
                 },
                 error: function (xhr) {
                     alert('error');
@@ -269,6 +385,17 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="tab-pane fade" id="publishedtab">
+                            TEsting
+                        </div>
+                    </div>
+                    <div class="alert alert-success hidden" style="margin-top: 15px; margin-bottom: 0px;">
+                        <strong>Fullført!</strong>
+                        Testen ble publisert hos de valgte objektene.
+                    </div>
+                    <div class="alert alert-danger" style="margin-top: 15px; margin-bottom: 0px;"><strong>Allerede
+                        publisert.</strong> Denne testen er allerede
+                        publisert hos <span>klasser</span> markert med denne fargen.
                     </div>
                 </div>
                 <div class="modal-footer">

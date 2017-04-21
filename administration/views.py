@@ -14,6 +14,7 @@ from django.views import View, generic
 from .forms import (ChangePasswordForm, FileUploadForm, PersonForm,
                     SchoolAdministratorForm, SchoolForm)
 from .models import Grade, Person, School, Gruppe
+from maths.models import Test
 
 
 class AdministratorCheck(views.UserPassesTestMixin):
