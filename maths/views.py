@@ -2,7 +2,7 @@ from django.views import generic
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm
-from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer
+from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, GeogebraAnswer
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
@@ -10,6 +10,7 @@ import json
 import datetime
 
 import random
+from django.http import HttpResponseRedirect
 
 
 class IndexView(LoginRequiredMixin, generic.TemplateView):
@@ -32,6 +33,17 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         context['schools'] = School.objects.count()
         context['grades'] = Grade.objects.count()
         context['groups'] = Gruppe.objects.count()
+
+        if self.request.user.role == 1:
+            answers = Answer.objects.filter(user=self.request.user)
+            answered = Test.objects.filter(answer__in=answers).distinct()
+            context['answered'] = answered
+            tests = Test.objects.filter(person=self.request.user)
+            notanswered = []
+            for test in tests:
+                if test not in answered:
+                    notanswered.append(test)
+            context['notanswered'] = notanswered
         return context
 
 
@@ -510,12 +522,12 @@ class TestDetailView(views.AjaxResponseMixin, generic.DetailView):
         return context
 
 
-class AnswerCreateView(generic.CreateView):
-    model = Answer
+class AnswerCreateView(generic.FormView):
     form_class = CreateAnswerForm
     template_name = 'maths/answer_form.html'
-    pk_url_kwarg = 'test_pk'
-    success_url = '/'
+
+    def get_success_url(self):
+        return reverse_lazy('maths:index')
 
     def get_context_data(self, **kwargs):
         context = super(AnswerCreateView, self).get_context_data(**kwargs)
@@ -527,7 +539,29 @@ class AnswerCreateView(generic.CreateView):
         context['randomtest'] = randomtest
         context['geogebratask'] = geogebratasks
         context['options'] = options
+        z = 0
+        for task in test.task_collection.tasks.all():
+            context['form' + str(z)] = CreateAnswerForm(prefix="task" + str(z))
+            z += 1
         return context
+
+    def post(self, request, *args, **kwargs):
+        test = Test.objects.get(id=self.kwargs.get('test_pk'))
+        y = 0
+        for task in test.task_collection.tasks.all():
+            text = request.POST["task" + str(y) + "-text"]
+            reasoning = request.POST["task" + str(y) + "-reasoning"]
+            taskid = request.POST["task" + str(y) + "-task"]
+            task = Task.objects.get(id=taskid)
+            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, task=task)
+            answer.save()
+            base64 = request.POST["task" + str(y) + "-base64answer"]
+            if task.extra:
+                geogebraanswer = GeogebraAnswer(answer=answer, base64=base64)
+                geogebraanswer.save()
+            y += 1
+        url = reverse('maths:index')
+        return HttpResponseRedirect(url)
 
 
 class TestListView(views.AjaxResponseMixin, generic.ListView):

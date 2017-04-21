@@ -7,21 +7,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Matistikk</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title>Matistikk - {{ test }}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'administration/style.css' %}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" type="image/jpeg" href="http://bildr.no/view/WS9ITTNK">
-    <script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
-    <script type="text/javascript" src="{% static 'maths/js/scrolloverflow.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
     <script type="text/javascript" src="{% static 'maths/js/jquery.fullPage.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'maths/css/jquery.fullPage.css' %}"/>
 </head>
 
 <body>
 <div class="row">
+    <form action="" method="post" hidden>
+        {% csrf_token %}
+        {{ form0 }}<br>
+        {{ form1 }}<br>
+        {{ form2 }}<br>
+        {{ form3 }}<br>
+        <button id="submitbutton" type="submit">Send inn</button>
+    </form>
     <nav id="tasknav" class="navbar navbar-default navbar-fixed-bottom">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="taskbar">
@@ -31,7 +38,10 @@
                             <a href="#oppgave{{ forloop.counter }}">Oppgave {{ forloop.counter }}</a>
                         </li>
                         {% if forloop.last %}
-                            <a class="btn btn-success btn-lg" type="submit">Send Inn</a>
+                            <li data-menuanchor="summary">
+                                <a href="#summary">Oppsummering</a>
+                            </li>
+                            <a class="btn btn-success btn-lg" type="button" onclick="submitTask()">Send Inn</a>
                         {% endif %}
                     {% endfor %}
                 </ul>
@@ -45,8 +55,9 @@
     {% if test.randomOrder %}
         <div id="fullpage">
             {% for task in randomtest %}
-                <div id="task{{ forloop.counter }}" class="section" data-anchor="oppgave{{ forloop.counter }}">
-                    <div class="col-xs-12 container-fluid" style="min-height: 100vh">
+                <div class="section" data-anchor="oppgave{{ forloop.counter }}">
+                    <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid" style="min-height: 100vh"
+                         data-taskid="{{ task.id }}">
                         <div class="panel panel-info">
                             <div class="panel-heading">
                                 <h3>Oppgave {{ forloop.counter }}</h3>
@@ -80,11 +91,12 @@
                                                 </div>
                                             {% elif task.answertype == 2 %}
                                                 <div id="multiplechoicediv">
-                                                    <label for="reasoning">Svaralternativer</label>
+                                                    <label>Svaralternativer</label>
                                                     <div id="optionsdiv">
                                                         {% for option in options %}
                                                             {% if option.task_id == task.id %}
-                                                                <input type="radio" name="multiplechoice{{ task.id }}">
+                                                                <input type="radio" name="multiplechoice{{ task.id }}"
+                                                                       value="{{ option.option }}">
                                                                 {{ option.option }}<br>
                                                             {% endif %}
                                                         {% endfor %}
@@ -94,8 +106,8 @@
 
                                             {% if task.reasoning %}
                                                 <div id="reasoningdiv">
-                                                    <label for="reasoning">Begrunnelse</label>
-                                                    <textarea class="form-control" id="reasoning" rows="6"
+                                                    <label for="reasoning{{ task.id }}">Begrunnelse</label>
+                                                    <textarea class="form-control" id="reasoning{{ task.id }}" rows="6"
                                                               style="resize:vertical"
                                                               placeholder="Begrunn svaret ditt..."></textarea>
                                                 </div>
@@ -147,11 +159,12 @@
                                                 </div>
                                             {% elif task.answertype == 2 %}
                                                 <div id="multiplechoicediv">
-                                                    <label for="reasoning">Svaralternativer</label>
+                                                    <label>Svaralternativer</label>
                                                     <div id="optionsdiv">
                                                         {% for option in options %}
                                                             {% if option.task_id == task.id %}
-                                                                <input type="radio" name="multiplechoice{{ task.id }}">
+                                                                <input type="radio" name="multiplechoice{{ task.id }}"
+                                                                       value="{{ option.option }}">
                                                                 {{ option.option }}<br>
                                                             {% endif %}
                                                         {% endfor %}
@@ -161,8 +174,8 @@
 
                                             {% if task.reasoning %}
                                                 <div id="reasoningdiv">
-                                                    <label for="reasoning">Begrunnelse</label>
-                                                    <textarea class="form-control" id="reasoning" rows="6"
+                                                    <label for="reasoning{{ task.id }}">Begrunnelse</label>
+                                                    <textarea class="form-control" id="reasoning{{ task.id }}" rows="6"
                                                               style="resize:vertical"
                                                               placeholder="Begrunn svaret ditt..."></textarea>
                                                 </div>
@@ -201,13 +214,21 @@
                         </div>
                     </div>
                 </div>
+                {% if forloop.last %}
+                    <div class="section" data-anchor="summary">
+                        <div id="summary" class="col-xs-12 container-fluid" style="min-height: 100vh">
+                            Salaam Jonas
+                        </div>
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
     {% else %}
         <div id="fullpage">
         {% for taskorder in test.taskorder_set.all %}
-            <div id="task{{ forloop.counter }}" class="section" data-anchor="oppgave{{ forloop.counter }}">
-                <div class="col-xs-12 container-fluid" style="min-height: 100vh">
+            <div class="section" data-anchor="oppgave{{ forloop.counter }}">
+                <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid" style="min-height: 100vh"
+                     data-taskid="{{ taskorder.task.id }}">
                     <div class="panel panel-info">
                         <div class="panel-heading">
                             <h3>Oppgave {{ forloop.counter }}</h3>
@@ -234,19 +255,21 @@
                                     <div class="panel-body">
                                         {% if taskorder.task.answertype == 1 %}
                                             <div id="textanswerdiv">
-                                                <label for="answer">Tekstsvar</label>
-                                                <textarea class="form-control" id="answer" rows="6"
+                                                <label for="answer{{ taskorder.task.id }}">Tekstsvar</label>
+                                                <textarea class="form-control" id="answer{{ taskorder.task.id }}"
+                                                          rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Skriv svaret ditt her..."></textarea>
                                             </div>
                                         {% elif taskorder.task.answertype == 2 %}
                                             <div id="multiplechoicediv">
-                                                <label for="reasoning">Svaralternativer</label>
+                                                <label>Svaralternativer</label>
                                                 <div id="optionsdiv">
                                                     {% for option in options %}
                                                         {% if option.task_id == taskorder.task.id %}
                                                             <input type="radio"
-                                                                   name="multiplechoice{{ taskorder.task.id }}">
+                                                                   name="multiplechoice{{ taskorder.task.id }}"
+                                                                   value="{{ option.option }}">
                                                             {{ option.option }}<br>
                                                         {% endif %}
                                                     {% endfor %}
@@ -256,8 +279,9 @@
 
                                         {% if taskorder.task.reasoning %}
                                             <div id="reasoningdiv">
-                                                <label for="reasoning">Begrunnelse</label>
-                                                <textarea class="form-control" id="reasoning" rows="6"
+                                                <label for="reasoning{{ taskorder.task.id }}">Begrunnelse</label>
+                                                <textarea class="form-control" id="reasoning{{ taskorder.task.id }}"
+                                                          rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Begrunn svaret ditt..."></textarea>
                                             </div>
@@ -313,7 +337,8 @@
                                                     {% for option in options %}
                                                         {% if option.task_id == taskorder.task.id %}
                                                             <input type="radio"
-                                                                   name="multiplechoice{{ taskorder.task.id }}">
+                                                                   name="multiplechoice{{ taskorder.task.id }}"
+                                                                   value="{{ option.option }}">
                                                             {{ option.option }}<br>
                                                         {% endif %}
                                                     {% endfor %}
@@ -362,6 +387,13 @@
                     </div>
                 </div>
             </div>
+            {% if forloop.last %}
+                <div class="section" data-anchor="summary">
+                    <div id="summary" class="col-xs-12 container-fluid" style="min-height: 100vh">
+                        Salaam Jonas
+                    </div>
+                </div>
+            {% endif %}
         {% endfor %}
     {% endif %}
     </div>
@@ -374,21 +406,18 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Er du sikker på at du vil avslutte testen? Ingen svar vil bli lagret dersom
-                    du
-                    avslutter nå.</h4>
+                    du avslutter nå.</h4>
             </div>
             <div class="modal-body">
                 <button type="button" class="btn btn-success" data-dismiss="modal" style="width: 49%; height: 10em">
                         <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"
                               style="font-size: 5em"></span><br>
-                    Ta
-                    meg tilbake til testen
+                    Ta meg tilbake til testen
                 </button>
                 <a type="button" class="btn btn-danger" href="{% url 'maths:index' %}"
                    style="width: 49%; height: 10em"><br><span
                         class="glyphicon glyphicon-remove" aria-hidden="true" style="font-size: 5em"></span><br>
-                    Avslutt
-                    test
+                    Avslutt test
                 </a>
             </div>
         </div>
@@ -396,30 +425,21 @@
 </div>
 
 <script>
-    var scroll = 0;
     $(document).ready(function () {
-        $('#fullpage').fullpage({
-            menu: '#taskBtnList',
-            scrollingSpeed: 1,
-            scrollBar: false ,
-            scrollOverflow: true
-        });
-        $.fn.fullpage.setAllowScrolling(false);
         for (var k = 0; k < taskcount; k++) {
             if (document.getElementById('applet_container' + (k + 1)) != null) {
                 applet[k].inject('applet_container' + (k + 1), 'preferhtml5');
             }
         }
+
+        $('#fullpage').fullpage({
+            menu: '#taskBtnList',
+            controlArrows: true,
+            scrollingSpeed: 1
+        });
     });
 
-    function ggbOnInit(param) {
-    }
-    $(window).scroll(function (e) {
-        if (scroll < 5) {
-            window.scrollTo(0, 1);
-            scroll++;
-        }
-    });
+
     function nextTask() {
         $('#fullpage').fullpage.moveSectionDown();
     }
@@ -445,7 +465,7 @@
         if (document.getElementById('base64' + (i + 1)) != null) {
             base64 = document.getElementById('base64' + (i + 1)).value;
             parameters = {
-                "id": "ggbApplet" + i,
+                "id": "ggbApplet" + (i + 1),
                 "width": viewPortWidth,
                 "height": viewPortHeight,
                 "showToolBar": true,
@@ -461,8 +481,7 @@
                 "showTutorialLink": false,
                 "showLogging": false,
                 "useBrowserForJS": true,
-                "ggbBase64": base64,
-                "preventFocus": true
+                "ggbBase64": base64
             };
         }
         var app = new GGBApplet(parameters, '5.0', 'applet_container' + (i + 1));
@@ -472,13 +491,249 @@
     //  when used with Math Apps Bundle, uncomment this:
     // applet.setHTML5Codebase('GeoGebra/HTML5/5.0/web3d/');
 
-</script>
+    function submitTask() {
+        for (var i = 0; i < taskcount; i++) {
+            var div = $('#task' + (i + 1));
+            var taskid = div.data('taskid');
+            var taskid2 = document.getElementById('id_task' + i + '-task');
+            var textanswer = $('#answer' + taskid).val();
+            var textanswer2 = document.getElementById('id_task' + i + '-text');
+            var reasoning = $('#reasoning' + taskid).val();
+            var reasoning2 = document.getElementById('id_task' + i + '-reasoning');
+            var base64 = getGeoBase64(i);
+            var base642 = document.getElementById('id_task' + i + '-base64answer');
+            var multiplechoiceanswer = $("input[name=multiplechoice" + taskid + "]:checked").val();
 
-<script>
-    $(window).ready(function () {
+            taskid2.value = taskid;
+            if (typeof textanswer !== 'undefined') {
+                textanswer2.value = textanswer;
+            }
+            else if (multiplechoiceanswer !== "" && multiplechoiceanswer !== null && typeof multiplechoiceanswer !== 'undefined') {
+                textanswer2.value = multiplechoiceanswer;
+            }
 
-    });
+            if (typeof reasoning !== 'undefined') {
+                reasoning2.value = reasoning;
+            }
+            if (base64 !== "" && base64 !== null) {
+                base642.value = base64;
+            }
+        }
+        $('#submitbutton').click();
+    }
 
+    function getGeoBase64(num) {
+        var base64;
+        switch (num) {
+            case 0:
+                if (typeof ggbApplet1 !== 'undefined') {
+                    base64 = ggbApplet1.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 1:
+                if (typeof ggbApplet2 !== 'undefined') {
+                    base64 = ggbApplet2.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 2:
+                if (typeof ggbApplet3 !== 'undefined') {
+                    base64 = ggbApplet3.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 3:
+                if (typeof ggbApplet4 !== 'undefined') {
+                    base64 = ggbApplet4.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 4:
+                if (typeof ggbApplet5 !== 'undefined') {
+                    base64 = ggbApplet5.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 5:
+                if (typeof ggbApplet6 !== 'undefined') {
+                    base64 = ggbApplet6.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 6:
+                if (typeof ggbApplet7 !== 'undefined') {
+                    base64 = ggbApplet7.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 7:
+                if (typeof ggbApplet8 !== 'undefined') {
+                    base64 = ggbApplet8.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 8:
+                if (typeof ggbApplet9 !== 'undefined') {
+                    base64 = ggbApplet9.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 9:
+                if (typeof ggbApplet10 !== 'undefined') {
+                    base64 = ggbApplet10.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 10:
+                if (typeof ggbApplet11 !== 'undefined') {
+                    base64 = ggbApplet11.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 11:
+                if (typeof ggbApplet12 !== 'undefined') {
+                    base64 = ggbApplet12.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 12:
+                if (typeof ggbApplet13 !== 'undefined') {
+                    base64 = ggbApplet13.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 13:
+                if (typeof ggbApplet14 !== 'undefined') {
+                    base64 = ggbApplet14.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 14:
+                if (typeof ggbApplet15 !== 'undefined') {
+                    base64 = ggbApplet15.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 15:
+                if (typeof ggbApplet16 !== 'undefined') {
+                    base64 = ggbApplet16.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 16:
+                if (typeof ggbApplet17 !== 'undefined') {
+                    base64 = ggbApplet17.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 17:
+                if (typeof ggbApplet18 !== 'undefined') {
+                    base64 = ggbApplet18.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 18:
+                if (typeof ggbApplet19 !== 'undefined') {
+                    base64 = ggbApplet19.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 19:
+                if (typeof ggbApplet20 !== 'undefined') {
+                    base64 = ggbApplet20.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 20:
+                if (typeof ggbApplet21 !== 'undefined') {
+                    base64 = ggbApplet21.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 21:
+                if (typeof ggbApplet22 !== 'undefined') {
+                    base64 = ggbApplet22.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+            case 22:
+                if (typeof ggbApplet23 !== 'undefined') {
+                    base64 = ggbApplet23.getBase64();
+                }
+                else {
+                    base64 = null;
+                }
+                return base64;
+                break;
+        }
+    }
 </script>
 </body>
 </html>
