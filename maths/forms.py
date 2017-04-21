@@ -58,10 +58,10 @@ class CreateTestForm(forms.ModelForm):
 
 
 class CreateAnswerForm(forms.ModelForm):
-    textanswer = forms.CharField(max_length=32700, required=False)
-    reasoning = forms.CharField(max_length=32700, required=False)
     base64answer = forms.CharField(max_length=500000, required=False)
+    reasoning = forms.CharField(max_length=32700, required=False)
+    text = forms.CharField(max_length=32700, required=False)
 
     class Meta:
         model = Answer
-        fields = ['task', 'test', 'user']
+        fields = ['task', 'reasoning', 'text']
