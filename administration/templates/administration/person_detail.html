@@ -6,128 +6,168 @@
 
 {% block body %}
     <div class="panel panel-info">
-        <div class="panel-heading">
-            <h2><i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ person.get_full_name }}</h2>
-            <div class="row">
-                <div class="col-md-2">
-                    <h5><i class="fa fa-user" aria-hidden="true"></i> Brukernavn - {{ person.username }}</h5>
-                    <h5><i class="fa fa-user-o" aria-hidden="true"></i> Brukertype - {% if person.role == 4 %}
-                        Administrator
-                    {% elif person.role == 3 %}
-                        Skoleadministrator
-                    {% elif person.role == 2 %}
-                        Lærer
-                    {% else %}
-                        Elev
-                    {% endif %}</h5>
-                    <h5><i class="fa fa-sign-in" aria-hidden="true"></i> Sist innlogget - {{ person.last_login }}</h5>
-                </div>
-                <div class="col-md-3">
-                    <h5><i class="fa fa-calendar" aria-hidden="true"></i> Fødselsdato - {{ person.date_of_birth }}</h5>
-                    {% if person.email %}
-                        <h5><i class="fa fa-envelope-o" aria-hidden="true"></i> Epost - {{ person.email }}</h5>
-                    {% endif %}
-                    <h5><i class="fa fa-venus-mars" aria-hidden="true"></i> Kjønn - {% if person.sex == 'M' %}
-                        Gutt
-                    {% else %}
-                        Jente
-                    {% endif %}</h5>
-                </div>
+    <div class="panel-heading">
+        <h2><i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ person.get_full_name }}</h2>
+        <div class="row">
+            <div class="col-md-2">
+                <h5><i class="fa fa-user" aria-hidden="true"></i> Brukernavn - {{ person.username }}</h5>
+                <h5><i class="fa fa-user-o" aria-hidden="true"></i> Brukertype - {% if person.role == 4 %}
+                    Administrator
+                {% elif person.role == 3 %}
+                    Skoleadministrator
+                {% elif person.role == 2 %}
+                    Lærer
+                {% else %}
+                    Elev
+                {% endif %}</h5>
+                <h5><i class="fa fa-sign-in" aria-hidden="true"></i> Sist innlogget - {{ person.last_login }}</h5>
+            </div>
+            <div class="col-md-3">
+                <h5><i class="fa fa-calendar" aria-hidden="true"></i> Fødselsdato - {{ person.date_of_birth }}</h5>
+                {% if person.email %}
+                    <h5><i class="fa fa-envelope-o" aria-hidden="true"></i> Epost - {{ person.email }}</h5>
+                {% endif %}
+                <h5><i class="fa fa-venus-mars" aria-hidden="true"></i> Kjønn - {% if person.sex == 'M' %}
+                    Gutt
+                {% else %}
+                    Jente
+                {% endif %}</h5>
             </div>
         </div>
-        <div class="panel-body">
-            <ul class="nav nav-tabs">
-                <li class="nav active"><a href="#A" data-toggle="tab">Klasser</a></li>
-                {% if groups %}
-                    <li class="nav"><a href="#B" data-toggle="tab">Grupper</a></li>
-                {% endif %}
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane fade in active" id="A">
-                    <table class="table table-hover table-striped table-responsive" id="schooltable">
+    </div>
+    <div class="panel-body">
+        <ul class="nav nav-tabs">
+            <li class="nav active"><a href="#A" data-toggle="tab">Klasser</a></li>
+            {% if groups %}
+                <li class="nav"><a href="#B" data-toggle="tab">Grupper</a></li>
+            {% endif %}
+            {% if person.role == 1 or person.role == 2 %}
+                <li class="nav"><a href="#C" data-toggle="tab">Tester</a></li>
+            {% endif %}
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="A">
+                <table class="table table-hover table-striped table-responsive" id="schooltable">
+                    <thead>
+                    <tr>
+                        <th>Klassenavn</th>
+                        <th>Skole</th>
+                        <th>Kontaktperson</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for grade in person.grades.all %}
+                        <tr>
+                            <td>{{ grade.grade_name }}</td>
+                            <td>{{ grade.school }}</td>
+                            <td>
+                                {{ grade.school.school_administrator.get_full_name }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if groups %}
+                <div class="tab-pane fade" id="B">
+                    <table class="table table-hover table-striped table-responsive" id="inactivetable">
                         <thead>
                         <tr>
-                            <th>Klassenavn</th>
-                            <th>Skole</th>
-                            <th>Kontaktperson</th>
+                            <th>Gruppenavn</th>
+                            <th>Ansvarlig</th>
+                            <th>Se medlemmer</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for grade in person.grades.all %}
+                        {% for group in groups %}
                             <tr>
-                                <td>{{ grade.grade_name }}</td>
-                                <td>{{ grade.school }}</td>
+                                <td>{{ group.group_name }}</td>
+                                <td>{{ group.creator.get_full_name }}</td>
                                 <td>
-                                    {{ grade.school.school_administrator.get_full_name }}
+                                    <button id="{{ group.id }}" value="{{ group.group_name }}"
+                                            class='btn btn-default'
+                                            data-toggle='modal'
+                                            data-target='#groupMemberModal' onclick="groupMemberBtn(this)">
+                                        <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
+                                        Medlemmer
+                                    </button>
                                 </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                {% if groups %}
-                    <div class="tab-pane fade" id="B">
-                        <table class="table table-hover table-striped table-responsive" id="inactivetable">
-                            <thead>
-                            <tr>
-                                <th>Gruppenavn</th>
-                                <th>Ansvarlig</th>
-                                <th>Se medlemmer</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for group in groups %}
-                                <tr>
-                                    <td>{{ group.group_name }}</td>
-                                    <td>{{ group.creator.get_full_name }}</td>
-                                    <td>
-                                        <button id="{{ group.id }}" value="{{ group.group_name }}"
-                                                class='btn btn-default'
-                                                data-toggle='modal'
-                                                data-target='#groupMemberModal' onclick="groupMemberBtn(this)">
-                                            <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
-                                            Medlemmer
-                                        </button>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% endif %}
-            </div>
-            {% bootstrap_messages %}
-        </div>
-
-        <div class="panel-footer">
-            {% if request.user.role == 4 %}
-                <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}" id="editUserBtn"><span
-                        class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Rediger bruker</a>
-                <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal' id="updatePasswordModalBtn">
-                    <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
-                {% if person.last_login is None %}
-                    <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
-                        <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
-                {% endif %}
-            {% elif request.user.role == 3 and person.role == 2 or person.role == 1 %}
-                <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}" id="editUserBtn"><span
-                        class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Rediger bruker</a>
-                <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal' id="updatePasswordModalBtn">
-                    <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
-                {% if person.last_login is None %}
-                    <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
-                        <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
-                {% endif %}
-            {% elif request.user.role == 2 and person.role == 1 %}
-                <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}" id="editUserBtn"><span
-                        class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Rediger bruker</a>
-                <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal' id="updatePasswordModalBtn">
-                    <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
-                {% if person.last_login is None %}
-                    <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
-                        <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
-                {% endif %}
             {% endif %}
+            {% if person.role == 1 or person.role == 2 %}
+                <div class="tab-pane fade" id="C">
+                    <table class="table table-hover table-striped table-responsive" id="inactivetable">
+                        <thead>
+                        <tr>
+                            <th>Tittel</th>
+                            <th>Publisert</th>
+                            <th>Svarfrist</th>
+                            <th>Alternativer</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for test in person.tests.all %}
+                            <tr>
+                                <td>{{ test.task_collection.test_name }}</td>
+                                <td>{{ test.published }}</td>
+                                <td>{% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen svarfrist{% endif %}</td>
+                                <td>
+                                    <button class='btn btn-default'>
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                        Se besvarelse
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            {% endif %}
+        </div>
+        {% bootstrap_messages %}
+    </div>
+    </div>
+
+    <div class="panel-footer">
+        {% if request.user.role == 4 %}
+            <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}"
+               id="editUserBtn"><span
+                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Rediger bruker</a>
+            <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal'
+               id="updatePasswordModalBtn">
+                <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
+            {% if person.last_login is None %}
+                <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
+                    <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
+            {% endif %}
+        {% elif request.user.role == 3 and person.role == 2 or person.role == 1 %}
+            <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}"
+               id="editUserBtn"><span
+                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Rediger bruker</a>
+            <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal'
+               id="updatePasswordModalBtn">
+                <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
+            {% if person.last_login is None %}
+                <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
+                    <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
+            {% endif %}
+        {% elif request.user.role == 2 and person.role == 1 %}
+            <a class="btn btn-primary" href="{% url 'administration:personUpdate' person.username %}"
+               id="editUserBtn"><span
+                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Rediger bruker</a>
+            <a class='btn btn-primary' data-toggle='modal' data-target='#passwordChangeModal'
+               id="updatePasswordModalBtn">
+                <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
+            {% if person.last_login is None %}
+                <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
+                    <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
+            {% endif %}
+        {% endif %}
     </div>
 
     <script>

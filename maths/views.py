@@ -6,6 +6,9 @@ from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, Task
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
+import json
+import datetime
+
 import random
 from django.http import HttpResponseRedirect
 
@@ -440,7 +443,11 @@ class TaskCollectionDetailView(views.AjaxResponseMixin, generic.DetailView):
 class TestCreateView(views.AjaxResponseMixin, generic.CreateView):
     form_class = CreateTestForm
     template_name = 'maths/test_form.html'
-    success_url = reverse_lazy('maths:taskCollectionList')
+
+    def get_success_url(self):
+        success = reverse_lazy('maths:taskCollectionDetail',
+                               kwargs={'taskCollection_pk': self.kwargs.get('taskCollection_pk')})
+        return success
 
     def post_ajax(self, request, *args, **kwargs):
         test_id = request.POST['id']
@@ -555,3 +562,69 @@ class AnswerCreateView(generic.FormView):
             y += 1
         url = reverse('maths:index')
         return HttpResponseRedirect(url)
+
+
+class TestListView(views.AjaxResponseMixin, generic.ListView):
+    model = Test
+    template_name = 'maths/test_list.html'
+
+    def get_ajax(self, request, *args, **kwargs):
+        test = Test.objects.get(id=request.GET['test'])
+        grade_table = []
+        group_table = []
+        student_table = []
+        grades = request.GET['grades']
+        groups = request.GET['groups']
+        students = request.GET['students']
+        grade_list = json.loads(grades)
+        group_list = json.loads(groups)
+        student_list = json.loads(students)
+        for grade_id in grade_list:
+            if test.grade_set.filter(id=grade_id).exists():
+                grade_table.append(True)
+            else:
+                grade_table.append(False)
+        for group_id in group_list:
+            if test.gruppe_set.filter(id=group_id).exists():
+                group_table.append(True)
+            else:
+                group_table.append(False)
+        for student_id in student_list:
+            if test.person_set.filter(id=student_id).exists() or test.grade_set.filter(
+                    person__id=student_id).exists() or test.gruppe_set.filter(persons__id=student_id).exists():
+                student_table.append(True)
+            else:
+                student_table.append(False)
+        data = {
+            "grades": grade_table,
+            'groups': group_table,
+            'students': student_table
+        }
+        return JsonResponse(data)
+
+    def post_ajax(self, request, *args, **kwargs):
+        test = Test.objects.get(id=request.POST['test'])
+        grades = request.POST['grades']
+        groups = request.POST['groups']
+        students = request.POST['students']
+        grade_list = json.loads(grades)
+        group_list = json.loads(groups)
+        student_list = json.loads(students)
+        for grade_id in grade_list:
+            grade = Grade.objects.get(id=grade_id)
+            grade.tests.add(test)
+        for group_id in group_list:
+            group = Gruppe.objects.get(id=group_id)
+            group.tests.add(test)
+        for student_id in student_list:
+            student = Person.objects.get(id=student_id)
+            student.tests.add(test)
+        data = {'test': 'test'}
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super(TestListView, self).get_context_data(**kwargs)
+        user = Person.objects.get(username=self.kwargs.get('slug'))
+        context['object_list'] = Test.objects.filter(person=user)
+        context['grades'] = Grade.objects.filter(person=user)
+        return context

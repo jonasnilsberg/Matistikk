@@ -121,5 +121,3 @@ class Answer(models.Model):
 class GeogebraAnswer(models.Model):
     answer = models.ForeignKey(Answer)
     base64 = models.CharField(max_length=32700)
-
-
