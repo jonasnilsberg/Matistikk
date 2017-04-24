@@ -7,21 +7,22 @@
 {% block head %}
     <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
     <script>
         UPLOADCARE_PUBLIC_KEY = '255bcffadf120c92a388';
     </script>
-     <script>
+    <script>
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}'
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
         tinymce.init({
-          selector: '#modalText',
-          plugins: 'equationeditor',
-          content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-          toolbar: [
-            'bold italic underline | bullist numlist | subscript superscript | equationeditor'
-          ],
+            selector: '#modalText',
+            plugins: 'equationeditor',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: [
+                'bold italic underline | bullist numlist | subscript superscript | equationeditor'
+            ],
         });
     </script>
 {% endblock %}
@@ -56,9 +57,10 @@
             <div class="col-sm-5">
                 <div class="panel panel-default">
                     <div class="panel-heading" id="tasktextdiv">
-                        <h4><span id="tasktext">{{ task.text | safe}}</span><a class="btn btn-default" data-toggle='modal'
-                                                                         href='#changeTextModal'
-                                                                         style="background-color: inherit;"><span
+                        <h4><span id="tasktext">{{ task.text | safe }}</span><a class="btn btn-default"
+                                                                                data-toggle='modal'
+                                                                                href='#changeTextModal'
+                                                                                style="background-color: inherit;"><span
                                 style="font-size:1em;" class="glyphicon glyphicon-pencil"></span> </a></h4>
                     </div> <!-- #inner panel-heading -->
                     <div class="panel-body">
@@ -202,6 +204,8 @@
             "errorDialogsActive": true,
             "showTutorialLink": false,
             "showLogging": false,
+            "language": "nb",
+            "preventFocus":true,
             "useBrowserForJS": true,
             "ggbBase64": base64
         };
@@ -452,8 +456,8 @@
 {% endblock %}
 
 {% block modal %}
-    <div  class="modal fade" id="changeTextModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div id = "changeTextModal2" class="modal-dialog"  role="document" style="width: 90%; ">
+    <div class="modal fade" id="changeTextModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div id="changeTextModal2" class="modal-dialog" role="document" style="width: 90%; ">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -590,7 +594,7 @@
         $('#changeTextModal').on('show.bs.modal', function () {
             var tasktext = $('#tasktext').html();
             var height = window.innerHeight * 0.9;
-            document.getElementById('changeTextModal2').style += "height:"+ height +"px";
+            document.getElementById('changeTextModal2').style += "height:" + height + "px";
             tinyMCE.activeEditor.setContent(tasktext);
         });
 

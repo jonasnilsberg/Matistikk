@@ -46,7 +46,11 @@
                             </thead>
                             <tbody>
                             {% for student in students %}
-                                <tr id="user{{ student.id }}">
+                                <tr id="user{{ student.id }}" {% for answer in student.answer_set.all %}
+                                    {% if answer.test.id == test.id %}
+                                        class="success"
+                                    {% endif %}
+                                    {% endfor %}>
                                     <td>{{ student.first_name }}</td>
                                     <td>{{ student.last_name }}</td>
                                     <td>{{ student.username }}</td>
@@ -231,7 +235,7 @@
             </div>
         </div>
         <div class="panel-footer">
-            <button id="addPublish" class="btn btn-primary" type="button" data-toggle="tooltip" onclick="publish()"
+            <button id="addPublish" class="btn btn-primary" type="button" data-toggle="tooltip" onclick="publishModal()"
                     title="Tidsfristen for denne oppgaven er utgått" disabled="disabled"><span
                     class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 Publiser
@@ -246,9 +250,19 @@
 
 
     <script>
-        $('#addPublish').attr('disabled', false);
-        $('#addPublish').attr('title', 'Legg til ');
+
+
         $(document).ready(function () {
+            var date = "{{ test.dueDate }}";
+            var dueDate = new Date(date);
+            var now = new Date();
+            if (date == 'None') {
+                $('#addPublish').attr('disabled', false);
+                $('#addPublish').attr('title', 'Legg til ');
+            } else if (dueDate > now) {
+                $('#addPublish').attr('disabled', false);
+                $('#addPublish').attr('title', 'Legg til ');
+            }
             if ($("#studentTab").length == 0) {
                 $('#teacherTab').addClass('active');
                 $('#B').removeClass('fade');
@@ -334,8 +348,62 @@
                 })
             }
         });
-        function publish() {
+        function publishModal() {
             $('#publishModal').modal('show');
+        }
+
+        function publish() {
+            var username = "{{ request.user.username }}";
+            var testID = "{{ test.id }}";
+            var students = [];
+            var grades = [];
+            var groups = [];
+            var studentTable = $('#studenttablemodal tr.success');
+            var teacherTable = $('#teachertablemodal tr.success');
+            var gradeTable = $('#gradetablemodal tr.success');
+            var groupTable = $('#grouptablemodal tr.success');
+            studentTable.each(function () {
+                var id = $(this).find(':checkbox').val();
+                students.push(id);
+            });
+            teacherTable.each(function () {
+                var id = $(this).find(':checkbox').val();
+                students.push(id);
+            });
+            gradeTable.each(function () {
+                var id = $(this).find(':checkbox').val();
+                grades.push(id);
+            });
+            groupTable.each(function () {
+                var id = $(this).find(':checkbox').val();
+                groups.push(id);
+            });
+            var students_id = JSON.stringify(students);
+            var grades_id = JSON.stringify(grades);
+            var groups_id = JSON.stringify(groups);
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'maths:testList' slug=12345 %}'.replace(/12345/, username),
+                data: {
+                    'test': testID,
+                    'grades': grades_id,
+                    'groups': groups_id,
+                    'students': students_id,
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: 'json',
+                success: function () {
+                    $('.alert-success').removeClass('hidden');
+                    $(".alert-success").fadeTo(5500, 500).slideUp(500, function () {
+                        location.reload();
+                    });
+                },
+                error: function (xhr) {
+                    alert('error');
+                    alert(xhr.responseText);
+                }
+            });
+
         }
 
         function updateDueDate() {
@@ -521,6 +589,7 @@
                     <h3 class="modal-title text-center">Publiser</h3>
                 </div>
                 <div class="modal-body">
+                    <form action="" method="post">{% csrf_token %}</form>
                     <ul class="nav nav-tabs">
                         <li class="nav active"><a href="#modalA" data-toggle="tab">Elever</a></li>
                         <li class="nav"><a href="#modalB" data-toggle="tab">Lærere</a></li>
@@ -719,9 +788,13 @@
                             </table>
                         </div>
                     </div>
+                    <div class="alert alert-success hidden" style="margin-top: 15px; margin-bottom: 0px;">
+                        <strong>Fullført!</strong>
+                        Testen ble publisert hos de valgte objektene. Nettsiden vil nå lastes inn på nytt.
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" onclick="updateDueDate()">
+                    <button type="button" class="btn btn-success" onclick="publish()">
                         <i class="fa fa-check-square-o" aria-hidden="true"></i> Publiser
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
