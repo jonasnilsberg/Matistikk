@@ -113,7 +113,7 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="circle-tile ">
-                        <a href="{% url 'maths:testList' %}">
+                        <a href="{% url 'maths:taskCollectionList' %}">
                             <div class="circle-tile-heading dark-blue"><i class="fa fa-tasks fa-fw fa-3x"></i></div>
                         </a>
                         <div class="circle-tile-content dark-blue">
@@ -126,7 +126,7 @@
 
             <div class="col-sm-12">
                 <center>
-                    <a class="btn btn-default" href="{% url 'maths:testCreate' %}" style="font-size: 2em;"><span
+                    <a class="btn btn-default" href="{% url 'maths:taskCollectionCreate' %}" style="font-size: 2em;"><span
                             style="font-size:5em; color: #545a7e"
                             class="glyphicon glyphicon-book"></span><br>Lag
                         Test</a>
@@ -146,7 +146,7 @@
                 <a class="btn btn-default" href="{% url 'administration:myPage' request.user.username %}"
                    id="myPageBtn"><span
                         style="font-size:10em; color: #ff9933" class="glyphicon glyphicon-user"></span><br>Min Side</a>
-                <a class="btn btn-default" href="{% url 'maths:testCreate' %}"><span
+                <a class="btn btn-default" href="{% url 'maths:taskCollectionCreate' %}"><span
                         style="font-size:10em; color: #ff9933"
                         class="glyphicon glyphicon-book"></span><br>Lag
                     Test</a>
@@ -165,7 +165,7 @@
                     Geometrioppgave</a>
             </div>
             <div class="col-lg-12">
-                <a class="btn btn-default" href="{% url 'maths:testList' %}"><span
+                <a class="btn btn-default" href="{% url 'maths:taskCollectionList' %}"><span
                         style="font-size:10em; color: #ff6600"
                         class="glyphicon glyphicon-align-left"></span><br>Testoversikt</a>
                 <a class="btn btn-default" href="{% url 'administration:personList' %}"><span
@@ -188,10 +188,49 @@
             <div class="col-sm-6">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <h4>Agenda</h4>
+                        <h4>Agenda ({{ request.user.tests.all.count }})</h4>
                     </div>
                     <div class="panel-body">
-                        Lorem ipsum
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                            {% for test in request.user.tests.all %}
+                                <div id="panel{{ forloop.counter }}" class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="heading{{ forloop.counter }}">
+                                        <h4 class="panel-title">
+                                            <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                               href="#collapse{{ forloop.counter }}"
+                                               aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
+                                                {{ test }}
+                                                <p id="testpanel{{ forloop.counter }}" class="pull-right"></p>
+                                                <input id="date{{ forloop.counter }}" type="datetime"
+                                                       value="{{ test.dueDate.isoformat }}" hidden>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse"
+                                         role="tabpanel"
+                                         aria-labelledby="heading{{ forloop.counter }}">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <p><strong>Starttidspunkt: </strong>{{ test.published }}</p>
+                                                    <span id="publishdate{{ forloop.counter }}" hidden>{{ test.published.isoformat }}</span>
+                                                    <p><strong>Frist: </strong>{{ test.dueDate }}</p>
+                                                    <p><strong>Antall Oppgaver: </strong>{{ test.task_collection.tasks.count }}</p>
+                                                    <p><strong>Laget
+                                                        av: </strong>{{ test.task_collection.author.first_name }} {{ test.task_collection.author.last_name }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <span id="testinfo{{ forloop.counter }}" ></span>
+                                                    <a id="starttestbutton{{ forloop.counter }}" type="button" class="btn btn-success btn-lg pull-right" href="{% url 'maths:answerCreate' test.id %}">Start Aktivitet
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -214,5 +253,49 @@
             </div>
         </div>
     {% endif %}
+
+    <script>
+        window.onload = function () {
+            var inputs = document.getElementById('accordion').getElementsByTagName('input');
+
+            for (var i = 0; i < inputs.length; i++) {
+                var duedate = new Date(document.getElementById('date' + (i + 1)).value);
+                var publishdate = new Date(document.getElementById('publishdate' + (i+1)).innerHTML);
+                if(publishdate > Date.now()){
+                    $('#starttestbutton' + (i+1)).hide();
+                    $('#testinfo' + (i+1)).append('<div class="alert alert-info" role="alert"><strong>Testen har ikke startet enda!</strong> Du kan starte denne testen når starttidspunktet er passert.</div>');
+                }
+
+                if (!(isNaN(duedate))) {
+                    var datenow = Date.now();
+                    var sjekk = duedate - datenow;
+                    var diff = Math.abs(duedate - datenow) / 1000;
+                    if (sjekk > 0) {
+                        var days = Math.floor(diff / 86400);
+                        diff -= days * 86400;
+                        var hours = Math.floor(diff / 3600) % 24;
+                        diff -= hours * 3600;
+                        var minutes = Math.floor(diff / 60) % 60;
+                        if (days > 0) {
+                            $('#testpanel' + (i + 1)).append(days + ' dager, ' + hours + ' timer, ' + minutes + ' min');
+                        }
+                        else{
+                            $('#testpanel' + (i + 1)).append(days + ' dager, ' + hours + ' timer, ' + minutes + ' min');
+                            $('#panel' + (i + 1)).removeClass('panel panel-default').addClass('panel panel-warning');
+                        }
+                    }
+                    else {
+                        $('#testpanel' + (i + 1)).append('Tidsfristen er ute');
+                        $('#panel' + (i + 1)).removeClass('panel panel-default').addClass('panel panel-danger');
+                        $('#testinfo' + (i+1)).append('<div class="alert alert-danger" role="alert"><strong>Tidsfristen er ute!</strong> Du kan fortsatt ta testen, men den vil bli markert som levert for sent.</div>');
+                    }
+                }
+                else {
+                    $('#testpanel' + (i + 1)).append('Ingen tidsfrist');
+                }
+            }
+
+        };
+    </script>
 
 {% endblock %}

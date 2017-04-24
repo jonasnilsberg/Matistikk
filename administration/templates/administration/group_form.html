@@ -198,6 +198,16 @@
                 }
             }
         }
+
+        $(document).ajaxSend(function (event, request, settings) {
+            $('.loading-indicator-modal').show();
+            $('.tableBody').addClass('hidden');
+        });
+
+        $(document).ajaxComplete(function (event, request, settings) {
+            $('.loading-indicator-modal').hide();
+            $('.tableBody').removeClass('hidden')
+        });
     </script>
 {% endblock %}
 {% block modal %}
@@ -254,30 +264,36 @@
                             </div>
                         </div>
                     </div>
-                    <table class="table table-hover table-striped table-responsive table-condensed"
-                           id="addtable">
-                        <thead>
-                        <tr>
-                            <th>Bruker</th>
-                            <th>Legg til</th>
-                        </tr>
-                        </thead>
-                        <tbody id="studentTable">
-                        {% for student in students %}
-                            <tr id="{{ student.id }}" value="{{ student.username }}">
-                                <td>{{ student }}
-                                </td>
-                                <td>
-                                    <button class="btn btn-success btn-xs" type="button"
-                                            id="btn{{ student.id }}" value="{{ student }}"
-                                            data-button='{"id": "{{ student.id }}","first_name": "{{ student.first_name }}", "last_name": "{{ student.last_name }}", "username": "{{ student.username }}"}'
-                                            onclick="addStudent(this)">Legg til
-                                    </button>
-                                </td>
+                    <div class="modalOverflow">
+
+                        <table class="table table-hover table-striped table-responsive table-condensed"
+                               id="addtable">
+                            <thead>
+                            <tr>
+                                <th>Bruker</th>
+                                <th>Legg til</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+
+                            <tbody id="studentTable" class="tableBody">
+                            {% for student in students %}
+                                <tr id="{{ student.id }}" value="{{ student.username }}">
+                                    <td>{{ student }}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-success btn-xs" type="button"
+                                                id="btn{{ student.id }}" value="{{ student }}"
+                                                data-button='{"id": "{{ student.id }}","first_name": "{{ student.first_name }}", "last_name": "{{ student.last_name }}", "username": "{{ student.username }}"}'
+                                                onclick="addStudent(this)">Legg til
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator-modal"
+                             style="display:none"/>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>

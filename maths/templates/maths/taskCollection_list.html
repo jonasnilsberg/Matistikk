@@ -1,0 +1,90 @@
+{% extends 'matistikk/base.html' %}
+
+{% block body %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2>Tester</h2>
+            <div class="input-group">
+                    <span class="input-group-addon">
+                            <i class="fa fa-search"></i>
+                        </span>
+                <input type="text" class="form-control" id="search"
+                       onkeyup="testSearch('testtable')"
+                       placeholder="Søk etter test">
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="tab-content">
+                <table class="table table-hover table-striped table-responsive" id="testtable">
+                    <thead>
+                    <tr>
+                        <th class="col-sm-1">ID</th>
+                        <th>Testnavn</th>
+                        <th>Laget av</th>
+                        <th>Testinfo</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for test in object_list %}
+                        <tr class="clickable-row"
+                            data-href="{% url 'maths:taskCollectionDetail' test.id %}"
+                            style="cursor: pointer">
+                            <td>{{ test.id }}</td>
+                            <td>{{ test.test_name }}</td>
+                            <td>{{ test.author.get_full_name }}</td>
+                            <td>
+                                <a class="btn btn-default"
+                                   href="#"><i class="fa fa-book" aria-hidden="true"></i> Se testinfo</a>
+                            </td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <a class="btn btn-primary" href="{% url 'maths:taskCollectionCreate' %}"><span
+                    class="glyphicon glyphicon-plus"
+                    aria-hidden="true"></span> Opprett ny test</a>
+        </div>
+    </div>
+    <script>
+        /**
+         * This function makes table rows clickable.
+         */
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.document.location = $(this).data("href");
+            });
+        });
+        /**
+         * This function matches the text in the search field with the content in the table given in the parameter.
+         * and removes rows that don't match the search criteria.
+         * @param inputTable
+         */
+        function testSearch(inputTable) {
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById(inputTable);
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
+
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1
+                        || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}

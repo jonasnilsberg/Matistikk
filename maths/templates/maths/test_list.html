@@ -3,82 +3,137 @@
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h2>Tester</h2>
-            <div class="input-group">
+            <h2>Tilgjengelige tester</h2>
+            <h5>Brukernavn: {{ request.user.username }}</h5>
+            <h5>Dato: {% now "SHORT_DATE_FORMAT" %}</h5>
+            <div class="row">
+                <div class="col-md-10" style="padding-right: 5px;">
+                    <div class="input-group">
                     <span class="input-group-addon">
                             <i class="fa fa-search"></i>
                         </span>
-                <input type="text" class="form-control" id="search"
-                       onkeyup="testSearch('testtable')"
-                       placeholder="Søk etter skole">
+                        <input type="text" class="form-control" id="search" onkeyup="testSearch()"
+                               placeholder="Søk etter test">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <select class="form-control" id="dropList">
+                            <option id="allschools" value="">Alle tester</option>
+                            <option value="1">Tilgjengelige tester</option>
+                            <option value="2">Utgåtte tester</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="panel-body">
-            <div class="tab-content">
-                <table class="table table-hover table-striped table-responsive" id="testtable">
-                    <thead>
-                    <tr>
-                        <th class="col-sm-1">ID</th>
-                        <th>Testnavn</th>
-                        <th>Laget av</th>
-                        <th>Testinfo</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for test in object_list %}
-                        <tr class="clickable-row"
-                            data-href="{% url 'maths:testDetail' test.id %}"
-                            style="cursor: pointer">
-                            <td>{{ test.id }}</td>
-                            <td>{{ test.test_name }}</td>
-                            <td>{{ test.author.get_full_name }}</td>
-                            <td>
-                                <a class="btn btn-default"
-                                   href="#"><i class="fa fa-book" aria-hidden="true"></i> Se testinfo</a>
-                            </td>
-                            <td></td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
 
-        <div class="panel-footer">
-            <a class="btn btn-primary" href="{% url 'maths:testCreate' %}"><span
-                    class="glyphicon glyphicon-plus"
-                    aria-hidden="true"></span> Opprett ny test</a>
+            <table class="table table-hover table-striped table-responsive" id="publishedtable">
+                <thead>
+                <tr>
+                    <th class="col-md-1">Tittel</th>
+                    <th>Publisert</th>
+                    <th>Svarfrist</th>
+                    <th>Tilfeldig rekkefølge</th>
+                    <th class="text-center">Alternativer</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for test in object_list %}
+                    <tr data-href="#" data-dueDate="{{ test.dueDate.isoformat }}">
+                        <td>
+                            {{ test.task_collection.test_name }}
+                        </td>
+                        <td>
+                            {{ test.published }}
+                        </td>
+                        <td>
+                            {% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen svarfrist{% endif %}
+                        </td>
+                        <td>
+                            {% if test.randomOrder %}Ja{% else %}Nei{% endif %}
+                        </td>
+                        <td>
+                            <div class="text-center">
+                                <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                                    <button value="{{ test.id }}" name="{{ test.task_collection.test_name }}"
+                                            type="button"
+                                            onclick="publishTest(this)"
+                                            class="btn btn-default publish"
+                                            value="{{ test.id }}"><i class="fa fa-book" aria-hidden="true"></i></span>
+                                        Publisering
+                                    </button>
+                                    <button type="button" href='#' class="btn btn-default"
+                                            value="{{ test.id }}"><i class="fa fa-tasks" aria-hidden="true"></i> Se test
+                                    </button>
+
+                                    <button type="button" href='#' class="btn btn-default"
+                                            value="{{ test.id }}"><span
+                                            class="glyphicon glyphicon-eye-open"></span> Se besvarelser
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
+
     <script>
-        /**
-         * This function makes table rows clickable.
-         */
+
         jQuery(document).ready(function ($) {
-            $(".clickable-row").click(function () {
-                window.document.location = $(this).data("href");
-            });
+            var rows = $('#publishedtable').find('> tbody > tr');
+            rows.each(function (index) {
+                var due = $(this).attr("data-dueDate");
+                if (due) {
+                    var dueDate = new Date(due);
+                    var now = new Date();
+                    if (dueDate < now) {
+                        $(this).addClass('danger');
+                        $(this).find('.publish').attr('disabled', true);
+                    }
+                }
+
+            })
         });
-        /**
-         * This function matches the text in the search field with the content in the table given in the parameter.
-         * and removes rows that don't match the search criteria.
-         * @param inputTable
-         */
-        function testSearch(inputTable) {
-            var input, filter, table, tr, td, i, td1, td2;
+
+        $("#dropList").change(function () {
+            var val = $(this).val();
+            var rows = $('#publishedtable').find('> tbody > tr');
+            rows.each(function (index) {
+                $(this).show();
+            });
+            if (val == 1) {
+                rows.each(function (index) {
+                    if ($(this).hasClass('danger')) {
+                        $(this).hide();
+                    }
+                });
+            } else if (val == 2) {
+                rows.each(function (index) {
+                    if (!$(this).hasClass('danger')) {
+                        $(this).hide();
+                    }
+                });
+            }
+        });
+
+        function testSearch() {
+            var input, filter, table, tr, td, td1, td2, i;
             input = document.getElementById("search");
             filter = input.value.toUpperCase();
-            table = document.getElementById(inputTable);
+            table = document.getElementById("publishedtable");
             tr = table.getElementsByTagName("tr");
 
             for (i = 0; i < tr.length; i++) {
                 td = tr[i].getElementsByTagName("td")[0];
                 td1 = tr[i].getElementsByTagName("td")[1];
                 td2 = tr[i].getElementsByTagName("td")[2];
-
                 if (td) {
-                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1
-                        || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
                         tr[i].style.display = "";
                     } else {
                         tr[i].style.display = "none";
@@ -86,5 +141,208 @@
                 }
             }
         }
+
+        function publishTest(elem) {
+            var id = elem.value;
+            var title = elem.name;
+            $('#modalHeading').text('Publiser test - ' + title);
+            $('#publishTestBtn').attr('value', id);
+            $('#publishTestModal').modal('show');
+        }
+
+        function publish(elem) {
+            var grades = [];
+            var testID = elem.value;
+            var gradesTable = $('#gradetable tr.success');
+            gradesTable.each(function () {
+                var id = $(this).find(':checkbox').val();
+                grades.push(id);
+            });
+            var grades_id = JSON.stringify(grades);
+            var username = "{{ request.user.username }}";
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'maths:testList' slug=12345 %}'.replace(/12345/, username),
+                data: {
+                    'grades': grades_id,
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: 'json',
+                success: function () {
+                    alert('success');
+                },
+                error: function (xhr) {
+                    alert('error');
+                    alert(xhr.responseText);
+                }
+            });
+
+        }
+
+
+    </script>
+{% endblock %}
+
+{% block modal %}
+    <div class="modal fade" id="publishTestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <div class="modal-title">
+                        <h3 id="modalHeading" class="text-center" style="margin-top: 5px;"></h3>
+                        <h5 class="text-center" id="headingText">Velg hvem testen skal publiseres til.</h5>
+                    </div>
+                </div>
+                <form action="" method="post">{% csrf_token %}</form>
+                <div class="modal-body" style="min-height: 30vh;">
+                    <ul class="nav nav-tabs">
+                        <li class="nav active"><a href="#grades" data-toggle="tab">Klasse</a></li>
+                        <li class="nav"><a href="#groups" data-toggle="tab">Gruppe</a></li>
+                        <li class="nav"><a href="#students" data-toggle="tab">Elever</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="grades">
+                            <table class="table table-hover table-striped table-responsive" id="gradetable">
+                                <thead>
+                                <tr>
+                                    <th class="col-md-3">Legg til</th>
+                                    <th>Klasse</th>
+                                    <th>Skole</th>
+                                </tr>
+                                </thead>
+                                <tbody class="tableBody">
+                                {% for grade in grades %}
+                                    <tr id="grade{{ grade.id }}" style="cursor: pointer">
+                                        <td><input type="checkbox" value="{{ grade.id }}"></td>
+                                        <td>{{ grade.grade_name }}</td>
+                                        <td>{{ grade.school.school_name }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="groups">
+                            <table class="table table-hover table-striped table-responsive" id="grouptable">
+                                <thead>
+                                <tr>
+                                    <th class="col-md-3">Legg til</th>
+                                    <th>Gruppe</th>
+                                    <th>Klasse</th>
+                                </tr>
+                                </thead>
+                                <tbody class="tableBody">
+                                {% for grade in grades %}
+                                    {% for group in grade.gruppe_set.all %}
+                                        <tr id="group{{ group.id }}" style="cursor: pointer">
+                                            <td><input type="checkbox" value="{{ group.id }}"></td>
+                                            <td>{{ group.group_name }}</td>
+                                            <td>{{ grade }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="students">
+                            <table class="table table-hover table-striped table-responsive" id="studenttable">
+                                <thead>
+                                <tr>
+                                    <th class="col-md-3">Legg til</th>
+                                    <th>Navn</th>
+                                    <th>Brukernavn</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for grade in grades %}
+                                    {% for student in grade.person_set.all %}
+                                        {% if student.role == 1 %}
+                                            <tr id="group{{ group.id }}" style="cursor: pointer">
+                                                <td><input type="checkbox" value="{{ student.id }}"></td>
+                                                <td>{{ student.get_full_name }}</td>
+                                                <td>{{ student.username }}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="publishTestBtn" type="button" class="btn btn-success" onclick="publish(this)">
+                        <i class="fa fa-check-square-o" aria-hidden="true"></i> Publiser
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        $('#publishTestModal').on('hidden.bs.modal', function () {
+            var gradetable = $("#gradetable tbody tr");
+            gradetable.each(function () {
+                if ($(this).hasClass('success')) {
+                    $(this).find(':checkbox').click();
+                }
+            });
+            var grouptable = $("#grouptable tbody tr");
+            grouptable.each(function () {
+                if ($(this).hasClass('success')) {
+                    $(this).find(':checkbox').click();
+                }
+            });
+            var studenttable = $("#studenttable tbody tr");
+            studenttable.each(function () {
+                if ($(this).hasClass('success')) {
+                    $(this).find(':checkbox').click();
+                }
+            });
+        });
+        $("#gradetable tbody tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $(this).addClass('success');
+                } else {
+                    $(this).removeClass('success');
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
+        $("#grouptable tbody tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $(this).addClass('success');
+                } else {
+                    $(this).removeClass('success');
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
+        $("#studenttable tbody tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $(this).addClass('success');
+                } else {
+                    $(this).removeClass('success');
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
+
+
     </script>
 {% endblock %}

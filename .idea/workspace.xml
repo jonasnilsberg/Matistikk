@@ -5,9 +5,942 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a3dadf1e-2e4f-489f-9312-8d2daafdb0f5" name="IdeaFiles" comment="Endringer på personCreateView">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/matistikk.iml" afterPath="$PROJECT_DIR$/.idea/matistikk.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/img/buttons.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/img/icons.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/img/items.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/img/menu_arrow.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/img/menu_check.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/img/progress.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/img/tabs.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-cool.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-cry.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-embarassed.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-foot-in-mouth.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-frown.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-innocent.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-kiss.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-laughing.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-money-mouth.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-sealed.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-smile.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-surprised.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-tongue-out.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-undecided.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-wink.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/img/smiley-yell.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/Symbola.eot" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/Symbola.otf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/Symbola.ttf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/Symbola.woff" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/address.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/article.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/aside.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/blockquote.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/div.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/dl.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/figure.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/h1.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/h2.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/h3.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/h4.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/h5.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/h6.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/hgroup.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/ol.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/p.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/pre.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/section.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/img/ul.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/fonts/tinymce-small.eot" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/fonts/tinymce-small.ttf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/fonts/tinymce-small.woff" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/fonts/tinymce.eot" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/fonts/tinymce.ttf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/fonts/tinymce.woff" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/img/anchor.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/img/loader.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/img/object.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/img/trans.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/img/dogleft.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/img/raster.gif" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/.eslintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/Gruntfile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/LICENSE.TXT" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/changelog.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/AddOnManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/Compat.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/DragDropOverrides.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/Editor.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/EditorCommands.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/EditorManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/EditorObservable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/EditorUpload.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/EnterKey.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/Env.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ErrorReporter.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/FocusManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ForceBlocks.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/Formatter.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/InsertContent.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/InsertList.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/LegacyInput.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/Mode.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/NodeChange.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/NotificationManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/Register.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/SelectionOverrides.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/Shortcuts.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/UndoManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/WindowManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/caret/CaretBookmark.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/caret/CaretCandidate.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/caret/CaretContainer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/caret/CaretPosition.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/caret/CaretUtils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/caret/CaretWalker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/caret/FakeCaret.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/caret/LineUtils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/caret/LineWalker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/content/LinkTargets.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/data/Binding.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/data/ObservableArray.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/data/ObservableObject.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/BookmarkManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/ControlSelection.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/DOMUtils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/Dimensions.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/DomQuery.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/ElementUtils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/EventUtils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/MousePosition.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/NodePath.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/NodeType.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/Range.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/RangeUtils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/ScriptLoader.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/Selection.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/Serializer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/Sizzle.jQuery.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/Sizzle.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/StyleSheetLoader.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/TreeWalker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/dom/TridentSelection.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/file/BlobCache.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/file/Conversions.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/file/ImageScanner.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/file/UploadStatus.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/file/Uploader.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/fmt/FontInfo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/fmt/Hooks.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/fmt/Preview.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/geom/ClientRect.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/geom/Rect.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/html/DomParser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/html/Entities.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/html/Node.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/html/SaxParser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/html/Schema.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/html/Serializer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/html/Styles.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/html/Writer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/jquery.tinymce.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/text/ExtendingChar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/text/Zwsp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/AbsoluteLayout.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/BoxUtils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Button.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/ButtonGroup.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Checkbox.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/ClassList.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Collection.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/ColorBox.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/ColorButton.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/ColorPicker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/ComboBox.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Container.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Control.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/DomUtils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/DragHelper.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/ElementPath.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Factory.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/FieldSet.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/FilePicker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/FitLayout.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/FlexLayout.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/FloatPanel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/FlowLayout.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Form.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/FormItem.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/FormatControls.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/GridLayout.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Iframe.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/InfoBox.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/KeyboardNavigation.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Label.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Layout.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/ListBox.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Menu.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/MenuBar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/MenuButton.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/MenuItem.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/MessageBox.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Movable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Notification.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Panel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/PanelButton.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Path.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Progress.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Radio.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/ReflowQueue.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Resizable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/ResizeHandle.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Scrollable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/SelectBox.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Selector.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Sidebar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Slider.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Spacer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/SplitButton.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/StackLayout.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/TabPanel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/TextBox.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Throbber.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Toolbar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Tooltip.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Widget.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/ui/Window.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/undo/Diff.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/undo/Fragments.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/undo/Levels.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/Arr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/Class.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/Color.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/Delay.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/EventDispatcher.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/Fun.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/I18n.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/JSON.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/JSONP.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/JSONRequest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/LocalStorage.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/Observable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/Private.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/Promise.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/Quirks.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/Tools.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/URI.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/Uuid.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/VK.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/classes/util/XHR.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/jquery.tinymce.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/langs/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/license.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/advlist/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/advlist/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/anchor/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/anchor/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/autolink/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/autolink/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/autoresize/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/autoresize/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/autosave/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/autosave/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/bbcode/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/bbcode/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/charmap/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/charmap/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/code/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/code/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/codesample/classes/Dialog.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/codesample/classes/Plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/codesample/classes/Prism.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/codesample/classes/Utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/codesample/css/prism.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/codesample/plugin.dev.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/codesample/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/codesample/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/colorpicker/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/colorpicker/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/css/dialog.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/tiny_mce_popup.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/utils/editable_selects.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/utils/form_utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/utils/mctabs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/compat3x/utils/validate.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/contextmenu/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/contextmenu/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/directionality/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/directionality/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/emoticons/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/Symbola.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/config.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/equation_editor.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/equation_editor.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/mathquill.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/example/dialog.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/example/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/example/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/example_dependency/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/example_dependency/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/fullpage/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/fullpage/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/fullscreen/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/fullscreen/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/hr/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/hr/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/image/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/image/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/Gruntfile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/config/bolt/atomic.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/config/bolt/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/config/bolt/demo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/config/bolt/prod.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/src/demo/html/demo.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/src/demo/js/Demo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/src/main/js/CropRect.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/src/main/js/Dialog.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/src/main/js/ImagePanel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/src/main/js/ImageSize.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/src/main/js/Plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/src/main/js/Proxy.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/src/main/js/UndoStack.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/imagetools/src/main/js/Utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/importcss/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/importcss/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/insertdatetime/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/insertdatetime/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/layer/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/legacyoutput/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/legacyoutput/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/link/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/link/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/Gruntfile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/config/bolt/atomic.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/config/bolt/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/config/bolt/demo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/config/bolt/prod.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/.eslintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/demo/html/demo.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/demo/js/tinymce/lists/Demo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/main/js/tinymce/lists/Plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/main/js/tinymce/lists/actions/Indent.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/main/js/tinymce/lists/actions/Outdent.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/main/js/tinymce/lists/actions/ToggleList.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/main/js/tinymce/lists/core/Bookmark.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/main/js/tinymce/lists/core/Delete.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/main/js/tinymce/lists/core/NodeType.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/main/js/tinymce/lists/core/NormalizeLists.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/main/js/tinymce/lists/core/Range.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/main/js/tinymce/lists/core/Selection.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/main/js/tinymce/lists/core/SplitList.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/main/js/tinymce/lists/core/TextBlock.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/test/js/browser/ApplyDlTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/test/js/browser/ApplyTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/test/js/browser/BackspaceDeleteInlineTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/test/js/browser/BackspaceDeleteTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/test/js/browser/IndentTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/test/js/browser/InlineTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/test/js/browser/OutdentTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/test/js/browser/RemoveTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/lists/src/test/js/module/tinymce/lists/test/LegacyUnit.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/Gruntfile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/config/bolt/atomic.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/config/bolt/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/config/bolt/demo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/config/bolt/prod.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/.eslintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/demo/html/demo.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/demo/js/tinymce/media/Demo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/main/js/tinymce/media/Plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/main/js/tinymce/media/core/DataToHtml.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/main/js/tinymce/media/core/HtmlToData.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/main/js/tinymce/media/core/Mime.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/main/js/tinymce/media/core/Nodes.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/main/js/tinymce/media/core/Sanitize.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/main/js/tinymce/media/core/Service.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/main/js/tinymce/media/core/Size.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/main/js/tinymce/media/core/UpdateHtml.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/main/js/tinymce/media/core/UrlPatterns.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/main/js/tinymce/media/core/VideoScript.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/main/js/tinymce/media/ui/Dialog.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/main/js/tinymce/media/ui/SizeManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/test/js/atomic/HtmlToDataTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/test/js/browser/DataAttributeTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/test/js/browser/DataToHtmlTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/test/js/browser/DimensionsControlTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/test/js/browser/EphoxEmbedTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/test/js/browser/MediaEmbedTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/test/js/browser/PlaceholderTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/test/js/browser/PluginTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/test/js/browser/ReopenResizeTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/test/js/browser/SubmitTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/media/src/test/js/module/tinymce/media/test/Utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/nonbreaking/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/nonbreaking/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/noneditable/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/noneditable/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/pagebreak/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/pagebreak/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/paste/classes/Clipboard.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/paste/classes/Plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/paste/classes/Quirks.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/paste/classes/SmartPaste.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/paste/classes/Utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/paste/classes/WordFilter.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/paste/plugin.dev.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/paste/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/paste/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/preview/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/preview/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/print/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/print/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/save/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/save/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/searchreplace/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/searchreplace/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/spellchecker/classes/DomTextMatcher.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/spellchecker/classes/Plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/spellchecker/plugin.dev.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/spellchecker/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/spellchecker/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/tabfocus/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/tabfocus/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/table/classes/CellSelection.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/table/classes/Dialogs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/table/classes/Plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/table/classes/Quirks.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/table/classes/ResizeBars.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/table/classes/SplitCols.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/table/classes/TableGrid.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/table/classes/Utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/table/plugin.dev.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/table/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/table/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/template/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/template/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/textcolor/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/textcolor/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/textpattern/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/textpattern/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/toc/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/toc/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/css/visualblocks.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualblocks/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualchars/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/visualchars/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/Gruntfile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/config/bolt/atomic.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/config/bolt/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/config/bolt/demo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/config/bolt/prod.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/plugin.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/src/demo/html/demo.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/src/demo/js/tinymce/wordcount/Demo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/src/main/js/tinymce/wordcount/Plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/src/main/js/tinymce/wordcount/alien/Arr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/src/main/js/tinymce/wordcount/text/StringMapper.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/src/main/js/tinymce/wordcount/text/UnicodeData.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/src/main/js/tinymce/wordcount/text/WordBoundary.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/src/main/js/tinymce/wordcount/text/WordGetter.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/src/test/.eslintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/src/test/js/atomic/core/IsWordBoundaryTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/src/test/js/atomic/core/StringMapperTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/src/test/js/atomic/core/WordGetterTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/wordcount/src/test/js/browser/core/PluginTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/AbsoluteLayout.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Animations.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Arrows.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Button.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/ButtonGroup.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Checkbox.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/ColorBox.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/ColorButton.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/ColorPicker.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/ComboBox.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Container.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Content.Inline.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Content.Objects.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Content.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/CropRect.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/FieldSet.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/FitLayout.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/FloatPanel.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/FlowLayout.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Icons.Ie7.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Icons.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Iframe.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/ImagePanel.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/InfoBox.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Label.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/ListBox.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Menu.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/MenuBar.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/MenuButton.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/MenuItem.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Mixins.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Notification.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Panel.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Path.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Progress.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Radio.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Reset.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/ResizeHandle.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Scrollable.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/SelectBox.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Sidebar.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Slider.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Spacer.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/SplitButton.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/StackLayout.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/TabPanel.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/TextBox.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Throbber.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/TinyMCE.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/ToolTip.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Variables.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/Window.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/content.inline.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/content.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/fonts/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/fonts/tinymce-small.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/fonts/tinymce-small.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/fonts/tinymce.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/fonts/tinymce.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/skin.dev.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/skin.ie7.dev.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/skin.ie7.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/skin.ie7.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/skin.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/skin.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/Gruntfile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/config/bolt/atomic.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/config/bolt/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/config/bolt/demo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/config/bolt/prod.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/demo/css/demo.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/demo/html/demo.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/demo/js/tinymce/inlite/Demo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/Theme.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/alien/Arr.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/alien/Bookmark.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/alien/EditorSettings.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/alien/Type.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/alien/Unlink.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/alien/Uuid.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/core/Actions.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/core/Convert.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/core/ElementMatcher.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/core/Layout.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/core/Matcher.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/core/Measure.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/core/PredicateId.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/core/SelectionMatcher.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/core/SkinLoader.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/core/UrlType.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/file/Conversions.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/file/Picker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/ui/Buttons.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/ui/Forms.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/ui/Panel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/main/js/tinymce/inlite/ui/Toolbar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/.eslintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/atomic/alien/ArrTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/atomic/alien/TypeTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/atomic/alien/UuidTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/atomic/core/ConvertTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/atomic/core/MatcherTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/atomic/core/UrlTypeTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/browser/AutoCompleteTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/browser/ThemeTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/browser/alien/BookmarkTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/browser/alien/EditorSettingsTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/browser/alien/UnlinkTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/browser/core/ActionsTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/browser/core/ElementMatcher.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/browser/core/LayoutTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/browser/core/MeasureTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/browser/core/PredicateIdTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/browser/core/SelectionMatcherTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/browser/file/ConversionsTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/browser/file/SelectionMatcher.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/src/test/js/module/tinymce/inlite/test/Toolbar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/theme.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/inlite/theme.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/Gruntfile.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/config/bolt/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/config/bolt/demo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/config/bolt/prod.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/demo/html/demo.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/demo/js/tinymce/modern/Demo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/main/js/tinymce/modern/Theme.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/main/js/tinymce/modern/modes/Iframe.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/main/js/tinymce/modern/modes/Inline.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/main/js/tinymce/modern/ui/A11y.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/main/js/tinymce/modern/ui/ContextToolbars.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/main/js/tinymce/modern/ui/Menubar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/main/js/tinymce/modern/ui/ProgressState.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/main/js/tinymce/modern/ui/Resize.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/main/js/tinymce/modern/ui/Sidebar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/main/js/tinymce/modern/ui/SkinLoaded.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/main/js/tinymce/modern/ui/Toolbar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/test/.eslintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/src/test/browser/SidebarTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/theme.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/themes/modern/theme.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/tinymce.dev.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/tinymce.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/tinymce.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/readme.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/.eslintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/.jshintrc" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/coverage/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/coverage/js/JSCovReporter.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/coverage/js/backbone-min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/coverage/js/reporter.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/coverage/js/reporter.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/coverage/js/underscore-min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/js/init.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/js/module_loader.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/js/qunit/QUnit.LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/js/qunit/qunit.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/js/qunit/qunit.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/js/runner.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/js/tinymce_loader.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/js/utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/accessibility.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/caretwalker.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/classic.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/commands.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/content-editable-false.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/css/content_editable.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/css/custom_theme_content.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/css/development.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/css/gecko_caret.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/css/noneditable_manual.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/custom_theme.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/development.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/dirty.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/dragdrop.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/focus.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/gecko_caret.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/icons.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/index.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/inline-toolbars.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/inline.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/jquery.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/media.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/noneditable.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/notification.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/paste.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/performance.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/removeformat.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/resize.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/skin.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/table-cell-selection.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/table-resize-bars.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/tests.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/ui_container.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/manual/visualblocks.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/advlist.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/autolink.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/autosave.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/charmap.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/fullpage.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/fullscreen.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/image.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/imagetools.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/importcss.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/jquery_initialization.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/jquery_plugin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/legacyoutput.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/link.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/lists.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/media.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/noneditable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/paste.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/paste_images.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/paste_smart.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/searchreplace.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/spellchecker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/table.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/textpattern.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/toc.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/visualchars.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/plugins/wordcount.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/AddOnManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/Editor.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/EditorCommands.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/EditorCustomTheme.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/EditorManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/EditorUpload.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/Editor_rtl.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/EnterKey.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/FocusManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ForceBlocks.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/Formatter_apply.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/Formatter_check.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/Formatter_remove.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/InsertContent.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/InsertContentForcedRootFalse.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/InsertList.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/NotificationManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/SelectionOverrides.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/Shortcuts.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/UndoManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/WindowManager.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/caret/CaretBookmark.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/caret/CaretCandidate.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/caret/CaretContainer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/caret/CaretPosition.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/caret/CaretUtils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/caret/CaretWalker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/caret/FakeCaret.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/caret/LineUtils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/caret/LineWalker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/content/LinkTargets.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/data/ObservableObject.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/dom/DOMUtils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/dom/Dimensions.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/dom/DomQuery.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/dom/EventUtils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/dom/NodePath.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/dom/NodeType.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/dom/Range.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/dom/Selection.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/dom/Serializer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/dom/TreeWalker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/dom/TridentSelection.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/dom/test.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/file/Conversions.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/file/ImageScanner.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/file/UploadStatus.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/fmt/FontInfo.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/fmt/Hooks.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/fmt/Preview.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/geom/ClientRect.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/geom/Rect.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/html/DomParser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/html/Entities.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/html/Node.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/html/SaxParser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/html/Schema.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/html/Serializer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/html/Styles.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/html/Writer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/options.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/text/ExtendingChar.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/text/Zwsp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/AbsoluteLayout.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/Button.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/Collection.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/ColorButton.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/Control.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/FilePicker.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/FitLayout.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/FlexLayout.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/GridLayout.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/MenuButton.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/Panel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/Selector.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/SplitButton.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/TabPanel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/TextBox.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/Window.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/ui/css/ui-overrides.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/undo/Diff.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/undo/ForcedRootBlock.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/undo/Fragments.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/undo/Levels.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/Color.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/Delay.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/EventDispatcher.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/Fun.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/I18n.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/JSON.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/JSONRequest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/LocalStorage.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/Observable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/Promise.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/Quirks_webkit.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/Tools.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/URI.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/XHR.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/json_rpc_error.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/json_rpc_ok.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/util/test.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/bolt/config/browser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/docs/tinymce.CommandEvent.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/docs/tinymce.ContentEvent.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/docs/tinymce.Editor.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/docs/tinymce.Event.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/docs/tinymce.FocusEvent.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/docs/tinymce.ProgressStateEvent.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/docs/tinymce.ResizeEvent.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/modules/zip-helper.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/tasks/amdlc.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/tasks/bedrock.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/tasks/bundle.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/tasks/moxiezip.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/tasks/skin.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/tasks/subgrunt.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/static/tinymce/tools/tasks/validateVersion.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/css/bootstrap-clockpicker.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/css/jquery.fullPage.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/bootstrap-clockpicker.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/jquery.fullPage.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/templates/maths/equation_editor.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/templates/maths/taskCollection_detail.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/templates/maths/taskCollection_list.html" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/CHANGES.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/LICENSE.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/adapters/jquery.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/build-config.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/ckeditor.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/config.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/contents.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/lang/en.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/clipboard/dialogs/paste.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/dialog/dialogDefinition.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/icons.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/icons_hidpi.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/imgur/images/icon.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/link/dialogs/anchor.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/link/dialogs/link.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/link/images/anchor.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/link/images/hidpi/anchor.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/mathjax/dialogs/mathjax.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/mathjax/images/loader.gif" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/texzilla/dialogs/texzilla.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/uploadcare/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/widget/images/handle.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/plugins/youtube/images/icon.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/css/samples.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/img/github-top.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/img/header-bg.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/img/header-separator.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/img/logo.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/img/navigation-tip.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/index.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/js/sample.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/js/sf.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/ajax.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/api.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/appendto.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/assets/inlineall/logo.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/assets/outputxhtml/outputxhtml.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/assets/posteddata.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/assets/sample.jpg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/assets/uilanguages/languages.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/datafiltering.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/dialog/assets/my_dialog.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/dialog/dialog.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/divreplace.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/enterkey/enterkey.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/index.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/inlineall.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/inlinebycode.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/inlinetextarea.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/jquery.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/mathjax/mathjax.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/readonly.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/replacebyclass.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/replacebycode.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/sample.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/sample.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/sample_posteddata.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/tabindex.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/texzilla/index.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/toolbar/toolbar.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/uicolor.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/uilanguages.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/wysiwygarea/fullpage.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/old/xhtmlstyle.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/css/fontello.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/font/LICENSE.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/font/config.json" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/font/fontello.eot" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/font/fontello.svg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/font/fontello.ttf" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/font/fontello.woff" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/index.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/js/abstracttoolbarmodifier.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/js/fulltoolbareditor.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/js/toolbarmodifier.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/js/toolbartextmodifier.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/lib/codemirror/LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/lib/codemirror/codemirror.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/lib/codemirror/javascript.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/lib/codemirror/neo.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/lib/codemirror/show-hint.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/samples/toolbarconfigurator/lib/codemirror/show-hint.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/dialog.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/dialog_ie.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/dialog_ie8.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/dialog_iequirks.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/editor.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/editor_gecko.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/editor_ie.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/editor_ie8.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/editor_iequirks.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/icons.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/icons_hidpi.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/images/arrow.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/images/close.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/images/hidpi/close.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/images/hidpi/lock-open.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/images/hidpi/lock.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/images/hidpi/refresh.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/images/lock-open.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/images/lock.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/images/refresh.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/images/spinner.gif" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/skins/moono-lisa/readme.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/administration/static/ckeditor/styles.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/maths/templates/maths/testdisplay_form.html" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_build/doctrees/environment.pickle" afterPath="$PROJECT_DIR$/docs/_build/doctrees/environment.pickle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_build/html/objects.inv" afterPath="$PROJECT_DIR$/docs/_build/html/objects.inv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/models.py" afterPath="$PROJECT_DIR$/administration/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/static/administration/style.css" afterPath="$PROJECT_DIR$/administration/static/administration/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/grade_detail.html" afterPath="$PROJECT_DIR$/administration/templates/administration/grade_detail.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/group_detail.html" afterPath="$PROJECT_DIR$/administration/templates/administration/group_detail.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/group_form.html" afterPath="$PROJECT_DIR$/administration/templates/administration/group_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/person_list.html" afterPath="$PROJECT_DIR$/administration/templates/administration/person_list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/views.py" afterPath="$PROJECT_DIR$/administration/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_build/html/genindex.html" afterPath="$PROJECT_DIR$/docs/_build/html/genindex.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_build/html/searchindex.js" afterPath="$PROJECT_DIR$/docs/_build/html/searchindex.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/forms.py" afterPath="$PROJECT_DIR$/maths/forms.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/models.py" afterPath="$PROJECT_DIR$/maths/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/static/maths/style.css" afterPath="$PROJECT_DIR$/maths/static/maths/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/index.html" afterPath="$PROJECT_DIR$/maths/templates/maths/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_list.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_update.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_update.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/test_detail.html" afterPath="$PROJECT_DIR$/maths/templates/maths/test_detail.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/test_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/test_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/test_list.html" afterPath="$PROJECT_DIR$/maths/templates/maths/test_list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/urls.py" afterPath="$PROJECT_DIR$/maths/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/views.py" afterPath="$PROJECT_DIR$/maths/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/matistikk/base.html" afterPath="$PROJECT_DIR$/templates/matistikk/base.html" />
     </list>
     <list id="de22f9bb-0d8d-43b9-a0ab-d5e54da7af91" name="Failed commit: IdeaFiles" comment="Endringer på personCreateView" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -34,16 +967,6 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="testdisplay_form.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/maths/templates/maths/testdisplay_form.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6976">
-              <caret line="436" column="14" lean-forward="false" selection-start-line="418" selection-start-column="8" selection-end-line="436" selection-end-column="14" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="grade_detail.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/administration/templates/administration/grade_detail.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -64,11 +987,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="task_form.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
+      <file leaf-file-name="answer_form.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="368">
-              <caret line="23" column="64" lean-forward="false" selection-start-line="23" selection-start-column="64" selection-end-line="23" selection-end-column="64" />
+            <state relative-caret-position="316">
+              <caret line="469" column="36" lean-forward="false" selection-start-line="469" selection-start-column="36" selection-end-line="469" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -87,8 +1010,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5728">
-              <caret line="365" column="95" lean-forward="false" selection-start-line="365" selection-start-column="95" selection-end-line="365" selection-end-column="95" />
+            <state relative-caret-position="5648">
+              <caret line="365" column="0" lean-forward="true" selection-start-line="365" selection-start-column="0" selection-end-line="365" selection-end-column="0" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -109,7 +1032,7 @@
       <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="512">
+            <state relative-caret-position="480">
               <caret line="33" column="38" lean-forward="false" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="38" />
               <folding />
             </state>
@@ -235,6 +1158,7 @@
         <option value="$PROJECT_DIR$/maths/views.py" />
         <option value="$PROJECT_DIR$/maths/templates/maths/test_detail.html" />
         <option value="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
       </list>
     </option>
   </component>
@@ -280,7 +1204,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -400,31 +1323,10 @@
               <option name="myItemId" value="static" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ckeditor" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="matistikk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="matistikk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="administration" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -1096,13 +1998,13 @@
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1053" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14903846" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15224358" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17811158" sideWeight="0.5176282" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17703862" sideWeight="0.5219017" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17811158" sideWeight="0.4823718" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17703862" sideWeight="0.4780983" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32760474" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34777898" sideWeight="0.4870808" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34763947" sideWeight="0.48504272" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24958768" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26100966" sideWeight="0.48720682" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -1194,7 +2096,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///usr/lib/python3/dist-packages/django/views/generic/edit.py" />
     <entry file="file:///usr/lib/python3/dist-packages/django/contrib/auth/forms.py" />
     <entry file="file://$PROJECT_DIR$/templates/matistikk/form-template.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -1233,7 +2134,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="15" column="22" lean-forward="false" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1258,7 +2158,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="54">
           <caret line="3" column="13" lean-forward="false" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1290,7 +2189,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4104">
           <caret line="228" column="8" lean-forward="false" selection-start-line="228" selection-start-column="8" selection-end-line="230" selection-end-column="11" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1298,7 +2196,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="738">
           <caret line="41" column="54" lean-forward="false" selection-start-line="41" selection-start-column="44" selection-end-line="41" selection-end-column="54" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1306,7 +2203,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1962">
           <caret line="109" column="52" lean-forward="false" selection-start-line="109" selection-start-column="52" selection-end-line="109" selection-end-column="52" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1322,7 +2218,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
           <caret line="17" column="54" lean-forward="false" selection-start-line="17" selection-start-column="54" selection-end-line="17" selection-end-column="54" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1330,7 +2225,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2193">
           <caret line="129" column="9" lean-forward="false" selection-start-line="129" selection-start-column="9" selection-end-line="129" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1338,7 +2232,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="76" column="17" lean-forward="false" selection-start-line="76" selection-start-column="17" selection-end-line="76" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1346,7 +2239,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="13" column="41" lean-forward="false" selection-start-line="13" selection-start-column="41" selection-end-line="13" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1354,7 +2246,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="26" column="48" lean-forward="true" selection-start-line="26" selection-start-column="48" selection-end-line="26" selection-end-column="48" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1377,7 +2268,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="680">
           <caret line="40" column="32" lean-forward="false" selection-start-line="40" selection-start-column="32" selection-end-line="40" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1413,7 +2303,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-187">
           <caret line="68" column="37" lean-forward="true" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1421,7 +2310,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2278">
           <caret line="134" column="77" lean-forward="false" selection-start-line="134" selection-start-column="77" selection-end-line="134" selection-end-column="77" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1429,7 +2317,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="378">
           <caret line="136" column="108" lean-forward="false" selection-start-line="136" selection-start-column="108" selection-end-line="136" selection-end-column="108" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1437,26 +2324,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="359">
           <caret line="193" column="35" lean-forward="false" selection-start-line="193" selection-start-column="35" selection-end-line="193" selection-end-column="35" />
-          <folding>
-            <element signature="e#5315#5338#0#HTML" expanded="true" />
-            <element signature="e#5373#5410#0#HTML" expanded="true" />
-            <element signature="e#5588#5611#0#HTML" expanded="true" />
-            <element signature="e#5674#5712#0#HTML" expanded="true" />
-            <element signature="e#5819#5842#0#HTML" expanded="true" />
-            <element signature="e#5907#5945#0#HTML" expanded="true" />
-            <element signature="e#9426#9456#0#HTML" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/testdisplay_form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6976">
-          <caret line="436" column="14" lean-forward="false" selection-start-line="418" selection-start-column="8" selection-end-line="436" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/testdisplay_form.html" />
     <entry file="file://$PROJECT_DIR$/administration/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="16">
@@ -1474,7 +2345,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/maths/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="512">
+        <state relative-caret-position="480">
           <caret line="33" column="38" lean-forward="false" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="38" />
           <folding />
         </state>
@@ -1498,8 +2369,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/maths/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5728">
-          <caret line="365" column="95" lean-forward="false" selection-start-line="365" selection-start-column="95" selection-end-line="365" selection-end-column="95" />
+        <state relative-caret-position="5648">
+          <caret line="365" column="0" lean-forward="true" selection-start-line="365" selection-start-column="0" selection-end-line="365" selection-end-column="0" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
           </folding>
@@ -1514,6 +2385,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="23" column="20" lean-forward="false" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_detail.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1792">
@@ -1522,10 +2400,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="23" column="64" lean-forward="false" selection-start-line="23" selection-start-column="64" selection-end-line="23" selection-end-column="64" />
+        <state relative-caret-position="316">
+          <caret line="469" column="36" lean-forward="false" selection-start-line="469" selection-start-column="36" selection-end-line="469" selection-end-column="36" />
           <folding />
         </state>
       </provider>

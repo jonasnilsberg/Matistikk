@@ -14,7 +14,7 @@
     {% block head %}
     {% endblock %}
 </head>
-<body>
+<body style="position: relative" data-spy="scroll" data-target="#tasknav">
 {% if request.user.role == 4 %}
     <!-- Super User Navbar-->
     <nav class="navbar navbar-inverse">
@@ -34,7 +34,7 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
                     <li><a href="{% url 'administration:myPage' request.user.username %}">Min Side</a></li>
-                    <li><a href="{% url 'maths:testCreate' %}">Lag Test</a></li>
+                    <li><a href="{% url 'maths:taskCollectionCreate' %}">Lag Test</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">Oversikt <span class="caret"></span></a>
@@ -42,7 +42,9 @@
                             <li><a href="{% url 'administration:personList' %}">Brukeroversikt</a></li>
                             <li><a href="{% url 'administration:schoolList' %}">Skoleoversikt</a></li>
                             <li><a href="{% url 'administration:groupList' %}">Gruppeoversikt</a></li>
+                            <li class="divider"></li>
                             <li><a href="{% url 'maths:taskList' %}">Oppgaveoversikt</a></li>
+                            <li><a href="{% url 'maths:taskCollectionList' %}">Testoversikt</a></li>
                         </ul>
                     </li>
                     <li><a href="statisticview">Statistikk</a></li>
@@ -50,7 +52,8 @@
 
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'logout' %}" id="logout"><span class="glyphicon glyphicon-log-out"></span>Logg ut</a></li>
+                    <li><a href="{% url 'logout' %}" id="logout"><span class="glyphicon glyphicon-log-out"></span>Logg
+                        ut</a></li>
                 </ul>
             </div>
         </div>
@@ -80,7 +83,8 @@
                     <li><a href="aboutview">Om</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'logout' %}" id="logout"><span class="glyphicon glyphicon-log-out"></span>Logg ut</a></li>
+                    <li><a href="{% url 'logout' %}" id="logout"><span class="glyphicon glyphicon-log-out"></span>Logg
+                        ut</a></li>
                 </ul>
             </div>
         </div>
@@ -106,11 +110,13 @@
                     <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
                     <li><a href="{% url 'administration:myPage' request.user.username %}">Min Side</a></li>
                     <li><a href="{% url 'administration:gradeList' %}">Mine klasser</a></li>
+                    <li><a href="{% url 'maths:testList' request.user.username %}">Tilgjengelige tester</a></li>
                     <li><a href="{% url 'administration:personList' %}">Brukeroversikt</a></li>
                     <li><a href="aboutview">Om</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'logout' %}" id="logout"><span class="glyphicon glyphicon-log-out"></span>Logg ut</a></li>
+                    <li><a href="{% url 'logout' %}" id="logout"><span class="glyphicon glyphicon-log-out"></span>Logg
+                        ut</a></li>
                 </ul>
             </div>
         </div>
@@ -137,8 +143,11 @@
                     <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'administration:myPage' request.user.username %}"><i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ request.user.first_name }} {{ request.user.last_name }}</a></li>
-                    <li><a href="{% url 'logout' %}" id="logout"><span class="glyphicon glyphicon-log-out"></span> Logg ut</a></li>
+                    <li><a href="{% url 'administration:myPage' request.user.username %}"><i class="fa fa-user-circle-o"
+                                                                                             aria-hidden="true"></i> {{ request.user.first_name }} {{ request.user.last_name }}
+                    </a></li>
+                    <li><a href="{% url 'logout' %}" id="logout"><span class="glyphicon glyphicon-log-out"></span> Logg
+                        ut</a></li>
                 </ul>
             </div>
         </div>
