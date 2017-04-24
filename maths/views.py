@@ -519,6 +519,11 @@ class TestDetailView(views.AjaxResponseMixin, generic.DetailView):
         context['teachers'] = Person.objects.filter(tests__exact=test, role=2)
         context['grades'] = Grade.objects.filter(tests__exact=test)
         context['groups'] = Gruppe.objects.filter(tests__exact=test)
+        context['allstudents'] = Person.objects.filter(role=1).exclude(tests__exact=test)
+        context['allteachers'] = Person.objects.filter(role=2).exclude(tests__exact=test)
+        context['allgrades'] = Grade.objects.all().exclude(tests__exact=test)
+        context['allgroups'] = Gruppe.objects.all().exclude(tests__exact=test)
+        context['allschools'] = School.objects.all()
         return context
 
 

@@ -110,7 +110,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for test in person.tests.all %}
+                        {% for test in tests %}
                             <tr>
                                 <td>{{ test.task_collection.test_name }}</td>
                                 <td>{{ test.published }}</td>

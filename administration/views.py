@@ -16,6 +16,8 @@ from .forms import (ChangePasswordForm, FileUploadForm, PersonForm,
 from .models import Grade, Person, School, Gruppe
 from maths.models import Test
 
+from django.db.models import Q
+
 
 class AdministratorCheck(views.UserPassesTestMixin):
     """
@@ -222,7 +224,8 @@ class MyPageDetailView(views.UserPassesTestMixin, views.AjaxResponseMixin, gener
         context = super(MyPageDetailView, self).get_context_data(**kwargs)
         context['person'] = Person.objects.get(username=self.kwargs.get('slug'))
         if self.request.user.role == 1:
-            context['groups'] = Gruppe.objects.filter(is_active=1, visible=True, persons__username=self.request.user.username)
+            context['groups'] = Gruppe.objects.filter(is_active=1, visible=True,
+                                                      persons__username=self.request.user.username)
         elif self.request.user.role == 4:
             context['groups'] = Gruppe.objects.filter(is_active=1, visible=True, creator=self.request.user)
         return context
@@ -343,6 +346,12 @@ class PersonDisplayView(views.AjaxResponseMixin, generic.DetailView):
         :return: The updated context
         """
         context = super(PersonDisplayView, self).get_context_data(**kwargs)
+        username = self.kwargs.get('slug')
+        person = Person.objects.get(username=username)
+        if person.role == 1:
+            tests = Test.objects.filter(
+                Q(person=person) | Q(grade__in=person.grades.all()) | Q(gruppe__in=person.gruppe_set.all())).distinct()
+            context['tests'] = tests
         if self.kwargs.get('grade_pk'):
             context['grade_pk'] = self.kwargs['grade_pk']
             context['school_pk'] = self.kwargs['school_pk']

@@ -231,8 +231,11 @@
             </div>
         </div>
         <div class="panel-footer">
-            <a class="btn btn-primary"><span
-                    class="glyphicon glyphicon-plus" aria-hidden="true"></span> Publiser </a>
+            <button id="addPublish" class="btn btn-primary" type="button" data-toggle="tooltip" onclick="publish()"
+                    title="Tidsfristen for denne oppgaven er utgått" disabled="disabled"><span
+                    class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                Publiser
+            </button>
             <button class="btn btn-primary" data-toggle="modal" data-target="#updateDueDateModal"><i
                     class="fa fa-clock-o" aria-hidden="true"></i>
                 Oppdater tidsfrist
@@ -243,6 +246,8 @@
 
 
     <script>
+        $('#addPublish').attr('disabled', false);
+        $('#addPublish').attr('title', 'Legg til ');
         $(document).ready(function () {
             if ($("#studentTab").length == 0) {
                 $('#teacherTab').addClass('active');
@@ -329,7 +334,9 @@
                 })
             }
         });
-
+        function publish() {
+            $('#publishModal').modal('show');
+        }
 
         function updateDueDate() {
             var newDueDate = new Date($("#datepickerUpdateDue").datepicker("getDate"));
@@ -505,10 +512,428 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="publishModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" style="width: 75%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title text-center">Publiser</h3>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav active"><a href="#modalA" data-toggle="tab">Elever</a></li>
+                        <li class="nav"><a href="#modalB" data-toggle="tab">Lærere</a></li>
+                        <li class="nav"><a href="#modalC" data-toggle="tab">Klasser</a></li>
+                        <li class="nav"><a href="#modalD" data-toggle="tab">Grupper</a></li>
+                        <li class="nav"><a href="#modalE" data-toggle="tab">Skole</a></li>
+                        <div class="col-sm-4" style="float: right">
+                            <div class="form-group" id="gradeDropDown">
+                                <select class="form-control" id="gradeDropList">
+                                    <option id="allschools" value="">Velg Klasse</option>
+                                    {% for grade in allgrades %}
+                                        <option value="{{ grade.id }}">{{ grade }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group" id="schoolDropDown">
+                                <select class="form-control" id="schoolDropList">
+                                    <option id="allgrades" value="">Velg Skole
+                                    </option>
+                                    {% for school in allschools %}
+                                        <option value="{{ school.id }}">{{ school }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="float: right">
+                            <div class="input-group">
+
+                    <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                                <input type="text" class="form-control" id="search"
+                                       onkeyup="searchTable('studenttablemodal'); searchTable('teachertablemodal');
+                                       searchTable('grouptablemodal'); searchTable('schooltablemodal'); searchGradeTable('gradetablemodal');"
+                                       placeholder="Søk etter elever">
+                            </div>
+                        </div>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="modalA">
+                            <table class="table table-hover table-striped table-responsive" id="studenttablemodal">
+                                <thead>
+                                <tr>
+                                    <th class="col-sm-1">Legg til</th>
+                                    <th>Fornavn</th>
+                                    <th>Etternavn</th>
+                                    <th>Brukernavn</th>
+                                    <th>Brukerinfo</th>
+                                </tr>
+                                </thead>
+                                <img src="http://dkclasses.com/images/loading.gif"
+                                     class="loading-indicator loading-filter"
+                                     style="display:none"/>
+                                <tbody class="tableclick">
+                                {% for student in allstudents %}
+                                    <tr id="user{{ student.id }}modal" style="cursor:pointer;">
+                                        <td><input type="checkbox"
+                                                   value="{{ student.id }}"></td>
+                                        <td>{{ student.first_name }}</td>
+                                        <td>{{ student.last_name }}</td>
+                                        <td>{{ student.username }}</td>
+                                        <td><a class="btn btn-default"
+                                               href="{% url 'administration:personDetail' student.username %}"><span
+                                                class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
+                                            Brukerinfo</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="modalB">
+                            <table class="table table-hover table-striped table-responsive" id="teachertablemodal">
+                                <thead>
+                                <tr>
+                                    <th class="col-sm-1">Legg til</th>
+                                    <th>Fornavn</th>
+                                    <th>Etternavn</th>
+                                    <th>Brukernavn</th>
+                                    <th>Brukerinfo</th>
+                                </tr>
+                                </thead>
+                                <img src="http://dkclasses.com/images/loading.gif"
+                                     class="loading-indicator loading-filter"
+                                     style="display:none"/>
+                                <tbody class="tableclick">
+                                {% for teacher in allteachers %}
+                                    <tr id="user{{ teacher.id }}modal" style="cursor:pointer;">
+                                        <td><input type="checkbox"
+                                                   value="{{ teacher.id }}"></td>
+                                        <td>{{ teacher.first_name }}</td>
+                                        <td>{{ teacher.last_name }}</td>
+                                        <td>{{ teacher.username }}</td>
+                                        <td><a class="btn btn-default"
+                                               href="{% url 'administration:personDetail' teacher.username %}"><span
+                                                class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
+                                            Brukerinfo</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="modalC">
+                            <table class="table table-hover table-striped table-responsive" id="gradetablemodal">
+                                <thead>
+                                <tr>
+                                    <th class="col-sm-2">Legg til</th>
+                                    <th>Klasse</th>
+                                    <th>Skole</th>
+                                    <th>Klasseinfo</th>
+                                </tr>
+                                </thead>
+                                <img src="http://dkclasses.com/images/loading.gif"
+                                     class="loading-indicator loading-filter"
+                                     style="display:none"/>
+                                <tbody class="tableclick">
+                                {% for grade in allgrades %}
+                                    <tr id="grade{{ grade.id }}modal" style="cursor:pointer;">
+                                        <td><input type="checkbox"
+                                                   value="{{ grade.id }}"></td>
+                                        <td>{{ grade.grade_name }}</td>
+                                        <td>{{ grade.school.school_name }}</td>
+                                        <td><a class="btn btn-default"
+                                               href="{% url 'administration:gradeDetail' school_pk=grade.school_id grade_pk=grade.id %}"><span
+                                                class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
+                                            Klasseinfo</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="modalD">
+                            <table class="table table-hover table-striped table-responsive" id="grouptablemodal">
+                                <thead>
+                                <tr>
+                                    <th class="col-sm-1">Legg til</th>
+                                    <th>Gruppenavn</th>
+                                    <th>Klasse</th>
+                                    <th>Ansvarlig</th>
+                                    <th>Gruppeinfo</th>
+                                </tr>
+                                </thead>
+                                <img src="http://dkclasses.com/images/loading.gif"
+                                     class="loading-indicator loading-filter"
+                                     style="display:none"/>
+                                <tbody class="tableclick">
+                                {% for group in allgroups %}
+                                    <tr id="group{{ group.id }}modal" style="cursor:pointer;">
+                                        <td><input type="checkbox"
+                                                   value="{{ group.id }}"></td>
+                                        <td>{{ group.group_name }}</td>
+                                        <td>{% if group.grade %}{{ group.grade }}{% else %}-{% endif %}</td>
+                                        <td>{{ group.creator.get_full_name }}</td>
+                                        <td><a class="btn btn-default"
+                                               href="{% url 'administration:groupDetail' group_pk=group.id %}"><span
+                                                class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
+                                            Gruppeinfo</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="modalE">
+                            <table class="table table-hover table-striped table-responsive" id="schooltablemodal">
+                                <thead>
+                                <tr>
+                                    <th class="col-sm-1">Legg til</th>
+                                    <th>Skole</th>
+                                    <th>Adresse</th>
+                                    <th>Kontaktperson</th>
+                                    <th>Skoleinfo</th>
+                                </tr>
+                                </thead>
+                                <img src="http://dkclasses.com/images/loading.gif"
+                                     class="loading-indicator loading-filter"
+                                     style="display:none"/>
+                                <tbody class="tableclick">
+                                {% for school in allschools %}
+                                    <tr id="school{{ school.id }}modal" style="cursor:pointer;">
+                                        <td><input type="checkbox"
+                                                   value="{{ school.id }}"></td>
+                                        <td>{{ school.school_name }}</td>
+                                        <td>{{ school.school_address }}</td>
+                                        <td>{{ school.school_administrator.get_full_name }}</td>
+                                        <td><a class="btn btn-default"
+                                               href="{% url 'administration:schoolDetail' school_pk=school.id %}"><span
+                                                class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
+                                            Skoleinfo</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="updateDueDate()">
+                        <i class="fa fa-check-square-o" aria-hidden="true"></i> Publiser
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         $('.clockpicker').clockpicker({
             autoclose: true
         });
+
+        $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+            var search = $('#search');
+            var schoolDrop = $('#schoolDropList');
+            var gradeDrop = $('#gradeDropList');
+            var tab = $(e.target).attr('href');
+            if (tab == '#modalA') {
+                search.attr("placeholder", "Søk etter elever");
+                schoolDrop.attr("disabled", false);
+                $('#gradeDropList').attr("disabled", false);
+            } else if (tab == '#modalB') {
+                search.attr("placeholder", "Søk etter lærere");
+                schoolDrop.attr("disabled", false);
+                gradeDrop.attr("disabled", false);
+            } else if (tab == '#modalC') {
+                search.attr("placeholder", "Søk etter klasser");
+                gradeDrop.attr("disabled", true);
+                schoolDrop.attr("disabled", false);
+                gradeDrop.val("").change();
+            } else if (tab == '#modalD') {
+                search.attr("placeholder", "Søk etter grupper");
+                schoolDrop.attr("disabled", true);
+                gradeDrop.attr("disabled", false);
+                var grade = $("#gradeDropList :selected").val();
+                schoolDrop.val("").change();
+                gradeDrop.val(grade).change();
+            } else if (tab == '#modalE') {
+                search.attr("placeholder", "Søk etter skoler");
+                schoolDrop.attr("disabled", true);
+                gradeDrop.attr("disabled", true);
+                gradeDrop.val("").change();
+                schoolDrop.val("").change();
+            }
+        });
+
+        $(".tableclick tr").click(function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            if (e.target.type == "checkbox") {
+                e.stopPropagation();
+                if ($checkbox.is(':checked')) {
+                    $(this).addClass('success');
+                } else {
+                    $(this).removeClass('success');
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
+
+        function searchTable(inputTable) {
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById(inputTable);
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                td1 = tr[i].getElementsByTagName("td")[2];
+                td2 = tr[i].getElementsByTagName("td")[3];
+
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1
+                        || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        function searchGradeTable(inputTable) {
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById(inputTable);
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[1];
+                td1 = tr[i].getElementsByTagName("td")[2];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        $("#schoolDropList").change(function () {
+            $("#gradeDropList").val('');
+            var school_id = $(this).val();
+            var school_name = $("#schoolDropList :selected").text();
+            personSchoolFilter(school_id);
+            var gradeList = $("#gradeDropList option");
+            gradeList.each(function () {
+                var grade_id = $(this).val();
+                var grade = $(this).text();
+                if (school_id == "") {
+                    $(this).show();
+                }
+                else if (grade.indexOf(school_name) >= 0 || grade_id == "") {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+
+        $("#gradeDropList").change(function () {
+            var grade_id = $(this).val();
+            if (grade_id != "") {
+                $('.loading-filter').show();
+                $('.tableclick').addClass('hidden');
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url 'administration:personList' %}',
+                    data: {
+                        'type': 'grade',
+                        'grade_id': grade_id
+                    },
+                    dataType: 'json',
+                    success: function (json) {
+                        var students = (json.persons);
+                        $("#studenttablemodal tbody tr").hide();
+                        $("#teachertablemodal tbody tr").hide();
+                        $.each(students, function (index, value) {
+                            $("#user" + value.id + "modal").show();
+                        });
+                        $('.loading-filter').hide();
+                        $('.tableclick').removeClass('hidden');
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                        alert(xhr.responseText);
+                    }
+                });
+                $('#grouptablemodal > tbody  > tr').each(function () {
+                    var grade_name = $("#gradeDropList :selected").text();
+                    var school = $(this).find("td:eq(2)").html();
+                    if (school.indexOf(grade_name) == -1) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            } else {
+                var school_id = $("#schoolDropList :selected").val();
+                personSchoolFilter(school_id);
+            }
+        });
+
+        /**
+         * Function that gets the userlist with an ajax-call and displays them in the table.
+         */
+        function personSchoolFilter(school) {
+            var school_id = school;
+            var school_name = $("#schoolDropList :selected").text();
+            if (school_id != "") {
+                $('.loading-filter').show();
+                $('.tableBody').addClass('hidden');
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url 'administration:personList' %}',
+                    data: {
+                        'type': 'school',
+                        'school_id': school_id
+                    },
+                    dataType: 'json',
+                    success: function (json) {
+                        var students = (json.persons);
+                        $("#studenttablemodal tbody tr").hide();
+                        $("#teachertablemodal tbody tr").hide();
+                        $.each(students, function (index, value) {
+                            $("#user" + value.id + "modal").show();
+                        });
+                        $('.loading-filter').hide();
+                        $('.tableclick').removeClass('hidden');
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+                $('#gradetablemodal > tbody  > tr').each(function () {
+                    var school = $(this).find("td:eq(2)").html();
+                    if (school.indexOf(school_name) == -1) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                });
+            } else {
+                $("#studenttablemodal tr").show();
+                $("#teachertablemodal tr").show();
+                $("#gradetablemodal tr").show();
+                $('#grouptablemodal tr').show();
+            }
+        }
+
     </script>
 {% endblock %}

@@ -111,7 +111,7 @@
                         {% for person in persons %}
                             {% if person.role == 2  and person.is_active or person.role == 3 and person.is_active or person.role == 4 and person.is_active %}
                                 <tr class="clickable-row"
-                                    data-href="{% url 'administration:PersonDetailFromGrade' grade.school_id grade.id person.username %}}"
+                                    data-href="{% url 'administration:PersonDetailFromGrade' school_pk=grade.school_id grade_pk=grade.id slug=person.username %}"
                                     style="cursor: pointer">
                                     <td>{{ person.first_name }}</td>
                                     <td>{{ person.last_name }}</td>
@@ -239,7 +239,6 @@
         {% endif %}
         <a type="button" class="btn btn-primary" data-toggle='modal' href='#publishTestModal'>
             <span class="fa fa-book" aria-hidden="true"></span> Publiser test</a>
-
     </div>
     </div>
 
