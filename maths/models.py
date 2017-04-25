@@ -3,6 +3,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from datetime import datetime, timedelta, timezone
 
+
 # Create your models here.
 
 
@@ -71,7 +72,7 @@ class GeogebraTask(models.Model):
 
 class TaskCollection(models.Model):
     """
-    A test is a collection of tasks.
+    A Collection of task, base of a test.
 
     :tasks: The tasks.
     :test_name: The name of the test.
@@ -91,6 +92,15 @@ class TaskCollection(models.Model):
 
 
 class Test(models.Model):
+    """
+    A test.
+    
+    :taskCollection: The collection of tasks, base of the test.
+    :published: Date the test was published.
+    :dueDate: Due date for the test
+    :randomOrder: Says if the order of the tasks should be in a random order or not.
+   
+    """
     task_collection = models.ForeignKey(TaskCollection)
     published = models.DateTimeField(verbose_name='Publisert')
     dueDate = models.DateTimeField(verbose_name='Siste frist for besvarelse', null=True, blank=True)
@@ -105,12 +115,27 @@ class Test(models.Model):
 
 
 class TaskOrder(models.Model):
+    """
+    Order of the tasks in a test. Uses the order in the database.
+
+    :test: The test the task is in.
+    :task: The task
+    """
     test = models.ForeignKey(Test)
     task = models.ForeignKey(Task)
     order = models.IntegerField()
 
 
 class Answer(models.Model):
+    """
+    The answer of a task in a test.
+
+    :task: The task.
+    :test: The test the task is in.
+    :user: The user that answered.
+    :reasoning: Users reasoning behind the answer.
+    :text: The answer.
+    """
     task = models.ForeignKey(Task)
     test = models.ForeignKey(Test)
     user = models.ForeignKey(Person)
@@ -119,5 +144,11 @@ class Answer(models.Model):
 
 
 class GeogebraAnswer(models.Model):
+    """
+    Geogebra extention for an answer.
+
+    :answer: The answer.
+    :base64: The base64 string.
+    """
     answer = models.ForeignKey(Answer)
     base64 = models.CharField(max_length=32700)

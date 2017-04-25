@@ -46,6 +46,19 @@ class CreateCategoryForm(forms.ModelForm):
 
 
 class CreateTestForm(forms.ModelForm):
+    """
+    Form used to create a new test.
+
+    :persons: All the persons the test can be published to.
+    :grades: All the grades the test can be published to.
+    :schools: All the schools the test can be published to.
+    :groups: All the groups the test can be published to.
+    :order: The order of the tasks in test, if randomOrder is not True.
+    :task_collection: The collection of the tasks (Base of the test).
+    :randomOrder: Says if the order of the tasks should be random or in a given order.
+    :published: Date the test is published.
+    :dueDate: Due date for the test.
+    """
     persons = forms.ModelMultipleChoiceField(queryset=Person.objects.filter(role__in=[1, 2]), required=False)
     grades = forms.ModelMultipleChoiceField(queryset=Grade.objects.all(), required=False)
     schools = forms.ModelMultipleChoiceField(queryset=School.objects.all(), required=False)
@@ -58,6 +71,14 @@ class CreateTestForm(forms.ModelForm):
 
 
 class CreateAnswerForm(forms.ModelForm):
+    """
+    Form used to create a new answer.
+
+    :base64answer: The base64 string from geogebra.
+    :reasoning: The reasoning behind the answer.
+    :text: The answer.
+    :task: The task the answer matches to.
+    """
     base64answer = forms.CharField(max_length=500000, required=False)
     reasoning = forms.CharField(max_length=32700, required=False)
     text = forms.CharField(max_length=32700, required=False)

@@ -14,10 +14,12 @@
     <link rel="stylesheet" type="text/css" href="{% static 'administration/style.css' %}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" type="image/jpeg" href="http://bildr.no/view/WS9ITTNK">
-    <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
+    <script type="text/javascript" src="{% static 'maths/js/deployggb.js' %}"></script>
     <script type="text/javascript" src="{% static 'maths/js/jquery.fullPage.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'maths/js/scrolloverflow.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'maths/css/jquery.fullPage.css' %}"/>
+
+
 </head>
 
 <body style="overflow: hidden">
@@ -437,9 +439,9 @@
                                     </thead>
                                     <tbody class="tableBody">
                                     {% for task in test.taskorder_set.all %}
-                                        <tr id="summarytask{{ task.id }}">
+                                        <tr id="summarytask{{ task.task.id }}">
                                             <td>Oppgave {{ forloop.counter }}</td>
-                                            <td id="status{{ task.id }}">Status</td>
+                                            <td id="status{{ task.task.id }}">Status</td>
                                             <td><a href="#oppgave{{ forloop.counter }}"><i
                                                     class="fa fa-arrow-right" aria-hidden="true"></i> Gå til oppgave</a>
                                             </td>
@@ -456,6 +458,8 @@
     {% endif %}
     </div>
 </div>
+
+</body>
 
 <div class="modal fade" id="exitTestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog">
@@ -504,7 +508,6 @@
             scrollingSpeed: 1,
             scrollBar: true,
             afterRender: function () {
-
             },
             onLeave: function () {
             }

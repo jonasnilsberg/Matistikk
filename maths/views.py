@@ -2,12 +2,14 @@ from django.views import generic
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm
-from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, GeogebraAnswer
+from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, \
+    GeogebraAnswer
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
 import json
 import datetime
+from django.db.models import Q
 
 import random
 from django.http import HttpResponseRedirect
@@ -36,9 +38,11 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
         if self.request.user.role == 1:
             answers = Answer.objects.filter(user=self.request.user)
-            answered = Test.objects.filter(answer__in=answers).distinct()
+            tests = Test.objects.filter(
+                Q(person=self.request.user) | Q(grade__in=self.request.user.grades.all()) | Q(
+                    gruppe__in=self.request.user.gruppe_set.all())).distinct()
+            answered = tests.filter(answer__in=answers).distinct()
             context['answered'] = answered
-            tests = Test.objects.filter(person=self.request.user)
             notanswered = []
             for test in tests:
                 if test not in answered:

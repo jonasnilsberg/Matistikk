@@ -7,6 +7,7 @@ from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 from django.core.urlresolvers import reverse
 
 
+
 class School(models.Model):
     """A school
 
