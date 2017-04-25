@@ -1,6 +1,7 @@
 {% extends 'matistikk/base.html' %}
 {% load staticfiles %}
 {% load static %}
+{% load customtags %}
 {% block head %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -46,11 +47,7 @@
                             </thead>
                             <tbody>
                             {% for student in students %}
-                                <tr id="user{{ student.id }}" {% for answer in student.answer_set.all %}
-                                    {% if answer.test.id == test.id %}
-                                        class="success"
-                                    {% endif %}
-                                    {% endfor %}>
+                                <tr id="user{{ student.id }}" class="{% answered student test %}">
                                     <td>{{ student.first_name }}</td>
                                     <td>{{ student.last_name }}</td>
                                     <td>{{ student.username }}</td>
@@ -114,7 +111,7 @@
                                     <div id="grade{{ grade.id }}" class="sublinks collapse">
                                         {% for student in grade.person_set.all %}
                                             {% if  student.role == 1 %}
-                                                <a class="list-group-item small"
+                                                <a class="list-group-item small {% answered student test %}"
                                                    style="padding-left: 50px; cursor: pointer;"><span
                                                         class="glyphicon glyphicon-user"></span>
                                                     {{ student }}
