@@ -549,9 +549,11 @@ class AnswerCreateView(generic.FormView):
         context['geogebratask'] = geogebratasks
         context['options'] = options
         z = 0
+        forms = []
         for task in test.task_collection.tasks.all():
-            context['form' + str(z)] = CreateAnswerForm(prefix="task" + str(z))
+            forms.append(CreateAnswerForm(prefix="task" + str(z)))
             z += 1
+        context['formlist'] = forms
         return context
 
     def post(self, request, *args, **kwargs):
