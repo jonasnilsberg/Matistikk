@@ -11,19 +11,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/i18n/defaults-*.min.js"></script>
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
     <script>UPLOADCARE_PUBLIC_KEY = '255bcffadf120c92a388';</script>
     <script>
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}'
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
         tinymce.init({
-          selector: '#tasktext',
-          plugins: 'equationeditor',
-          content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-          toolbar: [
-            'bold italic underline | bullist numlist | subscript superscript | equationeditor'
-          ],
+            selector: '#tasktext',
+            plugins: 'equationeditor',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: [
+                'bold italic underline | bullist numlist | subscript superscript | equationeditor'
+            ],
         });
     </script>
 
@@ -191,6 +192,7 @@
             "id": "ggbApplet",
             "width": 1200,
             "height": 750,
+            "language": "nb",
             "showToolBar": true,
             "borderColor": null,
             "showMenuBar": true,
@@ -415,7 +417,7 @@
                             .append($("<option></option>")
                                 .attr("value", data.category_id)
                                 .text(category));
-                        $('#choosetype option[value='+data.category_id + ']').attr('selected','selected');
+                        $('#choosetype option[value=' + data.category_id + ']').attr('selected', 'selected');
                         $('.selectpicker').selectpicker('refresh');
                         $('#id_category_title').val("");
                     },

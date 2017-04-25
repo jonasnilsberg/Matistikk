@@ -16,10 +16,11 @@
     <link rel="shortcut icon" type="image/jpeg" href="http://bildr.no/view/WS9ITTNK">
     <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
     <script type="text/javascript" src="{% static 'maths/js/jquery.fullPage.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'maths/js/scrolloverflow.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'maths/css/jquery.fullPage.css' %}"/>
 </head>
 
-<body>
+<body style="overflow: hidden">
 <div class="row">
     <form action="" method="post" hidden>
         {% csrf_token %}
@@ -482,6 +483,10 @@
 </div>
 
 <script>
+    $("#fullpage").bind("mousewheel", function () {
+        return false;
+    });
+    var scrollCounter = 0;
     $(document).ready(function () {
         for (var k = 0; k < taskcount; k++) {
             if (document.getElementById('applet_container' + (k + 1)) != null) {
@@ -494,11 +499,22 @@
         $('#fullpage').fullpage({
             menu: '#taskBtnList',
             controlArrows: true,
-            scrollingSpeed: 1
+            loopBottom: false,
+            loopTop: false,
+            scrollingSpeed: 1,
+            scrollBar: true,
+            afterRender: function () {
+
+            },
+            onLeave: function () {
+            }
         });
+        $("body").css({"overflow": "hidden"});
+        $.fn.fullpage.setMouseWheelScrolling(false);
+        $.fn.fullpage.setAllowScrolling(false);
+
+
     });
-
-
     function nextTask() {
         $('#fullpage').fullpage.moveSectionDown();
     }
@@ -506,6 +522,15 @@
     function previousTask() {
         $('#fullpage').fullpage.moveSectionUp();
     }
+
+    $(window).scroll(function () {
+        if (window.chrome) {
+            if (scrollCounter < 1) {
+                scrollTo(0, 1);
+                scrollCounter += 1;
+            }
+        }
+    });
 
     var viewPortWidth = 1200;
     var viewPortHeight = 750;
@@ -526,10 +551,11 @@
             parameters = {
                 "id": "ggbApplet" + (i + 1),
                 "width": viewPortWidth,
+                "language": "nb",
                 "height": viewPortHeight,
                 "showToolBar": true,
                 "borderColor": null,
-                "showMenuBar": false,
+                "showMenuBar": true,
                 "allowStyleBar": true,
                 "showAlgebraInput": true,
                 "enableLabelDrags": false,
@@ -539,6 +565,7 @@
                 "errorDialogsActive": true,
                 "showTutorialLink": false,
                 "showLogging": false,
+                "preventFocus": true,
                 "useBrowserForJS": true,
                 "ggbBase64": base64
             };
