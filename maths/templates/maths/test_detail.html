@@ -47,7 +47,7 @@
                             </thead>
                             <tbody>
                             {% for student in students %}
-                                <tr id="user{{ student.id }}" class="{% answered student test %}">
+                                <tr id="user{{ student.id }}" class="{% answered student test 1 %}">
                                     <td>{{ student.first_name }}</td>
                                     <td>{{ student.last_name }}</td>
                                     <td>{{ student.username }}</td>
@@ -97,6 +97,7 @@
                     </div>
                 {% endif %}
                 {% if grades %}
+
                     <div class="tab-pane fade" id="C">
                         <div id="menu" style="padding-top: 10px">
                             <div class="panel list-group">
@@ -110,8 +111,8 @@
                                         <span class="glyphicon glyphicon-education pull-right"></span></a>
                                     <div id="grade{{ grade.id }}" class="sublinks collapse">
                                         {% for student in grade.person_set.all %}
-                                            {% if  student.role == 1 %}
-                                                <a class="list-group-item small {% answered student test %}"
+                                            {% if student.role == 1 %}
+                                                <a class="list-group-item {% answered student test 2 %} small"
                                                    style="padding-left: 50px; cursor: pointer;"><span
                                                         class="glyphicon glyphicon-user"></span>
                                                     {{ student }}
@@ -139,7 +140,7 @@
                                     <div id="group{{ group.id }}" class="sublinks collapse">
                                         {% for student in group.persons.all %}
                                             {% if  student.role == 1 %}
-                                                <a class="list-group-item small"
+                                                <a class="list-group-item small {% answered student test 2 %}"
                                                    style="padding-left: 50px; cursor: pointer;"><span
                                                         class="glyphicon glyphicon-user"></span>
                                                     {{ student }}
@@ -312,19 +313,21 @@
         });
         $('.list-group-item.small').on('click', function () {
             var $this = $(this);
+            var name = $this.text();
+            var fullName = name.split("-");
             $this.addClass('active');
-            if ($this.hasClass('success')) {
+            if ($this.hasClass('list-group-item-success')) {
                 bootbox.confirm({
                     size: "medium",
-                    title: "Gå til besvarelse?",
-                    message: "Do you want to activate the Deathstar now? This cannot be undone.",
+                    title: "Besvarelse - {{ test.task_collection.test_name }}",
+                    message: "Gå til " + fullName[0] + "sin besvarelsen av {{ test.task_collection.test_name }}?",
                     backdrop: true,
                     buttons: {
                         cancel: {
                             label: '<i class="fa fa-times"></i> Avbryt'
                         },
                         confirm: {
-                            label: '<i class="fa fa-check"></i> Gå til svar',
+                            label: '<i class="fa fa-check"></i> Gå til besvarelse',
                             className: 'btn-success'
                         }
                     },
