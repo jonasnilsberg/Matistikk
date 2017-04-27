@@ -27,7 +27,7 @@ class PersonCreateViewTestCase(LiveServerTestCase):
         gradeobj.save()
         #  Webdriver setup
         #  This view uses jquery that can't be ran in htmlunit
-        self.selenium = webdriver.Firefox()
+        self.selenium = webdriver.Chrome()
         self.selenium.maximize_window()
         super(PersonCreateViewTestCase, self).setUp()
 
