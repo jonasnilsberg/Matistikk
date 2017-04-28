@@ -150,22 +150,3 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-CKEDITOR_CONFIGS = {
-    'eksempelSimpel': {
-        'toolbar': 'eksempelSimpel',
-        'toolbar_eksempelSimpel': [["Format", "Bold", "Italic", "Underline", "Strike", "SpellChecker"],
-                ['NumberedList', 'BulletedList', "Indent", "Outdent", 'JustifyLeft', 'JustifyCenter',
-                 'JustifyRight', 'JustifyBlock'],
-                ["Image", "Table", "Link", "Unlink", "Anchor", "SectionLink", "Subscript", "Superscript"], ['Undo', 'Redo'], ["Source"],
-                ["Maximize"]],
-        'height': 100,
-        'width': 600,
-        'toolbarCanCollapse': True,
-    },
-    'eksempelFull': {
-        'toolbar': 'Full',
-        'height': 300,
-        'width': 300,
-    }
-}
-
