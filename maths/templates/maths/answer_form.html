@@ -437,10 +437,10 @@
                                     </thead>
                                     <tbody class="tableBody">
                                     {% for task in test.taskorder_set.all %}
-                                        <tr id="summarytask{{ task.id }}">
+                                        <tr id="summarytask{{ task.task.id }}">
                                             <td>Oppgave {{ forloop.counter }}</td>
-                                            <td id="status{{ task.id }}">Status</td>
-                                            <td><a href="#oppgave{{ forloop.counter }}"><i
+                                            <td id="status{{ task.task.id }}">Status</td>
+                                            <td><a class="btn btn-default" href="#oppgave{{ forloop.counter }}"><i
                                                     class="fa fa-arrow-right" aria-hidden="true"></i> Gå til oppgave</a>
                                             </td>
                                         </tr>
@@ -555,9 +555,8 @@
                 "height": viewPortHeight,
                 "showToolBar": true,
                 "borderColor": null,
-                "showMenuBar": true,
+                "showMenuBar": false,
                 "allowStyleBar": true,
-                "showAlgebraInput": true,
                 "enableLabelDrags": false,
                 "enableShiftDragZoom": true,
                 "capturingThreshold": null,
