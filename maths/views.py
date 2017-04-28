@@ -519,15 +519,26 @@ class TestDetailView(views.AjaxResponseMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(TestDetailView, self).get_context_data(**kwargs)
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
-        context['students'] = Person.objects.filter(tests__exact=test, role=1)
-        context['teachers'] = Person.objects.filter(tests__exact=test, role=2)
-        context['grades'] = Grade.objects.filter(tests__exact=test)
-        context['groups'] = Gruppe.objects.filter(tests__exact=test)
-        context['allstudents'] = Person.objects.filter(role=1).exclude(tests__exact=test)
-        context['allteachers'] = Person.objects.filter(role=2).exclude(tests__exact=test)
-        context['allgrades'] = Grade.objects.all().exclude(tests__exact=test)
-        context['allgroups'] = Gruppe.objects.all().exclude(tests__exact=test)
-        context['allschools'] = School.objects.all()
+        if self.kwargs.get('grade_pk'):
+            grade = Grade.objects.get(id=self.kwargs.get('grade_pk'))
+            context['students'] = Person.objects.filter(grades=grade)
+            context['fromGrade'] = grade
+        elif self.request.user.role == 2:
+            grades = Grade.objects.filter(person=self.request.user)
+            context['students'] = Person.objects.filter(tests__exact=test, role=1, grades__in=grades).distinct()
+            print(context['students'])
+            context['grades'] = grades.filter(tests__exact=test)
+            context['groups'] = Gruppe.objects.filter(tests__exact=test, grade__in=grades)
+        else:
+            context['students'] = Person.objects.filter(tests__exact=test, role=1)
+            context['teachers'] = Person.objects.filter(tests__exact=test, role=2)
+            context['grades'] = Grade.objects.filter(tests__exact=test)
+            context['groups'] = Gruppe.objects.filter(tests__exact=test)
+            context['allstudents'] = Person.objects.filter(role=1).exclude(tests__exact=test)
+            context['allteachers'] = Person.objects.filter(role=2).exclude(tests__exact=test)
+            context['allgrades'] = Grade.objects.all().exclude(tests__exact=test)
+            context['allgroups'] = Gruppe.objects.all().exclude(tests__exact=test)
+            context['allschools'] = School.objects.all()
         return context
 
 

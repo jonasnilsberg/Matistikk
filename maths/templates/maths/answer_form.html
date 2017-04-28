@@ -11,18 +11,37 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'maths/css/jquery.fullPage.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'administration/style.css' %}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" type="image/jpeg" href="http://bildr.no/view/WS9ITTNK">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
     <script type="text/javascript" src="{% static 'maths/js/deployggb.js' %}"></script>
-    <script type="text/javascript" src="{% static 'maths/js/jquery.fullPage.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'maths/js/scrolloverflow.min.js' %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'maths/css/jquery.fullPage.css' %}"/>
+    <script type="text/javascript" src="{% static 'maths/js/jquery.fullPage.min.js' %}"></script>
 
+
+    <script type="text/javascript" src="{% static 'maths/js/blockUI.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+    <script>
+        var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
+        tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
+        tinymce.init({
+            selector: '#testTextArea',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            border: false
+        });
+    </script>
 
 </head>
 
-<body style="overflow: hidden">
+<body>
 <div class="row">
     <form action="" method="post" hidden>
         {% csrf_token %}
@@ -31,23 +50,31 @@
         {% endfor %}
         <button id="submitbutton" type="submit">Send inn</button>
     </form>
-    <nav id="tasknav" class="navbar navbar-default navbar-fixed-bottom">
+    <nav id="tasknav" class="navbar navbar-default navbar-fixed-bottom hidden">
         <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="taskbar">
-                <ul id="taskBtnList" class="nav navbar-nav">
+            <div class="collapse navbar-collapse" id="taskbar" style="text-align: center;">
+                <button id="prevTaskBtn" class="btn btn-primary btn-lg" disabled="disabled" type="button"
+                        onclick="previousTask()"><i class="fa fa-arrow-left"
+                                                    aria-hidden="true"></i>
+                    Forrige oppgave
+                </button>
+                <ul id="taskBtnList" class="nav navbar-nav" style="display: inline-block; float: none;">
+
                     {% for task in test.task_collection.tasks.all %}
                         <li data-menuanchor="oppgave{{ forloop.counter }}">
                             <a href="#oppgave{{ forloop.counter }}">Oppgave {{ forloop.counter }}</a>
                         </li>
-                        {% if forloop.last %}
-                            <li data-menuanchor="summary">
-                                <a href="#summary" onclick="checkTest()">Oppsummering</a>
-                            </li>
-                            <a class="btn btn-success btn-lg" type="button" onclick="submitTask()">Send Inn</a>
-                        {% endif %}
                     {% endfor %}
+                    <li data-menuanchor="summary">
+                        <a href="#summary" onclick="checkTest()">Oppsummering</a>
+                    </li>
+                    <button id="nextTaskBtn" class="btn btn-primary btn-lg" type="button" onclick="nextTask()"><span
+                            id="nextTaskBtnText">Neste Oppgave</span> <i
+                            class="fa fa-arrow-right"
+                            aria-hidden="true"></i></button>
                 </ul>
                 <ul id="endTestNav" class="nav navbar-nav navbar-right">
+                    <a class="btn btn-success btn-lg" type="button" onclick="submitTask()">Send Inn</a>
                     <a class="btn btn-danger btn-lg pull-right" data-toggle='modal' data-target='#exitTestModal'>Avbryt
                         Test</a>
                 </ul>
@@ -58,7 +85,7 @@
         <div id="fullpage">
             {% for task in randomtest %}
                 <div class="section" data-anchor="oppgave{{ forloop.counter }}">
-                    <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid" style="min-height: 100vh"
+                    <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid"
                          data-taskid="{{ task.id }}">
                         <div class="panel panel-info">
                             <div class="panel-heading">
@@ -115,33 +142,6 @@
                                                 </div>
                                             {% endif %}
                                         </div>
-                                        <div class="panel-footer">
-                                            {% if forloop.first %}
-                                                <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                        onclick="nextTask()">
-                                                    Neste Oppgave <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                                                </button>
-                                            {% elif forloop.last %}
-                                                <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                        onclick="previousTask()">
-                                                    <i class="fa fa-arrow-left" aria-hidden="true"></i> Forrige Oppgave
-                                                </button>
-                                                <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                        onclick="nextTask(); checkTest();">
-                                                    Til Oppsummering <i class="fa fa-arrow-right"
-                                                                        aria-hidden="true"></i>
-                                                </button>
-                                            {% else %}
-                                                <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                        onclick="previousTask()">
-                                                    <i class="fa fa-arrow-left" aria-hidden="true"></i> Forrige Oppgave
-                                                </button>
-                                                <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                        onclick="nextTask()">
-                                                    Neste Oppgave <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                                                </button>
-                                            {% endif %}
-                                        </div>
                                     </div>
                                 </div>
                             {% else %}
@@ -181,33 +181,6 @@
                                                               style="resize:vertical"
                                                               placeholder="Begrunn svaret ditt..."></textarea>
                                                 </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="panel-footer">
-                                            {% if forloop.first %}
-                                                <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                        onclick="nextTask()">
-                                                    Neste Oppgave <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                                                </button>
-                                            {% elif forloop.last %}
-                                                <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                        onclick="previousTask()">
-                                                    <i class="fa fa-arrow-left" aria-hidden="true"></i> Forrige Oppgave
-                                                </button>
-                                                <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                        onclick="nextTask(); checkTest();">
-                                                    Til Oppsummering <i class="fa fa-arrow-right"
-                                                                        aria-hidden="true"></i>
-                                                </button>
-                                            {% else %}
-                                                <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                        onclick="previousTask()">
-                                                    <i class="fa fa-arrow-left" aria-hidden="true"></i> Forrige Oppgave
-                                                </button>
-                                                <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                        onclick="nextTask()">
-                                                    Neste Oppgave <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                                                </button>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -256,9 +229,25 @@
         </div>
     {% else %}
         <div id="fullpage">
+        <div id="loadingScreen" class="section active" data-anchor="loading">
+            <div class="text-center">
+                <h2>Vennligst vent mens testen lastes inn.</h2>
+            </div>
+            <div class="sk-cube-grid">
+                <div class="sk-cube sk-cube1"></div>
+                <div class="sk-cube sk-cube2"></div>
+                <div class="sk-cube sk-cube3"></div>
+                <div class="sk-cube sk-cube4"></div>
+                <div class="sk-cube sk-cube5"></div>
+                <div class="sk-cube sk-cube6"></div>
+                <div class="sk-cube sk-cube7"></div>
+                <div class="sk-cube sk-cube8"></div>
+                <div class="sk-cube sk-cube9"></div>
+            </div>
+        </div>
         {% for taskorder in test.taskorder_set.all %}
             <div class="section" data-anchor="oppgave{{ forloop.counter }}">
-                <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid" style="min-height: 100vh"
+                <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid"
                      data-taskid="{{ taskorder.task.id }}">
                     <div class="panel panel-info">
                         <div class="panel-heading">
@@ -280,10 +269,72 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4>{{ taskorder.task.text | safe }}</h4>
+                                    <div class="panel-heading" style="max-height: 30vh; overflow: auto">
+                                        <div id="blockme">
+                                        <textarea id="testTextArea" style="cursor:pointer;">
+                                            <h4>{{ taskorder.task.text | safe }}</h4>
+                                            u nec ferri molestie consequat, vel at alia dolore putant. Labore
+                                            philosophia ut vix. In vis nostrud interesset appellantur, vis et tation
+                                            feugiat scripserit. Te nec noster suavitate persecuti. Diceret erroribus cu
+                                            vix, alii omnes ei sit. Sea an corrumpit patrioque, virtute accumsan
+                                            nominavi et usu, ex mei dolore vocibus incorrupte.
+
+                                            Duo ea saperet tacimates. Sed possim prodesset no, per novum putent doctus
+                                            ea. Eu mea magna aliquip graecis, pri corpora officiis complectitur ei,
+                                            lorem saepe consetetur his ad. Meis consulatu ei vis, an altera ocurreret
+                                            interesset qui.
+
+                                            Eu ponderum comprehensam his, case antiopam pri te. Mel ne partem consequat
+                                            instructior. Ad dicunt malorum sea, ex qui omnes invenire gubergren. Ius cu
+                                            autem aliquando, pri vide ornatus perpetua an, no has epicuri verterem. Nam
+                                            at animal pertinax efficiantur.
+
+                                            Per alienum torquatos eu. Sed saepe quodsi et, ullum choro definitionem sed
+                                            et. Ullum elitr comprehensam sed at, sint illum propriae per eu. Eu enim
+                                            laudem reformidans vel. Pro clita quando ad. Usu te virtute quaestio, ut
+                                            eruditi tacimates volutpat per.
+
+                                            Affert accusamus duo ex, ea pri habeo graece, cu magna dolorum sea. Quas
+                                            dictas assueverit ad qui, cu duo harum fabulas apeirian, ullum gubergren et
+                                            sit. Ne cetero recusabo adipiscing quo, cu harum quaestio neglegentur cum.
+                                            Has tation aliquip ad, virtute volumus definitionem mel ne. Nobis audiam
+                                            civibus ius at.
+
+                                            Ei eum hinc mutat inciderint. Cu maluisset assentior per, graecis ponderum
+                                            no mel. Eum eu vitae quando gloriatur, cum graece percipitur no, sed errem
+                                            maiestatis te. Sed porro epicuri te, ad nam malorum verterem. Ea zril
+                                            aliquip euismod sed.
+                                            uo ea saperet tacimates. Sed possim prodesset no, per novum putent doctus
+                                            ea. Eu mea magna aliquip graecis, pri corpora officiis complectitur ei,
+                                            lorem saepe consetetur his ad. Meis consulatu ei vis, an altera ocurreret
+                                            interesset qui.
+
+                                            Eu ponderum comprehensam his, case antiopam pri te. Mel ne partem consequat
+                                            instructior. Ad dicunt malorum sea, ex qui omnes invenire gubergren. Ius cu
+                                            autem aliquando, pri vide ornatus perpetua an, no has epicuri verterem. Nam
+                                            at animal pertinax efficiantur.
+
+                                            Per alienum torquatos eu. Sed saepe quodsi et, ullum choro definitionem sed
+                                            et. Ullum elitr comprehensam sed at, sint illum propriae per eu. Eu enim
+                                            laudem reformidans vel. Pro clita quando ad. Usu te virtute quaestio, ut
+                                            eruditi tacimates volutpat per.
+
+                                            Affert accusamus duo ex, ea pri habeo graece, cu magna dolorum sea. Quas
+                                            dictas assueverit ad qui, cu duo harum fabulas apeirian, ullum gubergren et
+                                            sit. Ne cetero recusabo adipiscing quo, cu harum quaestio neglegentur cum.
+                                            Has tation aliquip ad, virtute volumus definitionem mel ne. Nobis audiam
+                                            civibus ius at.
+
+                                            Ei eum hinc mutat inciderint. Cu maluisset assentior per, graecis ponderum
+                                            no mel. Eum eu vitae quando gloriatur, cum graece percipitur no, sed errem
+                                            maiestatis te. Sed porro epicuri te, ad nam malorum verterem. Ea zril
+                                            aliquip euismod sed.
+
+                                            <img src="http://www.rebuildbydesign.org/data/images/texts/422/ap-11-13-13-4-.jpg">
+                                        </textarea>
+                                        </div>
                                     </div>
-                                    <div class="panel-body">
+                                    <div class="panel-body" style="max-height: 30vh; overflow: auto">
                                         {% if taskorder.task.answertype == 1 %}
                                             <div id="textanswerdiv">
                                                 <label for="answer{{ taskorder.task.id }}">Tekstsvar</label>
@@ -316,32 +367,6 @@
                                                           style="resize:vertical"
                                                           placeholder="Begrunn svaret ditt..."></textarea>
                                             </div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="panel-footer">
-                                        {% if forloop.first %}
-                                            <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                    onclick="nextTask()">
-                                                Neste Oppgave <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                                            </button>
-                                        {% elif forloop.last %}
-                                            <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                    onclick="previousTask()">
-                                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Forrige Oppgave
-                                            </button>
-                                            <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                    onclick="nextTask(); checkTest();">
-                                                Til Oppsummering <i class="fa fa-arrow-right"
-                                                                    aria-hidden="true"></i></button>
-                                        {% else %}
-                                            <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                    onclick="previousTask()">
-                                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Forrige Oppgave
-                                            </button>
-                                            <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                    onclick="nextTask()">
-                                                Neste Oppgave <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                                            </button>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -386,32 +411,6 @@
                                             </div>
                                         {% endif %}
                                     </div>
-                                    <div class="panel-footer">
-                                        {% if forloop.first %}
-                                            <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                    onclick="nextTask()">
-                                                Neste Oppgave <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                                            </button>
-                                        {% elif forloop.last %}
-                                            <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                    onclick="previousTask()">
-                                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Forrige Oppgave
-                                            </button>
-                                            <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                    onclick="nextTask(); checkTest();">
-                                                Til Oppsummering <i class="fa fa-arrow-right"
-                                                                    aria-hidden="true"></i></button>
-                                        {% else %}
-                                            <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                    onclick="previousTask()">
-                                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Forrige Oppgave
-                                            </button>
-                                            <button class="btn btn-primary btn-lg" style="margin-top: 5px"
-                                                    onclick="nextTask()">
-                                                Neste Oppgave <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                                            </button>
-                                        {% endif %}
-                                    </div>
                                 </div>
                             </div>
                         {% endif %}
@@ -442,7 +441,7 @@
                                         <tr id="summarytask{{ task.task.id }}">
                                             <td>Oppgave {{ forloop.counter }}</td>
                                             <td id="status{{ task.task.id }}">Status</td>
-                                            <td><a href="#oppgave{{ forloop.counter }}"><i
+                                            <td><a class="btn btn-default" href="#oppgave{{ forloop.counter }}"><i
                                                     class="fa fa-arrow-right" aria-hidden="true"></i> Gå til oppgave</a>
                                             </td>
                                         </tr>
@@ -487,11 +486,39 @@
 </div>
 
 <script>
-    $("#fullpage").bind("mousewheel", function () {
-        return false;
-    });
+    /*$("body").bind("mousewheel", function () {
+     return false;
+     });*/
     var scrollCounter = 0;
+    var onLeave = false;
     $(document).ready(function () {
+
+        $('#fullpage').fullpage({
+            menu: '#taskBtnList',
+            loopBottom: false,
+            loopTop: false,
+            scrollingSpeed: 1,
+            scrollBar: true,
+            onLeave: function (index, nextIndex, direction) {
+                onLeave = true;
+                var summary = parseInt(taskcount) + 2;
+                var tasksnr = parseInt(taskcount) + 1;
+                if (nextIndex == tasksnr) {
+                    $('#nextTaskBtnText').text('Oppsummering');
+                    $('#nextTaskBtn').attr('disabled', false);
+                } else if (nextIndex == 2) {
+                    $('#prevTaskBtn').attr('disabled', 'disabled');
+                    $('#nextTaskBtn').attr('disabled', false);
+                } else if (nextIndex == summary) {
+                    $('#nextTaskBtn').attr('disabled', 'disabled');
+                    $('#nextTaskBtnText').text('Oppsummering');
+                } else {
+                    $('#nextTaskBtn').attr('disabled', false);
+                    $('#nextTaskBtnText').text('Neste Oppgave');
+                    $('#prevTaskBtn').attr('disabled', false);
+                }
+            }
+        });
         for (var k = 0; k < taskcount; k++) {
             if (document.getElementById('applet_container' + (k + 1)) != null) {
                 applet[k].inject('applet_container' + (k + 1), 'preferhtml5');
@@ -500,18 +527,6 @@
 
         checkTest();
 
-        $('#fullpage').fullpage({
-            menu: '#taskBtnList',
-            controlArrows: true,
-            loopBottom: false,
-            loopTop: false,
-            scrollingSpeed: 1,
-            scrollBar: true,
-            afterRender: function () {
-            },
-            onLeave: function () {
-            }
-        });
         $("body").css({"overflow": "hidden"});
         $.fn.fullpage.setMouseWheelScrolling(false);
         $.fn.fullpage.setAllowScrolling(false);
@@ -525,12 +540,19 @@
     function previousTask() {
         $('#fullpage').fullpage.moveSectionUp();
     }
+    $(document).on('keyup', function (e) {
+        if (e.keyCode == 37) {
+            previousTask();
+        }
+        if (e.keyCode == 39) {
+            nextTask();
+        }
+    });
 
     $(window).scroll(function () {
         if (window.chrome) {
-            if (scrollCounter < 1) {
+            if (onLeave == false) {
                 scrollTo(0, 1);
-                scrollCounter += 1;
             }
         }
     });
@@ -539,12 +561,27 @@
     var viewPortHeight = 750;
     var geocount = document.getElementById('geocount').innerHTML;
     var taskcount = document.getElementById('taskcount').innerHTML;
+    var geoloaded = 0;
     var base64;
     var parameters;
 
     if (typeof window.innerWidth != 'undefined' && window.innerWidth > 1000) {
         viewPortWidth = window.innerWidth * 0.49;
         viewPortHeight = window.innerHeight * 0.7;
+    }
+
+    function ggbOnInit(applet) {
+        geoloaded += 1;
+        if (geoloaded == geocount) {
+            setTimeout(function () {
+                $('#fullpage').fullpage.moveSectionDown();
+                $('#tasknav').removeClass('hidden');
+                $(".sk-cube-grid").remove();
+            }, 1000);
+        }
+    }
+    function onLoadHandler() {
+        alert('e')
     }
 
     var applet = [];
@@ -560,7 +597,6 @@
                 "borderColor": null,
                 "showMenuBar": true,
                 "allowStyleBar": true,
-                "showAlgebraInput": true,
                 "enableLabelDrags": false,
                 "enableShiftDragZoom": true,
                 "capturingThreshold": null,
