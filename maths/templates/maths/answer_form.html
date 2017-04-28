@@ -441,7 +441,7 @@
                                         <tr id="summarytask{{ task.task.id }}">
                                             <td>Oppgave {{ forloop.counter }}</td>
                                             <td id="status{{ task.task.id }}">Status</td>
-                                            <td><a href="#oppgave{{ forloop.counter }}"><i
+                                            <td><a class="btn btn-default" href="#oppgave{{ forloop.counter }}"><i
                                                     class="fa fa-arrow-right" aria-hidden="true"></i> Gå til oppgave</a>
                                             </td>
                                         </tr>
@@ -501,13 +501,12 @@
             scrollBar: true,
             onLeave: function (index, nextIndex, direction) {
                 onLeave = true;
-                alert(index);
-                alert(direction);
-                var summary = parseInt(taskcount) + 1;
-                if (nextIndex == taskcount) {
+                var summary = parseInt(taskcount) + 2;
+                var tasksnr = parseInt(taskcount) + 1;
+                if (nextIndex == tasksnr) {
                     $('#nextTaskBtnText').text('Oppsummering');
                     $('#nextTaskBtn').attr('disabled', false);
-                } else if (nextIndex == 1) {
+                } else if (nextIndex == 2) {
                     $('#prevTaskBtn').attr('disabled', 'disabled');
                     $('#nextTaskBtn').attr('disabled', false);
                 } else if (nextIndex == summary) {
@@ -575,9 +574,9 @@
         geoloaded += 1;
         if (geoloaded == geocount) {
             setTimeout(function () {
-                $('#fullpage').fullpage.silentMoveTo('oppgave1');
+                $('#fullpage').fullpage.moveSectionDown();
                 $('#tasknav').removeClass('hidden');
-                $("#loadingScreen").remove();
+                $(".sk-cube-grid").remove();
             }, 1000);
         }
     }
@@ -598,7 +597,6 @@
                 "borderColor": null,
                 "showMenuBar": true,
                 "allowStyleBar": true,
-                "showAlgebraInput": true,
                 "enableLabelDrags": false,
                 "enableShiftDragZoom": true,
                 "capturingThreshold": null,
