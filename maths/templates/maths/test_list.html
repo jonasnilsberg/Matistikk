@@ -68,10 +68,10 @@
                                             value="{{ test.id }}"><i class="fa fa-tasks" aria-hidden="true"></i> Se test
                                     </button>
 
-                                    <button type="button" href='#' class="btn btn-default"
+                                    <a type="button" href='{% url "maths:testDetail" test.id %}' class="btn btn-default"
                                             value="{{ test.id }}"><span
                                             class="glyphicon glyphicon-eye-open"></span> Se besvarelser
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </td>

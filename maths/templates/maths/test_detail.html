@@ -15,11 +15,24 @@
     <div class="panel panel-info">
         <div class="panel-heading">
             <h2>{{ test.task_collection.test_name }} - {{ test.id }}</h2>
-            <h5><strong>Publisert:</strong> {{ test.published }}</h5>
-            <h5 id="id_dueDate"><strong>Frist for besvarelse:</strong>
-                {% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen{% endif %}
-            </h5>
-            <h5><strong>Tilfeldig rekkefølge:</strong> {% if test.randomOrder %}Ja{% else %}Nei{% endif %}</h5>
+            <div class="row">
+                <div class="col-md-2">
+                    <h5><strong><i class="fa fa-calendar" aria-hidden="true"></i>
+                        Publisert:</strong> {{ test.published }}</h5>
+                    <h5><strong><i class="fa fa-random" aria-hidden="true"></i> Tilfeldig rekkefølge:</strong>
+                        {% if test.randomOrder %}Ja{% else %}Nei{% endif %}</h5>
+                </div>
+                <div class="col-md-2">
+                    <h5 id="id_dueDate"><strong><i class="fa fa-calendar" aria-hidden="true"></i>
+                        Frist for besvarelse:</strong>
+                        {% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen{% endif %}
+                    </h5>
+                    {% if fromGrade %}
+                        <h5><strong><i class="fa fa-graduation-cap" aria-hidden="true"></i>Klasse: </strong>{{ fromGrade }}</h5>
+                    {% endif %}
+                </div>
+            </div>
+
         </div>
         <div class="panel-body">
             <ul class="nav nav-tabs">
@@ -54,7 +67,7 @@
                                     <td>
                                         <button disabled='disabled' id="{{ student.username }}"
                                                 value="{{ student.username }}"
-                                                class='btn btn-default'>
+                                                class='btn btn-default button goToAnswer' href="#">
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
                                             Besvarelse
                                         </button>
@@ -85,7 +98,7 @@
                                     <td>
                                         <button disabled='disabled' id="{{ teacher.username }}"
                                                 value="{{ teacher.username }}"
-                                                class='btn btn-default'>
+                                                class='btn btn-default goToAnswer'>
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
                                             Besvarelse
                                         </button>
@@ -232,17 +245,20 @@
 
             </div>
         </div>
-        <div class="panel-footer">
-            <button id="addPublish" class="btn btn-primary" type="button" data-toggle="tooltip" onclick="publishModal()"
-                    title="Tidsfristen for denne oppgaven er utgått" disabled="disabled"><span
-                    class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                Publiser
-            </button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#updateDueDateModal"><i
-                    class="fa fa-clock-o" aria-hidden="true"></i>
-                Oppdater tidsfrist
-            </button>
-        </div> <!-- #Panel-footer -->
+        {% if request.user.role == 4 %}
+            <div class="panel-footer">
+                <button id="addPublish" class="btn btn-primary" type="button" data-toggle="tooltip"
+                        onclick="publishModal()"
+                        title="Tidsfristen for denne oppgaven er utgått" disabled="disabled"><span
+                        class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    Publiser
+                </button>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#updateDueDateModal"><i
+                        class="fa fa-clock-o" aria-hidden="true"></i>
+                    Oppdater tidsfrist
+                </button>
+            </div> <!-- #Panel-footer -->
+        {% endif %}
     </div>
     <form action="" method="post">{% csrf_token %}</form>
 
@@ -276,6 +292,12 @@
                     }
                 }
             }
+            var students = $('#studenttable tr').not(':first');
+            students.each(function () {
+                if ($(this).hasClass('success')) {
+                    $(this).find(':button').attr('disabled', false);
+                }
+            });
             var group = $('.list-group-item').not(".small");
             group.each(function (index) {
                 var success = 0;
@@ -351,6 +373,11 @@
         function publishModal() {
             $('#publishModal').modal('show');
         }
+
+        $('.goToAnswer').click(function () {
+            var username = ($(this).val());
+            var testID = "{{ test.id }}";
+        });
 
         function publish() {
             var username = "{{ request.user.username }}";
