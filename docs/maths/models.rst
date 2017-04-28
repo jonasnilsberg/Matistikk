@@ -20,13 +20,37 @@
     :show-inheritance:
 
 *GeogebraTask*
--------------
+------------
 .. automodule:: maths.models
     :members: GeogebraTask
     :show-inheritance:
 
-*TestBase*
+*TaskCollection*
 --------
 .. automodule:: maths.models
-    :members: TestBase
+    :members: TaskCollection
+    :show-inheritance:
+
+*Test*
+----
+.. automodule:: maths.models
+    :members: Test
+    :show-inheritance:
+
+*TaskOrder*
+--------
+.. automodule:: maths.models
+    :members: TaskOrder
+    :show-inheritance:
+
+*Answer*
+------
+.. automodule:: maths.models
+    :members: Answer
+    :show-inheritance:
+
+*GeogebraAnswer*
+--------
+.. automodule:: maths.models
+    :members: GeogebraAnswer
     :show-inheritance:

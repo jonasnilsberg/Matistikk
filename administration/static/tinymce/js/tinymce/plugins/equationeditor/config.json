@@ -45,56 +45,8 @@
   "buttonGroups": {
     "basic": [
       {
-        "groupName": "Numbers",
+        "groupName": "Tall",
         "buttonViews": [
-          {
-            "klass": "EquationEditor.Buttons.WriteButtonView",
-            "latex": "0"
-          },
-          {
-            "klass": "EquationEditor.Buttons.WriteButtonView",
-            "latex": "1"
-          },
-          {
-            "klass": "EquationEditor.Buttons.WriteButtonView",
-            "latex": "2"
-          },
-          {
-            "klass": "EquationEditor.Buttons.WriteButtonView",
-            "latex": "3"
-          },
-          {
-            "klass": "EquationEditor.Buttons.WriteButtonView",
-            "latex": "4"
-          },
-          {
-            "klass": "EquationEditor.Buttons.WriteButtonView",
-            "latex": "5"
-          },
-          {
-            "klass": "EquationEditor.Buttons.WriteButtonView",
-            "latex": "6"
-          },
-          {
-            "klass": "EquationEditor.Buttons.WriteButtonView",
-            "latex": "7"
-          },
-          {
-            "klass": "EquationEditor.Buttons.WriteButtonView",
-            "latex": "8"
-          },
-          {
-            "klass": "EquationEditor.Buttons.WriteButtonView",
-            "latex": "9"
-          },
-          {
-            "klass": "EquationEditor.Buttons.WriteButtonView",
-            "latex": ","
-          },
-          {
-            "klass": "EquationEditor.Buttons.WriteButtonView",
-            "latex": "."
-          },
           {
             "klass": "EquationEditor.Buttons.WriteButtonView",
             "latex": "\\pi"
@@ -114,7 +66,7 @@
         ]
       },
       {
-        "groupName": "Arithmetic and Units",
+        "groupName": "Aritmetikk",
         "buttonViews": [
           {
             "klass": "EquationEditor.Buttons.WriteButtonView",
@@ -166,7 +118,7 @@
     ],
     "intermediate": [
       {
-        "groupName": "Exponents, Roots, Logs",
+        "groupName": "Eksponenter, Røtter, Logaritmer",
         "buttonViews": [
           {
             "klass": "EquationEditor.Buttons.CommandButtonView",
@@ -212,7 +164,7 @@
         ]
       },
       {
-        "groupName": "Relations",
+        "groupName": "Relasjoner",
         "buttonViews": [
           {
             "klass": "EquationEditor.Buttons.WriteButtonView",
@@ -269,7 +221,7 @@
         ]
       },
       {
-        "groupName": "Geometry",
+        "groupName": "Geometri",
         "buttonViews": [
           {
             "klass": "EquationEditor.Buttons.WriteButtonView",
@@ -320,7 +272,7 @@
         ]
       },
       {
-        "groupName": "Groups",
+        "groupName": "Grupper",
         "buttonViews": [
           {
             "klass": "EquationEditor.Buttons.CommandButtonView",
@@ -358,7 +310,7 @@
     ],
     "advanced": [
       {
-        "groupName": "Trigonometry",
+        "groupName": "Trignometri",
         "buttonViews": [
           {
             "klass": "EquationEditor.Buttons.WriteButtonView",
@@ -417,7 +369,7 @@
         ]
       },
       {
-        "groupName": "Statistics",
+        "groupName": "Statistikk",
         "buttonViews": [
           {
             "klass": "EquationEditor.Buttons.WriteButtonView",
@@ -454,7 +406,7 @@
         ]
       },
       {
-        "groupName": "Greek",
+        "groupName": "Gresk",
         "buttonViews": [
           {
             "klass": "EquationEditor.Buttons.WriteButtonView",
@@ -483,7 +435,7 @@
         ]
       },
       {
-        "groupName": "Calculus",
+        "groupName": "Kalkulus",
         "buttonViews": [
           {
             "klass": "EquationEditor.Buttons.WriteButtonView",
@@ -516,6 +468,10 @@
           {
             "klass": "EquationEditor.Buttons.WriteButtonView",
             "latex": "\\infty"
+          },
+          {
+            "klass": "EquationEditor.Buttons.WriteButtonView",
+            "latex": "\\Longleftarrow"
           }
         ]
       }

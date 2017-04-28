@@ -5,7 +5,7 @@
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
 {% block head %}
-    <script type="text/javascript" src="{% static 'administration/deployggb.js' %}"></script>
+    <script type="text/javascript" src="{% static 'administration/../../static/maths/js/deployggb.js' %}"></script>
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
     <script type="text/javascript"
             src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
@@ -13,17 +13,20 @@
         UPLOADCARE_PUBLIC_KEY = '255bcffadf120c92a388';
     </script>
     <script>
-        var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}'
+        kantrykke = true;
+        configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}'
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
         tinymce.init({
-            selector: '#modalText',
-            plugins: 'equationeditor',
+            selector: '#modaltext',
+            plugins: 'equationeditor wordcount',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
             toolbar: [
                 'bold italic underline | bullist numlist | subscript superscript | equationeditor'
             ],
+
         });
+
     </script>
 {% endblock %}
 
@@ -57,11 +60,7 @@
             <div class="col-sm-5">
                 <div class="panel panel-default">
                     <div class="panel-heading" id="tasktextdiv">
-                        <h4><span id="tasktext">{{ task.text | safe }}</span><a class="btn btn-default"
-                                                                                data-toggle='modal'
-                                                                                href='#changeTextModal'
-                                                                                style="background-color: inherit;"><span
-                                style="font-size:1em;" class="glyphicon glyphicon-pencil"></span> </a></h4>
+                        <textarea id="modaltext">{{ task.text | safe }}</textarea>
                     </div> <!-- #inner panel-heading -->
                     <div class="panel-body">
                         {% if task.category %}
@@ -231,7 +230,7 @@
          * and clicks the submit-button in the django-form when its done.
          */
         function updateTask() {
-            var tasktext = document.getElementById('tasktext').innerHTML;
+            var tasktext = tinyMCE.activeEditor.getContent();
             var tasktext2 = document.getElementById('id_text');
             var answertype = $('input[name=answer_type]:checked').val();
             var answertype2 = document.getElementById('id_answertype');
@@ -249,6 +248,7 @@
             var optionsspan = optionsdiv.getElementsByTagName('span');
             var options = document.getElementById('id_options');
 
+            document.getElementById('modaltext').innerHTML = tasktext
             options.value = "";
 
             if (reasoning.checked) {
