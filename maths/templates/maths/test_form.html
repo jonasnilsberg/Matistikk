@@ -30,10 +30,10 @@
 {% endblock %}
 
 {% block body %}
-    <div class="panel panel-info">
+    <div class="panel panel-info" style="padding-bottom: 70px;">
         <div class="panel-heading">
             <div class="text-center">
-                <h2>{{ taskcollection.test_name }}</h2>
+                <h2>Publiser test - {{ taskcollection.test_name }}</h2>
                 <h5 id="headingText">Vennligst velg hvem testen skal publiseres til</h5>
             </div>
         </div>
@@ -288,14 +288,28 @@
                             {% endfor %}
                             </tbody>
                         </table>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        Tilfeldig rekkefølge
+                                        <div class="material-switch pull-right">
+                                            <input id="randomOrderCheckbox" name="randomOrderCheckbox" type="checkbox"
+                                                   onclick="randomOrder()"/>
+                                            <label for="randomOrderCheckbox" class="label-success"></label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                         <div class="col-md-2">
                             <ul class="list-group">
                                 <li class="list-group-item">
-                                    Tilfeldig rekkefølge
+                                    Lås rekkefølge
                                     <div class="material-switch pull-right">
-                                        <input id="randomOrderCheckbox" name="randomOrderCheckbox" type="checkbox"
-                                               onclick="randomOrder()"/>
-                                        <label for="randomOrderCheckbox" class="label-success"></label>
+                                        <input id="strictOrderCheckbox" name="strictOrderCheckbox" type="checkbox"
+                                               onclick="strictOrder()"/>
+                                        <label for="strictOrderCheckbox" class="label-success"></label>
                                     </div>
                                 </li>
                             </ul>
@@ -420,8 +434,12 @@
                             </div>
                         </div>
                         <div id="randomOverview" class="hidden">
-                            <div class="alert alert-warning">
-                                <strong>Tilfeldig rekkefølge</strong> er valgt.
+                            <div class="alert alert-warning"><span id="randomText" class="hidden">
+                                <strong>Tilfeldig rekkefølge</strong></span><span id="andText"
+                                                                                  class="hidden"> og </span><span
+                                    id="strictText"
+                                    class="hidden"><strong>Låst rekkefølge</strong></span>
+                                er valgt.
                             </div>
                         </div>
                         <div id="errorNoSelectedUsers" class="alert alert-danger hidden"><strong>Ingen brukere lagt
@@ -433,7 +451,7 @@
             </div>
         </div>
     </div>
-    <div class="panel-footer navbar-fixed-bottom">
+    <div class="panel-footer navbar-fixed-bottom" style="padding: 0px;">
         <div class="text-center">
             <nav aria-label="Page navigation">
                 <ul class="pagination">
@@ -455,7 +473,8 @@
         </div>
     </div>
     </div>
-    <form class="form-control form-margin hidden" action="" method="POST" enctype="multipart/form-data">
+    <form class="form-control form-margin hidden" action="" method="POST" enctype="multipart/form-data"
+          style="margin-bottom: 100px">
         {% csrf_token %}
         {% bootstrap_form form %}
         {% buttons %}
@@ -465,7 +484,7 @@
         {% endbuttons %}
     </form>
     <script>
-
+        $('body').css(["padding-bottom: 70px;"]);
         $(function () {
             $("#sortable").sortable({
                 helper: "original",
@@ -513,9 +532,37 @@
         function randomOrder() {
             if ($('#id_randomOrder').attr('checked')) {
                 $('#id_randomOrder').attr('checked', false);
-                $('#randomOverview').addClass('hidden');
+                if ($('#strictText').hasClass('hidden')) {
+                    $('#randomOverview').addClass('hidden');
+                } else {
+                    $('#andText').addClass('hidden');
+                }
+                $('#randomText').addClass('hidden');
             } else {
                 $('#id_randomOrder').attr('checked', true);
+                $('#randomOverview').removeClass('hidden');
+                if (!$('#strictText').hasClass('hidden')) {
+                    $('#andText').removeClass('hidden');
+                }
+                $('#randomText').removeClass('hidden');
+            }
+        }
+
+        function strictOrder() {
+            if ($('#id_strictOrder').attr('checked')) {
+                $('#id_strictOrder').attr('checked', false);
+                if ($('#randomText').hasClass('hidden')) {
+                    $('#randomOverview').addClass('hidden');
+                } else {
+                    $('#andText').addClass('hidden');
+                }
+                $('#strictText').addClass('hidden');
+            } else {
+                $('#id_strictOrder').attr('checked', true);
+                if (!$('#randomText').hasClass('hidden')) {
+                    $('#andText').removeClass('hidden');
+                }
+                $('#strictText').removeClass('hidden');
                 $('#randomOverview').removeClass('hidden');
 
             }

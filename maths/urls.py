@@ -21,5 +21,9 @@ urlpatterns = [
     url(r'tester/publisert/(?P<test_pk>[0-9]+)/(?P<grade_pk>[0-9]+)/$', views.TestDetailView.as_view(),
         name='testGradeDetail'),
     url(r'tester/(?P<taskCollection_pk>[0-9]+)/publiser/$', views.TestCreateView.as_view(), name='testCreate'),
+    url(r'test/(?P<test_pk>[0-9]+)/besvarelse/(?P<answer_pk>[0-9]+)/$', views.AnswerDetailView.as_view(), name='answerDetail'),
     url(r'test/(?P<test_pk>[0-9]+)/svar/$', views.AnswerCreateView.as_view(), name='answerCreate'),
+    url(r'test/(?P<test_pk>[0-9]+)/eksporter/$', views.export_data,
+        name='answerExport'),
+
 ]
