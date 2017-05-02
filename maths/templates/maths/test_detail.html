@@ -28,7 +28,8 @@
                         {% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen{% endif %}
                     </h5>
                     {% if fromGrade %}
-                        <h5><strong><i class="fa fa-graduation-cap" aria-hidden="true"></i>Klasse: </strong>{{ fromGrade }}</h5>
+                        <h5><strong><i class="fa fa-graduation-cap" aria-hidden="true"></i>Klasse:
+                        </strong>{{ fromGrade }}</h5>
                     {% endif %}
                 </div>
             </div>
@@ -60,14 +61,14 @@
                             </thead>
                             <tbody>
                             {% for student in students %}
-                                <tr id="user{{ student.id }}" class="{% answered student test 1 %}">
+                                <tr id="user{{ student.id }}">
                                     <td>{{ student.first_name }}</td>
                                     <td>{{ student.last_name }}</td>
                                     <td>{{ student.username }}</td>
                                     <td>
-                                        <button disabled='disabled' id="{{ student.username }}"
-                                                value="{{ student.username }}"
-                                                class='btn btn-default button goToAnswer' href="#">
+                                        <button type="button" disabled='disabled' id="{{ student.username }}"
+                                                value="{% answered2 student test %}"
+                                                class='btn btn-default button goToAnswer'>
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
                                             Besvarelse
                                         </button>
@@ -125,7 +126,8 @@
                                     <div id="grade{{ grade.id }}" class="sublinks collapse">
                                         {% for student in grade.person_set.all %}
                                             {% if student.role == 1 %}
-                                                <a class="list-group-item {% answered student test 2 %} small"
+                                                <a class="list-group-item small"
+                                                   data-answer="{% answered2 student test %}"
                                                    style="padding-left: 50px; cursor: pointer;"><span
                                                         class="glyphicon glyphicon-user"></span>
                                                     {{ student }}
@@ -153,7 +155,8 @@
                                     <div id="group{{ group.id }}" class="sublinks collapse">
                                         {% for student in group.persons.all %}
                                             {% if  student.role == 1 %}
-                                                <a class="list-group-item small {% answered student test 2 %}"
+                                                <a class="list-group-item small"
+                                                   data-answer="{% answered2 student test %}"
                                                    style="padding-left: 50px; cursor: pointer;"><span
                                                         class="glyphicon glyphicon-user"></span>
                                                     {{ student }}
@@ -257,6 +260,9 @@
                         class="fa fa-clock-o" aria-hidden="true"></i>
                     Oppdater tidsfrist
                 </button>
+                <button class="btn btn-primary" onclick="download()"><i class="fa fa-download" aria-hidden="true"></i>
+                    Eksporter svarresultater
+                </button>
             </div> <!-- #Panel-footer -->
         {% endif %}
     </div>
@@ -294,8 +300,10 @@
             }
             var students = $('#studenttable tr').not(':first');
             students.each(function () {
-                if ($(this).hasClass('success')) {
-                    $(this).find(':button').attr('disabled', false);
+                var button = $(this).find(':button');
+                if (button.val() != "") {
+                    $(this).addClass('success');
+                    button.removeAttr('disabled');
                 }
             });
             var group = $('.list-group-item').not(".small");
@@ -305,7 +313,8 @@
                 var id = $(this).data("target");
                 var items = $(id).find('.list-group-item');
                 items.each(function () {
-                    if ($(this).hasClass('list-group-item-success')) {
+                    if ($(this).data('answer') != "") {
+                        $(this).addClass('list-group-item-success');
                         success += 1;
                     } else {
                         danger += 1;
@@ -323,6 +332,16 @@
             $("#datepickerUpdateDue").datepicker("option", "dateFormat", "DD, d MM, yy");
             $("#datepickerUpdateDue").datepicker("option", "minDate", "0");
         });
+        $("td > a").attr("disabled", "disabled").on("click", function () {
+            return false;
+        });
+
+        $('.goToAnswer').click(function () {
+            var answerID = $(this).val();
+            var testID = "{{ test.id }}";
+            var url = "{% url 'maths:answerDetail' test_pk=1234 answer_pk=5678 %}".replace(/1234/, testID).replace(/5678/, answerID);
+            document.location.href = url;
+        });
 
         $('.list-group-item').not(".small").on('click', function () {
             var $this = $(this);
@@ -339,6 +358,7 @@
             var fullName = name.split("-");
             $this.addClass('active');
             if ($this.hasClass('list-group-item-success')) {
+                var answerID = $(this).data('answer');
                 bootbox.confirm({
                     size: "medium",
                     title: "Besvarelse - {{ test.task_collection.test_name }}",
@@ -356,6 +376,10 @@
                     callback: function (result) {
                         if (result == false) {
                             $this.removeClass('active');
+                        } else {
+                            var testID = "{{ test.id }}";
+                            var url = "{% url 'maths:answerDetail' test_pk=1234 answer_pk=5678 %}".replace(/1234/, testID).replace(/5678/, answerID);
+                            document.location.href = url;
                         }
                     }
                 });
@@ -374,10 +398,12 @@
             $('#publishModal').modal('show');
         }
 
-        $('.goToAnswer').click(function () {
-            var username = ($(this).val());
+        function download() {
+            alert('download');
             var testID = "{{ test.id }}";
-        });
+            var exportURL = "{% url 'maths:answerExport' test_pk=1234 %}".replace(/1234/, testID);
+            document.location.href = exportURL;
+        }
 
         function publish() {
             var username = "{{ request.user.username }}";

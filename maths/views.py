@@ -10,6 +10,7 @@ from administration.models import Grade, Person, Gruppe, School
 import json
 import datetime
 from django.db.models import Q
+import django_excel as excel
 
 import random
 from django.http import HttpResponseRedirect
@@ -510,12 +511,6 @@ class TestDetailView(views.AjaxResponseMixin, generic.DetailView):
     template_name = 'maths/test_detail.html'
     pk_url_kwarg = 'test_pk'
 
-    def get_ajax(self, request, *args, **kwargs):
-        data = {
-            'test': 'test'
-        }
-        return JsonResponse(data)
-
     def get_context_data(self, **kwargs):
         context = super(TestDetailView, self).get_context_data(**kwargs)
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
@@ -650,3 +645,16 @@ class TestListView(views.AjaxResponseMixin, generic.ListView):
         context['object_list'] = Test.objects.filter(person=user)
         context['grades'] = Grade.objects.filter(person=user)
         return context
+
+
+class AnswerDetailView(generic.DetailView):
+    model = Answer
+    template_name = 'maths/answer_detail.html'
+    pk_url_kwarg = 'answer_pk'
+
+
+def export_data(request, test_pk):
+    test = Test.objects.get(id=test_pk)
+    answers = Answer.objects.filter(test=test).order_by('task')
+    column_names = ['user_id', 'task_id', 'text', 'reasoning']
+    return excel.make_response_from_query_sets(answers, column_names, 'xls', file_name=test.task_collection.test_name)

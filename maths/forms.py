@@ -67,7 +67,7 @@ class CreateTestForm(forms.ModelForm):
 
     class Meta:
         model = Test
-        fields = ['task_collection', 'randomOrder', 'published', 'dueDate']
+        fields = ['task_collection', 'randomOrder', 'published', 'dueDate', 'strictOrder']
 
 
 class CreateAnswerForm(forms.ModelForm):

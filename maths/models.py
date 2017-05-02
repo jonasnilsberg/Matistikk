@@ -106,6 +106,7 @@ class Test(models.Model):
     dueDate = models.DateTimeField(verbose_name='Siste frist for besvarelse', null=True, blank=True)
     randomOrder = models.BooleanField(default=False, verbose_name='Tilfeldig rekkefølge',
                                       help_text='Dersom avkrysset vil testen bli gitt i tilfeldig rekkefølge.')
+    strictOrder = models.BooleanField(default=False, verbose_name='Lås rekkefølge')
 
     class Meta:
         ordering = ['-published']
