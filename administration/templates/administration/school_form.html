@@ -24,7 +24,7 @@
             </form>
         </div>
         <div class="panel-footer">
-            <button type="submit" class="btn btn-success" onclick="submit()">
+            <button type="submit" class="btn btn-success" onclick="submit()" id="saveNewSchoolBtnVisible">
                     {% bootstrap_icon "check" %} Lagre
                 </button>
         </div>
@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id='administratorCreate' type="button" class="btn btn-success" onclick="modalsubmit()">
+                    <button id='administratorCreateVisible' type="button" class="btn btn-success" onclick="modalsubmit()">
                         {% bootstrap_icon "check" %} Lagre
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
