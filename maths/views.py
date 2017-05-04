@@ -53,7 +53,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
 class EquationEditorView(LoginRequiredMixin, generic.TemplateView):
     """
-    Allows users to input math into the editor
+    Allows users to input math into the editor.
 
     **LoginRequiredMixin**
         Mixin from :ref:`Django braces` that check if the user is logged in.
@@ -82,8 +82,8 @@ class TaskCreateView(generic.CreateView):
             Function that adds all category objects and a form to create a new category to the context without
             overriding it.
 
-            :param kwargs: Keyword arguments
-            :return: Returns the updated context
+            :param kwargs: Keyword arguments.
+            :return: Returns the updated context.
         """
         context = super(TaskCreateView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
@@ -599,7 +599,7 @@ class TestDetailView(views.AjaxResponseMixin, generic.DetailView):
 
 class AnswerCreateView(generic.FormView):
     """
-       Class for creating answers for the tasks in a test.
+       Class for creating answers for all the tasks in a test.
 
         **FormView**
            A view that displays a form.
@@ -610,7 +610,7 @@ class AnswerCreateView(generic.FormView):
     def get_success_url(self):
         """
             Function that returns the success url.
-        :return: success url.
+            :return: success url.
         """
         return reverse_lazy('maths:index')
 
@@ -669,6 +669,7 @@ class AnswerCreateView(generic.FormView):
 class TestListView(views.AjaxResponseMixin, generic.ListView):
     """
        Class that displays a template a list of test objects.
+       
        **AjaxResponseMixin:**
             This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
        **ListView:**
@@ -682,7 +683,7 @@ class TestListView(views.AjaxResponseMixin, generic.ListView):
             Function that checks if the get request is an ajax request and checks if the students, groups and / or grades
             are associated with the test.
 
-            :param request: Request that was sent to TaskCollectionDetailView.
+            :param request: Request that was sent to TestListView.
             :param args:  Arguments that were sent with the request.
             :param kwargs: Keyword-arguments.
             :return: JsonResponse containing the a boolean table for students, teachers, grades and / or groups . 
@@ -728,7 +729,7 @@ class TestListView(views.AjaxResponseMixin, generic.ListView):
             :param request: Request that was sent to TestListView.
             :param args:  Arguments that were sent with the request.
             :param kwargs: Keyword-arguments.
-            :return: JsonResponse containing the new dueDate.
+            :return: JsonResponse containing a boolean that says true.
         """
         test = Test.objects.get(id=request.POST['test'])
         grades = request.POST['grades']
@@ -746,12 +747,12 @@ class TestListView(views.AjaxResponseMixin, generic.ListView):
         for student_id in student_list:
             student = Person.objects.get(id=student_id)
             student.tests.add(test)
-        data = {'test': 'test'}
+        data = {'success': True}
         return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         """
-            Function that overrides the created object_list to only containing the users tests and add all the 
+            Function that overrides the created object_list to only containing the users tests and adds all the 
             users grades to the context. 
 
             :param kwargs: Keyword arguments
@@ -766,7 +767,7 @@ class TestListView(views.AjaxResponseMixin, generic.ListView):
 
 class AnswerListView(generic.ListView):
     """
-       Class that displays e a list of answers for all the tasks in a specific test for a specific user.
+       Class that displays a list of answers for all the tasks in a specific test for a specific user.
        
        **ListView:**
             Inherits Django's ListView that makes a page representing a list of objects.
@@ -775,8 +776,9 @@ class AnswerListView(generic.ListView):
 
     def get_queryset(self):
         """
-        Function that sets the query for getting the object_list. 
-        :return: List of answer objects.
+            Function that sets the query for getting the object_list. 
+            
+            :return: List of answer objects.
         """
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
         person = Person.objects.get(username=self.kwargs.get('slug'))
@@ -786,6 +788,7 @@ class AnswerListView(generic.ListView):
 def export_data(request, test_pk):
     """
         Function that exports all answers for all tasks and users in a specific test.
+        
         :param request: Request that was sent to export_data 
         :param test_pk: The id for the specific test.
         :return: Excel-file
