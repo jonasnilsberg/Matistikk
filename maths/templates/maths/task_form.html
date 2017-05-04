@@ -15,17 +15,31 @@
             src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
     <script>UPLOADCARE_PUBLIC_KEY = '255bcffadf120c92a388';</script>
     <script>
+        kantrykke = true;
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
         tinymce.init({
             selector: '#tasktext',
-            plugins: 'equationeditor',
+            plugins: 'equationeditor textcolor lists fullscreen autolink link tabfocus table',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
             toolbar: [
-                'bold italic underline | bullist numlist | subscript superscript | equationeditor'
-            ]
+                'bold italic underline | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen'
+            ],
+            statusbar: false,
+            menubar: 'format table'
         });
+        kantrykke = false;
+        tinymce.init({
+            selector: '#previewtasktext',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            readonly: 1
+        });
+
+
     </script>
 
 {% endblock %}
@@ -219,6 +233,7 @@
         // Metoden benyttes til å legge GeoGebra med forhåndsvalgt konfigurasjon inn i en applet
         window.onload = function () {
             applet.inject('applet_container', 'preferhtml5');
+
         };
     </script>
 
@@ -473,7 +488,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="panel panel-default">
-                                <div class="panel-heading">
+                                <div class="panel-heading"">
                                     <h4><span id="previewtasktext"></span></h4>
                                 </div>
                                 <div class="panel-body">
@@ -517,10 +532,11 @@
             $('#textanswerdiv').hide();
             $('#reasoningdiv').hide();
             $('#multiplechoicediv').hide();
+            tinyMCE.get('previewtasktext').getBody().style.backgroundColor = "#f5f5f5";
             var answertype = $("input[type='radio'][name='answer_type']:checked").val();
-            var tasktext = document.getElementById('tasktext').value;
+            var previewtext = tinyMCE.get('tasktext').getContent()
 
-            document.getElementById('previewtasktext').innerHTML = tasktext;
+            tinyMCE.get('previewtasktext').setContent(previewtext);
 
             if (document.getElementById('extra').checked) {
                 $('#geogebradiv').show();

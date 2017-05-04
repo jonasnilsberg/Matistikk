@@ -1,6 +1,6 @@
 import pytest
 from mixer.backend.django import mixer
-from ..models import *
+from administration.models import *
 pytestmark = pytest.mark.django_db
 
 

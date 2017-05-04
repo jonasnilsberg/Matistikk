@@ -210,11 +210,11 @@
         {% endif %}
         <div class="btn-group dropup">
             <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-plus"
+                    aria-haspopup="true" aria-expanded="false" id="addStudentDropdown"><span class="glyphicon glyphicon-plus"
                                                                      aria-hidden="true"></span>
                 Legg til elev <span class="caret"></span></button>
             <ul class="dropdown-menu">
-                <li><a href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}">Opprett ny
+                <li><a href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}" id="addNewStudentBtn">Opprett ny
                     elev</a></li>
                 <li><a data-toggle='modal' href='#AddStudentModal'>Legg til eksisterende elev</a></li>
                 <li><a data-toggle='modal' href='#masseregModal'>Masseregistrering av elever</a></li>
@@ -223,11 +223,11 @@
         {% if request.user.role == 4 or request.user.role == 3 %}
             <div class="btn-group dropup">
                 <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-plus"
+                        aria-haspopup="true" aria-expanded="false" id="addTeacherDropdown"><span class="glyphicon glyphicon-plus"
                                                                          aria-hidden="true"></span>
                     Legg til lærer <span class="caret"></span></button>
                 <ul class="dropdown-menu">
-                    <li><a href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}">Opprett ny
+                    <li><a href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}" id="addNewTeacherBtn">Opprett ny
                         lærer</a></li>
                     <li><a data-toggle='modal' href='#AddTeacherModal'>Legg til eksisterende lærer</a></li>
                 </ul>

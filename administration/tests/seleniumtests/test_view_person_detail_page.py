@@ -49,7 +49,7 @@ class PersonDetailViewTestCase(LiveServerTestCase):
         server_url = "http://%s:%s/wd/hub" % ('127.0.0.1', '4444')  # ip address and port
         dc = DesiredCapabilities.HTMLUNITWITHJS
         self.selenium = webdriver.Remote(server_url, dc)"""
-        self.selenium = webdriver.Firefox()
+        self.selenium = webdriver.Chrome()
         super(PersonDetailViewTestCase, self).setUp()
 
     def tearDown(self):

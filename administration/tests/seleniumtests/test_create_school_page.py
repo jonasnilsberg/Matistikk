@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 
 
-class PersonDetailViewTestCase(LiveServerTestCase):
+class SchoolDetailViewTestCase(LiveServerTestCase):
     def setUp(self):
         # DB setup
         obj = mixer.blend('administration.Person', role=4, username='admin')
@@ -18,13 +18,13 @@ class PersonDetailViewTestCase(LiveServerTestCase):
         obj.save()
 
         #  Webdriver setup
-        self.selenium = webdriver.Firefox()
+        self.selenium = webdriver.Chrome()
         self.selenium.maximize_window()
-        super(PersonDetailViewTestCase, self).setUp()
+        super(SchoolDetailViewTestCase, self).setUp()
 
     def tearDown(self):
         self.selenium.quit()
-        super(PersonDetailViewTestCase, self).tearDown()
+        super(SchoolDetailViewTestCase, self).tearDown()
 
     def test_admin_can_create_school_without_schooladministrator(self):
         self.selenium.get(
@@ -36,16 +36,20 @@ class PersonDetailViewTestCase(LiveServerTestCase):
         password = self.selenium.find_element_by_id('id_password')
         password.send_keys("admin")
         self.selenium.find_element_by_id('logInBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "overviewDropdown")))
+        self.selenium.find_element_by_id('overviewDropdown').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "schoolOverview")))
+        self.selenium.find_element_by_id('schoolOverview').click()
         WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addSchoolBtn")))
         self.selenium.find_element_by_id('addSchoolBtn').click()
         WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_school_name")))
         self.selenium.find_element_by_id('id_school_name').send_keys('testSchool')
         self.selenium.find_element_by_id('id_school_address').send_keys('testAddress')
-        self.selenium.find_element_by_id('saveNewSchoolBtn').click()
+        self.selenium.find_element_by_id('saveNewSchoolBtnVisible').click()
         time.sleep(0.1)
         self.assertEqual(1, len(School.objects.filter(school_name='testSchool')))
 
-    def test_admin_can_create_school_with_schooladministrator(self):
+    def test_admin_can_create_school_with_new_schooladministrator(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
         )
@@ -55,15 +59,22 @@ class PersonDetailViewTestCase(LiveServerTestCase):
         password = self.selenium.find_element_by_id('id_password')
         password.send_keys("admin")
         self.selenium.find_element_by_id('logInBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "overviewDropdown")))
+        self.selenium.find_element_by_id('overviewDropdown').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "schoolOverview")))
+        self.selenium.find_element_by_id('schoolOverview').click()
         WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addSchoolBtn")))
         self.selenium.find_element_by_id('addSchoolBtn').click()
         WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_school_name")))
         self.selenium.find_element_by_id('id_school_name').send_keys('testSchool')
         self.selenium.find_element_by_id('id_school_address').send_keys('testAddress')
-        self.selenium.find_element_by_id('addNewSchoolAdministratorBtn').click()
-        time.sleep(0.2) # waiting for modal to open
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "createPerson")))
+        self.selenium.find_element_by_id('createPerson').click()
+        time.sleep(0.2)  # waiting for modal to open
         self.selenium.find_element_by_id('id_first_name').send_keys('testSchoolAdministrator')
         self.selenium.find_element_by_id('id_last_name').send_keys('testSchoolAdministratorsurname')
+        time.sleep(0.2)  # Waiting because of change in field type, seems to be a weakness in chrome
+        # when given fast input
         self.selenium.find_element_by_id('id_email').send_keys('test@test.com')
         self.selenium.find_element_by_id('id_date_of_birth').send_keys('13.10.1995')
         sex = self.selenium.find_element_by_id('id_sex')
@@ -73,9 +84,10 @@ class PersonDetailViewTestCase(LiveServerTestCase):
             else:
                 ARROW_DOWN = u'\ue015'
                 sex.send_keys(ARROW_DOWN)
-        self.selenium.find_element_by_id('administratorCreate').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "administratorCreateVisible")))
+        self.selenium.find_element_by_id('administratorCreateVisible').click()
         time.sleep(0.5)  # waiting for modal close
-        self.selenium.find_element_by_id('saveNewSchoolBtn').click()
-        time.sleep(0.5)  # waiting for db to be updated
+        self.selenium.find_element_by_id('saveNewSchoolBtnVisible').click()
+        time.sleep(0.2)  # waiting for db to be updated
         self.assertEqual(1, len(School.objects.filter(school_name='testSchool')))
 

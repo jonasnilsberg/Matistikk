@@ -1,5 +1,5 @@
 import pytest
-from .. import forms
+from administration import forms
 from mixer.backend.django import mixer
 pytestmark = pytest.mark.django_db
 

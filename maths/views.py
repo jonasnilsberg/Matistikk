@@ -51,9 +51,9 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         return context
 
 
-class equationEditor(LoginRequiredMixin, generic.TemplateView):
+class EquationEditorView(LoginRequiredMixin, generic.TemplateView):
     """
-    Class that displays the home page if logged in.
+    Allows users to input math into the editor
 
     **LoginRequiredMixin**
         Mixin from :ref:`Django braces` that check if the user is logged in.
