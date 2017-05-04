@@ -49,9 +49,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'matistikk'
-copyright = '2017, Jonas Nilsberg Refsnæs'
-author = 'Jonas Nilsberg Refsnæs'
+project = 'Matistikk'
+copyright = '2017, Haldor Myre, Sondre Oldervoll, Jonas Nilsberg Refsnæs'
+author = 'Haldor Myre, Sondre Oldervoll, Jonas Nilsberg Refsnæs'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
