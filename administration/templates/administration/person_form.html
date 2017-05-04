@@ -25,49 +25,49 @@
                 {% else %}
                     {% bootstrap_field form.role %}
                 {% endif %}
-                <div class="row" id="gradeList">
-                    <label for="schools">Velg Skole</label>
-                    <select id="schools" class="form-control" onchange="changeClassList()">
-                        <option value="allschools">
-                            Alle Skoler
-                        </option>
-                        {% for school in schools %}
-                            <option value="{{ school.school_name }}">
-                                {{ school.school_name }}
+                    <div class="row" id="gradeList">
+                        <label for="schools">Velg Skole</label>
+                        <select id="schools" class="form-control" onchange="changeClassList()">
+                            <option value="allschools">
+                                Alle Skoler
                             </option>
-                        {% endfor %}
-                    </select>
-                    <br>
-                    <div class="col-xs-5">
-                        <label for="grades">Velg Klasse</label>
-                        <select id="grades" class="form-control" multiple="multiple">
-                            {% for grade in gradesInfo %}
-                                <option value="{{ grade.id }}">
-                                    {{ grade }}
+                            {% for school in schools %}
+                                <option value="{{ school.school_name }}">
+                                    {{ school.school_name }}
                                 </option>
                             {% endfor %}
                         </select>
+                        <br>
+                        <div class="col-xs-5">
+                            <label for="grades">Velg Klasse</label>
+                            <select id="grades" class="form-control" multiple="multiple">
+                                {% for grade in gradesInfo %}
+                                    <option value="{{ grade.id }}">
+                                        {{ grade }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-xs-1">
+                            <br><br>
+                            <button type="button" onclick="chooseGrades()" id="selectClassButton"><span
+                                    class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
+                            <button type="button" onclick="removeGrades()"><span
+                                    class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button>
+                        </div>
+                        <div class="col-xs-5">
+                            <label for="chosengrades">Valgte Klasser</label>
+                            <select title="chosengrades" id="chosengrades" class="form-control"
+                                    multiple="multiple">
+                                {% if fromGrade %}
+                                    <option value="{{ fromGrade.id }}">{{ fromGrade }}</option>
+                                {% endif %}
+                                {% for grade in person.grades.all %}
+                                    <option value="{{ grade.id }}">{{ grade }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-xs-1">
-                        <br><br>
-                        <button type="button" onclick="chooseGrades()" id="selectClassButton"><span
-                                class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
-                        <button type="button" onclick="removeGrades()"><span
-                                class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button>
-                    </div>
-                    <div class="col-xs-5">
-                        <label for="chosengrades">Valgte Klasser</label>
-                        <select title="chosengrades" id="chosengrades" class="form-control"
-                                multiple="multiple">
-                            {% if fromGrade %}
-                                <option value="{{ fromGrade.id }}">{{ fromGrade }}</option>
-                            {% endif %}
-                            {% for grade in person.grades.all %}
-                                <option value="{{ grade.id }}">{{ grade }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
                 {% bootstrap_field form.is_active %}
 
                 <button type="submit" class="btn btn-success" id="saveNewInfoBtn">
@@ -90,7 +90,7 @@
                 $('#id_role').children('option[value="3"]').hide();
             }
             var roleSelected = $('#id_role').find(":selected").val();
-            if (roleSelected == 4 || roleSelected == 3){
+            if (roleSelected == 4 || roleSelected == 3) {
                 $("#gradeList").hide();
             }
         });

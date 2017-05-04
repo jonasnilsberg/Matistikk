@@ -3,93 +3,73 @@
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
+{% load customtags %}
 
 {% block body %}
     <div class="panel panel-info">
-    <div class="panel-heading">
-        <h2><i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ person.get_full_name }}</h2>
-        <div class="row">
-            <div class="col-md-2">
-                <h5><i class="fa fa-user" aria-hidden="true"></i> Brukernavn - {{ person.username }}</h5>
-                <h5><i class="fa fa-user-o" aria-hidden="true"></i> Brukertype - {% if person.role == 4 %}
-                    Administrator
-                {% elif person.role == 3 %}
-                    Skoleadministrator
-                {% elif person.role == 2 %}
-                    Lærer
-                {% else %}
-                    Elev
-                {% endif %}</h5>
-                <h5><i class="fa fa-sign-in" aria-hidden="true"></i> Sist innlogget - {{ person.last_login }}</h5>
+        <div class="panel-heading">
+            <h2><i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ person.get_full_name }}</h2>
+            <div class="row">
+                <div class="col-md-2">
+                    <h5><i class="fa fa-user" aria-hidden="true"></i> Brukernavn - {{ person.username }}</h5>
+                    <h5><i class="fa fa-user-o" aria-hidden="true"></i> Brukertype - {% if person.role == 4 %}
+                        Administrator
+                    {% elif person.role == 3 %}
+                        Skoleadministrator
+                    {% elif person.role == 2 %}
+                        Lærer
+                    {% else %}
+                        Elev
+                    {% endif %}</h5>
+                    <h5><i class="fa fa-sign-in" aria-hidden="true"></i> Sist innlogget - {{ person.last_login }}</h5>
+                </div>
+                <div class="col-md-3">
+                    <h5><i class="fa fa-calendar" aria-hidden="true"></i> Fødselsdato - {{ person.date_of_birth }}</h5>
+                    {% if person.email %}
+                        <h5><i class="fa fa-envelope-o" aria-hidden="true"></i> Epost - {{ person.email }}</h5>
+                    {% endif %}
+                    <h5><i class="fa fa-venus-mars" aria-hidden="true"></i> Kjønn - {% if person.sex == 'M' %}
+                        Gutt
+                    {% else %}
+                        Jente
+                    {% endif %}</h5>
+                </div>
             </div>
-            <div class="col-md-3">
-                <h5><i class="fa fa-calendar" aria-hidden="true"></i> Fødselsdato - {{ person.date_of_birth }}</h5>
-                {% if person.email %}
-                    <h5><i class="fa fa-envelope-o" aria-hidden="true"></i> Epost - {{ person.email }}</h5>
+        </div>
+        <div class="panel-body">
+            <ul class="nav nav-tabs">
+                <li class="nav active"><a href="#A" data-toggle="tab">Klasser</a></li>
+                {% if groups %}
+                    <li class="nav"><a href="#B" data-toggle="tab">Grupper</a></li>
                 {% endif %}
-                <h5><i class="fa fa-venus-mars" aria-hidden="true"></i> Kjønn - {% if person.sex == 'M' %}
-                    Gutt
-                {% else %}
-                    Jente
-                {% endif %}</h5>
-            </div>
-        </div>
-    </div>
-    <div class="panel-body">
-        <ul class="nav nav-tabs">
-            <li class="nav active"><a href="#A" data-toggle="tab">Klasser</a></li>
-            {% if groups %}
-                <li class="nav"><a href="#B" data-toggle="tab">Grupper</a></li>
-            {% endif %}
-            {% if person.role == 1 or person.role == 2 %}
-                <li class="nav"><a href="#C" data-toggle="tab">Tester</a></li>
-            {% endif %}
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane fade in active" id="A">
-                <table class="table table-hover table-striped table-responsive" id="schooltable">
-                    <thead>
-                    <tr>
-                        <th>Klassenavn</th>
-                        <th>Skole</th>
-                        <th>Kontaktperson</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for grade in person.grades.all %}
-                        <tr>
-                            <td>{{ grade.grade_name }}</td>
-                            <td>{{ grade.school }}</td>
-                            <td>
-                                {{ grade.school.school_administrator.get_full_name }}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% if groups %}
-                <div class="tab-pane fade" id="B">
-                    <table class="table table-hover table-striped table-responsive" id="inactivetable">
+                {% if person.role == 1 or person.role == 2 %}
+                    <li class="nav"><a href="#C" data-toggle="tab">Tester</a></li>
+                {% endif %}
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="A">
+                    <table class="table table-hover table-striped table-responsive" id="gradetable">
                         <thead>
                         <tr>
-                            <th>Gruppenavn</th>
-                            <th>Ansvarlig</th>
-                            <th>Se medlemmer</th>
+                            <th>Klassenavn</th>
+                            <th>Skole</th>
+                            <th>Kontaktperson</th>
+                            <th>Klasseinformasjon</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for group in groups %}
+                        {% for grade in person.grades.all %}
                             <tr>
-                                <td>{{ group.group_name }}</td>
-                                <td>{{ group.creator.get_full_name }}</td>
+                                <td>{{ grade.grade_name }}</td>
+                                <td>{{ grade.school }}</td>
                                 <td>
-                                    <button id="{{ group.id }}" value="{{ group.group_name }}"
-                                            class='btn btn-default'
-                                            data-toggle='modal'
-                                            data-target='#groupMemberModal' onclick="groupMemberBtn(this)">
-                                        <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
-                                        Medlemmer
+                                    {{ grade.school.school_administrator.get_full_name }}
+                                </td>
+                                <td>
+                                    <button value="{{ grade.id }}" disabled="disabled" onclick="goToGrade(this)"
+                                            class='btn btn-default' data-school="{{ grade.school.id }}"
+                                            data-available="{% grade_check grade request.user %}">
+                                        <i class="fa fa-graduation-cap" aria-hidden="true"></i> Gå til klasse
                                     </button>
                                 </td>
                             </tr>
@@ -97,40 +77,72 @@
                         </tbody>
                     </table>
                 </div>
-            {% endif %}
-            {% if person.role == 1 or person.role == 2 %}
-                <div class="tab-pane fade" id="C">
-                    <table class="table table-hover table-striped table-responsive" id="inactivetable">
-                        <thead>
-                        <tr>
-                            <th>Tittel</th>
-                            <th>Publisert</th>
-                            <th>Svarfrist</th>
-                            <th>Alternativer</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for test in tests %}
+                {% if groups %}
+                    <div class="tab-pane fade" id="B">
+                        <table class="table table-hover table-striped table-responsive" id="grouptable">
+                            <thead>
                             <tr>
-                                <td>{{ test.task_collection.test_name }}</td>
-                                <td>{{ test.published }}</td>
-                                <td>{% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen svarfrist{% endif %}</td>
-                                <td>
-                                    <button class='btn btn-default'>
-                                        <i class="fa fa-eye" aria-hidden="true"></i>
-                                        Se besvarelse
-                                    </button>
-                                </td>
+                                <th>Gruppenavn</th>
+                                <th>Ansvarlig</th>
+                                <th>Klassetilhørighet</th>
+                                <th>Se medlemmer</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                            {% for group in groups %}
+                                <tr>
+                                    <td>{{ group.group_name }}</td>
+                                    <td>{{ group.creator.get_full_name }}</td>
+                                    <td>{% if group.grade %}{{ group.grade }}{% else %}-{% endif %}</td>
+                                    <td>
+                                        <button id="{{ group.id }}" value="{{ group.group_name }}"
+                                                class='btn btn-default'
+                                                data-toggle='modal'
+                                                data-target='#groupMemberModal' onclick="groupMemberBtn(this)">
+                                            <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
+                                            Medlemmer
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+                {% if person.role == 1 or person.role == 2 %}
+                    <div class="tab-pane fade" id="C">
+                        <table class="table table-hover table-striped table-responsive" id="testtable">
+                            <thead>
+                            <tr>
+                                <th>Tittel</th>
+                                <th>Publisert</th>
+                                <th>Svarfrist</th>
+                                <th>Alternativer</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for test in tests %}
+                                <tr>
+                                    <td>{{ test.task_collection.test_name }}</td>
+                                    <td>{{ test.published }}</td>
+                                    <td>{% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen svarfrist{% endif %}</td>
+                                    <td>
+                                        <button class='btn btn-default goToAnswer' disabled="disabled"
+                                                value="{% answered person test %}" data-test="{{ test.id }}">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                            Se besvarelse
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
 
-            {% endif %}
+                {% endif %}
+            </div>
+            {% bootstrap_messages %}
         </div>
-        {% bootstrap_messages %}
-    </div>
     </div>
 
     <div class="panel-footer">
@@ -171,6 +183,37 @@
     </div>
 
     <script>
+        $(document).ready(function () {
+
+            var grades = $('#gradetable tr').not(':first');
+            grades.each(function () {
+                var button = $(this).find(':button');
+                if (button.data('available') == 'True') {
+                    button.attr('disabled', false);
+                }
+            });
+            var tests = $('#testtable tr').not(':first');
+            tests.each(function () {
+                var button = $(this).find(':button');
+                if (button.val() != "") {
+                    $(this).addClass('success');
+                    button.removeAttr('disabled');
+                }
+            });
+        });
+        $('.goToAnswer').click(function () {
+            var username = "{{ person.username }}";
+            var testID = $(this).data('test');
+            var url = "{% url 'maths:answerDetail' test_pk=1234 slug=5678 %}".replace(/1234/, testID).replace(/5678/, username);
+            document.location.href = url;
+        });
+
+        function goToGrade(button) {
+            var grade = button.value;
+            var school = $(button).data('school');
+            var url = "{% url 'administration:gradeDetail' school_pk=1234 grade_pk=5678 %}".replace(/1234/, school).replace(/5678/, grade);
+            document.location.href = url;
+        }
         function groupMemberBtn(group) {
             $("#groupMemberTable tr").remove();
             var group_id = group.id;
