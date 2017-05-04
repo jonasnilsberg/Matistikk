@@ -67,7 +67,7 @@
                                     <td>{{ student.username }}</td>
                                     <td>
                                         <button type="button" disabled='disabled' id="{{ student.username }}"
-                                                value="{% answered2 student test %}"
+                                                value="{% answered student test %}"
                                                 class='btn btn-default button goToAnswer'>
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
                                             Besvarelse
@@ -126,8 +126,8 @@
                                     <div id="grade{{ grade.id }}" class="sublinks collapse">
                                         {% for student in grade.person_set.all %}
                                             {% if student.role == 1 %}
-                                                <a class="list-group-item small"
-                                                   data-answer="{% answered2 student test %}"
+                                                <a class="list-group-item small" data-username="{{ student.username }}"
+                                                   data-answer="{% answered student test %}"
                                                    style="padding-left: 50px; cursor: pointer;"><span
                                                         class="glyphicon glyphicon-user"></span>
                                                     {{ student }}
@@ -154,9 +154,9 @@
                                         <i class="fa fa-users pull-right" aria-hidden="true"></i></a>
                                     <div id="group{{ group.id }}" class="sublinks collapse">
                                         {% for student in group.persons.all %}
-                                            {% if  student.role == 1 %}
-                                                <a class="list-group-item small"
-                                                   data-answer="{% answered2 student test %}"
+                                            {% if student.role == 1 %}
+                                                <a class="list-group-item small" data-username="{{ student.username }}"
+                                                   data-answer="{% answered student test %}"
                                                    style="padding-left: 50px; cursor: pointer;"><span
                                                         class="glyphicon glyphicon-user"></span>
                                                     {{ student }}
@@ -337,9 +337,9 @@
         });
 
         $('.goToAnswer').click(function () {
-            var answerID = $(this).val();
+            var username = this.id;
             var testID = "{{ test.id }}";
-            var url = "{% url 'maths:answerDetail' test_pk=1234 answer_pk=5678 %}".replace(/1234/, testID).replace(/5678/, answerID);
+            var url = "{% url 'maths:answerDetail' test_pk=1234 slug=5678 %}".replace(/1234/, testID).replace(/5678/, username);
             document.location.href = url;
         });
 
@@ -358,7 +358,7 @@
             var fullName = name.split("-");
             $this.addClass('active');
             if ($this.hasClass('list-group-item-success')) {
-                var answerID = $(this).data('answer');
+                var username = $(this).data('username');
                 bootbox.confirm({
                     size: "medium",
                     title: "Besvarelse - {{ test.task_collection.test_name }}",
@@ -378,7 +378,7 @@
                             $this.removeClass('active');
                         } else {
                             var testID = "{{ test.id }}";
-                            var url = "{% url 'maths:answerDetail' test_pk=1234 answer_pk=5678 %}".replace(/1234/, testID).replace(/5678/, answerID);
+                            var url = "{% url 'maths:answerDetail' test_pk=1234 slug=5678 %}".replace(/1234/, testID).replace(/5678/, username);
                             document.location.href = url;
                         }
                     }

@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-md-3">
                     <h5><i class="fa fa-calendar" aria-hidden="true"></i> Fødselsdato - {{ person.date_of_birth }}</h5>
-                    <h5><i class="fa fa-venus-mars" aria-hidden="true"></i>Kjønn - {% if person.sex == 'M' %}
+                    <h5><i class="fa fa-venus-mars" aria-hidden="true"></i> Kjønn - {% if person.sex == 'M' %}
                         Gutt
                     {% else %}
                         Jente
@@ -36,7 +36,7 @@
                         <tr>
                             <th>Klassenavn</th>
                             <th>Skole</th>
-                            <th>Se medlemmer</th>
+                            <th>{% if person.role == 2 %}Alternativer{% else %}Se medlemmer{% endif %}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -45,6 +45,13 @@
                                 <td>{{ grade.grade_name }}</td>
                                 <td>{{ grade.school }}</td>
                                 <td>
+                                    {% if person.role == 2 %}
+                                        <a type="button" id="{{ grade.id }}" value="{{ grade }}"
+                                                class='btn btn-default' href="{% url 'administration:gradeDetail' grade.school.id grade.id %}">
+                                            <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                                            Gå til klasse
+                                        </a>
+                                    {% endif %}
                                     <button id="{{ grade.id }}" value="{{ grade }}"
                                             class='btn btn-default'
                                             data-toggle='modal'
@@ -99,7 +106,8 @@
         </div>
         <div class="panel-footer">
             {% if person.role != 1 %}
-                <a id="updateInformationBtn" class='btn btn-primary' href="{% url 'administration:personUpdate' person.username %}">
+                <a id="updateInformationBtn" class='btn btn-primary'
+                   href="{% url 'administration:personUpdate' person.username %}">
                     <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Oppdater dine opplysninger</a>
             {% endif %}
             <a id="changePasswordModalBtn" class='btn btn-primary' data-toggle='modal'

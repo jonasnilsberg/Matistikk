@@ -603,6 +603,14 @@ class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView)
             schools = School.objects.filter(school_administrator=self.request.user.id)
             context['schools'] = schools
             context['gradesInfo'] = Grade.objects.filter(school_id__in=schools)
+        elif self.request.user.role == 2:
+            grades = self.request.user.grades.all()
+            school_ids = []
+            for grade in grades:
+                school_ids.append(grade.school_id)
+            schools = School.objects.filter(id__in=school_ids).distinct()
+            context['schools'] = schools
+            context['gradesInfo'] = grades
         else:
             context['schools'] = School.objects.all()
             context['gradesInfo'] = Grade.objects.all()
@@ -842,6 +850,9 @@ class GradeDisplay(views.AjaxResponseMixin, generic.DetailView):
 class FileUploadView(generic.FormView):
     """
     Class that handles uploading excel files using :ref:`Django-excel` and creates Person objects from them.
+    
+     **FormView**
+        A view that displays a form.
     """
 
     template_name = 'administration/grade_detail.html'
@@ -855,7 +866,7 @@ class FileUploadView(generic.FormView):
         :param request: Request that was sent to PersonUpdateView
         :param args:  Arguments that were sent with the request
         :param kwargs: Keyword-arguments
-        :return:
+        :return: 
         """
         persons = []
         order = ['fornavn', 'etternavn', 'epost', 'fødselsdag', 'kjønn']
