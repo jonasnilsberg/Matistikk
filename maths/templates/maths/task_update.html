@@ -18,14 +18,39 @@
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
         tinymce.init({
-            selector: '#modaltext',
-            plugins: 'equationeditor wordcount',
+            selector: '#tasktext',
+            plugins: 'equationeditor',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
             toolbar: [
                 'bold italic underline | bullist numlist | subscript superscript | equationeditor'
             ],
+            statusbar: false
 
         });
+
+
+        kantrykke = false;
+        tinymce.init({
+            selector: '#answer',
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            border: false,
+            readonly: 1
+        });
+        tinymce.init({
+            selector: '#reasoning',
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            border: false,
+            readonly: 1
+        });
+
 
     </script>
 {% endblock %}
@@ -60,7 +85,8 @@
             <div class="col-sm-5">
                 <div class="panel panel-default">
                     <div class="panel-heading" id="tasktextdiv">
-                        <textarea id="modaltext">{{ task.text | safe }}</textarea>
+                        <label for="tasktext" style="margin-top: 10px">Oppgavetekst</label>
+                        <div id="tasktext">{{ task.text | safe }}</div>
                     </div> <!-- #inner panel-heading -->
                     <div class="panel-body">
                         {% if task.category %}
@@ -204,7 +230,7 @@
             "showTutorialLink": false,
             "showLogging": false,
             "language": "nb",
-            "preventFocus":true,
+            "preventFocus": true,
             "useBrowserForJS": true,
             "ggbBase64": base64
         };
@@ -218,6 +244,7 @@
         // Metoden benyttes til å legge GeoGebra med forhåndsvalgt konfigurasjon inn i en applet
         window.onload = function () {
             applet.inject('applet_container', 'preferhtml5');
+            tinyMCE.get('tasktext').getBody().style.backgroundColor = "#f5f5f5";
         };
     </script>
     <script>
@@ -248,7 +275,7 @@
             var optionsspan = optionsdiv.getElementsByTagName('span');
             var options = document.getElementById('id_options');
 
-            document.getElementById('modaltext').innerHTML = tasktext
+            document.getElementById('tasktext').innerHTML = tasktext
             options.value = "";
 
             if (reasoning.checked) {
@@ -366,8 +393,9 @@
             var div = document.getElementById('optionsdiv');
             var inputCount = div.getElementsByTagName('input').length;
             var n = inputCount + 1;
-            div.innerHTML += '<a class="btn btn-default" id="option' + n + 'button" onclick="saveUpdatedOption(' + n + ');"><span style="font-size:1em;" id="option' + n + 'span" class="glyphicon glyphicon-plus"></span> </a> <input type="text" id="option' + n + '" name="options"> <span id="option' + n + 'value"></span> <a class="btn btn-default" onclick="changeCorrect(' + n + ')"><i class="fa fa-times" aria-hidden="true" id="correct' + n + '" style="font-size: 1.5em; color: #A00000"></i></a><br>';
+            div.innerHTML += '<a class="btn btn-default" id="option' + n + 'button" onclick="saveUpdatedOption(' + n + ');"><span style="font-size:1em;" id="option' + n + 'span" class="glyphicon glyphicon-plus"></span> </a> <input type="text" id="option' + n + '" name="options"> <span id="option' + n + 'value" ></span> <a class="btn btn-default" onclick="changeCorrect(' + n + ')"><i class="fa fa-times" aria-hidden="true" id="correct' + n + '" style="font-size: 1.5em; color: #A00000"></i></a><br>';
         }
+
 
         function changeCorrect(e) {
             var div = document.getElementById('optionsdiv');
@@ -456,25 +484,6 @@
 {% endblock %}
 
 {% block modal %}
-    <div class="modal fade" id="changeTextModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div id="changeTextModal2" class="modal-dialog" role="document" style="width: 90%; ">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Endre oppgavetekst</h4>
-                </div>
-                <div class="modal-body">
-                    <textarea class="form-control" id="modalText" rows="6" style="resize:vertical"
-                              placeholder="Skriv oppgavetekst her..."></textarea>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="modal fade" id="changeCategoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -578,25 +587,6 @@
     </div>
 
     <script>
-        /**
-         * This function changes the innerHTML of the tasktext-span when the user
-         * has updated the task text and closes the changeTextModal.
-         */
-        $('#changeTextModal').on('hide.bs.modal', function () {
-            var modaltext = tinyMCE.activeEditor.getContent();
-            document.getElementById('tasktext').innerHTML = modaltext;
-        });
-
-        /**
-         * This function fills the text input field in the changeTextModal when the
-         * user clicks the "Change task text"-button and the changeTextModal opens.
-         */
-        $('#changeTextModal').on('show.bs.modal', function () {
-            var tasktext = $('#tasktext').html();
-            var height = window.innerHeight * 0.9;
-            document.getElementById('changeTextModal2').style += "height:" + height + "px";
-            tinyMCE.activeEditor.setContent(tasktext);
-        });
 
         /**
          * This function selects the already chosen answertype when the user opens the

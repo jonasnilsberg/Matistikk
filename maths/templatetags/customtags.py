@@ -14,3 +14,11 @@ def answered(person, test, num):
             elif num == 2:
                 return "list-group-item-success"
     return ""
+
+
+@register.simple_tag
+def answered2(person, test):
+    for answer in person.answer_set.all():
+        if answer.test_id == test.id:
+            return answer.id
+    return ""

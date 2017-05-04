@@ -1,0 +1,5 @@
+{% extends 'matistikk/base.html' %}
+
+{% block body %}
+    Besvarelse av {{ answer.test.task_collection.test_name }} av {{ answer.user.get_full_name }}
+{% endblock %}
