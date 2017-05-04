@@ -26,7 +26,6 @@ class PersonCreateViewTestCase(LiveServerTestCase):
         gradeobj = mixer.blend('administration.Grade', grade_name='testGrade', school=schoolobj)
         gradeobj.save()
         #  Webdriver setup
-        #  This view uses jquery that can't be ran in htmlunit
         self.selenium = webdriver.Chrome()
         self.selenium.maximize_window()
         super(PersonCreateViewTestCase, self).setUp()
@@ -44,8 +43,12 @@ class PersonCreateViewTestCase(LiveServerTestCase):
         password = self.selenium.find_element_by_id('id_password')
         password.send_keys("admin")
         self.selenium.find_element_by_id('logInBtn').click()
-        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addNewUserBtn")))
-        self.selenium.find_element_by_id('addNewUserBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "overviewDropdown")))
+        self.selenium.find_element_by_id('overviewDropdown').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "userOverview")))
+        self.selenium.find_element_by_id('userOverview').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addNewStudentBtn")))
+        self.selenium.find_element_by_id('addNewStudentBtn').click()
         WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_first_name")))
         self.selenium.find_element_by_id('id_first_name').send_keys('testName')
         self.selenium.find_element_by_id('id_last_name').send_keys('testSurname')
@@ -199,8 +202,24 @@ class PersonCreateViewTestCase(LiveServerTestCase):
         password = self.selenium.find_element_by_id('id_password')
         password.send_keys("admin")
         self.selenium.find_element_by_id('logInBtn').click()
-        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addNewUserBtn")))
-        self.selenium.find_element_by_id('addNewUserBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "overviewDropdown")))
+        self.selenium.find_element_by_id('overviewDropdown').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "schoolOverview")))
+        self.selenium.find_element_by_id('schoolOverview').click()
+        school_list = self.selenium.find_element_by_id('schoolTable')
+        for el in school_list.find_elements_by_tag_name('td'):
+            if el.text == 'testSchool':
+                el.click()
+                break
+        grade_list = self.selenium.find_element_by_id('gradetable')
+        for el in grade_list.find_elements_by_tag_name('td'):
+            if el.text == 'testGrade':
+                el.click()
+                break
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addStudentDropdown")))
+        self.selenium.find_element_by_id('addStudentDropdown').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addNewStudentBtn")))
+        self.selenium.find_element_by_id('addNewStudentBtn').click()
         WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_first_name")))
         self.selenium.find_element_by_id('id_first_name').send_keys('testNameGrade')
         self.selenium.find_element_by_id('id_last_name').send_keys('testSurnameGrade')
@@ -240,16 +259,32 @@ class PersonCreateViewTestCase(LiveServerTestCase):
         self.selenium.find_element_by_id('saveNewInfoBtn').click()
         time.sleep(0.1)
         temp = Person.objects.get(first_name='testNameGrade')
-        gradelist = temp.grades.all()
-        self.assertEqual('testGrade', gradelist[0].grade_name), \
+        usersGradesList = temp.grades.all()
+        self.assertEqual('testGrade', usersGradesList[0].grade_name), \
             'Should be a student object saved in the database'
 
         # Teacher
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
         )
-        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addNewUserBtn")))
-        self.selenium.find_element_by_id('addNewUserBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "overviewDropdown")))
+        self.selenium.find_element_by_id('overviewDropdown').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "schoolOverview")))
+        self.selenium.find_element_by_id('schoolOverview').click()
+        school_list = self.selenium.find_element_by_id('schoolTable')
+        for el in school_list.find_elements_by_tag_name('td'):
+            if el.text == 'testSchool':
+                el.click()
+                break
+        grade_list = self.selenium.find_element_by_id('gradetable')
+        for el in grade_list.find_elements_by_tag_name('td'):
+            if el.text == 'testGrade':
+                el.click()
+                break
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addTeacherDropdown")))
+        self.selenium.find_element_by_id('addTeacherDropdown').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addNewTeacherBtn")))
+        self.selenium.find_element_by_id('addNewTeacherBtn').click()
         WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_first_name")))
         self.selenium.find_element_by_id('id_first_name').send_keys('testTeacher')
         self.selenium.find_element_by_id('id_last_name').send_keys('testTeacherSurname')
@@ -262,14 +297,6 @@ class PersonCreateViewTestCase(LiveServerTestCase):
             else:
                 ARROW_DOWN = u'\ue015'
                 sex.send_keys(ARROW_DOWN)
-        role = self.selenium.find_element_by_id('id_role')
-        for option in role.find_elements_by_tag_name('option'):
-            if option.text == 'Lærer':
-                break
-            else:
-                ARROW_DOWN = u'\ue015'
-                role.send_keys(ARROW_DOWN)
-
         schools = self.selenium.find_element_by_id('schools')
         for option in schools.find_elements_by_tag_name('option'):
             if option.text == 'testSchool':
@@ -289,8 +316,8 @@ class PersonCreateViewTestCase(LiveServerTestCase):
         self.selenium.find_element_by_id('saveNewInfoBtn').click()
         time.sleep(0.1)
         temp2 = Person.objects.get(first_name='testTeacher')
-        gradelist2 = temp2.grades.all()
-        self.assertEqual('testGrade', gradelist2[0].grade_name), \
+        usersGradesList2 = temp2.grades.all()
+        self.assertEqual('testGrade', usersGradesList2[0].grade_name), \
             'Should be a teacher object saved in the database'
 
     def test_schooladmin_can_create_teacher_student_with_school(self):

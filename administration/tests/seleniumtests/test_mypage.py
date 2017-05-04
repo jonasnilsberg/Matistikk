@@ -2,7 +2,7 @@ from django.test import LiveServerTestCase
 from mixer.backend.django import mixer
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-
+from ...models import Person
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -20,7 +20,7 @@ class MyPageDetailViewTestCase(LiveServerTestCase):
         schooladminobj.save()
 
         #  Webdriver setup
-        self.selenium = webdriver.Firefox()
+        self.selenium = webdriver.Chrome()
         self.selenium.maximize_window()
         super(MyPageDetailViewTestCase, self).setUp()
 
@@ -29,7 +29,7 @@ class MyPageDetailViewTestCase(LiveServerTestCase):
         super(MyPageDetailViewTestCase, self).tearDown()
 
     def test_change_password(self):
-        """Checks that a user can view their page and change their password through it"""
+        """Checks that a user can view their page and change their password"""
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
         )
@@ -77,7 +77,13 @@ class MyPageDetailViewTestCase(LiveServerTestCase):
         self.selenium.find_element_by_id('updateInformationBtn').click()
         time.sleep(0.2)  # waiting for modal to open
         self.selenium.find_element_by_id('id_first_name').clear()
-        self.selenium.find_element_by_id('id_first_name').send_keys('nyttNavn')
+        self.selenium.find_element_by_id('id_first_name').send_keys('newName')
         self.selenium.find_element_by_id('id_last_name').clear()
-        self.selenium.find_element_by_id('id_last_name').send_keys('nyttEtternavn')
-        self.selenium.find_element_by_id('id_')
+        self.selenium.find_element_by_id('id_last_name').send_keys('newSurname')
+        self.selenium.find_element_by_id('id_email').clear()
+        self.selenium.find_element_by_id('id_email').send_keys('new@email.test')
+        self.selenium.find_element_by_id('id_date_of_birth').clear()
+        self.selenium.find_element_by_id('id_date_of_birth').send_keys('1995-10-13')
+        self.selenium.find_element_by_id('saveNewInfoBtn').click()
+        time.sleep(0.2)
+        Person.objects.filter(first_name='newName', last_name='newSurname', email='new@email.test', date_of_birth='1995-10-13')

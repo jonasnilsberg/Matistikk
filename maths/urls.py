@@ -6,7 +6,7 @@ urlpatterns = [
 
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'nyoppgave/$', views.CreateTaskView.as_view(), name='createTask'),
-    url(r'equationEditor/$', views.equationEditor.as_view(), name='equationEditor'),
+    url(r'equationEditor/$', views.EquationEditorView.as_view(), name='equationEditor'),
     url(r'oppgaver/$', views.TaskListView.as_view(), name='taskList'),
     url(r'oppgaver/oppdater/(?P<task_pk>[0-9]+)/$', views.TaskUpdateView.as_view(), name='taskUpdate'),
     url(r'kategorier/$', views.CategoryListView.as_view(), name='categoryList'),

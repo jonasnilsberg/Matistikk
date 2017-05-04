@@ -34,7 +34,7 @@
                                 {% if school.is_active %}
                                     <tr class="clickable-row"
                                         data-href="{% url 'administration:schoolDetail' school.id %}"
-                                        style="cursor: pointer">
+                                        style="cursor: pointer" id="schoolTable">
                                         <td>{{ school.school_name }}</td>
                                         <td>{{ school.school_address }}</td>
                                         <td>
@@ -99,7 +99,7 @@
             <div class="panel-footer">
                 <a class="btn btn-primary" href="{% url 'administration:schoolCreate' %}"><span
                         class="glyphicon glyphicon-plus"
-                        aria-hidden="true"></span> Legg
+                        aria-hidden="true" id="addSchoolBtn"></span> Legg
                     til skole</a>
             </div>
             </div>
