@@ -40,7 +40,8 @@
                                             {% for option in multipleChoice %}
                                                 <div id="optionsdiv{{ task.id }}">
                                                     <input type="radio" name="multiplechoice{{ answer.task.id }}"
-                                                           value="{{ option.option }}">
+                                                           value="{{ option.option }}"
+                                                           {% if option.option == answer.text %}checked{% endif %}>
                                                     {{ option.option }}<br>
                                                 </div>
                                             {% endfor %}
@@ -83,6 +84,7 @@
                                                 {{ option.option }}<br>
                                             </div>
                                         {% endfor %}
+                                        {{ answer.text }}
                                     </div>
                                 {% endif %}
                                 {% if answer.task.reasoning %}

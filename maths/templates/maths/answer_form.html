@@ -105,8 +105,8 @@
                 <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid"
                      data-taskid="{{ task.id }}">
                     <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3>Oppgave {{ forloop.counter }}</h3>
+                        <div class="panel-heading" style="padding-top: 1px">
+                            <h3 class="centered-text">Oppgave {{ forloop.counter }}</h3>
                         </div>
                         {% if forloop.first %}
                             <span id="geocount" hidden>{{ geogebratask.count }}</span>
@@ -210,8 +210,8 @@
                 <div class="section" data-anchor="summary2">
                     <div id="summary" class="col-xs-12 container-fluid" style="min-height: 100vh">
                         <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h3>Oppsummering</h3>
+                            <div class="panel-heading" style="padding-top: 1px">
+                                <h3 class="text-center">Oppsummering</h3>
                             </div>
                             <div class="panel-body">
                                 <button class="btn btn-default btn-lg" onclick="checkTest()"><i
@@ -250,8 +250,8 @@
                 <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid"
                      data-taskid="{{ taskorder.task.id }}">
                     <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h3>Oppgave {{ forloop.counter }}</h3>
+                        <div class="panel-heading" style="padding-top: 1px">
+                            <h3 class="text-center">Oppgave {{ forloop.counter }}</h3>
                         </div>
                         {% if forloop.first %}
                             <span id="geocount" hidden>{{ geogebratask.count }}</span>
@@ -363,8 +363,8 @@
                 <div class="section" data-anchor="summary2">
                     <div id="summary" class="col-xs-12 container-fluid">
                         <div class="panel panel-info">
-                            <div class="panel-heading">
-                                <h3>Oppsummering</h3>
+                            <div class="panel-heading" style="padding-top: 1px">
+                                <h3 class="text-center">Oppsummering</h3>
                             </div>
                             <div class="panel-body">
                                 <table class="table table-hover table-striped table-responsive" id="summarytable">

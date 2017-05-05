@@ -9,7 +9,7 @@ register = template.Library()
 def answered(person, test):
     for answer in person.answer_set.all():
         if answer.test_id == test.id:
-            return answer.id
+            return answer
     return ""
 
 
