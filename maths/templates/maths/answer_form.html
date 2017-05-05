@@ -128,6 +128,8 @@
                                         <h4>{{ task.text | safe }}</h4>
                                     </div>
                                     <div class="panel-body">
+                                        <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
+                                        <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if task.answertype == 1 %}
                                             <div id="textanswerdiv">
                                                 <label for="answer">Tekstsvar</label>
@@ -169,6 +171,8 @@
                                         <h4>{{ task.text | safe }}</h4>
                                     </div>
                                     <div class="panel-body">
+                                        <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
+                                        <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if task.answertype == 1 %}
                                             <div id="textanswerdiv">
                                                 <label for="answer">Tekstsvar</label>
@@ -277,6 +281,8 @@
                                         </div>
                                     </div>
                                     <div class="panel-body" style="max-height: 30vh; overflow: auto">
+                                        <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
+                                        <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if taskorder.task.answertype == 1 %}
                                             <div id="textanswerdiv">
                                                 <label for="answer{{ taskorder.task.id }}">Tekstsvar</label>
@@ -321,6 +327,8 @@
                                         <h4>{{ taskorder.task.text | safe }}</h4>
                                     </div>
                                     <div class="panel-body">
+                                        <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
+                                        <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if taskorder.task.answertype == 1 %}
                                             <div id="textanswerdiv">
                                                 <label for="answer">Tekstsvar</label>
@@ -433,7 +441,13 @@
     var onLeave = false;
     var goToNextTask = false;
     var strictOrder = "{{ test.strictOrder }}";
+    var start;
+    var taskTimerStart;
+    /**
+     * This function runs when the document is ready.
+     */
     $(document).ready(function () {
+        start = Date.now();
 
         $('#fullpage').fullpage({
             menu: '#taskBtnList',
@@ -442,10 +456,27 @@
             loopTop: false,
             scrollingSpeed: 1,
             scrollBar: true,
+            afterLoad: function (anchorLink, index) {
+                if (index > 1) {
+                    taskTimerStart = Date.now();
+                }
+            },
             onLeave: function (index, nextIndex, direction) {
                 if (!geoFinished) {
                     return false;
                 }
+                if (index > 1 && index < (parseInt(taskcount) + 2)) {
+                    var tasktime = document.getElementById('tasktimer' + (index - 1));
+                    var time = tasktime.value;
+                    if (time !== "") {
+                        tasktime.value = (parseFloat(time) + (Date.now() - taskTimerStart) / 1000);
+                        taskTimerStart = Date.now();
+                    }
+                    else {
+                        tasktime.value = (Date.now() - taskTimerStart) / 1000;
+                    }
+                }
+
                 onLeave = true;
                 var summary = parseInt(taskcount) + 2;
                 var tasksnr = parseInt(taskcount) + 1;
@@ -543,6 +574,7 @@
                 }
             }
         });
+
         for (var k = 0; k < taskcount; k++) {
             if (document.getElementById('applet_container' + (k + 1)) != null) {
                 applet[k].inject('applet_container' + (k + 1), 'preferhtml5');
@@ -554,14 +586,25 @@
 
 
     });
+
+    /**
+     * This function changes the fullpage.js-section to the section below the current one.
+     */
     function nextTask() {
         $('#fullpage').fullpage.moveSectionDown();
     }
 
+    /**
+     * This function changes the fullpage.js-section to the section above the current one.
+     */
     function previousTask() {
         $('#fullpage').fullpage.moveSectionUp();
     }
 
+    /**
+     * This function changes the fullpage.js-section into a section clicked by the user.
+     * @param task - the task the user has chosen to go to.
+     */
     function goToTask(task) {
         if (task == 0) {
             var numItems = $('.section').length;
@@ -603,6 +646,10 @@
         viewPortHeight = window.innerHeight * 0.7;
     }
 
+    /**
+     * This function is called from every GeoGebra-applet when the applet is finished loading.
+     * @param applet - The id of the applet that called the function
+     */
     function ggbOnInit(applet) {
         geoloaded += 1;
         if (geoloaded == geocount) {
@@ -613,8 +660,9 @@
                 $('#tasknav').removeClass('hidden');
             }, 1000);
         }
+        window["ggbApplet" + applet.charAt(9)].registerAddListener("addListener" + applet.charAt(9));
+        window["ggbApplet" + applet.charAt(9)].registerRemoveListener("removeListener" + applet.charAt(9));
     }
-
 
     var applet = [];
     for (var i = 0; i < taskcount; i++) {
@@ -648,6 +696,12 @@
     //  when used with Math Apps Bundle, uncomment this:
     // applet.setHTML5Codebase('GeoGebra/HTML5/5.0/web3d/');
 
+    /**
+     * This function checks the HTML-elements in every task in the test.
+     * It returns true if every element is filled like it should, and returns false if one or more elements is missing input.
+     * The function also changes the status for every task in the summary, and adds a note on what's missing in each task.
+     * @returns {boolean}
+     */
     function checkTest() {
         var flag = true;
         for (var i = 0; i < taskcount; i++) {
@@ -696,6 +750,10 @@
         return flag;
     }
 
+    /**
+     * This function checks if a specific task is finished. That means that all inputs are filled out.
+     * @param task - the task to check.
+     */
     function checkTask(task) {
         var div = $('#task' + task);
         var taskid = div.data('taskid');
@@ -721,6 +779,12 @@
         return true;
     }
 
+    /**
+     * This function loops through every task and copy the value from the input fields that the user sees into the hidden django form.
+     * The first thing the function does is to call the checkTest()-function. If this function returns false, the user will be
+     * redirected to the summary-tab, and the function will return 0 without submitting the test.
+     * @returns {number}
+     */
     function submitTask() {
         var flag = checkTest();
         if (!flag) {
@@ -735,7 +799,7 @@
             var textanswer2 = document.getElementById('id_task' + i + '-text');
             var reasoning = $('#reasoning' + taskid).val();
             var reasoning2 = document.getElementById('id_task' + i + '-reasoning');
-            var base64 = getGeoBase64(i);
+            var base64 = window["ggbApplet" + (i + 1)].getBase64();
             var base642 = document.getElementById('id_task' + i + '-base64answer');
             var multiplechoiceanswer = $("input[name=multiplechoice" + taskid + "]:checked").val();
 
@@ -757,478 +821,72 @@
         $('#submitbutton').click();
     }
 
-    function getGeoBase64(num) {
-        var base64;
-        switch (num) {
-            case 0:
-                if (typeof ggbApplet1 !== 'undefined') {
-                    base64 = ggbApplet1.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 1:
-                if (typeof ggbApplet2 !== 'undefined') {
-                    base64 = ggbApplet2.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 2:
-                if (typeof ggbApplet3 !== 'undefined') {
-                    base64 = ggbApplet3.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 3:
-                if (typeof ggbApplet4 !== 'undefined') {
-                    base64 = ggbApplet4.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 4:
-                if (typeof ggbApplet5 !== 'undefined') {
-                    base64 = ggbApplet5.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 5:
-                if (typeof ggbApplet6 !== 'undefined') {
-                    base64 = ggbApplet6.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 6:
-                if (typeof ggbApplet7 !== 'undefined') {
-                    base64 = ggbApplet7.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 7:
-                if (typeof ggbApplet8 !== 'undefined') {
-                    base64 = ggbApplet8.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 8:
-                if (typeof ggbApplet9 !== 'undefined') {
-                    base64 = ggbApplet9.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 9:
-                if (typeof ggbApplet10 !== 'undefined') {
-                    base64 = ggbApplet10.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 10:
-                if (typeof ggbApplet11 !== 'undefined') {
-                    base64 = ggbApplet11.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 11:
-                if (typeof ggbApplet12 !== 'undefined') {
-                    base64 = ggbApplet12.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 12:
-                if (typeof ggbApplet13 !== 'undefined') {
-                    base64 = ggbApplet13.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 13:
-                if (typeof ggbApplet14 !== 'undefined') {
-                    base64 = ggbApplet14.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 14:
-                if (typeof ggbApplet15 !== 'undefined') {
-                    base64 = ggbApplet15.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 15:
-                if (typeof ggbApplet16 !== 'undefined') {
-                    base64 = ggbApplet16.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 16:
-                if (typeof ggbApplet17 !== 'undefined') {
-                    base64 = ggbApplet17.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 17:
-                if (typeof ggbApplet18 !== 'undefined') {
-                    base64 = ggbApplet18.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 18:
-                if (typeof ggbApplet19 !== 'undefined') {
-                    base64 = ggbApplet19.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 19:
-                if (typeof ggbApplet20 !== 'undefined') {
-                    base64 = ggbApplet20.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 20:
-                if (typeof ggbApplet21 !== 'undefined') {
-                    base64 = ggbApplet21.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 21:
-                if (typeof ggbApplet22 !== 'undefined') {
-                    base64 = ggbApplet22.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 22:
-                if (typeof ggbApplet23 !== 'undefined') {
-                    base64 = ggbApplet23.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 23:
-                if (typeof ggbApplet24 !== 'undefined') {
-                    base64 = ggbApplet24.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 24:
-                if (typeof ggbApplet25 !== 'undefined') {
-                    base64 = ggbApplet25.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 25:
-                if (typeof ggbApplet26 !== 'undefined') {
-                    base64 = ggbApplet26.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 26:
-                if (typeof ggbApplet27 !== 'undefined') {
-                    base64 = ggbApplet27.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 27:
-                if (typeof ggbApplet28 !== 'undefined') {
-                    base64 = ggbApplet28.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 28:
-                if (typeof ggbApplet29 !== 'undefined') {
-                    base64 = ggbApplet29.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 29:
-                if (typeof ggbApplet30 !== 'undefined') {
-                    base64 = ggbApplet30.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 30:
-                if (typeof ggbApplet31 !== 'undefined') {
-                    base64 = ggbApplet31.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 31:
-                if (typeof ggbApplet32 !== 'undefined') {
-                    base64 = ggbApplet32.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 32:
-                if (typeof ggbApplet33 !== 'undefined') {
-                    base64 = ggbApplet33.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 33:
-                if (typeof ggbApplet34 !== 'undefined') {
-                    base64 = ggbApplet34.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 34:
-                if (typeof ggbApplet35 !== 'undefined') {
-                    base64 = ggbApplet35.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 35:
-                if (typeof ggbApplet36 !== 'undefined') {
-                    base64 = ggbApplet36.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 36:
-                if (typeof ggbApplet37 !== 'undefined') {
-                    base64 = ggbApplet37.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 37:
-                if (typeof ggbApplet38 !== 'undefined') {
-                    base64 = ggbApplet38.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 38:
-                if (typeof ggbApplet39 !== 'undefined') {
-                    base64 = ggbApplet39.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 39:
-                if (typeof ggbApplet40 !== 'undefined') {
-                    base64 = ggbApplet40.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 40:
-                if (typeof ggbApplet41 !== 'undefined') {
-                    base64 = ggbApplet41.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 41:
-                if (typeof ggbApplet42 !== 'undefined') {
-                    base64 = ggbApplet42.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 42:
-                if (typeof ggbApplet43 !== 'undefined') {
-                    base64 = ggbApplet43.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 43:
-                if (typeof ggbApplet44 !== 'undefined') {
-                    base64 = ggbApplet44.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 44:
-                if (typeof ggbApplet45 !== 'undefined') {
-                    base64 = ggbApplet45.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 45:
-                if (typeof ggbApplet46 !== 'undefined') {
-                    base64 = ggbApplet46.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 46:
-                if (typeof ggbApplet47 !== 'undefined') {
-                    base64 = ggbApplet47.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 47:
-                if (typeof ggbApplet48 !== 'undefined') {
-                    base64 = ggbApplet48.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 48:
-                if (typeof ggbApplet49 !== 'undefined') {
-                    base64 = ggbApplet49.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 49:
-                if (typeof ggbApplet50 !== 'undefined') {
-                    base64 = ggbApplet50.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 50:
-                if (typeof ggbApplet51 !== 'undefined') {
-                    base64 = ggbApplet51.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
-            case 51:
-                if (typeof ggbApplet52 !== 'undefined') {
-                    base64 = ggbApplet52.getBase64();
-                }
-                else {
-                    base64 = null;
-                }
-                return base64;
-                break;
+    function addListener1(objName) {
+        var strVal = window["ggbApplet1"].getValueString(objName);
+        var timer = document.getElementById('tasktimer1').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
         }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener1').append(time + " Add: " + strVal + '\n');
+    }
+
+    function addListener2(objName) {
+        var strVal = window["ggbApplet2"].getValueString(objName);
+        var timer = document.getElementById('tasktimer2').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener2').append(time + " Add: " + strVal + '\n');
+    }
+
+    function addListener3(objName) {
+        var strVal = window["ggbApplet3"].getValueString(objName);
+        var timer = document.getElementById('tasktimer3').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener3').append(time + " Add: " + strVal + '\n');
+    }
+
+    function addListener4(objName) {
+        var strVal = window["ggbApplet4"].getValueString(objName);
+        var timer = document.getElementById('tasktimer4').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener4').append(time + " Add: " + strVal + '\n');
+    }
+
+    function removeListener1(objName) {
+        $('#geolistener1').append((Date.now() - start) / 1000 + " Remove: " + objName + '\n');
+    }
+
+    function removeListener2(objName) {
+        $('#geolistener2').append((Date.now() - start) / 1000 + " Remove: " + objName + '\n');
+    }
+
+    function removeListener3(objName) {
+        $('#geolistener3').append((Date.now() - start) / 1000 + " Remove: " + objName + '\n');
+    }
+
+    function removeListener4(objName) {
+        $('#geolistener4').append((Date.now() - start) / 1000 + " Remove: " + objName + '\n');
     }
 </script>
 </body>
