@@ -66,7 +66,7 @@
                                style="cursor: pointer">Oppgave {{ forloop.counter }} </a>
                         </li>
                     {% endfor %}
-                    <li data-menuanchor="summary">
+                    <li data-menuanchor="summary2">
                         <a type="button" onclick="checkTest(); goToTask(0)" style="cursor:pointer;">Oppsummering</a>
                     </li>
                     <button id="nextTaskBtn" class="btn btn-primary btn-lg" type="button" onclick="nextTask()"><span
@@ -129,6 +129,8 @@
                                         <h4>{{ task.text | safe }}</h4>
                                     </div>
                                     <div class="panel-body">
+                                        <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
+                                        <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if task.answertype == 1 %}
                                             <div id="textanswerdiv">
                                                 <label for="answer">Tekstsvar</label>
@@ -170,6 +172,8 @@
                                         <h4>{{ task.text | safe }}</h4>
                                     </div>
                                     <div class="panel-body">
+                                        <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
+                                        <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if task.answertype == 1 %}
                                             <div id="textanswerdiv">
                                                 <label for="answer">Tekstsvar</label>
@@ -208,7 +212,7 @@
                 </div>
             </div>
             {% if forloop.last %}
-                <div class="section" data-anchor="summary">
+                <div class="section" data-anchor="summary2">
                     <div id="summary" class="col-xs-12 container-fluid" style="min-height: 100vh">
                         <div class="panel panel-info">
                             <div class="panel-heading">
@@ -279,6 +283,7 @@
                                     </div>
                                     <div class="panel-body" style="max-height: 30vh; overflow: auto">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
+                                        <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if taskorder.task.answertype == 1 %}
                                             <div id="textanswerdiv">
                                                 <label for="answer{{ taskorder.task.id }}">Tekstsvar</label>
@@ -324,6 +329,7 @@
                                     </div>
                                     <div class="panel-body">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
+                                        <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if taskorder.task.answertype == 1 %}
                                             <div id="textanswerdiv">
                                                 <label for="answer">Tekstsvar</label>
@@ -398,7 +404,7 @@
             {% endif %}
         {% endfor %}
     {% endif %}
-    </div>
+</div>
 </div>
 
 </body>
@@ -437,6 +443,10 @@
     var goToNextTask = false;
     var strictOrder = "{{ test.strictOrder }}";
     var start;
+    var taskTimerStart;
+    /**
+     * This function runs when the document is ready.
+     */
     $(document).ready(function () {
         start = Date.now();
 
@@ -447,10 +457,27 @@
             loopTop: false,
             scrollingSpeed: 1,
             scrollBar: true,
+            afterLoad: function (anchorLink, index) {
+                if (index > 1) {
+                    taskTimerStart = Date.now();
+                }
+            },
             onLeave: function (index, nextIndex, direction) {
                 if (!geoFinished) {
                     return false;
                 }
+                if (index > 1 && index < (parseInt(taskcount) + 2)) {
+                    var tasktime = document.getElementById('tasktimer' + (index - 1));
+                    var time = tasktime.value;
+                    if (time !== "") {
+                        tasktime.value = (parseFloat(time) + (Date.now() - taskTimerStart) / 1000);
+                        taskTimerStart = Date.now();
+                    }
+                    else {
+                        tasktime.value = (Date.now() - taskTimerStart) / 1000;
+                    }
+                }
+
                 onLeave = true;
                 var summary = parseInt(taskcount) + 2;
                 var tasksnr = parseInt(taskcount) + 1;
@@ -546,6 +573,7 @@
                 }
             }
         });
+
         for (var k = 0; k < taskcount; k++) {
             if (document.getElementById('applet_container' + (k + 1)) != null) {
                 applet[k].inject('applet_container' + (k + 1), 'preferhtml5');
@@ -557,14 +585,25 @@
 
 
     });
+
+    /**
+     * This function changes the fullpage.js-section to the section below the current one.
+     */
     function nextTask() {
         $('#fullpage').fullpage.moveSectionDown();
     }
 
+    /**
+     * This function changes the fullpage.js-section to the section above the current one.
+     */
     function previousTask() {
         $('#fullpage').fullpage.moveSectionUp();
     }
 
+    /**
+     * This function changes the fullpage.js-section into a section clicked by the user.
+     * @param task - the task the user has chosen to go to.
+     */
     function goToTask(task) {
         if (task == 0) {
             var numItems = $('.section').length;
@@ -606,6 +645,10 @@
         viewPortHeight = window.innerHeight * 0.7;
     }
 
+    /**
+     * This function is called from every GeoGebra-applet when the applet is finished loading.
+     * @param applet - The id of the applet that called the function
+     */
     function ggbOnInit(applet) {
         geoloaded += 1;
         if (geoloaded == geocount) {
@@ -652,6 +695,12 @@
     //  when used with Math Apps Bundle, uncomment this:
     // applet.setHTML5Codebase('GeoGebra/HTML5/5.0/web3d/');
 
+    /**
+     * This function checks the HTML-elements in every task in the test.
+     * It returns true if every element is filled like it should, and returns false if one or more elements is missing input.
+     * The function also changes the status for every task in the summary, and adds a note on what's missing in each task.
+     * @returns {boolean}
+     */
     function checkTest() {
         var flag = true;
         for (var i = 0; i < taskcount; i++) {
@@ -700,6 +749,10 @@
         return flag;
     }
 
+    /**
+     * This function checks if a specific task is finished. That means that all inputs are filled out.
+     * @param task - the task to check.
+     */
     function checkTask(task) {
         var div = $('#task' + task);
         var taskid = div.data('taskid');
@@ -725,6 +778,12 @@
         return true;
     }
 
+    /**
+     * This function loops through every task and copy the value from the input fields that the user sees into the hidden django form.
+     * The first thing the function does is to call the checkTest()-function. If this function returns false, the user will be
+     * redirected to the summary-tab, and the function will return 0 without submitting the test.
+     * @returns {number}
+     */
     function submitTask() {
         var flag = checkTest();
         if (!flag) {
@@ -763,38 +822,70 @@
 
     function addListener1(objName) {
         var strVal = window["ggbApplet1"].getValueString(objName);
-        $('#geolistener1').append((Date.now()-start)/1000 + " Add: " + strVal + '\n');
+        var timer = document.getElementById('tasktimer1').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener1').append(time + " Add: " + strVal + '\n');
     }
 
     function addListener2(objName) {
         var strVal = window["ggbApplet2"].getValueString(objName);
-        $('#geolistener2').append((Date.now()-start)/1000 + " Add: " + strVal + '\n');
+        var timer = document.getElementById('tasktimer2').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener2').append(time + " Add: " + strVal + '\n');
     }
 
     function addListener3(objName) {
         var strVal = window["ggbApplet3"].getValueString(objName);
-        $('#geolistener3').append((Date.now()-start)/1000 + " Add: " + strVal + '\n');
+        var timer = document.getElementById('tasktimer3').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener3').append(time + " Add: " + strVal + '\n');
     }
 
     function addListener4(objName) {
         var strVal = window["ggbApplet4"].getValueString(objName);
-        $('#geolistener4').append((Date.now()-start)/1000 + " Add: " + strVal + '\n');
+        var timer = document.getElementById('tasktimer4').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener4').append(time + " Add: " + strVal + '\n');
     }
 
     function removeListener1(objName) {
-        $('#geolistener1').append((Date.now()-start)/1000 + " Remove: " + objName + '\n');
+        $('#geolistener1').append((Date.now() - start) / 1000 + " Remove: " + objName + '\n');
     }
 
     function removeListener2(objName) {
-        $('#geolistener2').append((Date.now()-start)/1000 + " Remove: " + objName + '\n');
+        $('#geolistener2').append((Date.now() - start) / 1000 + " Remove: " + objName + '\n');
     }
 
     function removeListener3(objName) {
-        $('#geolistener3').append((Date.now()-start)/1000 + " Remove: " + objName + '\n');
+        $('#geolistener3').append((Date.now() - start) / 1000 + " Remove: " + objName + '\n');
     }
 
     function removeListener4(objName) {
-        $('#geolistener4').append((Date.now()-start)/1000 + " Remove: " + objName + '\n');
+        $('#geolistener4').append((Date.now() - start) / 1000 + " Remove: " + objName + '\n');
     }
 </script>
 </body>
