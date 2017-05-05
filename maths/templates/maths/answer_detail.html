@@ -1,5 +1,175 @@
 {% extends 'matistikk/base.html' %}
+{% load staticfiles %}
+{% load customtags %}
+{% block head %}
+    <script type="text/javascript" src="{% static 'maths/js/jquery.fullPage.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'maths/css/jquery.fullPage.css' %}"/>
+
+{% endblock %}
 
 {% block body %}
-    Besvarelse av {{ answer.test.task_collection.test_name }} av {{ answer.user.get_full_name }}
+    <div id="fullpage">
+        {% for answer in object_list %}
+            <div class="section" data-anchor="oppgave{{ forloop.counter }}">
+                {% get_geogebra answer as geogebra %}
+                {% if geogebra %}
+                    {% for geo in geogebra %}
+                        <div class="col-sm-6" id="geogebradiv" style="border: dotted 1px">
+                            {% for geogebra in geogebratask %}
+                                <input id="base64{{ forloop.parentloop.counter }}" type="text"
+                                       value="{{ geo.base64 }}">
+                            {% endfor %}
+                            <div id="applet_container{{ forloop.counter }}"></div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4>{{ answer.task.text | safe }}</h4>
+                                </div>
+                                <div class="panel-body">
+                                    {% if answer.task.answertype == 1 %}
+                                        <div id="textanswerdiv">
+                                            <label for="answer">Tekstsvar</label>
+                                            <textarea readonly class="form-control" id="answer{{ task.id }}" rows="6"
+                                                      style="resize:vertical">{{ answer.text }}</textarea>
+                                        </div>
+                                    {% elif answer.task.answertype == 2 %}
+                                        <div id="multiplechoicediv">
+                                            <label>Svaralternativer</label>
+                                            {% get_mutiplechoice answer.task as multipleChoice %}
+                                            {% for option in multipleChoice %}
+                                                <div id="optionsdiv{{ task.id }}">
+                                                    <input type="radio" name="multiplechoice{{ answer.task.id }}"
+                                                           value="{{ option.option }}">
+                                                    {{ option.option }}<br>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    {% if answer.task.reasoning %}
+                                        <div id="reasoningdiv">
+                                            <label for="reasoning{{ task.id }}">Begrunnelse</label>
+                                            <textarea readonly class="form-control" id="reasoning{{ task.id }}" rows="6"
+                                                      style="resize:vertical">{{ answer.reasoning }}</textarea>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-8">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4>{{ answer.task.text | safe }}</h4>
+                            </div>
+                            <div class="panel-body">
+                                {% if answer.task.answertype == 1 %}
+                                    <div id="textanswerdiv">
+                                        <label for="answer">Tekstsvar</label>
+                                        <textarea readonly class="form-control" id="answer{{ task.id }}" rows="6"
+                                                  style="resize:vertical">{{ answer.text }}</textarea>
+                                    </div>
+                                {% elif answer.task.answertype == 2 %}
+                                    <div id="multiplechoicediv">
+                                        <label>Svaralternativer</label>
+                                        {% get_mutiplechoice answer.task as multipleChoice %}
+                                        {% for option in multipleChoice %}
+                                            <div id="optionsdiv{{ task.id }}">
+                                                <input type="radio" name="multiplechoice{{ answer.task.id }}"
+                                                       value="{{ option.option }}"
+                                                       {% if option.option == answer.text %}checked{% endif %}>
+                                                {{ option.option }}<br>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                {% if answer.task.reasoning %}
+                                    <div id="reasoningdiv">
+                                        <label for="reasoning{{ task.id }}">Begrunnelse</label>
+                                        <textarea readonly class="form-control" id="reasoning{{ task.id }}" rows="6"
+                                                  style="resize:vertical">{{ answer.reasoning }}</textarea>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    <nav id="tasknav" class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="taskbar" style="text-align: center;">
+
+                <ul id="taskBtnList" class="nav navbar-nav" style="display: inline-block; float: none;">
+                    <button id="prevTaskBtn" class="btn btn-primary btn-lg" type="button" disabled="disabled"
+                            style="float: left"
+                            onclick="previousTask()"><i class="fa fa-arrow-left"
+                                                        aria-hidden="true"></i>
+                        Forrige oppgave
+                    </button>
+                    {% for task in object_list %}
+                        <li data-menuanchor="oppgave{{ forloop.counter }}">
+                            <a type="button" onclick="goToTask({{ forloop.counter }})"
+                               style="cursor: pointer">Oppgave {{ forloop.counter }} </a>
+                        </li>
+                    {% endfor %}
+                    <button id="nextTaskBtn" class="btn btn-primary btn-lg" type="button" onclick="nextTask()"><span
+                            id="nextTaskBtnText">Neste Oppgave</span> <i
+                            class="fa fa-arrow-right"
+                            aria-hidden="true"></i></button>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#fullpage').fullpage({
+                menu: '#taskBtnList',
+                lockAnchors: true,
+                scrollingSpeed: 1,
+                onLeave: function (index, nextIndex, direction) {
+                    var numTasks = $('.section').length;
+                    if (nextIndex == 1) {
+                        $('#nextTaskBtn').attr('disabled', false);
+                        $('#prevTaskBtn').attr('disabled', 'disabled');
+                    } else if (nextIndex == numTasks) {
+                        $('#prevTaskBtn').attr('disabled', false);
+                        $('#nextTaskBtn').attr('disabled', 'disabled');
+                    } else {
+                        $('#nextTaskBtn').attr('disabled', false);
+                        $('#prevTaskBtn').attr('disabled', false);
+                    }
+                }
+            });
+            $.fn.fullpage.setMouseWheelScrolling(false);
+            $.fn.fullpage.setAllowScrolling(false);
+        });
+        $(':radio,:checkbox').click(function () {
+            return false;
+        });
+
+
+        function nextTask() {
+            $('#fullpage').fullpage.moveSectionDown();
+        }
+
+        function previousTask() {
+            $('#fullpage').fullpage.moveSectionUp();
+        }
+
+        function goToTask(task) {
+            if (task == 0) {
+                var numItems = $('.section').length;
+                $('#fullpage').fullpage.moveTo(numItems);
+            } else {
+                var nextIndex = parseInt(task);
+                $('#fullpage').fullpage.moveTo(nextIndex);
+            }
+        }
+    </script>
 {% endblock %}

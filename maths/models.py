@@ -143,6 +143,9 @@ class Answer(models.Model):
     reasoning = models.CharField(max_length=32700, null=True)
     text = models.CharField(max_length=32700, null=True)
 
+    def get_geogebra(self):
+        return "test"
+
 
 class GeogebraAnswer(models.Model):
     """

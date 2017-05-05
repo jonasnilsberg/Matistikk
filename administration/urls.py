@@ -19,7 +19,7 @@ urlpatterns = [
         name='gradeUpdate'),
     url(r'skoler/(?P<school_pk>[0-9]+)/klasse/(?P<grade_pk>[0-9]+)/leggtilelev/$', views.PersonCreateView.as_view(),
         name='gradeAddStudent'),
-    url(r'skoler/(?P<school_pk>[0-9]+)/grade/(?P<grade_pk>[0-9]+)/leggtillærer/$', views.PersonCreateView.as_view(role=2),
+    url(r'skoler/(?P<school_pk>[0-9]+)/klasse/(?P<grade_pk>[0-9]+)/leggtillærer/$', views.PersonCreateView.as_view(role=2),
         name='gradeAddTeacher'),
     url(r'mineklasser/$', views.GradeListView.as_view(), name='gradeList'),
     url(r'grupper/$', views.GroupListView.as_view(), name="groupList"),

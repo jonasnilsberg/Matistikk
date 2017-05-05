@@ -17,7 +17,6 @@
     <link rel="shortcut icon" type="image/jpeg" href="http://bildr.no/view/WS9ITTNK">
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
     <script type="text/javascript" src="{% static 'maths/js/deployggb.js' %}"></script>
-    <script type="text/javascript" src="{% static 'maths/js/scrolloverflow.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'maths/js/jquery.fullPage.min.js' %}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
@@ -75,7 +74,7 @@
                             aria-hidden="true"></i></button>
                 </ul>
                 <ul id="endTestNav" class="nav navbar-nav navbar-right">
-                    <a class="btn btn-success btn-lg" type="button" onclick="submitTask()">Send Inn</a>
+                    <button id="sendBtn" class="btn btn-success btn-lg" type="button" onclick="submitTask()" {% if test.strictOrder %}disabled="disabled"{% endif %}>Send Inn</button>
                     <a class="btn btn-danger btn-lg pull-right" data-toggle='modal' data-target='#exitTestModal'>Avbryt
                         Test</a>
                 </ul>
@@ -505,6 +504,8 @@
                 } else {
                     if (nextIndex == tasksnr) {
                         $('#nextTaskBtnText').text('Oppsummering');
+                    } else if (nextIndex == summary){
+                        $('#sendBtn').attr('disabled', false);
                     }
                     var nextTask = index + 1;
                     if (direction == 'Up') {
@@ -787,7 +788,7 @@
     function submitTask() {
         var flag = checkTest();
         if (!flag) {
-            window.location.hash = '#summary';
+            goToTask(0);
             return 0;
         }
         for (var i = 0; i < taskcount; i++) {
