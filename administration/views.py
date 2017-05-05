@@ -1,6 +1,5 @@
 import datetime
 import re
-from django.core import serializers
 from braces import views
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -14,7 +13,7 @@ from django.views import View, generic
 from .forms import (ChangePasswordForm, FileUploadForm, PersonForm,
                     SchoolAdministratorForm, SchoolForm)
 from .models import Grade, Person, School, Gruppe
-from maths.models import Test
+from maths.models import Test, TaskCollection
 
 from django.db.models import Q
 
@@ -227,7 +226,8 @@ class MyPageDetailView(views.UserPassesTestMixin, views.AjaxResponseMixin, gener
             context['groups'] = Gruppe.objects.filter(is_active=1, visible=True,
                                                       persons__username=self.request.user.username)
         elif self.request.user.role == 4:
-            context['groups'] = Gruppe.objects.filter(is_active=1, visible=True, creator=self.request.user)
+            context['groups'] = Gruppe.objects.filter(is_active=1, creator=self.request.user)
+            context['tests'] = TaskCollection.objects.filter(author=self.request.user)
         return context
 
 
@@ -706,7 +706,7 @@ class SchoolCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Crea
     Class to create a School object
 
     :func:`AdministratorCheck`:
-        inherited permission check
+        inherited permission check, checks if the logged in user is an administrator.
     **AjaxResponseMixin**
         This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **CreateView:**

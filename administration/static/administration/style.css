@@ -368,3 +368,7 @@ html, body {
         transform: scale3D(0, 0, 1);
     }
 }
+
+.box:hover {
+    background: darkgray; /* make this whatever you want */
+}
