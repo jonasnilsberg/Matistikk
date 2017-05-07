@@ -5,6 +5,17 @@
     <script type="text/javascript" src="{% static 'maths/js/jquery.fullPage.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'maths/css/jquery.fullPage.css' %}"/>
 
+    <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+    <script>
+        var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
+        tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
+
+        kantrykke = false;
+
+    </script>
+
 {% endblock %}
 
 {% block body %}
@@ -23,14 +34,17 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4>{{ answer.task.text | safe }}</h4>
+                                <div class="panel-heading" id="tasktextdiv{{ forloop.parentloop.counter }}">
+                                    <textarea id="tasktext{{ forloop.parentloop.counter }}">
+                                        <h4>{{ answer.task.text | safe }}</h4>
+                                    </textarea>
                                 </div>
                                 <div class="panel-body">
                                     {% if answer.task.answertype == 1 %}
-                                        <div id="textanswerdiv">
+                                        <div id="textanswerdiv{{ forloop.counter }}">
                                             <label for="answer">Tekstsvar</label>
-                                            <textarea readonly class="form-control" id="answer{{ task.id }}" rows="6"
+                                            <textarea readonly class="form-control" id="answer{{ forloop.parentloop.counter }}"
+                                                      rows="6"
                                                       style="resize:vertical">{{ answer.text }}</textarea>
                                         </div>
                                     {% elif answer.task.answertype == 2 %}
@@ -48,9 +62,10 @@
                                         </div>
                                     {% endif %}
                                     {% if answer.task.reasoning %}
-                                        <div id="reasoningdiv">
+                                        <div id="reasoningdiv{{ forloop.counter }}">
                                             <label for="reasoning{{ task.id }}">Begrunnelse</label>
-                                            <textarea readonly class="form-control" id="reasoning{{ task.id }}" rows="6"
+                                            <textarea readonly class="form-control" id="reasoning{{ forloop.parentloop.counter }}"
+                                                      rows="6"
                                                       style="resize:vertical">{{ answer.reasoning }}</textarea>
                                         </div>
                                     {% endif %}
@@ -62,14 +77,17 @@
                     <div class="col-sm-2"></div>
                     <div class="col-sm-8">
                         <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4>{{ answer.task.text | safe }}</h4>
-                            </div>
+                            <div class="panel-heading" id="tasktextdiv">
+                                    <textarea id="tasktext{{ forloop.counter }}">
+                                        <h4>{{ answer.task.text | safe }}</h4>
+                                    </textarea>
+                                </div>
                             <div class="panel-body">
                                 {% if answer.task.answertype == 1 %}
-                                    <div id="textanswerdiv">
+                                    <div id="textanswerdiv{{ forloop.counter }}">
                                         <label for="answer">Tekstsvar</label>
-                                        <textarea readonly class="form-control" id="answer{{ task.id }}" rows="6"
+                                        <textarea readonly class="form-control" id="answer{{ forloop.counter }}"
+                                                  rows="6"
                                                   style="resize:vertical">{{ answer.text }}</textarea>
                                     </div>
                                 {% elif answer.task.answertype == 2 %}
@@ -88,9 +106,10 @@
                                     </div>
                                 {% endif %}
                                 {% if answer.task.reasoning %}
-                                    <div id="reasoningdiv">
+                                    <div id="reasoningdiv{{ forloop.counter }}">
                                         <label for="reasoning{{ task.id }}">Begrunnelse</label>
-                                        <textarea readonly class="form-control" id="reasoning{{ task.id }}" rows="6"
+                                        <textarea readonly class="form-control" id="reasoning{{ forloop.counter }}"
+                                                  rows="6"
                                                   style="resize:vertical">{{ answer.reasoning }}</textarea>
                                     </div>
                                 {% endif %}
@@ -129,6 +148,40 @@
 
 
     <script>
+        var taskcount = $('.section').length;
+        for (var i = 0; i < taskcount; i++) {
+            tinymce.init({
+                selector: '#tasktext' + (i+1),
+                plugins: 'placeholder',
+                content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+                toolbar: false,
+                menubar: false,
+                statusbar: false,
+                readonly: 1
+            });
+            if ($('#answer'+(i+1)).length) {
+                tinymce.init({
+                selector: '#answer' + (i+1),
+                plugins: 'placeholder',
+                content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+                toolbar: false,
+                menubar: false,
+                statusbar: false,
+                readonly: 1
+            });
+            }
+            if ($('#reasoning'+(i+1)).length) {
+                tinymce.init({
+                selector: '#reasoning' + (i+1),
+                plugins: 'placeholder',
+                content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+                toolbar: false,
+                menubar: false,
+                statusbar: false,
+                readonly: 1
+            });
+            }
+        }
         $(document).ready(function () {
             $('#fullpage').fullpage({
                 menu: '#taskBtnList',
