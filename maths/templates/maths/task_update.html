@@ -178,10 +178,12 @@
                                     class="glyphicon glyphicon-check"
                                     aria-hidden="true"></span> Lagre som ny oppgave
                             </button>
+                            {% if not task.answer_set.all %}
                             <button type="button" class="btn btn-warning" onclick="updateTask()"><span
                                     class="glyphicon glyphicon-refresh"
                                     aria-hidden="true"></span> Oppdater eksisterende
                             </button>
+                            {% endif %}
                         </div> <!-- #btn-group -->
                     </div> <!-- #inner panel-footer -->
                 </div> <!-- #inner panel -->

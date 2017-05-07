@@ -1,5 +1,25 @@
 **Views**
 ===========
+*Permissions*
+------------
+*AnswerCheck*
+++++++++++++
+.. automodule:: maths.views
+    :members: AnswerCheck
+    :show-inheritance:
+
+*AdministratorCheck*
+++++++++++++++++++
+.. automodule:: administration.views
+    :members: AdministratorCheck
+    :show-inheritance:
+
+*RoleCheck*
+++++++++++
+.. automodule:: administration.views
+    :members: RoleCheck
+    :show-inheritance:
+
 *IndexView*
 ----------
 .. automodule:: maths.views
@@ -26,6 +46,26 @@
     :members: TaskUpdateView
     :show-inheritance:
 
+*TaskCollection*
+-----------------
+*TaskCollectionListView*
++++++++++++++++++++++
+.. automodule:: maths.views
+    :members: TaskCollectionListView
+    :show-inheritance:
+
+*TaskCollectionDetailView*
++++++++++++++++++++++
+.. automodule:: maths.views
+    :members: TaskCollectionDetailView
+    :show-inheritance:
+
+*TaskCollectionCreateView*
++++++++++++++++++++++
+.. automodule:: maths.views
+    :members: TaskCollectionCreateView
+    :show-inheritance:
+
 *Test*
 -------------
 *TestListView*
@@ -44,6 +84,20 @@
 ++++++++++++++
 .. automodule:: maths.views
     :members: TestCreateView
+    :show-inheritance:
+
+*Answer*
+-------
+*AnswerListView*
+++++++++++++++
+.. automodule:: maths.views
+    :members: AnswerListView
+    :show-inheritance:
+
+*AnswerCreateView*
+++++++++++++++
+.. automodule:: maths.views
+    :members: AnswerCreateView
     :show-inheritance:
 
 *Category*
@@ -65,4 +119,12 @@
 .. automodule:: maths.views
     :members: CategoryUpdateView
     :show-inheritance:
+
+*Export_data*
+------------
+.. automodule:: maths.views
+    :members: export_data
+    :show-inheritance:
+
+
 

@@ -5,15 +5,49 @@ from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAns
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, \
     GeogebraAnswer
 from braces import views
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from administration.models import Grade, Person, Gruppe, School
 import json
-import datetime
 from django.db.models import Q
 import django_excel as excel
+from administration.views import AdministratorCheck, RoleCheck
+import datetime
 
 import random
 from django.http import HttpResponseRedirect
+
+
+class AnswerCheck(views.UserPassesTestMixin):
+    """
+    Checks if the logged in user has privileges to see the answer.
+
+     **UserPassesTestMixin:**
+        Mixin from :ref:`Django braces` that check is the logged in user passes the test given in :func:`test_func`.
+    """
+
+    def test_func(self, user):
+        """
+            :param user: Person that has to pass the test.
+            :return: True if the user logged in as an administrator.
+        """
+        if user.is_authenticated():
+            role = [2, 3, 4]
+            if user.role in role:
+                return True
+            elif user.role == 1:
+                if self.kwargs.get('slug'):
+                    answer_user = self.kwargs.get('slug')
+                    if answer_user == user.username:
+                        return True
+                else:
+                    test_id = self.kwargs.get('test_pk')
+                    if Person.objects.filter(id=user.id, tests__id=test_id).exists():
+                        return True
+                    elif Grade.objects.filter(person=user, tests__id=test_id).exists():
+                        return True
+                    elif Gruppe.objects.filter(persons=user, tests__id=test_id).exists():
+                        return True
+        return False
 
 
 class IndexView(LoginRequiredMixin, generic.TemplateView):
@@ -54,7 +88,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
 class EquationEditorView(LoginRequiredMixin, generic.TemplateView):
     """
-    Allows users to input math into the editor
+    Allows users to input math into the editor.
 
     **LoginRequiredMixin**
         Mixin from :ref:`Django braces` that check if the user is logged in.
@@ -65,10 +99,12 @@ class EquationEditorView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'maths/equation_editor.html'
 
 
-class CreateTaskView(generic.CreateView):
+class TaskCreateView(AdministratorCheck, generic.CreateView):
     """
     Class that creates a task.
-
+    
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **CreateView:**
         Inherits Django's CreateView that displays a form for creating a object and
         saving the form when validated.
@@ -83,10 +119,10 @@ class CreateTaskView(generic.CreateView):
             Function that adds all category objects and a form to create a new category to the context without
             overriding it.
 
-            :param kwargs: Keyword arguments
-            :return: Returns the updated context
+            :param kwargs: Keyword arguments.
+            :return: Returns the updated context.
         """
-        context = super(CreateTaskView, self).get_context_data(**kwargs)
+        context = super(TaskCreateView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         context['categoryForm'] = CreateCategoryForm()
         return context
@@ -121,13 +157,15 @@ class CreateTaskView(generic.CreateView):
             preview = self.request.POST['preview']
             geogebratask = GeogebraTask(base64=base64, preview=preview, task=task)
             geogebratask.save()
-        return super(CreateTaskView, self).form_valid(form)
+        return super(TaskCreateView, self).form_valid(form)
 
 
-class CategoryListView(generic.ListView):
+class CategoryListView(AdministratorCheck, generic.ListView):
     """
     Class that displays a template containing all category objects.
-
+    
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **ListView:**
         Inherits Django's ListView that makes a page representing a list of objects.
     """
@@ -135,10 +173,12 @@ class CategoryListView(generic.ListView):
     template_name = 'maths/category_list.html'
 
 
-class CategoryCreateView(views.AjaxResponseMixin, generic.CreateView):
+class CategoryCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.CreateView):
     """
     Class that creates a category.
 
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **AjaxResponseMixin:**
         This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **CreateView:**
@@ -169,10 +209,12 @@ class CategoryCreateView(views.AjaxResponseMixin, generic.CreateView):
         return JsonResponse(data)
 
 
-class CategoryUpdateView(generic.UpdateView):
+class CategoryUpdateView(AdministratorCheck, generic.UpdateView):
     """
     Class that updates a category.
 
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **UpdateView:**
         Inherits Django's UpdateView that displays a form for updating a specific object and
         saving the form when validated.
@@ -184,10 +226,12 @@ class CategoryUpdateView(generic.UpdateView):
     pk_url_kwarg = 'category_pk'
 
 
-class TaskListView(views.AjaxResponseMixin, generic.ListView):
+class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
     """
     Class that displays a template containing all task objects.
-
+    
+     :func:`RoleCheck`:
+        Permission check, only allows teachers, administrators and school administrators.
     **AjaxResponseMixin:**
         This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **ListView:**
@@ -243,10 +287,12 @@ class TaskListView(views.AjaxResponseMixin, generic.ListView):
         return context
 
 
-class TaskUpdateView(generic.UpdateView):
+class TaskUpdateView(AdministratorCheck, generic.UpdateView):
     """
     Class that updates a task.
 
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **UpdateView:**
         Inherits Django's UpdateView that displays a form for updating a specific object and
         saving the form when validated.
@@ -327,10 +373,12 @@ class TaskUpdateView(generic.UpdateView):
         return super(TaskUpdateView, self).form_valid(form)
 
 
-class TaskCollectionCreateView(generic.CreateView):
+class TaskCollectionCreateView(AdministratorCheck, generic.CreateView):
     """
-    Class that creates a test.
+    Class that creates a taskCollection.
 
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **CreateView:**
         Inherits Django's CreateView that displays a form for creating a object and
         saving the form when validated.
@@ -341,7 +389,7 @@ class TaskCollectionCreateView(generic.CreateView):
 
     def get_context_data(self, **kwargs):
         """
-            Function that adds the tasks and categories to the context.
+            Function that adds all the task and category objects to the context.
 
             :param kwargs: Keyword arguments
             :return: Returns the updated context
@@ -365,10 +413,12 @@ class TaskCollectionCreateView(generic.CreateView):
         return super(TaskCollectionCreateView, self).form_valid(form)
 
 
-class TaskCollectionListView(generic.ListView):
+class TaskCollectionListView(AdministratorCheck, generic.ListView):
     """
-       Class that displays a template containing all test objects.
+       Class that displays a template containing all taskCollection objects.
 
+        :func:`AdministratorCheck`:
+            inherited permission check, checks if the logged in user is an administrator.
        **ListView:**
            Inherits Django's ListView that makes a page representing a list of objects.
     """
@@ -376,10 +426,14 @@ class TaskCollectionListView(generic.ListView):
     model = TaskCollection
 
 
-class TaskCollectionDetailView(views.AjaxResponseMixin, generic.DetailView):
+class TaskCollectionDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.DetailView):
     """
-    Class that displays information about a single test object based on the test_id
-
+    Class that displays information about a single taskCollection object based on the taskCollection_id.
+    
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
+    **AjaxResponseMixin:**
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **DetailView:**
         Inherits generic.DetailView that makes a page representing a specific object.
     """
@@ -388,6 +442,15 @@ class TaskCollectionDetailView(views.AjaxResponseMixin, generic.DetailView):
     pk_url_kwarg = 'taskCollection_pk'
 
     def get_ajax(self, request, *args, **kwargs):
+        """
+            Function that checks if the get request is an ajax request and returns the all the students, teachers, 
+            grades and groups associated with a test.
+
+            :param request: Request that was sent to TaskCollectionDetailView.
+            :param args:  Arguments that were sent with the request.
+            :param kwargs: Keyword-arguments.
+            :return: JsonResponse containing the students, teachers, grades and groups. 
+        """
         students = []
         teachers = []
         grades = []
@@ -434,7 +497,7 @@ class TaskCollectionDetailView(views.AjaxResponseMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         """
-            Function that adds all the categories to the context.
+            Function that adds all the categories and published test from the specified taskCollection to the context.
 
             :param kwargs: Keyword arguments
             :return: Returns the updated context
@@ -445,22 +508,44 @@ class TaskCollectionDetailView(views.AjaxResponseMixin, generic.DetailView):
         return context
 
 
-class TestCreateView(views.AjaxResponseMixin, generic.CreateView):
+class TestCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.CreateView):
+    """
+    Class that creates a test.
+
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
+    **AjaxResponseMixin:**
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
+    **CreateView:**
+        Inherits Django's CreateView that displays a form for creating a object and
+        saving the form when validated.
+    """
     form_class = CreateTestForm
     template_name = 'maths/test_form.html'
 
     def get_success_url(self):
+        """
+        Function that sets the success url.
+        :return: Success url
+        """
         success = reverse_lazy('maths:taskCollectionDetail',
                                kwargs={'taskCollection_pk': self.kwargs.get('taskCollection_pk')})
         return success
 
     def post_ajax(self, request, *args, **kwargs):
+        """
+            Function that checks if the post request is an ajax request, and updates the dueDate for the specified test.
+
+            :param request: Request that was sent to TestCreateView.
+            :param args:  Arguments that were sent with the request.
+            :param kwargs: Keyword-arguments.
+            :return: JsonResponse containing the new dueDate.
+        """
         test_id = request.POST['id']
         test = Test.objects.get(id=test_id)
         new_due = request.POST['dueDate']
         test.dueDate = new_due
         test.save()
-        print(test.dueDate)
         data = {
             'dueDate': new_due
         }
@@ -475,6 +560,13 @@ class TestCreateView(views.AjaxResponseMixin, generic.CreateView):
         return {'task_collection': self.kwargs.get('taskCollection_pk')}
 
     def get_context_data(self, **kwargs):
+        """
+            Function that adds all the students, teachers, grades, groups and schools to the context without 
+            overriding it.
+
+            :param kwargs: Keyword arguments
+            :return: Returns the updated context
+        """
         context = super(TestCreateView, self).get_context_data(**kwargs)
         context['taskcollection'] = TaskCollection.objects.get(id=self.kwargs.get('taskCollection_pk'))
         context['grades'] = Grade.objects.all()
@@ -485,6 +577,14 @@ class TestCreateView(views.AjaxResponseMixin, generic.CreateView):
         return context
 
     def form_valid(self, form):
+        """
+            Function that checks if the submitted :ref:`CreateTestForm` is correct. If correct it adds the test to the 
+            to the selected students, teachers, grades, groups and schools. Checks if randomOrder was selected and 
+            and creates the TaskOrder if that's the case. 
+            
+            :param form: References to the filled out form.
+            :return: calls super with the new form.
+        """
         test = form.save(commit=False)
         test.save()
         data = form.cleaned_data
@@ -506,12 +606,29 @@ class TestCreateView(views.AjaxResponseMixin, generic.CreateView):
         return super(TestCreateView, self).form_valid(form)
 
 
-class TestDetailView(views.AjaxResponseMixin, generic.DetailView):
+class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
+    """
+    Class that displays information about a single test object based on the test_id.
+    
+     :func:`RoleCheck`:
+        Permission check, only allows teachers, administrators and school administrators.
+    **AjaxResponseMixin:**
+        This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
+    **DetailView:**
+        Inherits generic.DetailView that makes a page representing a specific object.
+    """
     model = Test
     template_name = 'maths/test_detail.html'
     pk_url_kwarg = 'test_pk'
 
     def get_context_data(self, **kwargs):
+        """
+            Function that adds more to the context depending on the logged in user or the previous destination without 
+            overriding it. 
+
+            :param kwargs: Keyword arguments
+            :return: Returns the updated context
+        """
         context = super(TestDetailView, self).get_context_data(**kwargs)
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
         if self.kwargs.get('grade_pk'):
@@ -537,14 +654,33 @@ class TestDetailView(views.AjaxResponseMixin, generic.DetailView):
         return context
 
 
-class AnswerCreateView(generic.FormView):
+class AnswerCreateView(AnswerCheck, generic.FormView):
+    """
+   Class for creating answers for all the tasks in a test.
+
+    :func:`AnswerCheck`:
+        inherited permission check, checks if the logged in user can answer the test.
+    **FormView**
+       A view that displays a form.
+    """
     form_class = CreateAnswerForm
     template_name = 'maths/answer_form.html'
 
     def get_success_url(self):
+        """
+            Function that returns the success url.
+            :return: success url.
+        """
         return reverse_lazy('maths:index')
 
     def get_context_data(self, **kwargs):
+        """
+            Function that adds all information needed about a specific test and adds a form for each task in the test
+            without overriding it. 
+
+            :param kwargs: Keyword arguments
+            :return: Updated context
+        """
         context = super(AnswerCreateView, self).get_context_data(**kwargs)
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
         geogebratasks = GeogebraTask.objects.filter(task__in=test.task_collection.tasks.all())
@@ -563,6 +699,14 @@ class AnswerCreateView(generic.FormView):
         return context
 
     def post(self, request, *args, **kwargs):
+        """
+            Handles the HTTP POST methods and creates an answer for each task in the test.
+    
+            :param request: Request that was sent to AnswerCreateView.
+            :param args:  Arguments that were sent with the request.
+            :param kwargs: Keyword-arguments.
+            :return: HttpResponseRedirect to the index page.
+        """
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
         y = 0
         for task in test.task_collection.tasks.all():
@@ -571,6 +715,7 @@ class AnswerCreateView(generic.FormView):
             taskid = request.POST["task" + str(y) + "-task"]
             task = Task.objects.get(id=taskid)
             answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, task=task)
+            answer.date_answered = datetime.datetime.now()
             answer.save()
             base64 = request.POST["task" + str(y) + "-base64answer"]
             if task.extra:
@@ -581,11 +726,30 @@ class AnswerCreateView(generic.FormView):
         return HttpResponseRedirect(url)
 
 
-class TestListView(views.AjaxResponseMixin, generic.ListView):
+class TestListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
+    """
+       Class that displays a template a list of test objects.
+       
+        :func:`RoleCheck`:
+            Permission check, only allows teachers, administrators and school administrators.
+       **AjaxResponseMixin:**
+            This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
+       **ListView:**
+            Inherits Django's ListView that makes a page representing a list of objects.
+    """
     model = Test
     template_name = 'maths/test_list.html'
 
     def get_ajax(self, request, *args, **kwargs):
+        """
+            Function that checks if the get request is an ajax request and checks if the students, groups and / or grades
+            are associated with the test.
+
+            :param request: Request that was sent to TestListView.
+            :param args:  Arguments that were sent with the request.
+            :param kwargs: Keyword-arguments.
+            :return: JsonResponse containing the a boolean table for students, teachers, grades and / or groups . 
+        """
         test = Test.objects.get(id=request.GET['test'])
         grade_table = []
         group_table = []
@@ -620,6 +784,15 @@ class TestListView(views.AjaxResponseMixin, generic.ListView):
         return JsonResponse(data)
 
     def post_ajax(self, request, *args, **kwargs):
+        """
+            Function that checks if the post request is an ajax request, adds the test to the selected students, grades
+            and / or groups.
+
+            :param request: Request that was sent to TestListView.
+            :param args:  Arguments that were sent with the request.
+            :param kwargs: Keyword-arguments.
+            :return: JsonResponse containing a boolean that says true.
+        """
         test = Test.objects.get(id=request.POST['test'])
         grades = request.POST['grades']
         groups = request.POST['groups']
@@ -636,10 +809,17 @@ class TestListView(views.AjaxResponseMixin, generic.ListView):
         for student_id in student_list:
             student = Person.objects.get(id=student_id)
             student.tests.add(test)
-        data = {'test': 'test'}
+        data = {'success': True}
         return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
+        """
+            Function that overrides the created object_list to only containing the users tests and adds all the 
+            users grades to the context. 
+
+            :param kwargs: Keyword arguments
+            :return: Updated context
+        """
         context = super(TestListView, self).get_context_data(**kwargs)
         user = Person.objects.get(username=self.kwargs.get('slug'))
         context['object_list'] = Test.objects.filter(person=user)
@@ -647,14 +827,42 @@ class TestListView(views.AjaxResponseMixin, generic.ListView):
         return context
 
 
-class AnswerDetailView(generic.DetailView):
-    model = Answer
+class AnswerListView(AnswerCheck, generic.ListView):
+    """
+    Class that displays a list of answers for all the tasks in a specific test for a specific user.
+
+    :func:`AnswerCheck`:
+        inherited permission check, checks if the logged in user can answer the test.
+    **ListView:**
+        Inherits Django's ListView that makes a page representing a list of objects.
+    """
     template_name = 'maths/answer_detail.html'
-    pk_url_kwarg = 'answer_pk'
+
+    def get_queryset(self):
+        """
+            Function that sets the query for getting the object_list. 
+            
+            :return: List of answer objects.
+        """
+        test = Test.objects.get(id=self.kwargs.get('test_pk'))
+        person = Person.objects.get(username=self.kwargs.get('slug'))
+        return Answer.objects.filter(test=test, user=person)
 
 
 def export_data(request, test_pk):
-    test = Test.objects.get(id=test_pk)
-    answers = Answer.objects.filter(test=test).order_by('task')
-    column_names = ['user_id', 'task_id', 'text', 'reasoning']
-    return excel.make_response_from_query_sets(answers, column_names, 'xls', file_name=test.task_collection.test_name)
+    """
+        Function that exports all answers for all tasks and users in a specific test.
+        
+        :param request: Request that was sent to export_data 
+        :param test_pk: The id for the specific test.
+        :return: Excel-file
+    """
+    if request.user.role is not 1:
+        test = Test.objects.get(id=test_pk)
+        answers = Answer.objects.filter(test=test)
+        column_names = ['task_id', 'user_id', 'text', 'reasoning']
+        return excel.make_response_from_query_sets(answers, column_names, 'xlsx',
+                                                   file_name=test.task_collection.test_name)
+    else:
+        array = ['Skal ikke være så lett, din lille luring']
+        return excel.make_response_from_array(array, 'xlsx', file_name='Alle svar')

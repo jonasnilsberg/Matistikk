@@ -1,6 +1,5 @@
 import datetime
 import re
-from django.core import serializers
 from braces import views
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -14,7 +13,7 @@ from django.views import View, generic
 from .forms import (ChangePasswordForm, FileUploadForm, PersonForm,
                     SchoolAdministratorForm, SchoolForm)
 from .models import Grade, Person, School, Gruppe
-from maths.models import Test
+from maths.models import Test, TaskCollection
 
 from django.db.models import Q
 
@@ -227,7 +226,8 @@ class MyPageDetailView(views.UserPassesTestMixin, views.AjaxResponseMixin, gener
             context['groups'] = Gruppe.objects.filter(is_active=1, visible=True,
                                                       persons__username=self.request.user.username)
         elif self.request.user.role == 4:
-            context['groups'] = Gruppe.objects.filter(is_active=1, visible=True, creator=self.request.user)
+            context['groups'] = Gruppe.objects.filter(is_active=1, creator=self.request.user)
+            context['tests'] = TaskCollection.objects.filter(author=self.request.user)
         return context
 
 
@@ -603,6 +603,14 @@ class PersonUpdateView(SchoolCheck, views.AjaxResponseMixin, generic.UpdateView)
             schools = School.objects.filter(school_administrator=self.request.user.id)
             context['schools'] = schools
             context['gradesInfo'] = Grade.objects.filter(school_id__in=schools)
+        elif self.request.user.role == 2:
+            grades = self.request.user.grades.all()
+            school_ids = []
+            for grade in grades:
+                school_ids.append(grade.school_id)
+            schools = School.objects.filter(id__in=school_ids).distinct()
+            context['schools'] = schools
+            context['gradesInfo'] = grades
         else:
             context['schools'] = School.objects.all()
             context['gradesInfo'] = Grade.objects.all()
@@ -698,7 +706,7 @@ class SchoolCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Crea
     Class to create a School object
 
     :func:`AdministratorCheck`:
-        inherited permission check
+        inherited permission check, checks if the logged in user is an administrator.
     **AjaxResponseMixin**
         This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **CreateView:**
@@ -842,6 +850,9 @@ class GradeDisplay(views.AjaxResponseMixin, generic.DetailView):
 class FileUploadView(generic.FormView):
     """
     Class that handles uploading excel files using :ref:`Django-excel` and creates Person objects from them.
+    
+     **FormView**
+        A view that displays a form.
     """
 
     template_name = 'administration/grade_detail.html'
@@ -855,7 +866,7 @@ class FileUploadView(generic.FormView):
         :param request: Request that was sent to PersonUpdateView
         :param args:  Arguments that were sent with the request
         :param kwargs: Keyword-arguments
-        :return:
+        :return: 
         """
         persons = []
         order = ['fornavn', 'etternavn', 'epost', 'fødselsdag', 'kjønn']

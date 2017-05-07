@@ -56,6 +56,7 @@
                                 <th>Fornavn</th>
                                 <th>Etternavn</th>
                                 <th>Brukernavn</th>
+                                <th>Levert</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -65,9 +66,11 @@
                                     <td>{{ student.first_name }}</td>
                                     <td>{{ student.last_name }}</td>
                                     <td>{{ student.username }}</td>
+                                    <td>{% answered student test as answer %}{% if answer %}
+                                        {{ answer.date_answered }}{% else %}-{% endif %}
+                                    </td>
                                     <td>
                                         <button type="button" disabled='disabled' id="{{ student.username }}"
-                                                value="{% answered2 student test %}"
                                                 class='btn btn-default button goToAnswer'>
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
                                             Besvarelse
@@ -126,12 +129,20 @@
                                     <div id="grade{{ grade.id }}" class="sublinks collapse">
                                         {% for student in grade.person_set.all %}
                                             {% if student.role == 1 %}
-                                                <a class="list-group-item small"
-                                                   data-answer="{% answered2 student test %}"
+                                                {% answered student test as answer %}
+                                                <a class="list-group-item small" data-username="{{ student.username }}"
+                                                   {% if answer %}data-answer="{{ answer.id }}"
+                                                   {% else %}data-answer=""{% endif %}
                                                    style="padding-left: 50px; cursor: pointer;"><span
                                                         class="glyphicon glyphicon-user"></span>
                                                     {{ student }}
+                                                    {% if answer %}
+                                                        <p class="pull-right">Besvart: {{ answer.date_answered }}</p>
+                                                    {% else %}
+                                                        <p class="pull-right">Ikke besvart</p>
+                                                    {% endif %}
                                                 </a>
+
                                             {% endif %}
                                         {% endfor %}
                                     </div>
@@ -154,12 +165,19 @@
                                         <i class="fa fa-users pull-right" aria-hidden="true"></i></a>
                                     <div id="group{{ group.id }}" class="sublinks collapse">
                                         {% for student in group.persons.all %}
-                                            {% if  student.role == 1 %}
-                                                <a class="list-group-item small"
-                                                   data-answer="{% answered2 student test %}"
+                                            {% if student.role == 1 %}
+                                                {% answered student test as answer %}
+                                                <a class="list-group-item small" data-username="{{ student.username }}"
+                                                   {% if answer %}data-answer="{{ answer.id }}"
+                                                   {% else %}data-answer=""{% endif %}
                                                    style="padding-left: 50px; cursor: pointer;"><span
                                                         class="glyphicon glyphicon-user"></span>
                                                     {{ student }}
+                                                    {% if answer %}
+                                                        <p class="pull-right">Besvart: {{ answer.date_answered }}</p>
+                                                    {% else %}
+                                                        <p class="pull-right">Ikke besvart</p>
+                                                    {% endif %}
                                                 </a>
                                             {% endif %}
                                         {% endfor %}
@@ -301,7 +319,8 @@
             var students = $('#studenttable tr').not(':first');
             students.each(function () {
                 var button = $(this).find(':button');
-                if (button.val() != "") {
+                var answered = $(this).find('td').eq(3);
+                if (answered.text().trim() != "-") {
                     $(this).addClass('success');
                     button.removeAttr('disabled');
                 }
@@ -337,9 +356,9 @@
         });
 
         $('.goToAnswer').click(function () {
-            var answerID = $(this).val();
+            var username = this.id;
             var testID = "{{ test.id }}";
-            var url = "{% url 'maths:answerDetail' test_pk=1234 answer_pk=5678 %}".replace(/1234/, testID).replace(/5678/, answerID);
+            var url = "{% url 'maths:answerDetail' test_pk=1234 slug=5678 %}".replace(/1234/, testID).replace(/5678/, username);
             document.location.href = url;
         });
 
@@ -358,7 +377,7 @@
             var fullName = name.split("-");
             $this.addClass('active');
             if ($this.hasClass('list-group-item-success')) {
-                var answerID = $(this).data('answer');
+                var username = $(this).data('username');
                 bootbox.confirm({
                     size: "medium",
                     title: "Besvarelse - {{ test.task_collection.test_name }}",
@@ -378,7 +397,7 @@
                             $this.removeClass('active');
                         } else {
                             var testID = "{{ test.id }}";
-                            var url = "{% url 'maths:answerDetail' test_pk=1234 answer_pk=5678 %}".replace(/1234/, testID).replace(/5678/, answerID);
+                            var url = "{% url 'maths:answerDetail' test_pk=1234 slug=5678 %}".replace(/1234/, testID).replace(/5678/, username);
                             document.location.href = url;
                         }
                     }
@@ -399,7 +418,6 @@
         }
 
         function download() {
-            alert('download');
             var testID = "{{ test.id }}";
             var exportURL = "{% url 'maths:answerExport' test_pk=1234 %}".replace(/1234/, testID);
             document.location.href = exportURL;

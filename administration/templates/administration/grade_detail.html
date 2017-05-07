@@ -147,8 +147,7 @@
                         </thead>
                         <tbody>
                         {% for group in groups %}
-                            <tr
-                                    style="cursor: pointer">
+                            <tr>
                                 <td>{{ group.group_name }}</td>
                                 <td>{{ group.creator.get_full_name }}</td>
                                 {% if request.user.role == 4 %}
@@ -183,7 +182,7 @@
                         </thead>
                         <tbody>
                         {% for test in grade.tests.all %}
-                            <tr data-href="{% url 'maths:testGradeDetail' test.id grade.id%}"
+                            <tr data-href="{% url 'maths:testGradeDetail' test.id grade.id %}"
                                 style="cursor: pointer">
                                 <td>{{ test.id }}</td>
                                 <td>{{ test.task_collection.test_name }}</td>
@@ -210,11 +209,13 @@
         {% endif %}
         <div class="btn-group dropup">
             <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false" id="addStudentDropdown"><span class="glyphicon glyphicon-plus"
-                                                                     aria-hidden="true"></span>
+                    aria-haspopup="true" aria-expanded="false" id="addStudentDropdown"><span
+                    class="glyphicon glyphicon-plus"
+                    aria-hidden="true"></span>
                 Legg til elev <span class="caret"></span></button>
             <ul class="dropdown-menu">
-                <li><a href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}" id="addNewStudentBtn">Opprett ny
+                <li><a href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}" id="addNewStudentBtn">Opprett
+                    ny
                     elev</a></li>
                 <li><a data-toggle='modal' href='#AddStudentModal'>Legg til eksisterende elev</a></li>
                 <li><a data-toggle='modal' href='#masseregModal'>Masseregistrering av elever</a></li>
@@ -223,11 +224,13 @@
         {% if request.user.role == 4 or request.user.role == 3 %}
             <div class="btn-group dropup">
                 <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false" id="addTeacherDropdown"><span class="glyphicon glyphicon-plus"
-                                                                         aria-hidden="true"></span>
+                        aria-haspopup="true" aria-expanded="false" id="addTeacherDropdown"><span
+                        class="glyphicon glyphicon-plus"
+                        aria-hidden="true"></span>
                     Legg til lærer <span class="caret"></span></button>
                 <ul class="dropdown-menu">
-                    <li><a href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}" id="addNewTeacherBtn">Opprett ny
+                    <li><a href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"
+                           id="addNewTeacherBtn">Opprett ny
                         lærer</a></li>
                     <li><a data-toggle='modal' href='#AddTeacherModal'>Legg til eksisterende lærer</a></li>
                 </ul>
@@ -237,8 +240,6 @@
                href="{% url 'administration:gradeGroupCreate' grade.school_id grade.id %}"><span
                     class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til gruppe</a>
         {% endif %}
-        <a type="button" class="btn btn-primary" data-toggle='modal' href='#publishTestModal'>
-            <span class="fa fa-book" aria-hidden="true"></span> Publiser test</a>
     </div>
     </div>
 
@@ -914,56 +915,6 @@
                     {% buttons %}
                         <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                     {% endbuttons %}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="publishTestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" style="width: 95%">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <div class="modal-title">
-                        <h3 class="text-center" style="margin-top: 5px;">Publiser test</h3>
-                        <h5 class="text-center" id="headingText">Velg test.</h5>
-                    </div>
-                </div>
-                <div class="modal-body" style="min-height: 30vh;">
-                    <div class="tab-content">
-
-                        <div class="tab-pane active" id="publishTest">
-                            ok
-                        </div>
-                        <div class="tab-pane" id="order">
-                            ok2
-                        </div>
-                        <div class="tab-pane" id="publish">
-                            ok3
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer navbar-fixed-bottoms" style="padding: 0px;">
-                    <div class="text-center">
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination">
-                                <li class="prev">
-                                    <a href="#" aria-label="Previous" id="prev" onclick="previusTab()">
-                                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                                <li class="active"><a href="#publishTest" data-toggle="tab">Test</a></li>
-                                <li><a href="#order" data-toggle="tab">Rekkefølge</a></li>
-                                <li><a href="#publish" data-toggle="tab">Oversikt</a></li>
-                                <li class="next">
-                                    <a href="#" aria-label="Next" class="next" onclick="nextTab()">
-                                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
                 </div>
             </div>
         </div>

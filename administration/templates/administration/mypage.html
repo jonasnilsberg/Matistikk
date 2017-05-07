@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-md-3">
                     <h5><i class="fa fa-calendar" aria-hidden="true"></i> Fødselsdato - {{ person.date_of_birth }}</h5>
-                    <h5><i class="fa fa-venus-mars" aria-hidden="true"></i>Kjønn - {% if person.sex == 'M' %}
+                    <h5><i class="fa fa-venus-mars" aria-hidden="true"></i> Kjønn - {% if person.sex == 'M' %}
                         Gutt
                     {% else %}
                         Jente
@@ -24,40 +24,82 @@
         </div>
         <div class="panel-body">
             <ul class="nav nav-tabs">
-                <li class="nav active"><a href="#A" data-toggle="tab">Mine klasser</a></li>
+                {% if  person.role == 1 or person.role == 2 %}
+                    <li class="nav active"><a href="#A" data-toggle="tab">Mine klasser</a></li>
+                {% endif %}
+                {% if person.role == 4 %}
+                    <li class="nav active"><a href="#A" data-toggle="tab">Mine tester</a></li>
+                {% endif %}
                 {% if groups %}
                     <li class="nav"><a href="#B" data-toggle="tab">Mine grupper</a></li>
                 {% endif %}
             </ul>
             <div class="tab-content">
-                <div class="tab-pane fade in active" id="A">
-                    <table class="table table-hover table-striped table-responsive" id="schooltable">
-                        <thead>
-                        <tr>
-                            <th>Klassenavn</th>
-                            <th>Skole</th>
-                            <th>Se medlemmer</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for grade in person.grades.all %}
+                {% if person.role == 1 or person.role == 2 %}
+                    <div class="tab-pane fade in active" id="A">
+                        <table class="table table-hover table-striped table-responsive" id="schooltable">
+                            <thead>
                             <tr>
-                                <td>{{ grade.grade_name }}</td>
-                                <td>{{ grade.school }}</td>
-                                <td>
-                                    <button id="{{ grade.id }}" value="{{ grade }}"
-                                            class='btn btn-default'
-                                            data-toggle='modal'
-                                            data-target='#gradeMemberModal' onclick="gradeMemberBtn(this)">
-                                        <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
-                                        Medlemmer
-                                    </button>
-                                </td>
+                                <th>Klassenavn</th>
+                                <th>Skole</th>
+                                <th>{% if person.role == 2 %}Alternativer{% else %}Se medlemmer{% endif %}</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                            {% for grade in person.grades.all %}
+                                <tr>
+                                    <td>{{ grade.grade_name }}</td>
+                                    <td>{{ grade.school }}</td>
+                                    <td>
+                                        {% if person.role == 2 %}
+                                            <a type="button" id="{{ grade.id }}" value="{{ grade }}"
+                                               class='btn btn-default'
+                                               href="{% url 'administration:gradeDetail' grade.school.id grade.id %}">
+                                                <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                                                Gå til klasse
+                                            </a>
+                                        {% endif %}
+                                        <button id="{{ grade.id }}" value="{{ grade }}"
+                                                class='btn btn-default'
+                                                data-toggle='modal'
+                                                data-target='#gradeMemberModal' onclick="gradeMemberBtn(this)">
+                                            <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
+                                            Medlemmer
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+                {% if person.role == 4 %}
+                    <div class="tab-pane fade in active" id="A">
+                        <table class="table table-hover table-striped table-responsive" id="schooltable">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Testnavn</th>
+                                <th>Testinfo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for test in tests %}
+                                <tr style="cursor:pointer;" class="clickable-row"
+                                    data-href="{% url 'maths:taskCollectionDetail' test.id %}">
+                                    <td>{{ test.id }}</td>
+                                    <td>{{ test.test_name }}</td>
+                                    <td>
+                                        <button class="btn btn-default"><i class="fa fa-book" aria-hidden="true"></i> Se
+                                            testinfo
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
                 {% if groups %}
                     <div class="tab-pane fade" id="B">
                         <table class="table table-hover table-striped table-responsive" id="inactivetable">
@@ -70,7 +112,8 @@
                             </thead>
                             <tbody>
                             {% for group in groups %}
-                                <tr>
+                                <tr {% if person.role == 4 %}style="cursor:pointer;" class="clickable-row"
+                                    data-href="{% url 'administration:groupDetail' group.id %}"{% endif %}>
                                     <td>{{ group.group_name }}</td>
                                     <td>{{ group.creator.get_full_name }}</td>
                                     <td>
@@ -99,7 +142,8 @@
         </div>
         <div class="panel-footer">
             {% if person.role != 1 %}
-                <a id="updateInformationBtn" class='btn btn-primary' href="{% url 'administration:personUpdate' person.username %}">
+                <a id="updateInformationBtn" class='btn btn-primary'
+                   href="{% url 'administration:personUpdate' person.username %}">
                     <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Oppdater dine opplysninger</a>
             {% endif %}
             <a id="changePasswordModalBtn" class='btn btn-primary' data-toggle='modal'
@@ -112,6 +156,14 @@
         $(document).ready(function () {
             if ($("#passwordChangeError").length) {
                 $('#updatePasswordModal').modal('show');
+            }
+        });
+
+        $(".clickable-row").click(function (e) {
+            if (e.target.type != "button") {
+                window.document.location = $(this).data("href");
+            } else if (!$(this).find(':button').val()) {
+                window.document.location = $(this).data("href");
             }
         });
 
@@ -133,7 +185,7 @@
                     })
                 },
                 error: function (xhr) {
-                    alert('error')
+                    alert('error');
                     alert(xhr.responseText)
                 }
             });
