@@ -127,8 +127,8 @@
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if task.answertype == 1 %}
                                             <div id="textanswerdiv{{ task.id }}">
-                                                <label for="answer">Tekstsvar</label>
-                                                <textarea class="form-control" id="answer{{ task.id }}" rows="6"
+                                                <label for="textanswer">Tekstsvar</label>
+                                                <textarea class="form-control" id="textanswer{{ task.id }}" rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Skriv svaret ditt her..."></textarea>
                                             </div>
@@ -172,8 +172,8 @@
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if task.answertype == 1 %}
                                             <div id="textanswerdiv{{ task.id }}">
-                                                <label for="answer{{ task.id }}">Tekstsvar</label>
-                                                <textarea class="form-control" id="answer{{ task.id }}" rows="6"
+                                                <label for="textanswer{{ task.id }}">Tekstsvar</label>
+                                                <textarea class="form-control" id="textanswer{{ task.id }}" rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Skriv svaret ditt her..."></textarea>
                                             </div>
@@ -276,13 +276,13 @@
                                             <h4>{{ taskorder.task.text | safe }}</h4>
                                         </textarea>
                                     </div>
-                                    <div class="panel-body" style="max-height: 30vh; overflow: auto">
+                                    <div class="panel-body">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if taskorder.task.answertype == 1 %}
                                             <div id="textanswerdiv{{ taskorder.task.id }}">
-                                                <label for="answer{{ taskorder.task.id }}">Tekstsvar</label>
-                                                <textarea class="form-control" id="answer{{ taskorder.task.id }}"
+                                                <label for="textanswer{{ taskorder.task.id }}">Tekstsvar</label>
+                                                <textarea class="form-control" id="textanswer{{ taskorder.task.id }}"
                                                           rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Skriv svaret ditt her..."></textarea>
@@ -319,8 +319,8 @@
                             <div class="col-sm-2"></div>
                             <div class="col-sm-8">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading" id="tasktextdiv">
-                                        <textarea>
+                                    <div class="panel-heading" id="tasktextdiv{{ taskorder.task.id }}">
+                                        <textarea id="tasktext{{ taskorder.task.id }}">
                                             <h4>{{ taskorder.task.text | safe }}</h4>
                                         </textarea>
                                     </div>
@@ -329,8 +329,8 @@
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if taskorder.task.answertype == 1 %}
                                             <div id="textanswerdiv{{ taskorder.task.id }}">
-                                                <label for="answer">Tekstsvar</label>
-                                                <textarea class="form-control" id="answer{{ taskorder.task.id }}"
+                                                <label for="textanswer">Tekstsvar</label>
+                                                <textarea class="form-control" id="textanswer{{ taskorder.task.id }}"
                                                           rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Skriv svaret ditt her..."></textarea>
@@ -437,6 +437,9 @@
     /*$("body").bind("mousewheel", function () {
      return false;
      });*/
+    jQuery.fn.exists = function () {
+        return jQuery(this).length > 0;
+    }
     var geoFinished = false;
     var onLeave = false;
     var goToNextTask = false;
@@ -460,19 +463,19 @@
             border: false,
             readonly: 1
         });
-        if ($(('#answer' + taskid).length)) {
+        if ($(('#textanswer' + taskid)).exists()) {
             tinymce.init({
-                selector: '#answer' + taskid,
+                selector: '#textanswer' + taskid,
                 plugins: 'equationeditor textcolor lists fullscreen autolink link table placeholder tabfocus',
                 content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
                 toolbar: [
                     'bold italic underline | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen'
                 ],
                 statusbar: false,
-                menubar: 'format table'
+                menubar: false
             });
         }
-        if ($(('#reasoning' + taskid).length)) {
+        if ($(('#reasoning' + taskid)).exists()) {
             tinymce.init({
                 selector: '#reasoning' + taskid,
                 plugins: 'equationeditor textcolor lists fullscreen autolink link table placeholder tabfocus',
@@ -481,7 +484,7 @@
                     'bold italic underline | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen'
                 ],
                 statusbar: false,
-                menubar: 'format table'
+                menubar: false
             });
         }
     }
@@ -748,11 +751,11 @@
             var reasoningbool = false;
             var div = $('#task' + (i + 1));
             var taskid = div.data('taskid');
-            if ($(('#answer' + taskid).length)) {
+            if ($(('#textanswer' + taskid)).exists()) {
                 textanswerbool = true;
-                var textanswer = tinyMCE.get('answer' + taskid).getContent();
+                var textanswer = tinyMCE.get('textanswer' + taskid).getContent();
             }
-            if ($(('#answer' + taskid).length)) {
+            if ($(('#reasoning' + taskid)).exists()) {
                 reasoningbool = true;
                 var reasoning = tinyMCE.get('reasoning' + taskid).getContent();
             }
@@ -802,10 +805,10 @@
     function checkTask(task) {
         var div = $('#task' + task);
         var taskid = div.data('taskid');
-        if ($(('#answer' + taskid).length)) {
-            var textanswer = tinyMCE.get('answer' + taskid).getContent();
+        if ($(('#textanswer' + taskid)).exists()) {
+            var textanswer = tinyMCE.get('textanswer' + taskid).getContent();
         }
-        if ($(('#answer' + taskid).length)) {
+        if ($(('#reasoning' + taskid)).exists()) {
             var reasoning = tinyMCE.get('reasoning' + taskid).getContent();
         }
         var multiplechoice = document.getElementById('optionsdiv' + taskid);
@@ -845,9 +848,13 @@
             var div = $('#task' + (i + 1));
             var taskid = div.data('taskid');
             var taskid2 = document.getElementById('id_task' + i + '-task');
-            var textanswer = tinyMCE.get('answer' + taskid).getContent();
+            if ($(('#textanswer' + taskid)).exists()) {
+                var textanswer = tinyMCE.get('textanswer' + taskid).getContent();
+            }
             var textanswer2 = document.getElementById('id_task' + i + '-text');
-            var reasoning = tinyMCE.get('reasoning' + taskid).getContent();
+            if ($(('#reasoning' + taskid)).exists()) {
+                var reasoning = tinyMCE.get('reasoning' + taskid).getContent();
+            }
             var reasoning2 = document.getElementById('id_task' + i + '-reasoning');
             var base64 = window["ggbApplet" + (i + 1)].getBase64();
             var base642 = document.getElementById('id_task' + i + '-base64answer');
