@@ -21,22 +21,13 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
-
-    <script type="text/javascript" src="{% static 'maths/js/blockUI.js' %}"></script>
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
     <script type="text/javascript"
             src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
     <script>
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
-        tinymce.init({
-            selector: '#testTextArea',
-            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-            toolbar: false,
-            menubar: false,
-            statusbar: false,
-            border: false
-        });
+
     </script>
 </head>
 
@@ -74,7 +65,9 @@
                             aria-hidden="true"></i></button>
                 </ul>
                 <ul id="endTestNav" class="nav navbar-nav navbar-right">
-                    <button id="sendBtn" class="btn btn-success btn-lg" type="button" onclick="submitTask()" {% if test.strictOrder %}disabled="disabled"{% endif %}>Send Inn</button>
+                    <button id="sendBtn" class="btn btn-success btn-lg" type="button" onclick="submitTask()"
+                            {% if test.strictOrder %}disabled="disabled"{% endif %}>Send Inn
+                    </button>
                     <a class="btn btn-danger btn-lg pull-right" data-toggle='modal' data-target='#exitTestModal'>Avbryt
                         Test</a>
                 </ul>
@@ -124,14 +117,16 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4>{{ task.text | safe }}</h4>
+                                    <div class="panel-heading" id="tasktextdiv{{ task.id }}">
+                                        <textarea id="tasktext{{ task.id }}">
+                                            <h4>{{ task.text | safe }}</h4>
+                                        </textarea>
                                     </div>
                                     <div class="panel-body">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if task.answertype == 1 %}
-                                            <div id="textanswerdiv">
+                                            <div id="textanswerdiv{{ task.id }}">
                                                 <label for="answer">Tekstsvar</label>
                                                 <textarea class="form-control" id="answer{{ task.id }}" rows="6"
                                                           style="resize:vertical"
@@ -153,7 +148,7 @@
                                         {% endif %}
 
                                         {% if task.reasoning %}
-                                            <div id="reasoningdiv">
+                                            <div id="reasoningdiv{{ task.id }}">
                                                 <label for="reasoning{{ task.id }}">Begrunnelse</label>
                                                 <textarea class="form-control" id="reasoning{{ task.id }}" rows="6"
                                                           style="resize:vertical"
@@ -167,15 +162,17 @@
                             <div class="col-sm-2"></div>
                             <div class="col-sm-8">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4>{{ task.text | safe }}</h4>
+                                    <div class="panel-heading" id="tasktextdiv{{ task.id }}">
+                                        <textarea id="tasktext{{ task.id }}">
+                                            <h4>{{ task.text | safe }}</h4>
+                                        </textarea>
                                     </div>
                                     <div class="panel-body">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if task.answertype == 1 %}
-                                            <div id="textanswerdiv">
-                                                <label for="answer">Tekstsvar</label>
+                                            <div id="textanswerdiv{{ task.id }}">
+                                                <label for="answer{{ task.id }}">Tekstsvar</label>
                                                 <textarea class="form-control" id="answer{{ task.id }}" rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Skriv svaret ditt her..."></textarea>
@@ -196,7 +193,7 @@
                                         {% endif %}
 
                                         {% if task.reasoning %}
-                                            <div id="reasoningdiv">
+                                            <div id="reasoningdiv{{ task.id }}">
                                                 <label for="reasoning{{ task.id }}">Begrunnelse</label>
                                                 <textarea class="form-control" id="reasoning{{ task.id }}" rows="6"
                                                           style="resize:vertical"
@@ -273,18 +270,17 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading" style="max-height: 30vh; overflow: auto">
-                                        <div id="blockme">
-                                        <textarea id="testTextArea" style="cursor:pointer;">
+                                    <div class="panel-heading" style="max-height: 30vh; overflow: auto"
+                                         id="tasktextdiv{{ taskorder.task.id }}">
+                                        <textarea id="tasktext{{ taskorder.task.id }}" style="cursor:pointer;">
                                             <h4>{{ taskorder.task.text | safe }}</h4>
                                         </textarea>
-                                        </div>
                                     </div>
                                     <div class="panel-body" style="max-height: 30vh; overflow: auto">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if taskorder.task.answertype == 1 %}
-                                            <div id="textanswerdiv">
+                                            <div id="textanswerdiv{{ taskorder.task.id }}">
                                                 <label for="answer{{ taskorder.task.id }}">Tekstsvar</label>
                                                 <textarea class="form-control" id="answer{{ taskorder.task.id }}"
                                                           rows="6"
@@ -308,7 +304,7 @@
                                         {% endif %}
 
                                         {% if taskorder.task.reasoning %}
-                                            <div id="reasoningdiv">
+                                            <div id="reasoningdiv{{ taskorder.task.id }}">
                                                 <label for="reasoning{{ taskorder.task.id }}">Begrunnelse</label>
                                                 <textarea class="form-control" id="reasoning{{ taskorder.task.id }}"
                                                           rows="6"
@@ -323,16 +319,19 @@
                             <div class="col-sm-2"></div>
                             <div class="col-sm-8">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4>{{ taskorder.task.text | safe }}</h4>
+                                    <div class="panel-heading" id="tasktextdiv">
+                                        <textarea>
+                                            <h4>{{ taskorder.task.text | safe }}</h4>
+                                        </textarea>
                                     </div>
                                     <div class="panel-body">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if taskorder.task.answertype == 1 %}
-                                            <div id="textanswerdiv">
+                                            <div id="textanswerdiv{{ taskorder.task.id }}">
                                                 <label for="answer">Tekstsvar</label>
-                                                <textarea class="form-control" id="answer" rows="6"
+                                                <textarea class="form-control" id="answer{{ taskorder.task.id }}"
+                                                          rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Skriv svaret ditt her..."></textarea>
                                             </div>
@@ -353,9 +352,10 @@
                                         {% endif %}
 
                                         {% if taskorder.task.reasoning %}
-                                            <div id="reasoningdiv">
+                                            <div id="reasoningdiv{{ taskorder.task.id }}">
                                                 <label for="reasoning">Begrunnelse</label>
-                                                <textarea class="form-control" id="reasoning" rows="6"
+                                                <textarea class="form-control" id="reasoning{{ taskorder.task.id }}"
+                                                          rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Begrunn svaret ditt..."></textarea>
                                             </div>
@@ -443,9 +443,48 @@
     var strictOrder = "{{ test.strictOrder }}";
     var start;
     var taskTimerStart;
+    var taskcount = document.getElementById('taskcount').innerHTML;
     /**
      * This function runs when the document is ready.
      */
+    for (var i = 0; i < taskcount; i++) {
+        var div = $('#task' + (i + 1));
+        var taskid = div.data('taskid');
+        tinymce.init({
+            selector: '#tasktext' + taskid,
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            border: false,
+            readonly: 1
+        });
+        if ($(('#answer' + taskid).length)) {
+            tinymce.init({
+                selector: '#answer' + taskid,
+                plugins: 'equationeditor textcolor lists fullscreen autolink link table placeholder tabfocus',
+                content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+                toolbar: [
+                    'bold italic underline | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen'
+                ],
+                statusbar: false,
+                menubar: 'format table'
+            });
+        }
+        if ($(('#reasoning' + taskid).length)) {
+            tinymce.init({
+                selector: '#reasoning' + taskid,
+                plugins: 'equationeditor textcolor lists fullscreen autolink link table placeholder tabfocus',
+                content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+                toolbar: [
+                    'bold italic underline | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen'
+                ],
+                statusbar: false,
+                menubar: 'format table'
+            });
+        }
+    }
     $(document).ready(function () {
         start = Date.now();
 
@@ -504,7 +543,7 @@
                 } else {
                     if (nextIndex == tasksnr) {
                         $('#nextTaskBtnText').text('Oppsummering');
-                    } else if (nextIndex == summary){
+                    } else if (nextIndex == summary) {
                         $('#sendBtn').attr('disabled', false);
                     }
                     var nextTask = index + 1;
@@ -636,7 +675,6 @@
     var viewPortWidth = 1200;
     var viewPortHeight = 750;
     var geocount = document.getElementById('geocount').innerHTML;
-    var taskcount = document.getElementById('taskcount').innerHTML;
     var geoloaded = 0;
     var base64;
     var parameters;
@@ -706,17 +744,24 @@
         var flag = true;
         for (var i = 0; i < taskcount; i++) {
             var taskflag = true;
+            var textanswerbool = false;
+            var reasoningbool = false;
             var div = $('#task' + (i + 1));
             var taskid = div.data('taskid');
-            var textanswer = document.getElementById('answer' + taskid);
-            var reasoning = document.getElementById('reasoning' + taskid);
+            if ($(('#answer' + taskid).length)) {
+                textanswerbool = true;
+                var textanswer = tinyMCE.get('answer' + taskid).getContent();
+            }
+            if ($(('#answer' + taskid).length)) {
+                reasoningbool = true;
+                var reasoning = tinyMCE.get('reasoning' + taskid).getContent();
+            }
             var multiplechoice = document.getElementById('optionsdiv' + taskid);
             var multiplechoiceanswer = $("input[name=multiplechoice" + taskid + "]:checked").val();
             var status = document.getElementById('status' + taskid);
             status.innerHTML = "";
-
-            if (textanswer) {
-                if (textanswer.value == "" || textanswer.value == null) {
+            if (textanswerbool) {
+                if (textanswer == "" || textanswer == null) {
                     status.innerHTML += "Mangler tekstsvar | ";
                     status.parentNode.className = "danger";
                     flag = false;
@@ -724,8 +769,8 @@
                 }
             }
 
-            if (reasoning) {
-                if (reasoning.value == "" || reasoning.value == null) {
+            if (reasoningbool) {
+                if (reasoning == "" || reasoning == null) {
                     status.innerHTML += "Mangler begrunnelse | ";
                     status.parentNode.className = "danger";
                     flag = false;
@@ -757,17 +802,22 @@
     function checkTask(task) {
         var div = $('#task' + task);
         var taskid = div.data('taskid');
-        var textanswer = document.getElementById('answer' + taskid);
-        var reasoning = document.getElementById('reasoning' + taskid);
+        if ($(('#answer' + taskid).length)) {
+            var textanswer = tinyMCE.get('answer' + taskid).getContent();
+        }
+        if ($(('#answer' + taskid).length)) {
+            var reasoning = tinyMCE.get('reasoning' + taskid).getContent();
+        }
         var multiplechoice = document.getElementById('optionsdiv' + taskid);
         var multiplechoiceanswer = $("input[name=multiplechoice" + taskid + "]:checked").val();
+
         if (textanswer) {
-            if (!textanswer.value) {
+            if (!textanswer) {
                 return false;
             }
         }
         if (reasoning) {
-            if (!reasoning.value) {
+            if (!reasoning) {
                 return false;
             }
         }
@@ -795,16 +845,16 @@
             var div = $('#task' + (i + 1));
             var taskid = div.data('taskid');
             var taskid2 = document.getElementById('id_task' + i + '-task');
-            var textanswer = $('#answer' + taskid).val();
+            var textanswer = tinyMCE.get('answer' + taskid).getContent();
             var textanswer2 = document.getElementById('id_task' + i + '-text');
-            var reasoning = $('#reasoning' + taskid).val();
+            var reasoning = tinyMCE.get('reasoning' + taskid).getContent();
             var reasoning2 = document.getElementById('id_task' + i + '-reasoning');
             var base64 = window["ggbApplet" + (i + 1)].getBase64();
             var base642 = document.getElementById('id_task' + i + '-base64answer');
             var multiplechoiceanswer = $("input[name=multiplechoice" + taskid + "]:checked").val();
-
             taskid2.value = taskid;
             if (typeof textanswer !== 'undefined') {
+
                 textanswer2.value = textanswer;
             }
             else if (multiplechoiceanswer !== "" && multiplechoiceanswer !== null && typeof multiplechoiceanswer !== 'undefined') {
