@@ -76,7 +76,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             tests = Test.objects.filter(
                 Q(person=self.request.user) | Q(grade__in=self.request.user.grades.all()) | Q(
                     gruppe__in=self.request.user.gruppe_set.all())).distinct()
-            answered = tests.filter(answer__in=answers).distinct()
+            answered = tests.filter(answer__in=answers).distinct().order_by('-answer__date_answered')
             context['answered'] = answered
             notanswered = []
             for test in tests:
