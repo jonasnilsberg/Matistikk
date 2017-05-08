@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a3dadf1e-2e4f-489f-9312-8d2daafdb0f5" name="IdeaFiles" comment="Små endringer overalt">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_build/doctrees/environment.pickle" afterPath="$PROJECT_DIR$/docs/_build/doctrees/environment.pickle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_build/doctrees/index.doctree" afterPath="$PROJECT_DIR$/docs/_build/doctrees/index.doctree" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_build/html/objects.inv" afterPath="$PROJECT_DIR$/docs/_build/html/objects.inv" />
+    <list default="true" id="a3dadf1e-2e4f-489f-9312-8d2daafdb0f5" name="IdeaFiles" comment="equations i answer_form">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_build/html/.buildinfo" afterPath="$PROJECT_DIR$/docs/_build/html/.buildinfo" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_build/html/genindex.html" afterPath="$PROJECT_DIR$/docs/_build/html/genindex.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_build/html/index.html" afterPath="$PROJECT_DIR$/docs/_build/html/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_build/html/py-modindex.html" afterPath="$PROJECT_DIR$/docs/_build/html/py-modindex.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_build/html/search.html" afterPath="$PROJECT_DIR$/docs/_build/html/search.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/_build/html/searchindex.js" afterPath="$PROJECT_DIR$/docs/_build/html/searchindex.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/maths/views.rst" afterPath="$PROJECT_DIR$/docs/maths/views.rst" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/forms.py" afterPath="$PROJECT_DIR$/maths/forms.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/views.py" afterPath="$PROJECT_DIR$/maths/views.py" />
     </list>
     <list id="de22f9bb-0d8d-43b9-a0ab-d5e54da7af91" name="Failed commit: IdeaFiles" comment="Endringer på personCreateView" />
@@ -40,11 +32,68 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="answer_form.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="answer_form.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="400">
-              <caret line="476" column="62" lean-forward="false" selection-start-line="476" selection-start-column="62" selection-end-line="476" selection-end-column="62" />
+            <state relative-caret-position="-505">
+              <caret line="852" column="55" lean-forward="false" selection-start-line="852" selection-start-column="55" selection-end-line="852" selection-end-column="55" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#div#0;n#nav#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#ul#0;n#div#0;n#div#0;n#nav#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#div#0;n#div#0;n#nav#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#1;n#ul#0;n#div#0;n#div#0;n#nav#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#0;n#div#1;n#div#0;n#div#2;n#div#0;n#div#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#2;n#div#1;n#div#0;n#div#2;n#div#0;n#div#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#0;n#div#1;n#div#0;n#div#4;n#div#0;n#div#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#2;n#div#1;n#div#0;n#div#4;n#div#0;n#div#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#0;n#div#1;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#2;n#div#1;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#0;n#div#1;n#div#0;n#div#2;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#2;n#div#1;n#div#0;n#div#2;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="e#26494#26501#1#HTML" expanded="true" />
+                <element signature="n#style#0;n#button#0;n#div#1;n#div#0;n#div#0;n#div#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#button#0;n#div#1;n#div#0;n#div#0;n#div#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#div#1;n#div#0;n#div#0;n#div#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#a#0;n#div#1;n#div#0;n#div#0;n#div#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/maths/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2288">
+              <caret line="146" column="0" lean-forward="false" selection-start-line="146" selection-start-column="0" selection-end-line="146" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="plugin.min.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/plugin.min.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="318">
+              <caret line="32" column="22" lean-forward="false" selection-start-line="32" selection-start-column="22" selection-end-line="32" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="task_form.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2190">
+              <caret line="540" column="41" lean-forward="false" selection-start-line="540" selection-start-column="41" selection-end-line="540" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -60,44 +109,38 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/administration/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="92">
-              <caret line="127" column="0" lean-forward="false" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="610">
-              <caret line="787" column="15" lean-forward="false" selection-start-line="787" selection-start-column="4" selection-end-line="787" selection-end-column="15" />
+            <state relative-caret-position="132">
+              <caret line="840" column="38" lean-forward="false" selection-start-line="840" selection-start-column="27" selection-end-line="840" selection-end-column="38" />
               <folding>
-                <element signature="e#0#32#0" expanded="true" />
+                <marker date="1494244031698" expanded="true" signature="3967:4007" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="3972:4007" ph="&quot;&quot;&quot;Class that creates a task....&quot;&quot;&quot;" />
+                <marker date="1494244031698" expanded="true" signature="29370:29428" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="29370:29506" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="29582:33759" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="29587:30054" ph="&quot;&quot;&quot;Class that displays a template a list of test objects....&quot;&quot;&quot;" />
+                <marker date="1494244031698" expanded="true" signature="30165:31938" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="30174:30651" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1494244031698" expanded="true" signature="31065:31226" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="31262:31424" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="31464:31769" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="31786:31903" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="31990:33164" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="31999:32417" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1494244031698" expanded="true" signature="32758:32843" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="32879:32965" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="33005:33097" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="33207:33759" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="33216:33469" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+                <marker date="1494244031698" expanded="true" signature="33814:34568" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="33819:34145" ph="&quot;&quot;&quot;Class that displays a list of answers for all the tasks in a specific test for a specific user....&quot;&quot;&quot;" />
+                <marker date="1494244031698" expanded="true" signature="34221:34568" ph="..." />
+                <marker date="1494244031698" expanded="true" signature="34230:34374" ph="&quot;&quot;&quot;Function that sets the query for getting the object_list....&quot;&quot;&quot;" />
+                <marker date="1494244031698" expanded="true" signature="34610:34860" ph="&quot;&quot;&quot;Function that exports all answers for all tasks and users in a specific test....&quot;&quot;&quot;" />
+                <marker date="1494244031698" expanded="true" signature="34895:35232" ph="..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="person_detail.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_detail.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1136">
-              <caret line="71" column="95" lean-forward="false" selection-start-line="71" selection-start-column="40" selection-end-line="71" selection-end-column="95" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="person_form.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_form.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1120">
-              <caret line="70" column="0" lean-forward="false" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -105,11 +148,9 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/administration/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="256">
+            <state relative-caret-position="709">
               <caret line="868" column="17" lean-forward="false" selection-start-line="868" selection-start-column="17" selection-end-line="868" selection-end-column="17" />
-              <folding>
-                <element signature="e#0#15#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -117,22 +158,12 @@
       <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="384">
-              <caret line="25" column="89" lean-forward="false" selection-start-line="25" selection-start-column="89" selection-end-line="25" selection-end-column="89" />
+            <state relative-caret-position="336">
+              <caret line="22" column="89" lean-forward="false" selection-start-line="22" selection-start-column="89" selection-end-line="22" selection-end-column="89" />
               <folding>
-                <marker date="1493903512423" expanded="true" signature="88:1836" ph="..." />
-                <marker date="1493903512423" expanded="true" signature="89:147" ph="..." />
+                <marker date="1494230817741" expanded="true" signature="88:145" ph="..." />
+                <marker date="1494230817741" expanded="true" signature="88:1840" ph="..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mypage.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/administration/templates/administration/mypage.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="784">
-              <caret line="49" column="138" lean-forward="false" selection-start-line="49" selection-start-column="138" selection-end-line="49" selection-end-column="138" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -140,9 +171,30 @@
       <file leaf-file-name="test_detail.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_detail.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5408">
-              <caret line="338" column="0" lean-forward="false" selection-start-line="338" selection-start-column="0" selection-end-line="343" selection-end-column="11" />
+            <state relative-caret-position="16">
+              <caret line="368" column="0" lean-forward="false" selection-start-line="368" selection-start-column="0" selection-end-line="368" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="answer_detail.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_detail.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2452">
+              <caret line="81" column="97" lean-forward="false" selection-start-line="81" selection-start-column="97" selection-end-line="81" selection-end-column="97" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#0;n#div#1;n#div#0;n#div#2;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#2;n#div#1;n#div#0;n#div#2;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#0;n#div#1;n#div#0;n#div#4;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#2;n#div#1;n#div#0;n#div#4;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#nav#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#ul#0;n#div#0;n#div#0;n#nav#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#button#0;n#ul#0;n#div#0;n#div#0;n#nav#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#div#0;n#div#0;n#nav#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -159,23 +211,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>nextTaskBtnText</find>
-      <find>alert</find>
-      <find>bootbo</find>
-      <find>bootbox</find>
-      <find>checkTest</find>
-      <find>re</find>
-      <find>replace</find>
-      <find>ajaz</find>
-      <find>excel</find>
-      <find>detailview</find>
-      <find>fileup</find>
-      <find>answer</find>
-      <find>goToAnswer</find>
-      <find>goToNextTask</find>
-      <find>answered</find>
-      <find>personUpdateView</find>
-      <find>personDelete</find>
       <find>gradeList</find>
       <find>CreateView</find>
       <find>get_success_url</find>
@@ -189,20 +224,36 @@
       <find>post_ajax</find>
       <find>get_context_data</find>
       <find>ListView</find>
+      <find>task.</find>
+      <find>place</find>
+      <find>for</find>
+      <find>tinymce</find>
+      <find>taskcount</find>
+      <find>checktask</find>
+      <find>timespent</find>
+      <find>answer_deta</find>
+      <find>textanswer</find>
+      <find>endb</find>
+      <find>getcontent</find>
+      <find>task.id</find>
+      <find>panel-body</find>
+      <find>checkt</find>
+      <find>checktest</find>
+      <find>answer</find>
+      <find>tasktextdiv</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="backupbranch" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/administration/templates/administration/passwordChange.html" />
         <option value="$PROJECT_DIR$/administration/templates/administration/ajax_person_search.html" />
         <option value="$PROJECT_DIR$/administration/templates/administration/person_ajax.html" />
         <option value="$PROJECT_DIR$/matistikk/urls.py" />
@@ -240,19 +291,20 @@
         <option value="$PROJECT_DIR$/administration/static/administration/style.css" />
         <option value="$PROJECT_DIR$/maths/forms.py" />
         <option value="$PROJECT_DIR$/maths/templates/maths/test_form.html" />
-        <option value="$PROJECT_DIR$/maths/models.py" />
         <option value="$PROJECT_DIR$/templates/matistikk/base.html" />
         <option value="$PROJECT_DIR$/maths/templates/maths/test_detail.html" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/answer_detail.html" />
         <option value="$PROJECT_DIR$/maths/templatetags/customtags.py" />
         <option value="$PROJECT_DIR$/administration/templates/administration/person_detail.html" />
         <option value="$PROJECT_DIR$/administration/templates/administration/person_form.html" />
         <option value="$PROJECT_DIR$/administration/templates/administration/mypage.html" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
         <option value="$PROJECT_DIR$/administration/urls.py" />
         <option value="$PROJECT_DIR$/maths/urls.py" />
         <option value="$PROJECT_DIR$/administration/views.py" />
         <option value="$PROJECT_DIR$/maths/views.py" />
+        <option value="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/plugin.min.js" />
+        <option value="$PROJECT_DIR$/maths/models.py" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/answer_detail.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
       </list>
     </option>
   </component>
@@ -263,9 +315,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="-1" />
+    <option name="y" value="30" />
     <option name="width" value="1920" />
-    <option name="height" value="1053" />
+    <option name="height" value="1050" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -299,6 +351,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -472,6 +525,112 @@
               <option name="myItemId" value="static" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tinymce" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matistikk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matistikk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="administration" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tinymce" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tinymce" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matistikk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matistikk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="administration" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tinymce" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tinymce" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="plugins" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matistikk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matistikk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="administration" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tinymce" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tinymce" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="plugins" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="equationeditor" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -497,7 +656,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -509,19 +667,20 @@
     <property name="nodejs_interpreter_path" value="/usr/bin/node" />
     <property name="js-jscs-nodeInterpreter" value="/usr/bin/node" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///home/haldor/Bachelor/env/matistikk/maths/models.py&#10;mode&#9;FILE&#9;file:///home/haldor/Bachelor/env/matistikk/maths/models.py&#10;models&#9;FILE&#9;file:///home/haldor/Bachelor/env/matistikk/maths/models.py" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/maths/static/maths/js" />
+      <recent name="C:\Users\Sondre\PycharmProjects\matistikk3\administration\static\administration" />
+      <recent name="C:\Users\Sondre\PycharmProjects\matistikk3\maths\static\maths" />
+      <recent name="$PROJECT_DIR$/templates/matistikk" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/maths/static/maths/js" />
       <recent name="$PROJECT_DIR$/maths/static/maths/css" />
       <recent name="C:\Users\Sondre\PycharmProjects\matistikk3\maths\static\maths" />
       <recent name="$PROJECT_DIR$/administration/static/administration/images" />
-      <recent name="$PROJECT_DIR$/templates/matistikk" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/maths/static/maths/js" />
-      <recent name="C:\Users\Sondre\PycharmProjects\matistikk3\administration\static\administration" />
-      <recent name="C:\Users\Sondre\PycharmProjects\matistikk3\maths\static\maths" />
       <recent name="$PROJECT_DIR$/templates/matistikk" />
     </key>
   </component>
@@ -783,10 +942,10 @@
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
         <env name="DJANGO_SETTINGS_MODULE" value="matistikk.settings" />
+        <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="/usr/bin/python3.5" />
+      <option name="SDK_HOME" value="$PROJECT_DIR$/../bin/python3.5" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -840,27 +999,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1485778837143</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Endring av usermodel">
-      <created>1486373466875</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1486373466875</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Endring av usermodel">
-      <created>1486374803348</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1486374803348</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Endring av usermodel">
-      <created>1486389822187</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1486389822187</updated>
     </task>
     <task id="LOCAL-00021" summary="Endring av usermodel">
       <created>1486394489913</created>
@@ -1184,7 +1322,28 @@
       <option name="project" value="LOCAL" />
       <updated>1493903542029</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="equations i answer_form">
+      <created>1494236447453</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1494236447453</updated>
+    </task>
+    <task id="LOCAL-00068" summary="equations i answer_form">
+      <created>1494243892580</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1494243892580</updated>
+    </task>
+    <task id="LOCAL-00069" summary="equations i answer_form">
+      <created>1494244009529</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1494244009530</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1197,51 +1356,43 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-1" width="1920" height="1053" extended-state="6" />
+    <frame x="0" y="30" width="1920" height="1050" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1339381" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32867885" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34479055" sideWeight="0.5149413" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32867885" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39370933" sideWeight="0.5229456" order="19" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39370933" sideWeight="0.47705442" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32760474" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14099783" sideWeight="0.48292422" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26100966" sideWeight="0.48720682" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13713981" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3941998" sideWeight="0.47812167" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32760474" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14178303" sideWeight="0.4850587" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24958768" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26100966" sideWeight="0.48720682" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32867885" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="99" y="75" width="1722" height="879" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34479055" sideWeight="0.5149413" order="15" side_tool="true" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3941998" sideWeight="0.47812167" order="16" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32760474" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.14178303" sideWeight="0.4850587" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26100966" sideWeight="0.48720682" order="18" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1339381" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32867885" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-    </layout>
-    <layout-to-restore>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25365344" sideWeight="0.5074217" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24112734" sideWeight="0.49477735" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32776618" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25887266" sideWeight="0.49037933" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25156575" sideWeight="0.49257833" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15008247" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985157" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24958768" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-    </layout-to-restore>
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+    </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="processedProjectFiles" value="true" />
@@ -1292,7 +1443,8 @@
     <MESSAGE value="lagt til testDetailView og testhåndtering" />
     <MESSAGE value="Endringer i dokumentasjon" />
     <MESSAGE value="Små endringer overalt" />
-    <option name="LAST_COMMIT_MESSAGE" value="Små endringer overalt" />
+    <MESSAGE value="equations i answer_form" />
+    <option name="LAST_COMMIT_MESSAGE" value="equations i answer_form" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1301,20 +1453,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/maths/static/maths/js/bootstrap-clockpicker.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="5" column="10660" lean-forward="false" selection-start-line="5" selection-start-column="10660" selection-end-line="5" selection-end-column="10660" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/static/maths/css/bootstrap-clockpicker.min.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="5" column="1215" lean-forward="false" selection-start-line="5" selection-start-column="1215" selection-end-line="5" selection-end-column="1215" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/maths/static/maths/style.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="472">
@@ -1380,13 +1518,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/maths/static/maths/js/jquery.onepage-scroll.min.js" />
     <entry file="file://$PROJECT_DIR$/maths/static/maths/css/onepage-scroll.css" />
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="777">
-          <caret line="240" column="65" lean-forward="false" selection-start-line="240" selection-start-column="39" selection-end-line="240" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_list.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1120">
@@ -1407,13 +1538,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="26" column="13" lean-forward="false" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -1489,7 +1613,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1056">
           <caret line="69" column="89" lean-forward="false" selection-start-line="69" selection-start-column="89" selection-end-line="69" selection-end-column="89" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1510,16 +1633,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_form.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="680" column="44" lean-forward="false" selection-start-line="680" selection-start-column="44" selection-end-line="711" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="800">
-          <caret line="53" column="4" lean-forward="false" selection-start-line="53" selection-start-column="4" selection-end-line="53" selection-end-column="4" />
+        <state relative-caret-position="583">
+          <caret line="35" column="28" lean-forward="false" selection-start-line="35" selection-start-column="28" selection-end-line="35" selection-end-column="28" />
           <folding />
         </state>
       </provider>
@@ -1528,14 +1643,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="256">
           <caret line="16" column="5" lean-forward="false" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_detail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2192">
-          <caret line="137" column="64" lean-forward="false" selection-start-line="137" selection-start-column="64" selection-end-line="137" selection-end-column="64" />
           <folding />
         </state>
       </provider>
@@ -1558,41 +1665,76 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_detail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5408">
-          <caret line="338" column="0" lean-forward="false" selection-start-line="338" selection-start-column="0" selection-end-line="343" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_detail.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1136">
-          <caret line="71" column="95" lean-forward="false" selection-start-line="71" selection-start-column="40" selection-end-line="71" selection-end-column="95" />
-          <folding />
+        <state relative-caret-position="304">
+          <caret line="84" column="51" lean-forward="true" selection-start-line="84" selection-start-column="51" selection-end-line="84" selection-end-column="51" />
+          <folding>
+            <marker date="1494230817737" expanded="false" signature="12902:12909" ph="×" />
+            <marker date="1494230817737" expanded="false" signature="14580:14587" ph="×" />
+            <marker date="1494230817737" expanded="false" signature="16545:16552" ph="×" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/administration/templates/administration/mypage.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="784">
-          <caret line="49" column="138" lean-forward="false" selection-start-line="49" selection-start-column="138" selection-end-line="49" selection-end-column="138" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="476" column="62" lean-forward="false" selection-start-line="476" selection-start-column="62" selection-end-line="476" selection-end-column="62" />
-          <folding />
+        <state relative-caret-position="720">
+          <caret line="45" column="33" lean-forward="false" selection-start-line="45" selection-start-column="33" selection-end-line="45" selection-end-column="33" />
+          <folding>
+            <marker date="1494230817737" expanded="true" signature="9622:9684" ph="{...}" />
+            <marker date="1494230817737" expanded="true" signature="9622:9698" ph="{&quot;type&quot;: 'GET'...}" />
+            <marker date="1494230817737" expanded="true" signature="9622:9710" ph="{...}" />
+            <marker date="1494230817737" expanded="true" signature="9622:11130" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="9751:11029" ph="{...}" />
+            <marker date="1494230817737" expanded="true" signature="9953:11017" ph="{&quot;type&quot;: 'GET'...}" />
+            <marker date="1494230817737" expanded="true" signature="10080:10140" ph="{&quot;grade_id&quot;: grade_id...}" />
+            <marker date="1494230817737" expanded="true" signature="10217:10863" ph="{...}" />
+            <marker date="1494230817737" expanded="true" signature="10384:10582" ph="{...}" />
+            <marker date="1494230817737" expanded="true" signature="10646:10843" ph="{...}" />
+            <marker date="1494230817737" expanded="true" signature="10903:11003" ph="{...}" />
+            <marker date="1494230817737" expanded="true" signature="11061:11117" ph="{...}" />
+            <marker date="1494230817737" expanded="true" signature="11148:15047" ph="{% block modal ... %}" />
+            <marker date="1494230817737" expanded="true" signature="11232:12526" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="11267:12515" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="11307:12500" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="11350:11510" ph="..." />
+            <marker date="1494230817737" expanded="false" signature="11429:11436" ph="×" />
+            <marker date="1494230817737" expanded="true" signature="11551:12099" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="11662:12076" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="12142:12481" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="12255:12355" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="12592:13755" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="12627:13744" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="12667:13729" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="12710:12886" ph="..." />
+            <marker date="1494230817737" expanded="false" signature="12789:12796" ph="×" />
+            <marker date="1494230817737" expanded="true" signature="12927:13468" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="13028:13445" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="13102:13329" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="13131:13296" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="13383:13416" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="13511:13710" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="13533:13688" ph="{% buttons ... %}" />
+            <marker date="1494230817737" expanded="true" signature="13820:15031" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="13855:15020" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="13895:15005" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="13938:14114" ph="..." />
+            <marker date="1494230817737" expanded="false" signature="14017:14024" ph="×" />
+            <marker date="1494230817737" expanded="true" signature="14155:14744" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="14256:14721" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="14330:14605" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="14359:14572" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="14659:14692" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="14787:14986" ph="..." />
+            <marker date="1494230817737" expanded="true" signature="14809:14964" ph="{% buttons ... %}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/administration/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
+        <state relative-caret-position="1984">
           <caret line="127" column="0" lean-forward="false" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
           <folding />
         </state>
@@ -1608,31 +1750,155 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/maths/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="25" column="89" lean-forward="false" selection-start-line="25" selection-start-column="89" selection-end-line="25" selection-end-column="89" />
+        <state relative-caret-position="336">
+          <caret line="22" column="89" lean-forward="false" selection-start-line="22" selection-start-column="89" selection-end-line="22" selection-end-column="89" />
           <folding>
-            <marker date="1493903512423" expanded="true" signature="88:1836" ph="..." />
-            <marker date="1493903512423" expanded="true" signature="89:147" ph="..." />
+            <marker date="1494230817741" expanded="true" signature="88:145" ph="..." />
+            <marker date="1494230817741" expanded="true" signature="88:1840" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="10" column="102" lean-forward="false" selection-start-line="10" selection-start-column="102" selection-end-line="11" selection-end-column="99" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/matistikk/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="26" column="12" lean-forward="false" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/plugin.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="318">
+          <caret line="32" column="22" lean-forward="false" selection-start-line="32" selection-start-column="22" selection-end-line="32" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16">
+          <caret line="368" column="0" lean-forward="false" selection-start-line="368" selection-start-column="0" selection-end-line="368" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="840" column="38" lean-forward="false" selection-start-line="840" selection-start-column="27" selection-end-line="840" selection-end-column="38" />
+          <folding>
+            <marker date="1494244031698" expanded="true" signature="3967:4007" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="3972:4007" ph="&quot;&quot;&quot;Class that creates a task....&quot;&quot;&quot;" />
+            <marker date="1494244031698" expanded="true" signature="29370:29428" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="29370:29506" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="29582:33759" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="29587:30054" ph="&quot;&quot;&quot;Class that displays a template a list of test objects....&quot;&quot;&quot;" />
+            <marker date="1494244031698" expanded="true" signature="30165:31938" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="30174:30651" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1494244031698" expanded="true" signature="31065:31226" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="31262:31424" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="31464:31769" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="31786:31903" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="31990:33164" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="31999:32417" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1494244031698" expanded="true" signature="32758:32843" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="32879:32965" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="33005:33097" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="33207:33759" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="33216:33469" ph="&quot;&quot;&quot;...&quot;&quot;&quot;" />
+            <marker date="1494244031698" expanded="true" signature="33814:34568" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="33819:34145" ph="&quot;&quot;&quot;Class that displays a list of answers for all the tasks in a specific test for a specific user....&quot;&quot;&quot;" />
+            <marker date="1494244031698" expanded="true" signature="34221:34568" ph="..." />
+            <marker date="1494244031698" expanded="true" signature="34230:34374" ph="&quot;&quot;&quot;Function that sets the query for getting the object_list....&quot;&quot;&quot;" />
+            <marker date="1494244031698" expanded="true" signature="34610:34860" ph="&quot;&quot;&quot;Function that exports all answers for all tasks and users in a specific test....&quot;&quot;&quot;" />
+            <marker date="1494244031698" expanded="true" signature="34895:35232" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/administration/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
+        <state relative-caret-position="709">
           <caret line="868" column="17" lean-forward="false" selection-start-line="868" selection-start-column="17" selection-end-line="868" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2288">
+          <caret line="146" column="0" lean-forward="false" selection-start-line="146" selection-start-column="0" selection-end-line="146" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2190">
+          <caret line="540" column="41" lean-forward="false" selection-start-line="540" selection-start-column="41" selection-end-line="540" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2452">
+          <caret line="81" column="97" lean-forward="false" selection-start-line="81" selection-start-column="97" selection-end-line="81" selection-end-column="97" />
           <folding>
-            <element signature="e#0#15#0" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#0;n#div#1;n#div#0;n#div#2;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#2;n#div#1;n#div#0;n#div#2;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#0;n#div#1;n#div#0;n#div#4;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#2;n#div#1;n#div#0;n#div#4;n#div#0;n#div#0;n#div#1;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#nav#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ul#0;n#div#0;n#div#0;n#nav#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#ul#0;n#div#0;n#div#0;n#nav#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#div#0;n#div#0;n#nav#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/views.py">
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="610">
-          <caret line="787" column="15" lean-forward="false" selection-start-line="787" selection-start-column="4" selection-end-line="787" selection-end-column="15" />
+        <state relative-caret-position="-505">
+          <caret line="852" column="55" lean-forward="false" selection-start-line="852" selection-start-column="55" selection-end-line="852" selection-end-column="55" />
           <folding>
-            <element signature="e#0#32#0" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#nav#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ul#0;n#div#0;n#div#0;n#nav#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#div#0;n#div#0;n#nav#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#1;n#ul#0;n#div#0;n#div#0;n#nav#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#0;n#div#1;n#div#0;n#div#2;n#div#0;n#div#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#2;n#div#1;n#div#0;n#div#2;n#div#0;n#div#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#0;n#div#1;n#div#0;n#div#4;n#div#0;n#div#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#2;n#div#1;n#div#0;n#div#4;n#div#0;n#div#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#2;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#0;n#div#1;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#2;n#div#1;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#0;n#div#1;n#div#0;n#div#2;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#2;n#div#1;n#div#0;n#div#2;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#26494#26501#1#HTML" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#div#1;n#div#0;n#div#0;n#div#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#button#0;n#div#1;n#div#0;n#div#0;n#div#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#div#1;n#div#0;n#div#0;n#div#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#a#0;n#div#1;n#div#0;n#div#0;n#div#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
