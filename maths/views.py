@@ -102,7 +102,7 @@ class EquationEditorView(LoginRequiredMixin, generic.TemplateView):
 class TaskCreateView(AdministratorCheck, generic.CreateView):
     """
     Class that creates a task.
-    
+
     :func:`AdministratorCheck`:
         inherited permission check, checks if the logged in user is an administrator.
     **CreateView:**
@@ -163,7 +163,7 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
 class CategoryListView(AdministratorCheck, generic.ListView):
     """
     Class that displays a template containing all category objects.
-    
+
     :func:`AdministratorCheck`:
         inherited permission check, checks if the logged in user is an administrator.
     **ListView:**
@@ -229,7 +229,7 @@ class CategoryUpdateView(AdministratorCheck, generic.UpdateView):
 class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
     """
     Class that displays a template containing all task objects.
-    
+
      :func:`RoleCheck`:
         Permission check, only allows teachers, administrators and school administrators.
     **AjaxResponseMixin:**
@@ -609,7 +609,7 @@ class TestCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Create
 class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
     """
     Class that displays information about a single test object based on the test_id.
-    
+
      :func:`RoleCheck`:
         Permission check, only allows teachers, administrators and school administrators.
     **AjaxResponseMixin:**
@@ -713,13 +713,15 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             text = request.POST["task" + str(y) + "-text"]
             reasoning = request.POST["task" + str(y) + "-reasoning"]
             taskid = request.POST["task" + str(y) + "-task"]
+            timespent = request.POST["task" + str(y) + "-timespent"]
             task = Task.objects.get(id=taskid)
-            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, task=task)
+            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, task=task, timespent=timespent)
             answer.date_answered = datetime.datetime.now()
             answer.save()
             base64 = request.POST["task" + str(y) + "-base64answer"]
+            geogebradata = request.POST["task" + str(y) + "-geogebradata"]
             if task.extra:
-                geogebraanswer = GeogebraAnswer(answer=answer, base64=base64)
+                geogebraanswer = GeogebraAnswer(answer=answer, base64=base64, data=geogebradata)
                 geogebraanswer.save()
             y += 1
         url = reverse('maths:index')

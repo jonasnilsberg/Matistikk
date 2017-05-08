@@ -82,7 +82,9 @@ class CreateAnswerForm(forms.ModelForm):
     base64answer = forms.CharField(max_length=500000, required=False)
     reasoning = forms.CharField(max_length=32700, required=False)
     text = forms.CharField(max_length=32700, required=False)
+    timespent = forms.FloatField(required=False)
+    geogebradata = forms.CharField(max_length=500000, required=False)
 
     class Meta:
         model = Answer
-        fields = ['task', 'reasoning', 'text']
+        fields = ['task', 'reasoning', 'text', 'timespent']
