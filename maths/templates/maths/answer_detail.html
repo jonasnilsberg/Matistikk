@@ -1,27 +1,94 @@
-{% extends 'matistikk/base.html' %}
 {% load staticfiles %}
 {% load customtags %}
-{% block head %}
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'administration/style.css' %}"/>
     <script type="text/javascript" src="{% static 'maths/js/jquery.fullPage.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'maths/css/jquery.fullPage.css' %}"/>
+    <script type="text/javascript" src="{% static 'maths/js/deployggb.js' %}"></script>
+</head>
 
-{% endblock %}
-
-{% block body %}
-    <div id="fullpage">
-        {% for answer in object_list %}
-            <div class="section" data-anchor="oppgave{{ forloop.counter }}">
-                {% get_geogebra answer as geogebra %}
-                {% if geogebra %}
-                    {% for geo in geogebra %}
-                        <div class="col-sm-6" id="geogebradiv" style="border: dotted 1px">
-                            {% for geogebra in geogebratask %}
+<div id="fullpage">
+    <div id="loadingScreen" class="section active" data-anchor="loading" style="height: 100vh;">
+        <div class="middle">
+            <h2>Vennligst vent mens besvarelsen lastes inn.</h2>
+        </div>
+        <div class="sk-cube-grid">
+            <div class="sk-cube sk-cube1"></div>
+            <div class="sk-cube sk-cube2"></div>
+            <div class="sk-cube sk-cube3"></div>
+            <div class="sk-cube sk-cube4"></div>
+            <div class="sk-cube sk-cube5"></div>
+            <div class="sk-cube sk-cube6"></div>
+            <div class="sk-cube sk-cube7"></div>
+            <div class="sk-cube sk-cube8"></div>
+            <div class="sk-cube sk-cube9"></div>
+        </div>
+    </div>
+    {% for answer in object_list %}
+        <div class="section" data-anchor="oppgave{{ forloop.counter }}">
+            <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid">
+                {% if forloop.first %}
+                    <span id="taskcount" hidden>{{ answer.test.task_collection.tasks.all.count }}</span>
+                    <span id="testid" hidden>{{ answer.test.id }}</span>
+                    <span id="role" hidden>{{ request.user.role }}</span>
+                {% endif %}
+                <div class="panel panel-info">
+                    <div class="panel-heading" style="padding-top: 1px">
+                        <h3 class="text-center">Oppgave {{ forloop.counter }}</h3>
+                    </div>
+                    {% get_geogebra answer as geogebra %}
+                    {% if geogebra %}
+                        {% for geo in geogebra %}
+                            <div class="col-sm-6 geogebra">
                                 <input id="base64{{ forloop.parentloop.counter }}" type="text"
-                                       value="{{ geo.base64 }}">
-                            {% endfor %}
-                            <div id="applet_container{{ forloop.counter }}"></div>
-                        </div>
-                        <div class="col-sm-6">
+                                       value="{{ geo.base64 }}" hidden>
+                                <div id="applet_container{{ forloop.parentloop.counter }}"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4>{{ answer.task.text | safe }}</h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        {% if answer.task.answertype == 1 %}
+                                            <div id="textanswerdiv">
+                                                <label for="answer">Tekstsvar</label>
+                                                <textarea readonly class="form-control" id="answer{{ task.id }}"
+                                                          rows="6"
+                                                          style="resize:vertical">{{ answer.text }}</textarea>
+                                            </div>
+                                        {% elif answer.task.answertype == 2 %}
+                                            <div id="multiplechoicediv">
+                                                <label>Svaralternativer</label>
+                                                {% get_mutiplechoice answer.task as multipleChoice %}
+                                                {% for option in multipleChoice %}
+                                                    <div id="optionsdiv{{ task.id }}">
+                                                        <input type="radio" name="multiplechoice{{ answer.task.id }}"
+                                                               value="{{ option.option }}"
+                                                               {% if option.option == answer.text %}checked{% endif %}>
+                                                        {{ option.option }}<br>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        {% if answer.task.reasoning %}
+                                            <div id="reasoningdiv">
+                                                <label for="reasoning{{ task.id }}">Begrunnelse</label>
+                                                <textarea readonly class="form-control" id="reasoning{{ task.id }}"
+                                                          rows="6"
+                                                          style="resize:vertical">{{ answer.reasoning }}</textarea>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-8">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h4>{{ answer.task.text | safe }}</h4>
@@ -57,121 +124,173 @@
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="col-sm-2"></div>
-                    <div class="col-sm-8">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h4>{{ answer.task.text | safe }}</h4>
-                            </div>
-                            <div class="panel-body">
-                                {% if answer.task.answertype == 1 %}
-                                    <div id="textanswerdiv">
-                                        <label for="answer">Tekstsvar</label>
-                                        <textarea readonly class="form-control" id="answer{{ task.id }}" rows="6"
-                                                  style="resize:vertical">{{ answer.text }}</textarea>
-                                    </div>
-                                {% elif answer.task.answertype == 2 %}
-                                    <div id="multiplechoicediv">
-                                        <label>Svaralternativer</label>
-                                        {% get_mutiplechoice answer.task as multipleChoice %}
-                                        {% for option in multipleChoice %}
-                                            <div id="optionsdiv{{ task.id }}">
-                                                <input type="radio" name="multiplechoice{{ answer.task.id }}"
-                                                       value="{{ option.option }}"
-                                                       {% if option.option == answer.text %}checked{% endif %}>
-                                                {{ option.option }}<br>
-                                            </div>
-                                        {% endfor %}
-                                        {{ answer.text }}
-                                    </div>
-                                {% endif %}
-                                {% if answer.task.reasoning %}
-                                    <div id="reasoningdiv">
-                                        <label for="reasoning{{ task.id }}">Begrunnelse</label>
-                                        <textarea readonly class="form-control" id="reasoning{{ task.id }}" rows="6"
-                                                  style="resize:vertical">{{ answer.reasoning }}</textarea>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-        {% endfor %}
-    </div>
-    <nav id="tasknav" class="navbar navbar-default navbar-fixed-bottom">
-        <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="taskbar" style="text-align: center;">
-
-                <ul id="taskBtnList" class="nav navbar-nav" style="display: inline-block; float: none;">
-                    <button id="prevTaskBtn" class="btn btn-primary btn-lg" type="button" disabled="disabled"
-                            style="float: left"
-                            onclick="previousTask()"><i class="fa fa-arrow-left"
-                                                        aria-hidden="true"></i>
-                        Forrige oppgave
-                    </button>
-                    {% for task in object_list %}
-                        <li data-menuanchor="oppgave{{ forloop.counter }}">
-                            <a type="button" onclick="goToTask({{ forloop.counter }})"
-                               style="cursor: pointer">Oppgave {{ forloop.counter }} </a>
-                        </li>
-                    {% endfor %}
-                    <button id="nextTaskBtn" class="btn btn-primary btn-lg" type="button" onclick="nextTask()"><span
-                            id="nextTaskBtnText">Neste Oppgave</span> <i
-                            class="fa fa-arrow-right"
-                            aria-hidden="true"></i></button>
-                </ul>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </nav>
+    {% endfor %}
+</div>
+<nav id="tasknav" class="navbar navbar-default navbar-fixed-bottom hidden">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="taskbar" style="text-align: center;">
+
+            <ul id="taskBtnList" class="nav navbar-nav" style="display: inline-block; float: none;">
+                <button id="prevTaskBtn" class="btn btn-primary btn-lg" type="button" disabled="disabled"
+                        style="float: left"
+                        onclick="previousTask()"><i class="fa fa-arrow-left"
+                                                    aria-hidden="true"></i>
+                    Forrige oppgave
+                </button>
+                {% for task in object_list %}
+                    <li data-menuanchor="oppgave{{ forloop.counter }}">
+                        <a type="button" onclick="goToTask({{ forloop.counter }})"
+                           style="cursor: pointer">Oppgave {{ forloop.counter }} </a>
+                    </li>
+                {% endfor %}
+                <button id="nextTaskBtn" class="btn btn-primary btn-lg" type="button" onclick="nextTask()"><span
+                        id="nextTaskBtnText">Neste Oppgave</span> <i
+                        class="fa fa-arrow-right"
+                        aria-hidden="true"></i></button>
+            </ul>
+            <a class="btn btn-danger btn-lg pull-right" onclick="goBack()">Avslutt fremvisning</a>
+        </div>
+    </div>
+</nav>
 
 
-    <script>
-        $(document).ready(function () {
-            $('#fullpage').fullpage({
-                menu: '#taskBtnList',
-                lockAnchors: true,
-                scrollingSpeed: 1,
-                onLeave: function (index, nextIndex, direction) {
-                    var numTasks = $('.section').length;
-                    if (nextIndex == 1) {
-                        $('#nextTaskBtn').attr('disabled', false);
-                        $('#prevTaskBtn').attr('disabled', 'disabled');
-                    } else if (nextIndex == numTasks) {
-                        $('#prevTaskBtn').attr('disabled', false);
-                        $('#nextTaskBtn').attr('disabled', 'disabled');
-                    } else {
-                        $('#nextTaskBtn').attr('disabled', false);
-                        $('#prevTaskBtn').attr('disabled', false);
-                    }
+<script>
+    var viewPortWidth = 1200;
+    var viewPortHeight = 750;
+    var taskcount = document.getElementById('taskcount').innerHTML;
+    var geocount = $('.geogebra').length;
+    var geoFinished = false;
+    var onLeave = false;
+    var geoloaded = 0;
+    var base64;
+    var parameters;
+
+    if (typeof window.innerWidth != 'undefined' && window.innerWidth > 1000) {
+        viewPortWidth = window.innerWidth * 0.49;
+        viewPortHeight = window.innerHeight * 0.7;
+    }
+
+    /**
+     * This function is called from every GeoGebra-applet when the applet is finished loading.
+     * @param applet - The id of the applet that called the function
+     */
+    function ggbOnInit(applet) {
+        geoloaded += 1;
+        if (geoloaded == geocount) {
+            setTimeout(function () {
+                geoFinished = true;
+                goToTask(1);
+                $(".sk-cube-grid").remove();
+                $('#tasknav').removeClass('hidden');
+            }, 1000);
+        }
+    }
+
+    var applet = [];
+    for (var i = 0; i < taskcount; i++) {
+        if (document.getElementById('base64' + (i + 1)) != null) {
+            base64 = document.getElementById('base64' + (i + 1)).value;
+            parameters = {
+                "id": "ggbApplet" + (i + 1),
+                "width": viewPortWidth,
+                "language": "nb",
+                "height": viewPortHeight,
+                "showToolBar": true,
+                "borderColor": null,
+                "showMenuBar": true,
+                "allowStyleBar": true,
+                "enableLabelDrags": false,
+                "enableShiftDragZoom": true,
+                "capturingThreshold": null,
+                "showToolBarHelp": false,
+                "errorDialogsActive": true,
+                "showTutorialLink": false,
+                "showLogging": false,
+                "preventFocus": true,
+                "useBrowserForJS": true,
+                "ggbBase64": base64
+            };
+        }
+        var app = new GGBApplet(parameters, '5.0', 'applet_container' + (i + 1));
+        app.setPreviewImage('http://bildr.no/image/cEtUd3R6.jpeg', 'https://www.geogebra.org/images/GeoGebra_loading.png?v=1490705653', 'https://www.geogebra.org/images/applet_play.png?v=1490705653');
+        applet.push(app);
+    }
+    $(document).ready(function () {
+        $('#fullpage').fullpage({
+            menu: '#taskBtnList',
+            lockAnchors: true,
+            scrollingSpeed: 1,
+            scrollBar: true,
+            onLeave: function (index, nextIndex, direction) {
+                if (!geoFinished) {
+                    return false;
                 }
-            });
-            $.fn.fullpage.setMouseWheelScrolling(false);
-            $.fn.fullpage.setAllowScrolling(false);
+                onLeave = true;
+                var numTasks = $('.section').length;
+                if (nextIndex == 2) {
+                    $('#nextTaskBtn').attr('disabled', false);
+                    $('#prevTaskBtn').attr('disabled', 'disabled');
+                } else if (nextIndex == numTasks) {
+                    $('#prevTaskBtn').attr('disabled', false);
+                    $('#nextTaskBtn').attr('disabled', 'disabled');
+                } else {
+                    $('#nextTaskBtn').attr('disabled', false);
+                    $('#prevTaskBtn').attr('disabled', false);
+                }
+            }
         });
-        $(':radio,:checkbox').click(function () {
-            return false;
-        });
-
-
-        function nextTask() {
-            $('#fullpage').fullpage.moveSectionDown();
-        }
-
-        function previousTask() {
-            $('#fullpage').fullpage.moveSectionUp();
-        }
-
-        function goToTask(task) {
-            if (task == 0) {
-                var numItems = $('.section').length;
-                $('#fullpage').fullpage.moveTo(numItems);
-            } else {
-                var nextIndex = parseInt(task);
-                $('#fullpage').fullpage.moveTo(nextIndex);
+        for (var k = 0; k < taskcount; k++) {
+            if (document.getElementById('applet_container' + (k + 1)) != null) {
+                applet[k].inject('applet_container' + (k + 1), 'preferhtml5');
             }
         }
-    </script>
-{% endblock %}
+        $("body").css({"overflow": "hidden"});
+        $.fn.fullpage.setMouseWheelScrolling(false);
+        $.fn.fullpage.setAllowScrolling(false);
+    });
+    $(':radio,:checkbox').click(function () {
+        return false;
+    });
+
+    $(window).scroll(function () {
+        if (window.chrome) {
+            if (onLeave == false) {
+                scrollTo(0, 10);
+            }
+        }
+    });
+
+
+    function goToTask(task) {
+        var nextIndex = parseInt(task) + 1;
+        $('#fullpage').fullpage.moveTo(nextIndex);
+    }
+
+    function goBack() {
+        var role = $('#role').text();
+        var url;
+        if (role == "1") {
+            url = "{% url 'maths:index' %}";
+            window.location = url;
+        } else {
+            var testID = $('#testid').text();
+            url = "{% url 'maths:testDetail' test_pk=12345 %}".replace(/12345/, testID);
+        }
+        window.location = url;
+
+    }
+
+
+    function nextTask() {
+        $('#fullpage').fullpage.moveSectionDown();
+    }
+
+    function previousTask() {
+        $('#fullpage').fullpage.moveSectionUp();
+    }
+
+</script>

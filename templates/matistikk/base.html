@@ -39,9 +39,12 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false" id="overviewDropdown">Oversikt <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{% url 'administration:personList' %}" id="userOverview">Brukeroversikt</a></li>
-                            <li><a href="{% url 'administration:schoolList' %}" id="schoolOverview">Skoleoversikt</a></li>
-                            <li><a href="{% url 'administration:groupList' %}" id="groupOverview">Gruppeoversikt</a></li>
+                            <li><a href="{% url 'administration:personList' %}" id="userOverview">Brukeroversikt</a>
+                            </li>
+                            <li><a href="{% url 'administration:schoolList' %}" id="schoolOverview">Skoleoversikt</a>
+                            </li>
+                            <li><a href="{% url 'administration:groupList' %}" id="groupOverview">Gruppeoversikt</a>
+                            </li>
                             <li class="divider"></li>
                             <li><a href="{% url 'maths:taskList' %}">Oppgaveoversikt</a></li>
                             <li><a href="{% url 'maths:taskCollectionList' %}">Testoversikt</a></li>
@@ -154,11 +157,8 @@
     </nav>
 
 {% endif %}
-<div class="container">
-    {% block body %}
-        <p>admin/base.html</p>
-    {% endblock %}
-</div>
+{% block body %}
+{% endblock %}
 {% block modal %}
 {% endblock %}
 </body>
