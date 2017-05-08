@@ -275,9 +275,8 @@
                                         <textarea id="tasktext{{ taskorder.task.id }}" style="cursor:pointer;">
                                             <h4>{{ taskorder.task.text | safe }}</h4>
                                         </textarea>
-                                        </div>
                                     </div>
-                                    <div class="panel-body" style="max-height: 30vh; overflow: auto">
+                                    <div class="panel-body">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6" hidden></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if taskorder.task.answertype == 1 %}
@@ -365,8 +364,8 @@
                                 </div>
                             </div>
                         {% endif %}
-                    </div>
                 </div>
+            </div>
             </div>
             {% if forloop.last %}
                 <div class="section" data-anchor="summary2">
@@ -859,40 +858,40 @@
             }
             var reasoning2 = document.getElementById('id_task' + i + '-reasoning');
             var base64;
-            if(window["ggbApplet" + (i + 1)]){
+            if (window["ggbApplet" + (i + 1)]) {
                 base64 = window["ggbApplet" + (i + 1)].getBase64();
             }
             var base642 = document.getElementById('id_task' + i + '-base64answer');
             var multiplechoiceanswer = $("input[name=multiplechoice" + taskid + "]:checked").val();
             var geolistener = document.getElementById('geolistener' + (i + 1));
             var geogebradata = document.getElementById('id_task' + i + '-geogebradata');
-            var timespent = document.getElementById('tasktimer' + (i+1)).value;
+            var timespent = document.getElementById('tasktimer' + (i + 1)).value;
             var timespent2 = document.getElementById('id_task' + i + '-timespent');
 
             var tab = (geolistener.value).split('\n');
             var timetab = [];
             var output = [];
 
-            for(var z = 0; z < tab.length - 1; z++){
+            for (var z = 0; z < tab.length - 1; z++) {
                 var tab2 = tab[z].split('|');
                 timetab.push(parseFloat(tab2[0]));
             }
 
-            for(var x = 0; x < timetab.length; x++){
-                if(x !== timetab.length-1){
-                    if((timetab[x] + 0.2) < timetab[x+1]){
+            for (var x = 0; x < timetab.length; x++) {
+                if (x !== timetab.length - 1) {
+                    if ((timetab[x] + 0.2) < timetab[x + 1]) {
                         output.push(tab[x]);
                     }
                 }
-                else{
+                else {
                     output.push(tab[x]);
                 }
             }
 
             geolistener.value = "";
-            for(var y = 0; y < output.length; y++){
+            for (var y = 0; y < output.length; y++) {
                 geolistener.value += output[y];
-                if(y !== output.length-1){
+                if (y !== output.length - 1) {
                     geolistener.value += '\n';
                 }
             }
