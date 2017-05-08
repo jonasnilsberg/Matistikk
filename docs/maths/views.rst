@@ -1,5 +1,25 @@
 **Views**
 ===========
+*Permissions*
+------------
+*AnswerCheck*
+++++++++++++
+.. automodule:: maths.views
+    :members: AnswerCheck
+    :show-inheritance:
+
+*AdministratorCheck*
+++++++++++++++++++
+.. automodule:: administration.views
+    :members: AdministratorCheck
+    :show-inheritance:
+
+*RoleCheck*
+++++++++++
+.. automodule:: administration.views
+    :members: RoleCheck
+    :show-inheritance:
+
 *IndexView*
 ----------
 .. automodule:: maths.views

@@ -189,16 +189,17 @@
             <div class="col-sm-6">
                 <div class="panel panel-info">
                     <div class="panel-heading">
-                        <h4>Agenda ({{ notanswered|length}})</h4>
+                        <h4>Agenda ({{ notanswered|length }})</h4>
                     </div>
                     <div class="panel-body">
                         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             {% for test in notanswered %}
                                 <div id="panel{{ forloop.counter }}" class="panel panel-default">
-                                    <div class="panel-heading" role="tab" id="heading{{ forloop.counter }}">
+                                    <div class="panel-heading box" role="tab" id="heading{{ forloop.counter }}"
+                                         data-toggle="collapse" data-parent="#accordion"
+                                         href="#collapse{{ forloop.counter }}" style="cursor: pointer">
                                         <h4 class="panel-title">
-                                            <a role="button" data-toggle="collapse" data-parent="#accordion"
-                                               href="#collapse{{ forloop.counter }}"
+                                            <a role="button"
                                                aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
                                                 {{ test }}
                                                 <p id="testpanel{{ forloop.counter }}" class="pull-right"></p>
@@ -245,13 +246,15 @@
                         <h4>Gjennomførte aktiviteter</h4>
                     </div>
                     <div class="panel-body">
-                        <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
+                        <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true"
+                             style="max-height: 75vh; overflow: auto">
                             {% for test in answered %}
                                 <div id="donepanel{{ forloop.counter }}" class="panel panel-default">
-                                    <div class="panel-heading" role="tab" id="doneheading{{ forloop.counter }}">
+                                    <div class="panel-heading box" role="tab" id="doneheading{{ forloop.counter }}"
+                                         data-toggle="collapse" data-parent="#accordion2" style="cursor:pointer;"
+                                         href="#donecollapse{{ forloop.counter }}">
                                         <h4 class="panel-title">
-                                            <a role="button" data-toggle="collapse" data-parent="#accordion2"
-                                               href="#donecollapse{{ forloop.counter }}"
+                                            <a role="button"
                                                aria-expanded="true" aria-controls="donecollapse{{ forloop.counter }}">
                                                 {{ test }}
                                             </a>
@@ -263,10 +266,25 @@
                                         <div class="panel-body">
                                             <div class="row">
                                                 <div class="col-sm-6">
-
+                                                    <p><strong>Starttidspunkt: </strong>{{ test.published }}</p>
+                                                    <span id="publishdate{{ forloop.counter }}"
+                                                          hidden>{{ test.published.isoformat }}</span>
+                                                    <p><strong>Frist: </strong>{{ test.dueDate }}</p>
+                                                    <p>
+                                                        <strong>Besvart: </strong>{{ test.answer_set.all.0.date_answered }}
+                                                    </p>
+                                                    <p><strong>Antall
+                                                        Oppgaver: </strong>{{ test.task_collection.tasks.count }}</p>
+                                                    <p><strong>Laget
+                                                        av: </strong>{{ test.task_collection.author.first_name }} {{ test.task_collection.author.last_name }}
+                                                    </p>
                                                 </div>
                                                 <div class="col-sm-6">
-
+                                                    <a id="seetestbutton{{ forloop.counter }}" type="button"
+                                                       class="btn btn-success btn-lg pull-right"
+                                                       href="{% url 'maths:answerDetail' test.id request.user.username %}">Se
+                                                        Besvarelse
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>

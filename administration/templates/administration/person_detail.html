@@ -117,18 +117,21 @@
                                 <th>Tittel</th>
                                 <th>Publisert</th>
                                 <th>Svarfrist</th>
+                                <th>Besvart</th>
                                 <th>Alternativer</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for test in tests %}
                                 <tr>
+                                    {% answered person test as answer %}
                                     <td>{{ test.task_collection.test_name }}</td>
                                     <td>{{ test.published }}</td>
                                     <td>{% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen svarfrist{% endif %}</td>
+                                    <td>{% if answer %}{{ answer.date_answered }}{% else %}-{% endif %}</td>
                                     <td>
                                         <button class='btn btn-default goToAnswer' disabled="disabled"
-                                                value="{% answered person test %}" data-test="{{ test.id }}">
+                                                {% if answer %}value="{{ answer.id }}"{% else %}value=""{% endif %} data-test="{{ test.id }}">
                                             <i class="fa fa-eye" aria-hidden="true"></i>
                                             Se besvarelse
                                         </button>

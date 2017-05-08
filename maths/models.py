@@ -145,8 +145,8 @@ class Answer(models.Model):
     date_answered = models.DateTimeField(null=True)
     timespent = models.FloatField(null=True)
 
-    def get_geogebra(self):
-        return "test"
+    def __str__(self):
+        return "Svar: " + self.test.task_collection.test_name + " - " + self.task.title + " - " + self.user.get_full_name()
 
 
 class GeogebraAnswer(models.Model):
@@ -159,3 +159,6 @@ class GeogebraAnswer(models.Model):
     answer = models.ForeignKey(Answer)
     base64 = models.CharField(max_length=32700)
     data = models.CharField(max_length=2000, null=True)
+
+    def __str__(self):
+        return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.task.title + " - " + self.answer.user.get_full_name()

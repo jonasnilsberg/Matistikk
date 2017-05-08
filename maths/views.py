@@ -5,14 +5,49 @@ from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAns
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, \
     GeogebraAnswer
 from braces import views
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from administration.models import Grade, Person, Gruppe, School
 import json
 from django.db.models import Q
 import django_excel as excel
+from administration.views import AdministratorCheck, RoleCheck
+import datetime
 
 import random
 from django.http import HttpResponseRedirect
+
+
+class AnswerCheck(views.UserPassesTestMixin):
+    """
+    Checks if the logged in user has privileges to see the answer.
+
+     **UserPassesTestMixin:**
+        Mixin from :ref:`Django braces` that check is the logged in user passes the test given in :func:`test_func`.
+    """
+
+    def test_func(self, user):
+        """
+            :param user: Person that has to pass the test.
+            :return: True if the user logged in as an administrator.
+        """
+        if user.is_authenticated():
+            role = [2, 3, 4]
+            if user.role in role:
+                return True
+            elif user.role == 1:
+                if self.kwargs.get('slug'):
+                    answer_user = self.kwargs.get('slug')
+                    if answer_user == user.username:
+                        return True
+                else:
+                    test_id = self.kwargs.get('test_pk')
+                    if Person.objects.filter(id=user.id, tests__id=test_id).exists():
+                        return True
+                    elif Grade.objects.filter(person=user, tests__id=test_id).exists():
+                        return True
+                    elif Gruppe.objects.filter(persons=user, tests__id=test_id).exists():
+                        return True
+        return False
 
 
 class IndexView(LoginRequiredMixin, generic.TemplateView):
@@ -64,10 +99,12 @@ class EquationEditorView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'maths/equation_editor.html'
 
 
-class TaskCreateView(generic.CreateView):
+class TaskCreateView(AdministratorCheck, generic.CreateView):
     """
     Class that creates a task.
 
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **CreateView:**
         Inherits Django's CreateView that displays a form for creating a object and
         saving the form when validated.
@@ -123,10 +160,12 @@ class TaskCreateView(generic.CreateView):
         return super(TaskCreateView, self).form_valid(form)
 
 
-class CategoryListView(generic.ListView):
+class CategoryListView(AdministratorCheck, generic.ListView):
     """
     Class that displays a template containing all category objects.
 
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **ListView:**
         Inherits Django's ListView that makes a page representing a list of objects.
     """
@@ -134,10 +173,12 @@ class CategoryListView(generic.ListView):
     template_name = 'maths/category_list.html'
 
 
-class CategoryCreateView(views.AjaxResponseMixin, generic.CreateView):
+class CategoryCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.CreateView):
     """
     Class that creates a category.
 
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **AjaxResponseMixin:**
         This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **CreateView:**
@@ -168,10 +209,12 @@ class CategoryCreateView(views.AjaxResponseMixin, generic.CreateView):
         return JsonResponse(data)
 
 
-class CategoryUpdateView(generic.UpdateView):
+class CategoryUpdateView(AdministratorCheck, generic.UpdateView):
     """
     Class that updates a category.
 
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **UpdateView:**
         Inherits Django's UpdateView that displays a form for updating a specific object and
         saving the form when validated.
@@ -183,10 +226,12 @@ class CategoryUpdateView(generic.UpdateView):
     pk_url_kwarg = 'category_pk'
 
 
-class TaskListView(views.AjaxResponseMixin, generic.ListView):
+class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
     """
     Class that displays a template containing all task objects.
 
+     :func:`RoleCheck`:
+        Permission check, only allows teachers, administrators and school administrators.
     **AjaxResponseMixin:**
         This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **ListView:**
@@ -242,10 +287,12 @@ class TaskListView(views.AjaxResponseMixin, generic.ListView):
         return context
 
 
-class TaskUpdateView(generic.UpdateView):
+class TaskUpdateView(AdministratorCheck, generic.UpdateView):
     """
     Class that updates a task.
 
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **UpdateView:**
         Inherits Django's UpdateView that displays a form for updating a specific object and
         saving the form when validated.
@@ -326,10 +373,12 @@ class TaskUpdateView(generic.UpdateView):
         return super(TaskUpdateView, self).form_valid(form)
 
 
-class TaskCollectionCreateView(generic.CreateView):
+class TaskCollectionCreateView(AdministratorCheck, generic.CreateView):
     """
     Class that creates a taskCollection.
 
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **CreateView:**
         Inherits Django's CreateView that displays a form for creating a object and
         saving the form when validated.
@@ -364,10 +413,12 @@ class TaskCollectionCreateView(generic.CreateView):
         return super(TaskCollectionCreateView, self).form_valid(form)
 
 
-class TaskCollectionListView(generic.ListView):
+class TaskCollectionListView(AdministratorCheck, generic.ListView):
     """
        Class that displays a template containing all taskCollection objects.
 
+        :func:`AdministratorCheck`:
+            inherited permission check, checks if the logged in user is an administrator.
        **ListView:**
            Inherits Django's ListView that makes a page representing a list of objects.
     """
@@ -375,10 +426,12 @@ class TaskCollectionListView(generic.ListView):
     model = TaskCollection
 
 
-class TaskCollectionDetailView(views.AjaxResponseMixin, generic.DetailView):
+class TaskCollectionDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.DetailView):
     """
     Class that displays information about a single taskCollection object based on the taskCollection_id.
     
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **AjaxResponseMixin:**
         This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **DetailView:**
@@ -455,10 +508,12 @@ class TaskCollectionDetailView(views.AjaxResponseMixin, generic.DetailView):
         return context
 
 
-class TestCreateView(views.AjaxResponseMixin, generic.CreateView):
+class TestCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.CreateView):
     """
     Class that creates a test.
-    
+
+    :func:`AdministratorCheck`:
+        inherited permission check, checks if the logged in user is an administrator.
     **AjaxResponseMixin:**
         This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **CreateView:**
@@ -551,10 +606,12 @@ class TestCreateView(views.AjaxResponseMixin, generic.CreateView):
         return super(TestCreateView, self).form_valid(form)
 
 
-class TestDetailView(views.AjaxResponseMixin, generic.DetailView):
+class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
     """
     Class that displays information about a single test object based on the test_id.
 
+     :func:`RoleCheck`:
+        Permission check, only allows teachers, administrators and school administrators.
     **AjaxResponseMixin:**
         This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
     **DetailView:**
@@ -597,13 +654,15 @@ class TestDetailView(views.AjaxResponseMixin, generic.DetailView):
         return context
 
 
-class AnswerCreateView(generic.FormView):
+class AnswerCreateView(AnswerCheck, generic.FormView):
     """
-       Class for creating answers for all the tasks in a test.
+   Class for creating answers for all the tasks in a test.
 
-        **FormView**
-           A view that displays a form.
-       """
+    :func:`AnswerCheck`:
+        inherited permission check, checks if the logged in user can answer the test.
+    **FormView**
+       A view that displays a form.
+    """
     form_class = CreateAnswerForm
     template_name = 'maths/answer_form.html'
 
@@ -657,6 +716,7 @@ class AnswerCreateView(generic.FormView):
             timespent = request.POST["task" + str(y) + "-timespent"]
             task = Task.objects.get(id=taskid)
             answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, task=task, timespent=timespent)
+            answer.date_answered = datetime.datetime.now()
             answer.save()
             base64 = request.POST["task" + str(y) + "-base64answer"]
             geogebradata = request.POST["task" + str(y) + "-geogebradata"]
@@ -668,10 +728,12 @@ class AnswerCreateView(generic.FormView):
         return HttpResponseRedirect(url)
 
 
-class TestListView(views.AjaxResponseMixin, generic.ListView):
+class TestListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
     """
        Class that displays a template a list of test objects.
        
+        :func:`RoleCheck`:
+            Permission check, only allows teachers, administrators and school administrators.
        **AjaxResponseMixin:**
             This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
        **ListView:**
@@ -767,12 +829,14 @@ class TestListView(views.AjaxResponseMixin, generic.ListView):
         return context
 
 
-class AnswerListView(generic.ListView):
+class AnswerListView(AnswerCheck, generic.ListView):
     """
-       Class that displays a list of answers for all the tasks in a specific test for a specific user.
-       
-       **ListView:**
-            Inherits Django's ListView that makes a page representing a list of objects.
+    Class that displays a list of answers for all the tasks in a specific test for a specific user.
+
+    :func:`AnswerCheck`:
+        inherited permission check, checks if the logged in user can answer the test.
+    **ListView:**
+        Inherits Django's ListView that makes a page representing a list of objects.
     """
     template_name = 'maths/answer_detail.html'
 
@@ -795,7 +859,12 @@ def export_data(request, test_pk):
         :param test_pk: The id for the specific test.
         :return: Excel-file
     """
-    test = Test.objects.get(id=test_pk)
-    answers = Answer.objects.filter(test=test)
-    column_names = ['task_id', 'user_id', 'text', 'reasoning']
-    return excel.make_response_from_query_sets(answers, column_names, 'xlsx', file_name=test.task_collection.test_name)
+    if request.user.role is not 1:
+        test = Test.objects.get(id=test_pk)
+        answers = Answer.objects.filter(test=test)
+        column_names = ['task_id', 'user_id', 'text', 'reasoning']
+        return excel.make_response_from_query_sets(answers, column_names, 'xlsx',
+                                                   file_name=test.task_collection.test_name)
+    else:
+        array = ['Skal ikke være så lett, din lille luring']
+        return excel.make_response_from_array(array, 'xlsx', file_name='Alle svar')
