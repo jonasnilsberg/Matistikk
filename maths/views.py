@@ -862,9 +862,9 @@ def export_data(request, test_pk):
     if request.user.role is not 1:
         test = Test.objects.get(id=test_pk)
         answers = Answer.objects.filter(test=test)
-        column_names = ['task_id', 'user_id', 'text', 'reasoning']
+        column_names = ['task_id', 'user_id', 'text', 'reasoning', 'timespent', 'date_answered']
         return excel.make_response_from_query_sets(answers, column_names, 'xlsx',
                                                    file_name=test.task_collection.test_name)
     else:
-        array = ['Skal ikke være så lett, din lille luring']
-        return excel.make_response_from_array(array, 'xlsx', file_name='Alle svar')
+        array = ['#hackerman']
+        return excel.make_response_from_array(array, 'xlsx', file_name='fasit')

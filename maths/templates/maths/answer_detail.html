@@ -53,35 +53,81 @@
                                         <h4>{{ answer.task.text | safe }}</h4>
                                     </div>
                                     <div class="panel-body">
-                                        {% if answer.task.answertype == 1 %}
-                                            <div id="textanswerdiv">
-                                                <label for="answer">Tekstsvar</label>
-                                                <textarea readonly class="form-control" id="answer{{ task.id }}"
-                                                          rows="6"
-                                                          style="resize:vertical">{{ answer.text }}</textarea>
-                                            </div>
-                                        {% elif answer.task.answertype == 2 %}
-                                            <div id="multiplechoicediv">
-                                                <label>Svaralternativer</label>
-                                                {% get_mutiplechoice answer.task as multipleChoice %}
-                                                {% for option in multipleChoice %}
-                                                    <div id="optionsdiv{{ task.id }}">
-                                                        <input type="radio" name="multiplechoice{{ answer.task.id }}"
-                                                               value="{{ option.option }}"
-                                                               {% if option.option == answer.text %}checked{% endif %}>
-                                                        {{ option.option }}<br>
+                                        <ul class="nav nav-tabs">
+                                            <li class="nav active"><a href="#answer{{ forloop.parentloop.counter }}"
+                                                                      data-toggle="tab">Besvarelse</a>
+                                            </li>
+                                            <li class="nav"><a href="#approach{{ forloop.parentloop.counter }}"
+                                                               data-toggle="tab">Fremgangsmåte</a></li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade in active"
+                                                 id="answer{{ forloop.parentloop.counter }}">
+                                                {% if answer.task.answertype == 1 %}
+                                                    <div id="textanswerdiv">
+                                                        <label for="answer">Tekstsvar</label>
+                                                        <textarea readonly class="form-control" id="answer{{ task.id }}"
+                                                                  rows="6"
+                                                                  style="resize:vertical">{{ answer.text }}</textarea>
                                                     </div>
-                                                {% endfor %}
+                                                {% elif answer.task.answertype == 2 %}
+                                                    <div id="multiplechoicediv">
+                                                        <label>Svaralternativer</label>
+                                                        {% get_mutiplechoice answer.task as multipleChoice %}
+                                                        {% for option in multipleChoice %}
+                                                            <div id="optionsdiv{{ task.id }}">
+                                                                <input type="radio"
+                                                                       name="multiplechoice{{ answer.task.id }}"
+                                                                       value="{{ option.option }}"
+                                                                       {% if option.option == answer.text %}checked{% endif %}>
+                                                                {{ option.option }}<br>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                                {% if answer.task.reasoning %}
+                                                    <div id="reasoningdiv">
+                                                        <label for="reasoning{{ task.id }}">Begrunnelse</label>
+                                                        <textarea readonly class="form-control"
+                                                                  id="reasoning{{ task.id }}"
+                                                                  rows="6"
+                                                                  style="resize:vertical">{{ answer.reasoning }}</textarea>
+                                                    </div>
+                                                {% endif %}
+
                                             </div>
-                                        {% endif %}
-                                        {% if answer.task.reasoning %}
-                                            <div id="reasoningdiv">
-                                                <label for="reasoning{{ task.id }}">Begrunnelse</label>
-                                                <textarea readonly class="form-control" id="reasoning{{ task.id }}"
-                                                          rows="6"
-                                                          style="resize:vertical">{{ answer.reasoning }}</textarea>
+                                            <div class="tab-pane fade" id="approach{{ forloop.parentloop.counter }}">
+                                                <div class="modalOverflow">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Tid</th>
+                                                            <th>Operasjon</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% split_geo geo.data as approach %}
+                                                        {% for test in approach %}
+                                                            {% split_geo2 test as geoapproach %}
+                                                            <tr>
+                                                                {% for geotable in geoapproach %}
+                                                                    <td>
+                                                                        {% if forloop.first %}
+                                                                            {{ geotable }} sek
+                                                                        {% else %}
+                                                                            {{ geotable }}
+                                                                        {% endif %}
+                                                                    </td>
+                                                                {% endfor %}
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <h4 style="margin-top: 25px"><strong>Tid brukt på oppgave: </strong>{{ answer.timespent }}
+                                                    sekunder</h4>
                                             </div>
-                                        {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -199,7 +245,7 @@
                 "width": viewPortWidth,
                 "language": "nb",
                 "height": viewPortHeight,
-                "customToolBar":[0],
+                "customToolBar": [0],
                 "showToolBar": false,
                 "showToolBarHelp": false,
                 "borderColor": null,

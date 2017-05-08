@@ -34,3 +34,14 @@ def grade_check(grade, person):
             if grade == teacherGrade:
                 return True
     return False
+
+
+@register.simple_tag
+def split_geo(geo):
+    geotab = str.split(geo, "|||")
+    return geotab
+
+@register.simple_tag
+def split_geo2(geo):
+    geotab = str.split(geo, '|')
+    return geotab
