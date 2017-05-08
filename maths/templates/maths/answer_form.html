@@ -123,7 +123,7 @@
                                         </textarea>
                                     </div>
                                     <div class="panel-body">
-                                        <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
+                                        <textarea id="geolistener{{ forloop.counter }}" rows="6" hidden></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if task.answertype == 1 %}
                                             <div id="textanswerdiv{{ task.id }}">
@@ -168,7 +168,7 @@
                                         </textarea>
                                     </div>
                                     <div class="panel-body">
-                                        <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
+                                        <textarea id="geolistener{{ forloop.counter }}" rows="6" hidden></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if task.answertype == 1 %}
                                             <div id="textanswerdiv{{ task.id }}">
@@ -275,9 +275,10 @@
                                         <textarea id="tasktext{{ taskorder.task.id }}" style="cursor:pointer;">
                                             <h4>{{ taskorder.task.text | safe }}</h4>
                                         </textarea>
+                                        </div>
                                     </div>
-                                    <div class="panel-body">
-                                        <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
+                                    <div class="panel-body" style="max-height: 30vh; overflow: auto">
+                                        <textarea id="geolistener{{ forloop.counter }}" rows="6" hidden></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if taskorder.task.answertype == 1 %}
                                             <div id="textanswerdiv{{ taskorder.task.id }}">
@@ -325,7 +326,7 @@
                                         </textarea>
                                     </div>
                                     <div class="panel-body">
-                                        <textarea id="geolistener{{ forloop.counter }}" rows="6"></textarea>
+                                        <textarea id="geolistener{{ forloop.counter }}" rows="6" hidden></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if taskorder.task.answertype == 1 %}
                                             <div id="textanswerdiv{{ taskorder.task.id }}">
@@ -703,6 +704,7 @@
         }
         window["ggbApplet" + applet.charAt(9)].registerAddListener("addListener" + applet.charAt(9));
         window["ggbApplet" + applet.charAt(9)].registerRemoveListener("removeListener" + applet.charAt(9));
+        window["ggbApplet" + applet.charAt(9)].registerUpdateListener("updateListener" + applet.charAt(9));
     }
 
     var applet = [];
@@ -856,12 +858,49 @@
                 var reasoning = tinyMCE.get('reasoning' + taskid).getContent();
             }
             var reasoning2 = document.getElementById('id_task' + i + '-reasoning');
-            var base64 = window["ggbApplet" + (i + 1)].getBase64();
+            var base64;
+            if(window["ggbApplet" + (i + 1)]){
+                base64 = window["ggbApplet" + (i + 1)].getBase64();
+            }
             var base642 = document.getElementById('id_task' + i + '-base64answer');
             var multiplechoiceanswer = $("input[name=multiplechoice" + taskid + "]:checked").val();
-            taskid2.value = taskid;
-            if (typeof textanswer !== 'undefined') {
+            var geolistener = document.getElementById('geolistener' + (i + 1));
+            var geogebradata = document.getElementById('id_task' + i + '-geogebradata');
+            var timespent = document.getElementById('tasktimer' + (i+1)).value;
+            var timespent2 = document.getElementById('id_task' + i + '-timespent');
 
+            var tab = (geolistener.value).split('\n');
+            var timetab = [];
+            var output = [];
+
+            for(var z = 0; z < tab.length - 1; z++){
+                var tab2 = tab[z].split('|');
+                timetab.push(parseFloat(tab2[0]));
+            }
+
+            for(var x = 0; x < timetab.length; x++){
+                if(x !== timetab.length-1){
+                    if((timetab[x] + 0.2) < timetab[x+1]){
+                        output.push(tab[x]);
+                    }
+                }
+                else{
+                    output.push(tab[x]);
+                }
+            }
+
+            geolistener.value = "";
+            for(var y = 0; y < output.length; y++){
+                geolistener.value += output[y];
+                if(y !== output.length-1){
+                    geolistener.value += '\n';
+                }
+            }
+
+            geogebradata.value = geolistener.value;
+            taskid2.value = taskid;
+            timespent2.value = parseFloat(timespent);
+            if (typeof textanswer !== 'undefined') {
                 textanswer2.value = textanswer;
             }
             else if (multiplechoiceanswer !== "" && multiplechoiceanswer !== null && typeof multiplechoiceanswer !== 'undefined') {
@@ -888,7 +927,7 @@
         else {
             time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
         }
-        $('#geolistener1').append(time + " Add: " + strVal + '\n');
+        $('#geolistener1').append(time + " | Add: " + strVal + '\n');
     }
 
     function addListener2(objName) {
@@ -901,7 +940,7 @@
         else {
             time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
         }
-        $('#geolistener2').append(time + " Add: " + strVal + '\n');
+        $('#geolistener2').append(time + " | Add: " + strVal + '\n');
     }
 
     function addListener3(objName) {
@@ -914,7 +953,7 @@
         else {
             time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
         }
-        $('#geolistener3').append(time + " Add: " + strVal + '\n');
+        $('#geolistener3').append(time + " | Add: " + strVal + '\n');
     }
 
     function addListener4(objName) {
@@ -927,23 +966,107 @@
         else {
             time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
         }
-        $('#geolistener4').append(time + " Add: " + strVal + '\n');
+        $('#geolistener4').append(time + " | Add: " + strVal + '\n');
     }
 
     function removeListener1(objName) {
-        $('#geolistener1').append((Date.now() - start) / 1000 + " Remove: " + objName + '\n');
+        var timer = document.getElementById('tasktimer1').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener1').append(time + " | Remove: " + objName + '\n');
     }
 
     function removeListener2(objName) {
-        $('#geolistener2').append((Date.now() - start) / 1000 + " Remove: " + objName + '\n');
+        var timer = document.getElementById('tasktimer2').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener2').append(time + " | Remove: " + objName + '\n');
     }
 
     function removeListener3(objName) {
-        $('#geolistener3').append((Date.now() - start) / 1000 + " Remove: " + objName + '\n');
+        var timer = document.getElementById('tasktimer3').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener3').append(time + " | Remove: " + objName + '\n');
     }
 
     function removeListener4(objName) {
-        $('#geolistener4').append((Date.now() - start) / 1000 + " Remove: " + objName + '\n');
+        var timer = document.getElementById('tasktimer4').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener4').append(time + " | Remove: " + objName + '\n');
+    }
+
+    function updateListener1(objName) {
+        var strVal = window["ggbApplet1"].getValueString(objName);
+        var timer = document.getElementById('tasktimer1').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener1').append(time + " | Update: " + strVal + '\n');
+    }
+
+    function updateListener2(objName) {
+        var strVal = window["ggbApplet2"].getValueString(objName);
+        var timer = document.getElementById('tasktimer2').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener2').append(time + " | Update: " + strVal + '\n');
+    }
+
+    function updateListener3(objName) {
+        var strVal = window["ggbApplet3"].getValueString(objName);
+        var timer = document.getElementById('tasktimer3').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener3').append(time + " | Update: " + strVal + '\n');
+    }
+
+    function updateListener4(objName) {
+        var strVal = window["ggbApplet4"].getValueString(objName);
+        var timer = document.getElementById('tasktimer4').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener4').append(time + " | Update: " + strVal + '\n');
     }
 </script>
 </body>
