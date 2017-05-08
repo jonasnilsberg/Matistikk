@@ -142,6 +142,8 @@ class Answer(models.Model):
     user = models.ForeignKey(Person)
     reasoning = models.CharField(max_length=32700, null=True)
     text = models.CharField(max_length=32700, null=True)
+    date_answered = models.DateTimeField(null=True)
+    timespent = models.FloatField(null=True)
 
     def get_geogebra(self):
         return "test"
@@ -156,3 +158,4 @@ class GeogebraAnswer(models.Model):
     """
     answer = models.ForeignKey(Answer)
     base64 = models.CharField(max_length=32700)
+    data = models.CharField(max_length=2000, null=True)

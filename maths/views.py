@@ -654,12 +654,14 @@ class AnswerCreateView(generic.FormView):
             text = request.POST["task" + str(y) + "-text"]
             reasoning = request.POST["task" + str(y) + "-reasoning"]
             taskid = request.POST["task" + str(y) + "-task"]
+            timespent = request.POST["task" + str(y) + "-timespent"]
             task = Task.objects.get(id=taskid)
-            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, task=task)
+            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, task=task, timespent=timespent)
             answer.save()
             base64 = request.POST["task" + str(y) + "-base64answer"]
+            geogebradata = request.POST["task" + str(y) + "-geogebradata"]
             if task.extra:
-                geogebraanswer = GeogebraAnswer(answer=answer, base64=base64)
+                geogebraanswer = GeogebraAnswer(answer=answer, base64=base64, data=geogebradata)
                 geogebraanswer.save()
             y += 1
         url = reverse('maths:index')
