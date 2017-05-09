@@ -372,3 +372,7 @@ html, body {
 .box:hover {
     background: darkgray; /* make this whatever you want */
 }
+
+#tasktextdiv{
+    height: 20%;
+}

@@ -60,7 +60,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading" id="tasktextdiv{{ answer.task.id }}">
+                                    <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ answer.task.id }}">
                                             <h4>{{ answer.task.text | safe }}</h4>
                                         </textarea>
@@ -82,6 +82,7 @@
                                                         <input type="radio" name="multiplechoice{{ answer.task.id }}"
                                                                value="{{ option.option }}"
                                                                {% if option.option == answer.text %}checked{% endif %}>
+
                                                         {{ option.option }}<br>
                                                     </div>
                                                 {% endfor %}
@@ -125,6 +126,7 @@
                                                            value="{{ option.option }}"
                                                            {% if option.option == answer.text %}checked{% endif %}>
                                                     {{ option.option }}<br>
+                                                 {{ option. }}
                                                 </div>
                                             {% endfor %}
                                         </div>
@@ -175,9 +177,11 @@
 
 <script>
     var taskcount = $('.section').length;
+    var divheight = document.getElementById('tasktextdiv').clientHeight;
     for (var i = 0; i < taskcount; i++) {
         var div = $('#task' + (i + 1));
         var taskid = div.data('taskid');
+
         tinymce.init({
             selector: '#tasktext' + taskid,
             plugins: 'placeholder',
@@ -185,7 +189,9 @@
             toolbar: false,
             menubar: false,
             statusbar: false,
-            readonly: 1
+            height: ''+(divheight-25),
+            readonly: 1,
+            body_id: 'tasktextID'
         });
         if ($('#answer' + taskid).length) {
             tinymce.init({
@@ -241,6 +247,7 @@
         }
     }
 
+
     var applet = [];
     for (var i = 0; i < taskcount; i++) {
         if (document.getElementById('base64' + (i + 1)) != null) {
@@ -271,6 +278,7 @@
         applet.push(app);
     }
     $(document).ready(function () {
+
         $('#fullpage').fullpage({
             menu: '#taskBtnList',
             lockAnchors: true,
@@ -314,7 +322,6 @@
             }
         }
     });
-
 
     function goToTask(task) {
         var nextIndex = parseInt(task) + 1;
