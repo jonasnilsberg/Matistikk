@@ -64,6 +64,19 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
+        if self.request.user.role == 2:
+            user = Person.objects.get(username=self.request.user.username)
+            tests = Test.objects.filter(person=user)
+            context['tests'] = tests
+            tabOne = []
+            tabTwo = []
+            ans = Answer.objects.filter(test__in=tests).order_by('-id')
+            for a in ans:
+                if a.test.id not in tabOne:
+                    tabOne.append(a.test.id)
+                    tabTwo.append(a)
+
+            context['lastanswers'] = tabTwo[:15]
         if self.request.user.role == 4:
             context['answers'] = Answer.objects.count()
             context['users'] = Person.objects.count()
