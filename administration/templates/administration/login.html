@@ -24,32 +24,12 @@
             padding-top: 50px;
         }
 
-        .tab-content {
-            border-left: 1px solid #ddd;
-            border-right: 1px solid #ddd;
-            border-bottom: 1px solid #ddd;
+        .content {
+            border: 1px solid #ddd;
             padding: 10px;
             width: 400px;
             min-height: 250px;
-        }
-
-        .nav-tabs {
-            margin-bottom: 0;
             background-color: whitesmoke;
-            border-top: 0px solid #ddd;
-            width: 400px;
-        }
-
-        .btn-block {
-            width: 300px;
-        }
-
-        #logintab {
-            width: 200px;
-        }
-
-        #forgotpasswordtab {
-            width: 200px;
         }
 
         .container {
@@ -80,48 +60,22 @@
     <img src="http://bildr.no/image/djdYNzZp.jpeg" id="MatistikkLogoSkriftBesk"
          class="img-responsive center-block" width="600" height="300" alt="Responsive Image"/>
     <center>
-        <!-- Tab panes -->
-        <ul class="nav nav-tabs">
-            <li class="nav active" id="logintab"><a href="#A" data-toggle="tab">Innlogging</a></li>
-            <li class="nav" id="forgotpasswordtab"><a href="#B" data-toggle="tab">Glemt passord</a></li>
-        </ul>
-
-        <!-- Tab panes content -->
-        <div class="tab-content">
-            <!--Login form-->
-            <div class="tab-pane fade in active" id="A">
-                {% block body %}
-                    <form class="form-horizontal" action="" method="POST">
-                        {% csrf_token %}
-                        {% bootstrap_form_errors form %}
-                        {% bootstrap_field form.username addon_before='<span class="glyphicon glyphicon-user"></span>' %}
-                        {% bootstrap_field form.password addon_before='<span class="glyphicon glyphicon-lock"></span>' %}
-                        {% buttons %}
-                            <button type="submit" class="btn btn-success form-control" id="logInBtn">
-                                {% bootstrap_icon "log-in" %} Logg inn
-                            </button>
-                        {% endbuttons %}
-                    </form>
-                {% endblock %}
-            </div>
-
-
-            <!--ForgotPassword form-->
-            <div class="tab-pane fade" id="B">
-                <form id="forgotPassword-form" action="forgotpassword" method="POST" modelAttribute="student">
-                    <div class="form-group">
-                        <label>Brukernavn</label>
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input type="text" class="form-control" name="username" placeholder="Brukernavn" autofocus>
-                        </div>
-                        <br>
-                        <button type="submit" class="btn btn-success form-control">Send passord</button>
-                    </div>
-
+        <!--Login form-->
+        {% block body %}
+            <div class="content">
+                <form class="form-horizontal" action="" method="POST">
+                    {% csrf_token %}
+                    {% bootstrap_form_errors form %}
+                    {% bootstrap_field form.username addon_before='<span class="glyphicon glyphicon-user"></span>' %}
+                    {% bootstrap_field form.password addon_before='<span class="glyphicon glyphicon-lock"></span>' %}
+                    {% buttons %}
+                        <button type="submit" class="btn btn-success form-control" id="logInBtn">
+                            {% bootstrap_icon "log-in" %} Logg inn
+                        </button>
+                    {% endbuttons %}
                 </form>
             </div>
-        </div>
+        {% endblock %}
     </center>
 </div>
 </body>

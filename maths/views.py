@@ -635,6 +635,10 @@ class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
             grade = Grade.objects.get(id=self.kwargs.get('grade_pk'))
             context['students'] = Person.objects.filter(grades=grade)
             context['fromGrade'] = grade
+        elif self.kwargs.get('group_pk'):
+            group = Gruppe.objects.get(id=self.kwargs.get('group_pk'))
+            context['students'] = Person.objects.filter(gruppe=group)
+            context['fromGroup'] = group
         elif self.request.user.role == 2:
             grades = Grade.objects.filter(person=self.request.user)
             context['students'] = Person.objects.filter(tests__exact=test, role=1, grades__in=grades).distinct()
@@ -715,7 +719,8 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             taskid = request.POST["task" + str(y) + "-task"]
             timespent = request.POST["task" + str(y) + "-timespent"]
             task = Task.objects.get(id=taskid)
-            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, task=task, timespent=timespent)
+            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, task=task,
+                            timespent=timespent)
             answer.date_answered = datetime.datetime.now()
             answer.save()
             base64 = request.POST["task" + str(y) + "-base64answer"]
@@ -849,6 +854,12 @@ class AnswerListView(AnswerCheck, generic.ListView):
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
         person = Person.objects.get(username=self.kwargs.get('slug'))
         return Answer.objects.filter(test=test, user=person)
+
+    def get_context_data(self, **kwargs):
+        context = super(AnswerListView, self).get_context_data(**kwargs)
+        if self.kwargs.get('grade_pk'):
+            context['fromGrade'] = self.kwargs.get('grade_pk')
+        return context
 
 
 def export_data(request, test_pk):
