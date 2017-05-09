@@ -9,6 +9,44 @@
 {% block head %}
     <script type="text/javascript" src="{% static 'maths/js/bootstrap-multiselect.js' %}"></script>
     <link rel="stylesheet" href="{% static 'maths/css/bootstrap-multiselect.css' %}" type="text/css"/>
+    <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+    <script>
+        var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
+        tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
+
+        kantrykke = false;
+         tinymce.init({
+            selector: '#tasktext',
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            readonly: 1
+        });
+        tinymce.init({
+            selector: '#answer',
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            readonly: 1
+        });
+        tinymce.init({
+            selector: '#reasoning',
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            readonly: 1
+        });
+
+
+    </script>
 {% endblock %}
 {% block body %}
     <div class="panel panel-info">
@@ -199,7 +237,8 @@
                         $("#previewbilde").attr("src", 'data:image/png;base64,' + (task.geogebra_preview));
                         $('#geogebradiv').show();
                     }
-                    document.getElementById('tasktext').innerHTML = (task.task_text);
+                    tinyMCE.get('tasktext').getBody().style.backgroundColor = "#f5f5f5";
+                    tinyMCE.get('tasktext').setContent(task.task_text);
 
                     var answertype = (task.task_answertype);
                     if (answertype == 1) {
