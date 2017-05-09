@@ -40,7 +40,7 @@
     </div>
     {% for answer in object_list %}
         <div class="section" data-anchor="oppgave{{ forloop.counter }}">
-            <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid" data-taskid="{{ answer.task.id }}">
+            <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid">
                 {% if forloop.first %}
                     <span id="taskcount" hidden>{{ answer.test.task_collection.tasks.all.count }}</span>
                     <span id="testid" hidden>{{ answer.test.id }}</span>
@@ -66,36 +66,81 @@
                                         </textarea>
                                     </div>
                                     <div class="panel-body">
-                                        {% if answer.task.answertype == 1 %}
-                                            <div id="textanswerdiv{{ answer.task.id }}">
-                                                <label for="answer{{ answer.id }}">Tekstsvar</label>
-                                                <textarea readonly class="form-control" id="answer{{ answer.task.id }}"
-                                                          rows="6"
-                                                          style="resize:vertical">{{ answer.text }}</textarea>
-                                            </div>
-                                        {% elif answer.task.answertype == 2 %}
-                                            <div id="multiplechoicediv">
-                                                <label>Svaralternativer</label>
-                                                {% get_mutiplechoice answer.task as multipleChoice %}
-                                                {% for option in multipleChoice %}
-                                                    <div id="optionsdiv{{ answer.task.id }}">
-                                                        <input type="radio" name="multiplechoice{{ answer.task.id }}"
-                                                               value="{{ option.option }}"
-                                                               {% if option.option == answer.text %}checked{% endif %}>
-
-                                                        {{ option.option }}<br>
+                                        <ul class="nav nav-tabs">
+                                            <li class="nav active"><a href="#answer{{ forloop.parentloop.counter }}"
+                                                                      data-toggle="tab">Besvarelse</a>
+                                            </li>
+                                            <li class="nav"><a href="#approach{{ forloop.parentloop.counter }}"
+                                                               data-toggle="tab">Fremgangsmåte</a></li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade in active"
+                                                 id="answer{{ forloop.parentloop.counter }}">
+                                                {% if answer.task.answertype == 1 %}
+                                                    <div id="textanswerdiv">
+                                                        <label for="answer">Tekstsvar</label>
+                                                        <textarea readonly class="form-control" id="answer{{ task.id }}"
+                                                                  rows="6"
+                                                                  style="resize:vertical">{{ answer.text }}</textarea>
                                                     </div>
-                                                {% endfor %}
+                                                {% elif answer.task.answertype == 2 %}
+                                                    <div id="multiplechoicediv">
+                                                        <label>Svaralternativer</label>
+                                                        {% get_mutiplechoice answer.task as multipleChoice %}
+                                                        {% for option in multipleChoice %}
+                                                            <div id="optionsdiv{{ task.id }}">
+                                                                <input type="radio"
+                                                                       name="multiplechoice{{ answer.task.id }}"
+                                                                       value="{{ option.option }}"
+                                                                       {% if option.option == answer.text %}checked{% endif %}>
+                                                                {{ option.option }}<br>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                                {% if answer.task.reasoning %}
+                                                    <div id="reasoningdiv">
+                                                        <label for="reasoning{{ task.id }}">Begrunnelse</label>
+                                                        <textarea readonly class="form-control"
+                                                                  id="reasoning{{ task.id }}"
+                                                                  rows="6"
+                                                                  style="resize:vertical">{{ answer.reasoning }}</textarea>
+                                                    </div>
+                                                {% endif %}
+
                                             </div>
-                                        {% endif %}
-                                        {% if answer.task.reasoning %}
-                                            <div id="reasoningdiv{{ answer.task.id }}">
-                                                <label for="reasoning{{ answer.task.id }}">Begrunnelse</label>
-                                                <textarea readonly class="form-control" id="reasoning{{ answer.task.id }}"
-                                                          rows="6"
-                                                          style="resize:vertical">{{ answer.reasoning }}</textarea>
+                                            <div class="tab-pane fade" id="approach{{ forloop.parentloop.counter }}">
+                                                <div class="modalOverflow">
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Tid</th>
+                                                            <th>Operasjon</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% split_geo geo.data as approach %}
+                                                        {% for test in approach %}
+                                                            {% split_geo2 test as geoapproach %}
+                                                            <tr>
+                                                                {% for geotable in geoapproach %}
+                                                                    <td>
+                                                                        {% if forloop.first %}
+                                                                            {{ geotable }} sek
+                                                                        {% else %}
+                                                                            {{ geotable }}
+                                                                        {% endif %}
+                                                                    </td>
+                                                                {% endfor %}
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <h4 style="margin-top: 25px"><strong>Tid brukt på oppgave: </strong>{{ answer.timespent }}
+                                                    sekunder</h4>
                                             </div>
-                                        {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -104,16 +149,14 @@
                         <div class="col-sm-2"></div>
                         <div class="col-sm-8">
                             <div class="panel panel-default">
-                                <div class="panel-heading" id="tasktextdiv">
-                                    <textarea id="tasktext{{ answer.task.id }}">
-                                        <h4>{{ answer.task.text | safe }}</h4>
-                                    </textarea>
+                                <div class="panel-heading">
+                                    <h4>{{ answer.task.text | safe }}</h4>
                                 </div>
                                 <div class="panel-body">
                                     {% if answer.task.answertype == 1 %}
-                                        <div id="textanswerdiv{{ answer.task.id }}">
-                                            <label for="answer{{ answer.task.id }}">Tekstsvar</label>
-                                            <textarea readonly class="form-control" id="answer{{ answer.task.id }}" rows="6"
+                                        <div id="textanswerdiv">
+                                            <label for="answer">Tekstsvar</label>
+                                            <textarea readonly class="form-control" id="answer{{ task.id }}" rows="6"
                                                       style="resize:vertical">{{ answer.text }}</textarea>
                                         </div>
                                     {% elif answer.task.answertype == 2 %}
@@ -121,20 +164,19 @@
                                             <label>Svaralternativer</label>
                                             {% get_mutiplechoice answer.task as multipleChoice %}
                                             {% for option in multipleChoice %}
-                                                <div id="optionsdiv{{ answer.task.id }}">
+                                                <div id="optionsdiv{{ task.id }}">
                                                     <input type="radio" name="multiplechoice{{ answer.task.id }}"
                                                            value="{{ option.option }}"
                                                            {% if option.option == answer.text %}checked{% endif %}>
                                                     {{ option.option }}<br>
-                                                 {{ option. }}
                                                 </div>
                                             {% endfor %}
                                         </div>
                                     {% endif %}
                                     {% if answer.task.reasoning %}
-                                        <div id="reasoningdiv{{ answer.task.id }}">
-                                            <label for="reasoning{{ answer.task.id }}">Begrunnelse</label>
-                                            <textarea readonly class="form-control" id="reasoning{{ answer.task.id }}" rows="6"
+                                        <div id="reasoningdiv">
+                                            <label for="reasoning{{ task.id }}">Begrunnelse</label>
+                                            <textarea readonly class="form-control" id="reasoning{{ task.id }}" rows="6"
                                                       style="resize:vertical">{{ answer.reasoning }}</textarea>
                                         </div>
                                     {% endif %}
@@ -257,17 +299,15 @@
                 "width": viewPortWidth,
                 "language": "nb",
                 "height": viewPortHeight,
-                "showToolBar": true,
+                "customToolBar": [0],
+                "showToolBar": false,
+                "showToolBarHelp": false,
                 "borderColor": null,
                 "showMenuBar": true,
-                "allowStyleBar": true,
                 "enableLabelDrags": false,
                 "enableShiftDragZoom": true,
                 "capturingThreshold": null,
-                "showToolBarHelp": false,
                 "errorDialogsActive": true,
-                "showTutorialLink": false,
-                "showLogging": false,
                 "preventFocus": true,
                 "useBrowserForJS": true,
                 "ggbBase64": base64
@@ -322,6 +362,7 @@
             }
         }
     });
+
 
     function goToTask(task) {
         var nextIndex = parseInt(task) + 1;
