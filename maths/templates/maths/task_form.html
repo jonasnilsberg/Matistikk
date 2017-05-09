@@ -14,31 +14,49 @@
     <script type="text/javascript"
             src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
     <script>
-        kantrykke = true;
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
         tinymce.init({
             selector: '#tasktext',
-            plugins: 'equationeditor textcolor lists fullscreen autolink link tabfocus table',
+            plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table ',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
             toolbar: [
-                'bold italic underline | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen'
+                'bold italic underline fontsizeselect | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen '
             ],
             statusbar: false,
+            fontsize_formats: '8pt 10pt 12pt 14pt 18pt',
             menubar: 'format table'
         });
-        kantrykke = false;
         tinymce.init({
             selector: '#previewtasktext',
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            readonly: 1,
+            body_id: 'tasktextID'
+        });
+
+        tinymce.init({
+            selector: '#previewanswer',
+            plugins: 'placeholder',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
             toolbar: false,
             menubar: false,
             statusbar: false,
             readonly: 1
         });
-
-
+        tinymce.init({
+            selector: '#previewreasoning',
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            readonly: 1
+        });
     </script>
 
 {% endblock %}
@@ -487,7 +505,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="panel panel-default">
-                                <div class="panel-heading"">
+                                <div class="panel-heading">
                                     <h4><span id="previewtasktext"></span></h4>
                                 </div>
                                 <div class="panel-body">
@@ -507,7 +525,7 @@
 
                                     <div id="reasoningdiv">
                                         <label for="reasoning">Begrunnelse</label>
-                                        <textarea class="form-control" id="reasoning" rows="6" style="resize:vertical"
+                                        <textarea class="form-control" id="previewreasoning" rows="6" style="resize:vertical"
                                                   placeholder="Begrunn svaret ditt..."></textarea>
                                     </div>
 
@@ -531,7 +549,6 @@
             $('#textanswerdiv').hide();
             $('#reasoningdiv').hide();
             $('#multiplechoicediv').hide();
-            tinyMCE.get('previewtasktext').getBody().style.backgroundColor = "#f5f5f5";
             var answertype = $("input[type='radio'][name='answer_type']:checked").val();
             var previewtext = tinyMCE.get('tasktext').getContent()
 

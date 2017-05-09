@@ -373,3 +373,7 @@ html, body {
     background: darkgray; /* make this whatever you want */
     cursor: pointer;
 }
+
+#tasktextdiv{
+    height: 20%;
+}

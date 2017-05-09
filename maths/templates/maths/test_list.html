@@ -64,9 +64,9 @@
                                             value="{{ test.id }}"><i class="fa fa-book" aria-hidden="true"></i></span>
                                         Publisering
                                     </button>
-                                    <button type="button" href='#' class="btn btn-default"
+                                    <a type="button" href='{% url 'maths:answerCreate' test.id %}' class="btn btn-default"
                                             value="{{ test.id }}"><i class="fa fa-tasks" aria-hidden="true"></i> Se test
-                                    </button>
+                                    </a>
 
                                     <a type="button" href='{% url "maths:testDetail" test.id %}' class="btn btn-default"
                                        value="{{ test.id }}"><span
