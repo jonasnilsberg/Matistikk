@@ -17,9 +17,7 @@
     </script>
 
 </head>
-
-
-
+<body>
 <div id="fullpage">
     <div id="loadingScreen" class="section active" data-anchor="loading" style="height: 100vh;">
         <div class="middle">
@@ -43,7 +41,6 @@
                 {% if forloop.first %}
                     <span id="taskcount" hidden>{{ answer.test.task_collection.tasks.all.count }}</span>
                     <span id="testid" hidden>{{ answer.test.id }}</span>
-                    <span id="role" hidden>{{ request.user.role }}</span>
                 {% endif %}
                 <div class="panel panel-info">
                     <div class="panel-heading" style="padding-top: 1px">
@@ -118,25 +115,28 @@
                                                         </tr>
                                                         </thead>
                                                         <tbody>
-                                                        {% split_geo geo.data as approach %}
-                                                        {% for test in approach %}
-                                                            {% split_geo2 test as geoapproach %}
-                                                            <tr>
-                                                                {% for geotable in geoapproach %}
-                                                                    <td>
-                                                                        {% if forloop.first %}
-                                                                            {{ geotable }} sek
-                                                                        {% else %}
-                                                                            {{ geotable }}
-                                                                        {% endif %}
-                                                                    </td>
-                                                                {% endfor %}
-                                                            </tr>
-                                                        {% endfor %}
+                                                        {% if geo.data %}
+                                                            {% split_geo geo.data as approach %}
+                                                            {% for test in approach %}
+                                                                {% split_geo2 test as geoapproach %}
+                                                                <tr>
+                                                                    {% for geotable in geoapproach %}
+                                                                        <td>
+                                                                            {% if forloop.first %}
+                                                                                {{ geotable }} sek
+                                                                            {% else %}
+                                                                                {{ geotable }}
+                                                                            {% endif %}
+                                                                        </td>
+                                                                    {% endfor %}
+                                                                </tr>
+                                                            {% endfor %}
+                                                        {% endif %}
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                                <h4 style="margin-top: 25px"><strong>Tid brukt på oppgave: </strong>{{ answer.timespent }}
+                                                <h4 style="margin-top: 25px"><strong>Tid brukt på
+                                                    oppgave: </strong>{{ answer.timespent }}
                                                     sekunder</h4>
                                             </div>
                                         </div>
@@ -214,6 +214,7 @@
         </div>
     </div>
 </nav>
+</body>
 
 
 <script>
@@ -287,7 +288,6 @@
         }
     }
 
-
     var applet = [];
     for (var i = 0; i < taskcount; i++) {
         if (document.getElementById('base64' + (i + 1)) != null) {
@@ -316,7 +316,6 @@
         applet.push(app);
     }
     $(document).ready(function () {
-
         $('#fullpage').fullpage({
             menu: '#taskBtnList',
             lockAnchors: true,
@@ -368,17 +367,7 @@
     }
 
     function goBack() {
-        var role = $('#role').text();
-        var url;
-        if (role == "1") {
-            url = "{% url 'maths:index' %}";
-            window.location = url;
-        } else {
-            var testID = $('#testid').text();
-            url = "{% url 'maths:testDetail' test_pk=12345 %}".replace(/12345/, testID);
-        }
-        window.location = url;
-
+        window.history.back();
     }
 
 

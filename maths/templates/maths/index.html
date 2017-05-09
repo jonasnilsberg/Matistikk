@@ -363,7 +363,7 @@
                         <h4>Agenda ({{ notanswered|length }})</h4>
                     </div>
                     <div class="panel-body">
-                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="max-height: 75vh; overflow: auto">
                             {% for test in notanswered %}
                                 <div id="panel{{ forloop.counter }}" class="panel panel-default">
                                     <div class="panel-heading box" role="tab" id="heading{{ forloop.counter }}"
