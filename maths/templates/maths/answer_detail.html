@@ -10,6 +10,17 @@
     <script type="text/javascript" src="{% static 'maths/js/deployggb.js' %}"></script>
 </head>
 
+<script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+<script type="text/javascript"
+        src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+<script>
+    var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
+    tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
+
+
+</script>
+
+
 <div id="fullpage">
     <div id="loadingScreen" class="section active" data-anchor="loading" style="height: 100vh;">
         <div class="middle">
@@ -49,8 +60,10 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4>{{ answer.task.text | safe }}</h4>
+                                    <div class="panel-heading" id="tasktextdiv">
+                                        <textarea id="tasktext{{ answer.task.id }}">
+                                            <h4>{{ answer.task.text | safe }}</h4>
+                                        </textarea>
                                     </div>
                                     <div class="panel-body">
                                         <ul class="nav nav-tabs">
@@ -205,6 +218,46 @@
 
 
 <script>
+    var taskcount = $('.section').length;
+    var divheight = document.getElementById('tasktextdiv').clientHeight;
+    for (var i = 0; i < taskcount; i++) {
+        var div = $('#task' + (i + 1));
+        var taskid = div.data('taskid');
+
+        tinymce.init({
+            selector: '#tasktext' + taskid,
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            height: ''+(divheight-25),
+            readonly: 1,
+            body_id: 'tasktextID'
+        });
+        if ($('#answer' + taskid).length) {
+            tinymce.init({
+                selector: '#answer' + taskid,
+                plugins: 'placeholder',
+                content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+                toolbar: false,
+                menubar: false,
+                statusbar: false,
+                readonly: 1
+            });
+        }
+        if ($('#reasoning' +taskid).length) {
+            tinymce.init({
+                selector: '#reasoning' + taskid,
+                plugins: 'placeholder',
+                content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+                toolbar: false,
+                menubar: false,
+                statusbar: false,
+                readonly: 1
+            });
+        }
+    }
     var viewPortWidth = 1200;
     var viewPortHeight = 750;
     var taskcount = document.getElementById('taskcount').innerHTML;
@@ -236,6 +289,7 @@
         }
     }
 
+
     var applet = [];
     for (var i = 0; i < taskcount; i++) {
         if (document.getElementById('base64' + (i + 1)) != null) {
@@ -264,6 +318,7 @@
         applet.push(app);
     }
     $(document).ready(function () {
+
         $('#fullpage').fullpage({
             menu: '#taskBtnList',
             lockAnchors: true,

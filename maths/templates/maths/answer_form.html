@@ -117,7 +117,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading" id="tasktextdiv{{ task.id }}">
+                                    <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ task.id }}">
                                             <h4>{{ task.text | safe }}</h4>
                                         </textarea>
@@ -162,7 +162,7 @@
                             <div class="col-sm-2"></div>
                             <div class="col-sm-8">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading" id="tasktextdiv{{ task.id }}">
+                                    <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ task.id }}">
                                             <h4>{{ task.text | safe }}</h4>
                                         </textarea>
@@ -271,7 +271,7 @@
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" style="max-height: 30vh; overflow: auto"
-                                         id="tasktextdiv{{ taskorder.task.id }}">
+                                         id="tasktextdiv">
                                         <textarea id="tasktext{{ taskorder.task.id }}" style="cursor:pointer;">
                                             <h4>{{ taskorder.task.text | safe }}</h4>
                                         </textarea>
@@ -319,7 +319,7 @@
                             <div class="col-sm-2"></div>
                             <div class="col-sm-8">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading" id="tasktextdiv{{ taskorder.task.id }}">
+                                    <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ taskorder.task.id }}">
                                             <h4>{{ taskorder.task.text | safe }}</h4>
                                         </textarea>
@@ -447,6 +447,7 @@
     var start;
     var taskTimerStart;
     var taskcount = document.getElementById('taskcount').innerHTML;
+    var divheight = document.getElementById('tasktextdiv').clientHeight;
     /**
      * This function runs when the document is ready.
      */
@@ -460,8 +461,9 @@
             toolbar: false,
             menubar: false,
             statusbar: false,
-            border: false,
-            readonly: 1
+            height: ''+(divheight-25),
+            readonly: 1,
+            body_id: 'tasktextID'
         });
         if ($(('#textanswer' + taskid)).exists()) {
             tinymce.init({
@@ -846,15 +848,18 @@
             return 0;
         }
         for (var i = 0; i < taskcount; i++) {
+            var textanswer = undefined;
+            var reasoning = undefined;
             var div = $('#task' + (i + 1));
             var taskid = div.data('taskid');
             var taskid2 = document.getElementById('id_task' + i + '-task');
             if ($(('#textanswer' + taskid)).exists()) {
-                var textanswer = tinyMCE.get('textanswer' + taskid).getContent();
+                textanswer = tinyMCE.get('textanswer' + taskid).getContent();
             }
             var textanswer2 = document.getElementById('id_task' + i + '-text');
             if ($(('#reasoning' + taskid)).exists()) {
-                var reasoning = tinyMCE.get('reasoning' + taskid).getContent();
+                reasoning = tinyMCE.get('reasoning' + taskid).getContent();
+
             }
             var reasoning2 = document.getElementById('id_task' + i + '-reasoning');
             var base64;
