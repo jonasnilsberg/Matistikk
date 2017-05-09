@@ -10,6 +10,47 @@
 
     <script type="text/javascript" src="{% static 'maths/js/bootstrap-clockpicker.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'maths/css/bootstrap-clockpicker.min.css' %}" type="text/css"/>
+    <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+    <script>
+        var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
+        tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
+
+        tinymce.init({
+            selector: '#previewtasktext',
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            readonly: 1,
+            body_id: 'tasktextID'
+        });
+        tinymce.init({
+            selector: '#previewtextanswer',
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            readonly: 1
+
+        });
+
+        tinymce.init({
+            selector: '#previewreasoning',
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            readonly: 1
+        });
+
+
+    </script>
+
 {% endblock %}
 {% block body %}
     <div class="panel panel-info">
@@ -531,11 +572,11 @@
                         $("#previewbilde").attr("src", 'data:image/png;base64,' + (task.geogebra_preview));
                         $('#geogebradiv').show();
                     }
-                    document.getElementById('tasktext').innerHTML = (task.task_text);
+                    tinyMCE.get('previewtasktext').setContent(task.task_text);
 
                     var answertype = (task.task_answertype);
                     if (answertype == 1) {
-                        $('#textanswerdiv').show();
+                        $('#previewtextanswerdiv').show();
                     }
 
                     if (task.task_reasoning) {
@@ -577,13 +618,14 @@
                         </div>
                         <div class="col-md-6" style="padding-left: 10px">
                             <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4><span id="tasktext"></span></h4>
+                                <div class="panel-heading" id="previewtasktextdiv">
+                                    <textarea id="previewtasktext"></textarea>
                                 </div>
                                 <div class="panel-body">
-                                    <div id="textanswerdiv">
-                                        <label for="answer">Tekstsvar</label>
-                                        <textarea class="form-control" id="answer" rows="6" style="resize:vertical"
+                                    <div id="previewtextanswerdiv">
+                                        <label for="previewtextanswer">Tekstsvar</label>
+                                        <textarea class="form-control" id="previewtextanswer" rows="6"
+                                                  style="resize:vertical"
                                                   placeholder="Skriv svaret ditt her..."></textarea>
                                     </div>
 
@@ -594,9 +636,10 @@
                                         </div>
                                     </div>
 
-                                    <div id="reasoningdiv">
-                                        <label for="reasoning">Begrunnelse</label>
-                                        <textarea class="form-control" id="reasoning" rows="6" style="resize:vertical"
+                                    <div id="previewreasoningdiv">
+                                        <label for="previewreasoningreasoning">Begrunnelse</label>
+                                        <textarea class="form-control" id="previewreasoning" rows="6"
+                                                  style="resize:vertical"
                                                   placeholder="Begrunn svaret ditt..."></textarea>
                                     </div>
 
