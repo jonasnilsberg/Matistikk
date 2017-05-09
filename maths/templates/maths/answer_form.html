@@ -66,7 +66,7 @@
                 </ul>
                 <ul id="endTestNav" class="nav navbar-nav navbar-right">
                     <button id="sendBtn" class="btn btn-success btn-lg" type="button" onclick="submitTask()"
-                            {% if test.strictOrder %}disabled="disabled"{% endif %}>Send Inn
+                            {% if test.strictOrder or request.user.role != 1 %}disabled="disabled"{% endif %}>Send Inn
                     </button>
                     <a class="btn btn-danger btn-lg pull-right" data-toggle='modal' data-target='#exitTestModal'>Avbryt
                         Test</a>
@@ -423,7 +423,7 @@
                               style="font-size: 5em"></span><br>
                     Ta meg tilbake til testen
                 </button>
-                <a type="button" class="btn btn-danger" href="{% url 'maths:index' %}"
+                <a type="button" class="btn btn-danger" href={% if request.user.role == 1 %}"{% url 'maths:index' %}"{% else %}"{% url 'maths:testList' request.user.username %}"{% endif %}"
                    style="width: 49%; height: 10em"><br><span
                         class="glyphicon glyphicon-remove" aria-hidden="true" style="font-size: 5em"></span><br>
                     Avslutt test
