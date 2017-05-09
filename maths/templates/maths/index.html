@@ -106,8 +106,8 @@
                             <div class="circle-tile-heading dark-blue"><i class="fa fa-pencil fa-fw fa-3x"></i></div>
                         </a>
                         <div class="circle-tile-content dark-blue">
-                            <div class="circle-tile-description text-faded"> Antall Oppgaver</div>
-                            <div class="circle-tile-number text-faded ">{{ tasks }}</div>
+                            <div class="circle-tile-description text-faded"> Antall Svar</div>
+                            <div class="circle-tile-number text-faded ">{{ answers }}</div>
                         </div>
                     </div>
                 </div>
@@ -125,18 +125,189 @@
             </div>
 
             <div class="col-sm-12">
-                <center>
-                    <a class="btn btn-default" href="{% url 'maths:taskCollectionCreate' %}"
-                       style="font-size: 2em;"><span
-                            style="font-size:5em; color: #545a7e"
-                            class="glyphicon glyphicon-book"></span><br>Lag
-                        Test</a>
-                    <a class="btn btn-default" href="statisticview" style="font-size: 2em;"><i
-                            class="fa fa-line-chart fa-fw" style="font-size:5em; color: #545a7e;"></i><br>Statistikk</a>
-                    <a class="btn btn-default" href="{% url 'maths:createTask' %}" style="font-size: 2em;"><i
-                            class="fa fa-puzzle-piece fa-fw" style="font-size:5em; color: #545a7e;"></i><br>Lag
-                        Oppgave</a>
-                </center>
+                <div class="col-xs-2">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading box" role="tab" id="headingOne" data-toggle="collapse"
+                                 data-parent="#accordion" href="#collapseOne"
+                                 aria-expanded="true" aria-controls="collapseOne">
+                                <h4 class="panel-title">
+                                    <a role="button">
+                                        <i class="fa fa-user fa-fw"></i> Brukere <i class="fa fa-arrow-right pull-right"
+                                                                                    aria-hidden="true"
+                                                                                    id="arrowOne"></i>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel"
+                                 aria-labelledby="headingOne">
+                                <div class="panel-body">
+                                    <ul class="nav nav-pills nav-stacked">
+                                        <li role="presentation"><a href="{% url 'administration:personList' %}">Se
+                                            brukeroversikt</a></li>
+                                        <li role="presentation"><a href="{% url 'administration:personCreate' %}">Legg
+                                            til bruker</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading box" role="tab" id="headingTwo" data-toggle="collapse"
+                                 data-parent="#accordion"
+                                 href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" role="button">
+                                        <i class="fa fa-pencil fa-fw"></i> Oppgaver <i
+                                            class="fa fa-arrow-right pull-right" aria-hidden="true" id="arrowTwo"></i>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel"
+                                 aria-labelledby="headingTwo">
+                                <div class="panel-body">
+                                    <ul class="nav nav-pills nav-stacked">
+                                        <li role="presentation"><a href="{% url 'maths:taskList' %}">Se
+                                            oppgaveoversikt</a></li>
+                                        <li role="presentation"><a href="{% url 'maths:createTask' %}">Opprett ny
+                                            oppgave</a></li>
+                                        <li role="presentation"><a href="{% url 'maths:categoryList' %}">Se
+                                            kategorier</a></li>
+                                        <li role="presentation"><a href="{% url 'maths:categoryCreate' %}">Opprett ny
+                                            kategori</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading box" role="tab" id="headingThree" data-toggle="collapse"
+                                 data-parent="#accordion"
+                                 href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" role="button">
+                                        <i class="fa fa-tasks fa-fw"></i> Tester <i class="fa fa-arrow-right pull-right"
+                                                                                    aria-hidden="true"
+                                                                                    id="arrowThree"></i>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel"
+                                 aria-labelledby="headingThree">
+                                <div class="panel-body">
+                                    <ul class="nav nav-pills nav-stacked">
+                                        <li role="presentation"><a href="{% url 'maths:taskCollectionList' %}">Se
+                                            testoversikt</a></li>
+                                        <li role="presentation"><a href="{% url 'maths:taskCollectionCreate' %}">Opprett
+                                            ny test</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading box" role="tab" id="headingFour" data-toggle="collapse"
+                                 data-parent="#accordion"
+                                 href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" role="button">
+                                        <i class="fa fa-home fa-fw"></i> Skoler <i class="fa fa-arrow-right pull-right"
+                                                                                   aria-hidden="true"
+                                                                                   id="arrowFour"></i>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse" role="tabpanel"
+                                 aria-labelledby="headingFour">
+                                <div class="panel-body">
+                                    <ul class="nav nav-pills nav-stacked">
+                                        <li role="presentation"><a href="{% url 'administration:schoolList' %}">Se
+                                            skoleoversikt</a></li>
+                                        <li role="presentation"><a href="{% url 'administration:schoolCreate' %}">Opprett
+                                            ny skole</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading box" role="tab" id="headingFive" data-toggle="collapse"
+                                 data-parent="#accordion"
+                                 href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" role="button">
+                                        <i class="fa fa-users fa-fw"></i> Grupper <i
+                                            class="fa fa-arrow-right pull-right" aria-hidden="true" id="arrowFive"></i>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseFive" class="panel-collapse collapse" role="tabpanel"
+                                 aria-labelledby="headingFive">
+                                <div class="panel-body">
+                                    <ul class="nav nav-pills nav-stacked">
+                                        <li role="presentation"><a href="{% url 'administration:groupList' %}">Se
+                                            gruppeoversikt</a></li>
+                                        <li role="presentation"><a href="{% url 'administration:groupCreate' %}">Opprett
+                                            ny gruppe</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="panel panel-info" style="border-right: 1px solid">
+                        <div class="panel-heading">
+                            <h4>Siste Publiserte Tester</h4>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-hover table-striped table-responsive">
+                                <thead>
+                                <tr>
+                                    <th>Dato</th>
+                                    <th>Test</th>
+                                    <th>Laget av</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for test in lasttests %}
+                                    <tr class="clickable-row" data-href="{% url 'maths:testDetail' test.id %}"
+                                        style="cursor: pointer">
+                                        <td>{{ test.published }}</td>
+                                        <td>{{ test }}</td>
+                                        <td>{{ test.task_collection.author.first_name }} {{ test.task_collection.author.last_name }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h4>Siste Besvarte Tester</h4>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-hover table-striped table-responsive">
+                                <thead>
+                                <tr>
+                                    <th>Dato</th>
+                                    <th>Test</th>
+                                    <th>Besvart av</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for answer in lastanswers %}
+                                    <tr class="clickable-row"
+                                        data-href="{% url 'maths:answerDetail' test_pk=answer.test.id slug=answer.user.username %}"
+                                        style="cursor: pointer">
+                                        <td>{{ answer.date_answered }}</td>
+                                        <td>{{ answer.test }}</td>
+                                        <td>{{ answer.user }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -340,6 +511,46 @@
             }
 
         };
+
+        /**
+         * This function makes the rows of the user-, student-, teacher- and admintable clickable
+         */
+        jQuery(document).ready(function ($) {
+            $(".clickable-row").click(function () {
+                window.document.location = $(this).data("href");
+            });
+        });
+
+        $('#collapseOne').on('show.bs.collapse', function () {
+            $('#arrowOne').removeClass().addClass('fa fa-arrow-down pull-right');
+        });
+        $('#collapseOne').on('hide.bs.collapse', function () {
+            $('#arrowOne').removeClass().addClass('fa fa-arrow-right pull-right');
+        });
+        $('#collapseTwo').on('show.bs.collapse', function () {
+            $('#arrowTwo').removeClass().addClass('fa fa-arrow-down pull-right');
+        });
+        $('#collapseTwo').on('hide.bs.collapse', function () {
+            $('#arrowTwo').removeClass().addClass('fa fa-arrow-right pull-right');
+        });
+        $('#collapseThree').on('show.bs.collapse', function () {
+            $('#arrowThree').removeClass().addClass('fa fa-arrow-down pull-right');
+        });
+        $('#collapseThree').on('hide.bs.collapse', function () {
+            $('#arrowThree').removeClass().addClass('fa fa-arrow-right pull-right');
+        });
+        $('#collapseFour').on('show.bs.collapse', function () {
+            $('#arrowFour').removeClass().addClass('fa fa-arrow-down pull-right');
+        });
+        $('#collapseFour').on('hide.bs.collapse', function () {
+            $('#arrowFour').removeClass().addClass('fa fa-arrow-right pull-right');
+        });
+        $('#collapseFive').on('show.bs.collapse', function () {
+            $('#arrowFive').removeClass().addClass('fa fa-arrow-down pull-right');
+        });
+        $('#collapseFive').on('hide.bs.collapse', function () {
+            $('#arrowFive').removeClass().addClass('fa fa-arrow-right pull-right');
+        });
     </script>
 
 {% endblock %}
