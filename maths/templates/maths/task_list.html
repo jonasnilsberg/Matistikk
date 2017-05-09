@@ -16,7 +16,6 @@
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
-        kantrykke = false;
          tinymce.init({
             selector: '#tasktext',
             plugins: 'placeholder',
@@ -24,8 +23,10 @@
             toolbar: false,
             menubar: false,
             statusbar: false,
-            readonly: 1
+            readonly: 1,
+            body_id: 'tasktextID'
         });
+
         tinymce.init({
             selector: '#answer',
             plugins: 'placeholder',

@@ -8,6 +8,14 @@
     <script type="text/javascript" src="{% static 'maths/js/jquery.fullPage.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'maths/css/jquery.fullPage.css' %}"/>
     <script type="text/javascript" src="{% static 'maths/js/deployggb.js' %}"></script>
+    <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <script type="text/javascript"
+        src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+    <script>
+    var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
+    tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
+    </script>
+
 </head>
 <body>
 <div id="fullpage">
@@ -29,7 +37,7 @@
     </div>
     {% for answer in object_list %}
         <div class="section" data-anchor="oppgave{{ forloop.counter }}">
-            <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid">
+            <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid" data-taskid="{{ answer.task.id }}">
                 {% if forloop.first %}
                     <span id="taskcount" hidden>{{ answer.test.task_collection.tasks.all.count }}</span>
                     <span id="testid" hidden>{{ answer.test.id }}</span>
@@ -48,8 +56,10 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h4>{{ answer.task.text | safe }}</h4>
+                                    <div class="panel-heading" id="tasktextdiv">
+                                        <textarea id="tasktext{{ answer.task.id }}">
+                                            <h4>{{ answer.task.text | safe }}</h4>
+                                        </textarea>
                                     </div>
                                     <div class="panel-body">
                                         <ul class="nav nav-tabs">
@@ -64,8 +74,8 @@
                                                  id="answer{{ forloop.parentloop.counter }}">
                                                 {% if answer.task.answertype == 1 %}
                                                     <div id="textanswerdiv">
-                                                        <label for="answer">Tekstsvar</label>
-                                                        <textarea readonly class="form-control" id="answer{{ task.id }}"
+                                                        <label for="taxtanswer{{ answer.task.id }}">Tekstsvar</label>
+                                                        <textarea readonly class="form-control" id="textanswer{{ answer.task.id }}"
                                                                   rows="6"
                                                                   style="resize:vertical">{{ answer.text }}</textarea>
                                                     </div>
@@ -74,7 +84,7 @@
                                                         <label>Svaralternativer</label>
                                                         {% get_mutiplechoice answer.task as multipleChoice %}
                                                         {% for option in multipleChoice %}
-                                                            <div id="optionsdiv{{ task.id }}">
+                                                            <div id="optionsdiv{{ answer.task.id }}">
                                                                 <input type="radio"
                                                                        name="multiplechoice{{ answer.task.id }}"
                                                                        value="{{ option.option }}"
@@ -86,9 +96,9 @@
                                                 {% endif %}
                                                 {% if answer.task.reasoning %}
                                                     <div id="reasoningdiv">
-                                                        <label for="reasoning{{ task.id }}">Begrunnelse</label>
+                                                        <label for="reasoning{{ answer.task.id }}">Begrunnelse</label>
                                                         <textarea readonly class="form-control"
-                                                                  id="reasoning{{ task.id }}"
+                                                                  id="reasoning{{ answer.task.id }}"
                                                                   rows="6"
                                                                   style="resize:vertical">{{ answer.reasoning }}</textarea>
                                                     </div>
@@ -144,8 +154,8 @@
                                 <div class="panel-body">
                                     {% if answer.task.answertype == 1 %}
                                         <div id="textanswerdiv">
-                                            <label for="answer">Tekstsvar</label>
-                                            <textarea readonly class="form-control" id="answer{{ task.id }}" rows="6"
+                                            <label for="textanswer{{ answer.task.id }}">Tekstsvar</label>
+                                            <textarea readonly class="form-control" id="textanswer{{ answer.task.id }}" rows="6"
                                                       style="resize:vertical">{{ answer.text }}</textarea>
                                         </div>
                                     {% elif answer.task.answertype == 2 %}
@@ -153,7 +163,7 @@
                                             <label>Svaralternativer</label>
                                             {% get_mutiplechoice answer.task as multipleChoice %}
                                             {% for option in multipleChoice %}
-                                                <div id="optionsdiv{{ task.id }}">
+                                                <div id="optionsdiv{{ answer.task.id }}">
                                                     <input type="radio" name="multiplechoice{{ answer.task.id }}"
                                                            value="{{ option.option }}"
                                                            {% if option.option == answer.text %}checked{% endif %}>
@@ -164,8 +174,8 @@
                                     {% endif %}
                                     {% if answer.task.reasoning %}
                                         <div id="reasoningdiv">
-                                            <label for="reasoning{{ task.id }}">Begrunnelse</label>
-                                            <textarea readonly class="form-control" id="reasoning{{ task.id }}" rows="6"
+                                            <label for="reasoning{{ answer.task.id }}">Begrunnelse</label>
+                                            <textarea readonly class="form-control" id="reasoning{{ answer.task.id }}" rows="6"
                                                       style="resize:vertical">{{ answer.reasoning }}</textarea>
                                         </div>
                                     {% endif %}
@@ -208,9 +218,48 @@
 
 
 <script>
+    var taskcount = $('.section').length;
+    var divheight = document.getElementById('tasktextdiv').clientHeight;
+    for (var i = 0; i < taskcount; i++) {
+        var div = $('#task' + (i + 1));
+        var taskid = div.data('taskid');
+
+        tinymce.init({
+            selector: '#tasktext' + taskid,
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            height: ''+(divheight-25),
+            readonly: 1,
+            body_id: 'tasktextID'
+        });
+        if ($('#textanswer' + taskid).length) {
+            tinymce.init({
+                selector: '#textanswer' + taskid,
+                plugins: 'placeholder',
+                content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+                toolbar: false,
+                menubar: false,
+                statusbar: false,
+                readonly: 1
+            });
+        }
+        if ($('#reasoning' +taskid).length) {
+            tinymce.init({
+                selector: '#reasoning' + taskid,
+                plugins: 'placeholder',
+                content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+                toolbar: false,
+                menubar: false,
+                statusbar: false,
+                readonly: 1
+            });
+        }
+    }
     var viewPortWidth = 1200;
     var viewPortHeight = 750;
-    var taskcount = document.getElementById('taskcount').innerHTML;
     var geocount = $('.geogebra').length;
     var geoFinished = false;
     var onLeave = false;

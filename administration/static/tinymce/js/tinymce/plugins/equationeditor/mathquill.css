@@ -361,3 +361,11 @@
   filter: progid:DXImageTransform.Microsoft.Chroma(color='white');
   margin-top: -0.1em;
 }
+
+#tasktextID{
+  font-size: 120%;
+  background-color: #F5F5F5;
+}
+
+
+
