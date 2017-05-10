@@ -1,6 +1,7 @@
 {% extends 'matistikk/base.html' %}
 
 {% block body %}
+    {% if modal %}<span id="openModal" hidden>{{ modal }}</span>{% endif %}
     <div class="panel panel-info">
         <div class="panel-heading">
             <h2>Tilgjengelige tester</h2>
@@ -57,15 +58,17 @@
                         <td>
                             <div class="text-center">
                                 <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                    <button value="{{ test.id }}" name="{{ test.task_collection.test_name }}"
+                                    <button id="publishBtn{{ test.id }}" value="{{ test.id }}"
+                                            name="{{ test.task_collection.test_name }}"
                                             type="button"
                                             onclick="publishTest(this)"
-                                            class="btn btn-default publish"
-                                            value="{{ test.id }}"><i class="fa fa-book" aria-hidden="true"></i></span>
+                                            class="btn btn-default publish"><i class="fa fa-book"
+                                                                               aria-hidden="true"></i></span>
                                         Publisering
                                     </button>
-                                    <a type="button" href='{% url 'maths:answerCreate' test.id %}' class="btn btn-default"
-                                            value="{{ test.id }}"><i class="fa fa-tasks" aria-hidden="true"></i> Se test
+                                    <a type="button" href='{% url 'maths:answerCreate' test.id %}'
+                                       class="btn btn-default"
+                                       value="{{ test.id }}"><i class="fa fa-tasks" aria-hidden="true"></i> Se test
                                     </a>
 
                                     <a type="button" href='{% url "maths:testDetail" test.id %}' class="btn btn-default"
@@ -100,7 +103,12 @@
                     }
                 }
 
-            })
+            });
+            var openModal = $('#openModal');
+            if (openModal.length) {
+                var testID = openModal.text();
+                $('#publishBtn' + testID).click();
+            }
         });
 
         /**
