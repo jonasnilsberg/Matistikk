@@ -381,6 +381,16 @@
 
     }
 
+    $(document).on('keyup', function (e) {
+        if (e.keyCode == 37) {
+            if (!$('#prevTaskBtn').is(':disabled')) {
+                $('#prevTaskBtn').click();
+            }
+        }
+        if (e.keyCode == 39) {
+            $('#nextTaskBtn').click()
+        }
+    });
 
     function nextTask() {
         $('#fullpage').fullpage.moveSectionDown();

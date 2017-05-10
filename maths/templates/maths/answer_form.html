@@ -468,24 +468,26 @@
         if ($(('#textanswer' + taskid)).exists()) {
             tinymce.init({
                 selector: '#textanswer' + taskid,
-                plugins: 'equationeditor textcolor lists fullscreen autolink link table placeholder tabfocus',
+                plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table ',
                 content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
                 toolbar: [
-                    'bold italic underline | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen'
+                    'bold italic underline fontsizeselect | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen '
                 ],
                 statusbar: false,
+                fontsize_formats: '8pt 10pt 12pt 14pt 18pt',
                 menubar: false
             });
         }
         if ($(('#reasoning' + taskid)).exists()) {
             tinymce.init({
                 selector: '#reasoning' + taskid,
-                plugins: 'equationeditor textcolor lists fullscreen autolink link table placeholder tabfocus',
+                plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table ',
                 content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
                 toolbar: [
-                    'bold italic underline | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen'
+                    'bold italic underline fontsizeselect | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen '
                 ],
                 statusbar: false,
+                fontsize_formats: '8pt 10pt 12pt 14pt 18pt',
                 menubar: false
             });
         }
@@ -767,7 +769,7 @@
             var status = document.getElementById('status' + taskid);
             status.innerHTML = "";
             if (textanswerbool) {
-                if (textanswer == "" || textanswer == null) {
+                if (textanswer.trim() == '' || textanswer == null || textanswer == '<div>&nbsp;</div>') {
                     status.innerHTML += "Mangler tekstsvar | ";
                     status.parentNode.className = "danger";
                     flag = false;
@@ -776,7 +778,7 @@
             }
 
             if (reasoningbool) {
-                if (reasoning == "" || reasoning == null) {
+                if (reasoning == '' || reasoning == null || reasoning == '<div>&nbsp;</div>') {
                     status.innerHTML += "Mangler begrunnelse | ";
                     status.parentNode.className = "danger";
                     flag = false;
@@ -808,22 +810,26 @@
     function checkTask(task) {
         var div = $('#task' + task);
         var taskid = div.data('taskid');
+        var textanswerbool = false;
+        var reasoningbool = false;
         if ($(('#textanswer' + taskid)).exists()) {
+            textanswerbool = true;
             var textanswer = tinyMCE.get('textanswer' + taskid).getContent();
         }
         if ($(('#reasoning' + taskid)).exists()) {
+            reasoningbool = true;
             var reasoning = tinyMCE.get('reasoning' + taskid).getContent();
         }
         var multiplechoice = document.getElementById('optionsdiv' + taskid);
         var multiplechoiceanswer = $("input[name=multiplechoice" + taskid + "]:checked").val();
 
-        if (textanswer) {
-            if (!textanswer) {
+        if (textanswerbool) {
+            if (textanswer == '' || textanswer == null || textanswer == '<div>&nbsp;</div>') {
                 return false;
             }
         }
-        if (reasoning) {
-            if (!reasoning) {
+        if (reasoningbool) {
+            if (reasoning == '' || reasoning == null || reasoning == '<div>&nbsp;</div>') {
                 return false;
             }
         }
@@ -841,7 +847,11 @@
      * redirected to the summary-tab, and the function will return 0 without submitting the test.
      * @returns {number}
      */
+    var submit = false;
     function submitTask() {
+        if(submit){
+            return 0;
+        }
         var flag = checkTest();
         if (!flag) {
             goToTask(0);
@@ -919,6 +929,7 @@
             }
         }
         $('#submitbutton').click();
+        submit = true;
     }
 
     function addListener1(objName) {
