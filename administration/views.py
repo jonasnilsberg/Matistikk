@@ -307,7 +307,7 @@ class PersonListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
             persons = Person.objects.filter(grades__school_id__in=schools).distinct()
             context['object_list'] = persons
             context['schools'] = schools
-            grades = Grade.objects.filter(school__exact=schools)
+            grades = Grade.objects.filter(school__in=schools)
             context['grades'] = grades
         elif self.request.user.role == 2:
             grades = self.request.user.grades.all()

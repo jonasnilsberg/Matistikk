@@ -81,12 +81,13 @@
             <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
-                    <li><a href="{% url 'administration:myPage' request.user.username %}">Min Side</a></li>
                     <li><a href="{% url 'administration:personList' %}">Brukeroversikt</a></li>
-                    <li><a href="{% url 'administration:schoolList' %}">Mine Skoler</a></li>
-                    <li><a href="aboutview">Om</a></li>
+                    <li><a href="{% url 'administration:schoolList' %}">Skoler</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url 'administration:myPage' request.user.username %}"><i class="fa fa-user-circle-o"
+                                                                                             aria-hidden="true"></i> {{ request.user.first_name }} {{ request.user.last_name }}
+                    </a></li>
                     <li><a href="{% url 'logout' %}" id="logout"><span class="glyphicon glyphicon-log-out"></span>Logg
                         ut</a></li>
                 </ul>

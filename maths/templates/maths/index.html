@@ -321,6 +321,78 @@
 
     {% elif request.user.role == 3 %}
         <!-- School Administrator User Dashboard -->
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4>Brukere</h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover table-striped table-responsive">
+                            <thead>
+                            <tr>
+                                <th>Navn</th>
+                                <th>Brukernavn</th>
+                                <th>Brukertype</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for person in persons %}
+                                <tr class="clickable-row"
+                                    data-href="{% url 'administration:personDetail' person.username %}"
+                                    style="cursor: pointer">
+                                    <td>{{ person.first_name }} {{ person.last_name }}</td>
+                                    <td>{{ person.username }}</td>
+                                    <td>
+                                        {% if person.role == 1 %}
+                                            Elev
+                                        {% elif person.role == 2 %}
+                                            Lærer
+                                        {% elif person.role == 3 %}
+                                            Skoleadministrator
+                                        {% elif person.role == 4 %}
+                                            Superbruker
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4>Skoler</h4>
+                    </div>
+                    <div class="panel-body">
+                        {% for school in schools %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4>{{ school.school_name }}</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table table-hover table-striped table-responsive">
+                                        <tbody>
+                                        {% for grade in grades %}
+                                            <tr class="clickable-row"
+                                                data-href="{% url 'administration:gradeDetail' school.id grade.id %}"
+                                                style="cursor: pointer">
+                                                {% if grade.school == school %}
+                                                    <td>{{ grade.grade_name }}</td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
 
     {% elif request.user.role == 2 %}
         <div class="row">
@@ -422,6 +494,8 @@
                 </div>
             </div>
         </div>
+
+
     {% elif request.user.role == 1 %}
         <!-- Student Dashboard -->
         <div class="row">
