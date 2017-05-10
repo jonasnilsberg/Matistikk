@@ -45,3 +45,8 @@ def split_geo(geo):
 def split_geo2(geo):
     geotab = str.split(geo, '|')
     return geotab
+
+@register.simple_tag
+def get_answered(test, username):
+    answer = Answer.objects.filter(test=test, user__username=username).first()
+    return answer

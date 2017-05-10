@@ -1,5 +1,8 @@
 {% extends 'matistikk/base.html' %}
-
+{% load customtags %}
+{% block head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+{% endblock %}
 {% block body %}
 
     <style>
@@ -300,7 +303,7 @@
                                 </thead>
                                 <tbody>
                                 {% for answer in lastanswers %}
-                                    <tr class="clickable-row"
+                                    <tr class="clickable-answer"
                                         data-href="{% url 'maths:answerDetail' test_pk=answer.test.id slug=answer.user.username %}"
                                         style="cursor: pointer">
                                         <td>{{ answer.date_answered }}</td>
@@ -320,111 +323,105 @@
         <!-- School Administrator User Dashboard -->
 
     {% elif request.user.role == 2 %}
-        <div class="col-sm-6">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4>Tilgjengelige tester ({{ tests|length }})</h4>
-                </div>
-                <div class="panel-body">
-                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"
-                         style="max-height: 75vh; overflow: auto">
-                        {% for test in tests %}
-                            <div id="panel{{ forloop.counter }}" class="panel panel-default">
-                                <div class="panel-heading box" role="tab" id="heading{{ forloop.counter }}"
-                                     data-toggle="collapse" data-parent="#accordion"
-                                     href="#collapse{{ forloop.counter }}" style="cursor: pointer">
-                                    <h4 class="panel-title">
-                                        <a role="button"
-                                           aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
-                                            {{ test }}
-                                            <p id="testpanel{{ forloop.counter }}" class="pull-right"></p>
-                                            <input id="date{{ forloop.counter }}" type="datetime"
-                                                   value="{{ test.dueDate.isoformat }}" hidden>
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse"
-                                     role="tabpanel"
-                                     aria-labelledby="heading{{ forloop.counter }}">
-                                    <div class="panel-body">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <p><strong>Starttidspunkt: </strong>{{ test.published }}</p>
-                                                <span id="publishdate{{ forloop.counter }}"
-                                                      hidden>{{ test.published.isoformat }}</span>
-                                                <p><strong>Frist: </strong>{% if test.dueDate %}
-                                                    {{ test.dueDate }}{% else %}Ingen{% endif %}</p>
-                                                <p><strong>Rekkefølge: </strong> {% if test.randomOrder %}
-                                                    Tilfeldig {% endif %}{% if test.randomOrder and test.strictOrder %}
-                                                    og {% endif %}
-                                                    {% if test.strictOrder %}Låst{% endif %}</p>
-                                                <p><strong>Antall
-                                                    Oppgaver: </strong>{{ test.task_collection.tasks.count }}</p>
-                                                <p><strong>Laget
-                                                    av: </strong>{{ test.task_collection.author.first_name }} {{ test.task_collection.author.last_name }}
-                                                </p>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <button value="{{ test.id }}"
-                                                        name="{{ test.task_collection.test_name }}"
-                                                        type="button"
-                                                        onclick="publishTest(this)"
-                                                        class="btn btn-info publish pull-right"
-                                                        value="{{ test.id }}"><i class="fa fa-book"
-                                                                                 aria-hidden="true"></i></span>
-                                                    Publisering
-                                                </button>
-                                                <a type="button" href='{% url 'maths:answerCreate' test.id %}'
-                                                   class="btn btn-info pull-right"
-                                                   value="{{ test.id }}"><i class="fa fa-tasks" aria-hidden="true"></i>
-                                                    Se test
-                                                </a>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4>Tilgjengelige tester ({{ tests|length }})</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"
+                             style="max-height: 75vh; overflow: auto">
+                            {% for test in tests %}
+                                <div id="panel{{ forloop.counter }}" class="panel panel-default">
+                                    <div class="panel-heading box" role="tab" id="heading{{ forloop.counter }}"
+                                         data-toggle="collapse" data-parent="#accordion"
+                                         href="#collapse{{ forloop.counter }}" style="cursor: pointer">
+                                        <h4 class="panel-title">
+                                            <a role="button"
+                                               aria-expanded="true" aria-controls="collapse{{ forloop.counter }}">
+                                                {{ test }}
+                                                <p id="testpanel{{ forloop.counter }}" class="pull-right"></p>
+                                                <input id="date{{ forloop.counter }}" type="datetime"
+                                                       value="{{ test.dueDate.isoformat }}" hidden>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse"
+                                         role="tabpanel"
+                                         aria-labelledby="heading{{ forloop.counter }}">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <p><strong>Starttidspunkt: </strong>{{ test.published }}</p>
+                                                    <span id="publishdate{{ forloop.counter }}"
+                                                          hidden>{{ test.published.isoformat }}</span>
+                                                    <p><strong>Frist: </strong>{% if test.dueDate %}
+                                                        {{ test.dueDate }}{% else %}Ingen{% endif %}</p>
+                                                    <p><strong>Rekkefølge: </strong> {% if test.randomOrder %}
+                                                        Tilfeldig {% endif %}
+                                                        {% if test.randomOrder and test.strictOrder %}
+                                                            og {% endif %}
+                                                        {% if test.strictOrder %}Låst{% endif %}</p>
+                                                    <p><strong>Antall
+                                                        Oppgaver: </strong>{{ test.task_collection.tasks.count }}</p>
+                                                    <p><strong>Laget
+                                                        av: </strong>{{ test.task_collection.author.first_name }} {{ test.task_collection.author.last_name }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <button id="publishBtn{{ forloop.counter }}" value="{{ test.id }}" type="button" class="btn btn-info publish pull-right" onclick="publish(this)">
+                                                        <i class="fa fa-book" aria-hidden="true"></i> Publisering
+                                                    </button>
+                                                    <a type="button" href='{% url 'maths:answerCreate' test.id %}'
+                                                       class="btn btn-info pull-right">
+                                                        <i class="fa fa-tasks" aria-hidden="true"></i> Se test
+                                                    </a>
 
-                                                <a type="button" href='{% url "maths:testDetail" test.id %}'
-                                                   class="btn btn-info pull-right"
-                                                   value="{{ test.id }}"><span
-                                                        class="glyphicon glyphicon-eye-open"></span> Se besvarelser
-                                                </a>
+                                                    <a type="button" href='{% url "maths:testDetail" test.id %}'
+                                                       class="btn btn-info pull-right"><span
+                                                            class="glyphicon glyphicon-eye-open"></span> Se besvarelser
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4>Siste Besvarte Tester</h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover table-striped table-responsive">
+                            <thead>
+                            <tr>
+                                <th>Dato</th>
+                                <th>Test</th>
+                                <th>Besvart av</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for answer in lastanswers %}
+                                <tr class="clickable-answer"
+                                    data-href="{% url 'maths:answerDetail' test_pk=answer.test.id slug=answer.user.username %}"
+                                    style="cursor: pointer">
+                                    <td>{{ answer.date_answered }}</td>
+                                    <td>{{ answer.test }}</td>
+                                    <td>{{ answer.user }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4>Siste Besvarte Tester</h4>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-hover table-striped table-responsive">
-                        <thead>
-                        <tr>
-                            <th>Dato</th>
-                            <th>Test</th>
-                            <th>Besvart av</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for answer in lastanswers %}
-                            <tr class="clickable-row"
-                                data-href="{% url 'maths:answerDetail' test_pk=answer.test.id slug=answer.user.username %}"
-                                style="cursor: pointer">
-                                <td>{{ answer.date_answered }}</td>
-                                <td>{{ answer.test }}</td>
-                                <td>{{ answer.user }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
     {% elif request.user.role == 1 %}
         <!-- Student Dashboard -->
         <div class="row">
@@ -512,9 +509,11 @@
                                                     <p><strong>Starttidspunkt: </strong>{{ test.published }}</p>
                                                     <span id="publishdate{{ forloop.counter }}"
                                                           hidden>{{ test.published.isoformat }}</span>
-                                                    <p><strong>Frist: </strong>{{ test.dueDate }}</p>
+                                                    <p><strong>Frist: </strong>{% if test.dueDate %}
+                                                        {{ test.dueDate }}{% else %}Ingen Frist.{% endif %}</p>
+                                                    {% get_answered test request.user.username as answer %}
                                                     <p>
-                                                        <strong>Besvart: </strong>{{ test.answer_set.all.0.date_answered }}
+                                                        <strong>Besvart: </strong> {{ answer.date_answered }}
                                                     </p>
                                                     <p><strong>Antall
                                                         Oppgaver: </strong>{{ test.task_collection.tasks.count }}</p>
@@ -573,6 +572,7 @@
                     }
                     else {
                         $('#testpanel' + (i + 1)).append('Tidsfristen er ute');
+                        $('#publishBtn' + (i + 1)).attr('disabled', 'disabled');
                         $('#panel' + (i + 1)).removeClass('panel panel-default').addClass('panel panel-danger');
                         $('#testinfo' + (i + 1)).append('<div class="alert alert-danger" role="alert"><strong>Tidsfristen er ute!</strong> Du kan fortsatt ta testen, men den vil bli markert som levert for sent.</div>');
                     }
@@ -591,7 +591,43 @@
             $(".clickable-row").click(function () {
                 window.document.location = $(this).data("href");
             });
+
+            $(".clickable-answer").click(function () {
+                var url =  $(this).data("href");
+                var row = $(this);
+                row.addClass('info');
+                bootbox.confirm({
+                    size: "medium",
+                    title: "Gå til besvarelse?",
+                    message: "Dette fører deg direkte til besvarelsen av denne oppgaven.",
+                    backdrop: true,
+                    buttons: {
+                        cancel: {
+                            label: '<i class="fa fa-times"></i> Avbryt'
+                        },
+                        confirm: {
+                            label: '<i class="fa fa-check"></i> ' + "Gå til besvarelse",
+                            className: 'btn-success'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            window.document.location = url;
+                        } else {
+                            row.removeClass('info')
+                        }
+                    }
+                });
+            })
         });
+
+        function publish(btn) {
+            var testID = btn.value;
+            var username = "{{ request.user.username }}";
+            var publishURL = "{% url 'maths:testListPublish' slug=1234 test_pk=5678 %}".replace(/1234/, username).replace(/5678/, testID);
+            window.document.location = publishURL;
+
+        }
 
         $('#collapseOne').on('show.bs.collapse', function () {
             $('#arrowOne').removeClass().addClass('fa fa-arrow-down pull-right');
