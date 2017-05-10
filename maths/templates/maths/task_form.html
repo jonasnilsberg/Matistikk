@@ -26,7 +26,7 @@
             ],
             statusbar: false,
             fontsize_formats: '8pt 10pt 12pt 14pt 18pt',
-            menubar: 'format table'
+            menubar: false
         });
         tinymce.init({
             selector: '#previewtasktext',
@@ -37,25 +37,6 @@
             statusbar: false,
             readonly: 1,
             body_id: 'tasktextID'
-        });
-
-        tinymce.init({
-            selector: '#previewanswer',
-            plugins: 'placeholder',
-            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-            toolbar: false,
-            menubar: false,
-            statusbar: false,
-            readonly: 1
-        });
-        tinymce.init({
-            selector: '#previewreasoning',
-            plugins: 'placeholder',
-            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-            toolbar: false,
-            menubar: false,
-            statusbar: false,
-            readonly: 1
         });
     </script>
 

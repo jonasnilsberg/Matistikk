@@ -141,8 +141,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(PROJECT_DIR, 'lokaldb.db'),
     }
-}
-"""
+}"""
+
 AUTH_USER_MODEL = 'administration.Person'
 
 # File upload with django-excel
