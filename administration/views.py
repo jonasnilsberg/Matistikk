@@ -147,6 +147,17 @@ class MyPageDetailView(views.UserPassesTestMixin, views.AjaxResponseMixin, gener
     slug_field = 'username'
     template_name = 'administration/mypage.html'
 
+    def post_ajax(self, request, *args, **kwargs):
+        new_email = request.POST['newEmail']
+        username = request.POST['username']
+        person = Person.objects.get(username=username)
+        person.email = new_email
+        person.save()
+        data = {
+            'new_email': person.email
+        }
+        return JsonResponse(data)
+
     def get_ajax(self, request, *args, **kwargs):
         students = []
         teachers = []

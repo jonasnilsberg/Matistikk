@@ -85,7 +85,7 @@
                         </thead>
                         <tbody>
                         {% for test in gruppe.tests.all %}
-                            <tr data-href="{% url 'maths:testDetail' test.id %}"
+                            <tr data-href="{% url 'maths:testGroupDetail' test.id gruppe.id %}"
                                 style="cursor: pointer">
                                 <td>{{ test.id }}</td>
                                 <td>{{ test.task_collection.test_name }}</td>

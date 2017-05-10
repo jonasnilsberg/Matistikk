@@ -10,7 +10,8 @@
             <div class="row">
                 <div class="col-md-2">
                     <h5><i class="fa fa-user" aria-hidden="true"></i> Brukernavn - {{ person.username }}</h5>
-                    <h5><i class="fa fa-envelope-o" aria-hidden="true"></i> Epost - {{ person.email }}</h5>
+                    <h5><i class="fa fa-envelope-o" aria-hidden="true"></i> Epost - <span
+                            id="personEmail">{{ person.email }}</span></h5>
                 </div>
                 <div class="col-md-3">
                     <h5><i class="fa fa-calendar" aria-hidden="true"></i> Fødselsdato - {{ person.date_of_birth }}</h5>
@@ -26,6 +27,9 @@
             <ul class="nav nav-tabs">
                 {% if  person.role == 1 or person.role == 2 %}
                     <li class="nav active"><a href="#A" data-toggle="tab">Mine klasser</a></li>
+                {% endif %}
+                {% if person.role == 3 %}
+                    <li class="nav active"><a href="#A" data-toggle="tab">Mine skoler</a></li>
                 {% endif %}
                 {% if person.role == 4 %}
                     <li class="nav active"><a href="#A" data-toggle="tab">Mine tester</a></li>
@@ -73,9 +77,35 @@
                         </table>
                     </div>
                 {% endif %}
-                {% if person.role == 4 %}
+                {% if person.role == 3 %}
                     <div class="tab-pane fade in active" id="A">
                         <table class="table table-hover table-striped table-responsive" id="schooltable">
+                            <thead>
+                            <tr>
+                                <th>Navn</th>
+                                <th>Adresse</th>
+                                <th>Skoleinfo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for school in person.school_set.all %}
+                                <tr class="clickable-row"
+                                        data-href="{% url 'administration:schoolDetail' school.id %}" style="cursor: pointer">
+                                    <td>{{ school.school_name }}</td>
+                                    <td>{{ school.school_address }}</td>
+                                    <td><a class="btn btn-default"
+                                        href="{% url 'administration:schoolDetail' school.id %}"><span
+                                                class="glyphicon glyphicon-home" aria-hidden="true"></span> Se
+                                        Skoleinfo</a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+                {% if person.role == 4 %}
+                    <div class="tab-pane fade in active" id="A">
+                        <table class="table table-hover table-striped table-responsive" id="testtable">
                             <thead>
                             <tr>
                                 <th>ID</th>
@@ -146,9 +176,16 @@
                    href="{% url 'administration:personUpdate' person.username %}">
                     <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Oppdater dine opplysninger</a>
             {% endif %}
+            {% if person.role == 1 %}
+                <button id="updateEmailBtn" class='btn btn-primary' data-toggle='modal'
+                        data-target='#updateEmailModal'><i class="fa fa-envelope" aria-hidden="true"></i>
+                    Oppdater din epost
+                </button>
+            {% endif %}
             <a id="changePasswordModalBtn" class='btn btn-primary' data-toggle='modal'
                data-target='#updatePasswordModal'>
                 <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
+
         </div>
     </div>
 
@@ -157,6 +194,40 @@
             if ($("#passwordChangeError").length) {
                 $('#updatePasswordModal').modal('show');
             }
+
+            $('#updateEmailForm').submit(function (e) {
+                e.preventDefault();
+                var newEmail = $('#newEmail').val().trim();
+                var username = "{{ person.username }}";
+                if (newEmail) {
+                    $('#updateEmailWarning').addClass('hidden');
+                    $.ajax({
+                        type: 'POST',
+                        url: '{% url 'administration:myPage' slug=1234 %}'.replace(/1234/, username),
+                        data: {
+                            'newEmail': newEmail,
+                            'username': username,
+                            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#updateEmailSuccess').removeClass('hidden');
+                            $('#personEmail').html(data.new_email);
+                            setTimeout(function () {
+                                $('#updateEmailModal').modal('hide');
+                                $('#updateEmailSuccess').addClass('hidden');
+                            }, 3000);
+
+
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                } else {
+                    $('#updateEmailWarning').removeClass('hidden');
+                }
+            });
         });
 
         $(".clickable-row").click(function (e) {
@@ -220,9 +291,7 @@
             });
         }
 
-        function submitForm() {
-            $('#submitPasswordBtn').click();
-        }
+
     </script>
 {% endblock %}
 
@@ -304,6 +373,40 @@
                         <tbody id="gradeMemberTable">
                         </tbody>
                     </table>
+                </div>
+                <div class="modal-footer">
+                    {% buttons %}
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    {% endbuttons %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="updateEmailModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 id="gradeMemberHeader" class="text-center">Oppdater epost</h3>
+                </div>
+                <div class="modal-body">
+                    <div id="updateEmailSuccess" class="alert alert-success hidden">
+                        <strong>Fullført!</strong> Din epost ble oppdatert!
+                    </div>
+                    <div id="updateEmailWarning" class="alert alert-info hidden">
+                        <strong>Advarsel!</strong> Venligst fyll ut feltet for å oppdatere din epost!
+                    </div>
+                    <form id="updateEmailForm" action="" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="newEmail">Epost:</label>
+                            <input id="newEmail" class="form-control" type="email" placeholder="Ny epost">
+                        </div>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa fa-check-square-o" aria-hidden="true"></i> Oppdater
+                        </button>
+                    </form>
+
                 </div>
                 <div class="modal-footer">
                     {% buttons %}

@@ -69,8 +69,12 @@
                         {% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen{% endif %}
                     </h5>
                     {% if fromGrade %}
-                        <h5><strong><i class="fa fa-graduation-cap" aria-hidden="true"></i>Klasse:
+                        <h5 id="gradeText"><strong><i class="fa fa-graduation-cap" aria-hidden="true"></i>Klasse:
                         </strong>{{ fromGrade }}</h5>
+                    {% endif %}
+                    {% if fromGroup %}
+                        <h5 id="gradeText"><strong><i class="fa fa-users" aria-hidden="true"></i> Gruppe:
+                        </strong>{{ fromGroup }}</h5>
                     {% endif %}
                 </div>
             </div>
@@ -401,6 +405,8 @@
             var testID = "{{ test.id }}";
             var url = "{% url 'maths:answerDetail' test_pk=1234 slug=5678 %}".replace(/1234/, testID).replace(/5678/, username);
             document.location.href = url;
+
+
         });
 
         $('.list-group-item').not(".small").on('click', function () {
