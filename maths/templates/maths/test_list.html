@@ -391,16 +391,14 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for grade in grades %}
-                                    {% for student in grade.person_set.all %}
-                                        {% if student.role == 1 %}
-                                            <tr id="group{{ group.id }}" style="cursor: pointer">
-                                                <td><input type="checkbox" value="{{ student.id }}"></td>
-                                                <td>{{ student.get_full_name }}</td>
-                                                <td>{{ student.username }}</td>
-                                            </tr>
-                                        {% endif %}
-                                    {% endfor %}
+                                {% for student in students %}
+                                    {% if student.role == 1 %}
+                                        <tr id="group{{ group.id }}" style="cursor: pointer">
+                                            <td><input type="checkbox" value="{{ student.id }}"></td>
+                                            <td>{{ student.get_full_name }}</td>
+                                            <td>{{ student.username }}</td>
+                                        </tr>
+                                    {% endif %}
                                 {% endfor %}
                                 </tbody>
                             </table>

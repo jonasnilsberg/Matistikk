@@ -363,6 +363,9 @@ class PersonDisplayView(views.AjaxResponseMixin, generic.DetailView):
             tests = Test.objects.filter(
                 Q(person=person) | Q(grade__in=person.grades.all()) | Q(gruppe__in=person.gruppe_set.all())).distinct()
             context['tests'] = tests.order_by('-answer__date_answered')
+        elif person.role == 2:
+            tests = Test.objects.filter(person=person)
+            context['tests'] = tests
         if self.kwargs.get('grade_pk'):
             context['grade_pk'] = self.kwargs['grade_pk']
             context['school_pk'] = self.kwargs['school_pk']

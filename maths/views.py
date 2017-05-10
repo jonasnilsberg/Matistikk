@@ -863,7 +863,9 @@ class TestListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
             :return: Updated context
         """
         context = super(TestListView, self).get_context_data(**kwargs)
-        context['grades'] = Grade.objects.filter(person=self.request.user)
+        grades = Grade.objects.filter(person=self.request.user)
+        context['grades'] = grades
+        context['students'] = Person.objects.filter(grades__in=grades).distinct()
         if self.kwargs.get('test_pk'):
             context['modal'] = self.kwargs.get('test_pk')
         return context

@@ -189,9 +189,10 @@
                                 <td>{{ test.published }}</td>
                                 <td>{{ test.task_collection.author.get_full_name }}</td>
                                 <td>
-                                    <button class="btn btn-default" type="button" value="{{ test.id }}"><i
-                                            class="fa fa-tasks" aria-hidden="true"></i> Oppgaver
-                                    </button>
+                                    <a href="{% url 'maths:answerCreate' test.id %}" class="btn btn-default"
+                                       type="button" value="{{ test.id }}"><i
+                                            class="fa fa-tasks" aria-hidden="true"></i> Se gjennom test
+                                    </a>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -281,13 +282,18 @@
              * This function reloads the page when the AddStudentModal closes
              */
             $('#AddStudentModal').on('hidden.bs.modal', function () {
-                location.reload();
+                if ($('#successMessageStudent').css('display') != 'none') {
+                    location.reload();
+                }
+
             });
             /**
              * This function reloads the page when the AddTeacherModal closes
              */
             $('#AddTeacherModal').on('hidden.bs.modal', function () {
-                location.reload();
+                if ($('#successMessageTeacher').css('display') != 'none') {
+                    location.reload();
+                }
             });
             /**
              * This function shows or hides the students that has a connection to the school selected in the
@@ -409,12 +415,7 @@
         });
 
         $("#testtable tbody tr").click(function (e) {
-            var $button = $(this).find(':button');
-            if ($(e.target).is(":button")) {
-                alert('$button');
-            } else {
-                window.document.location = $(this).data("href");
-            }
+            window.document.location = $(this).data("href");
         });
 
     </script>
@@ -720,7 +721,7 @@
                     <h4 class="modal-title" id="myModalLabel">Legg til eksisterende elever</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
+                    <div class="row" style="padding-bottom: 5px;">
                         <div class="col-xs-10">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
@@ -730,7 +731,7 @@
                             </div>
                         </div>
                         <div class="col-xs-2">
-                            <button id="filterUserBtn" type="button" class="btn btn-primary"
+                            <button class="filterBtn" type="button" class="btn btn-primary"
                                     onclick="filterButtonStudent()">
                                 Sorter<span class="caret"></span>
                             </button>
@@ -813,7 +814,7 @@
                 </div>
                 <div class="modal-body">
 
-                    <div class="row">
+                    <div class="row" style="padding-bottom: 5px">
                         <div class="col-xs-10">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
@@ -823,7 +824,7 @@
                             </div>
                         </div>
                         <div class="col-xs-2">
-                            <button type="button" class="btn btn-primary" onclick="filterButtonTeacher()">
+                            <button type="button" class="btn btn-primary filterBtn" onclick="filterButtonTeacher()">
                                 Sorter<span
                                     class="caret"></span>
                             </button>

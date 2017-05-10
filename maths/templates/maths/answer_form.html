@@ -423,20 +423,18 @@
                               style="font-size: 5em"></span><br>
                     Ta meg tilbake til testen
                 </button>
-                <a type="button" class="btn btn-danger" href={% if request.user.role == 1 %}"{% url 'maths:index' %}"{% else %}"{% url 'maths:testList' request.user.username %}"{% endif %}"
+                <button type="button" class="btn btn-danger" onclick="window.history.back()"
                    style="width: 49%; height: 10em"><br><span
                         class="glyphicon glyphicon-remove" aria-hidden="true" style="font-size: 5em"></span><br>
                     Avslutt test
-                </a>
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    /*$("body").bind("mousewheel", function () {
-     return false;
-     });*/
+
     jQuery.fn.exists = function () {
         return jQuery(this).length > 0;
     }
