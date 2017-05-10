@@ -10,10 +10,10 @@
     <script type="text/javascript" src="{% static 'maths/js/deployggb.js' %}"></script>
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
     <script type="text/javascript"
-        src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
     <script>
-    var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
-    tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
+        var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
+        tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
     </script>
 
 </head>
@@ -44,7 +44,7 @@
                 {% endif %}
                 <div class="panel panel-info">
                     <div class="panel-heading" style="padding-top: 1px">
-                        <h3 class="text-center">Oppgave {{ forloop.counter }}</h3>
+                        <h3 class="text-center">Oppgave {{ forloop.counter }} - {{ answer.timespent }} Sekunder</h3>
                     </div>
                     {% get_geogebra answer as geogebra %}
                     {% if geogebra %}
@@ -75,7 +75,8 @@
                                                 {% if answer.task.answertype == 1 %}
                                                     <div id="textanswerdiv">
                                                         <label for="taxtanswer{{ answer.task.id }}">Tekstsvar</label>
-                                                        <textarea readonly class="form-control" id="textanswer{{ answer.task.id }}"
+                                                        <textarea readonly class="form-control"
+                                                                  id="textanswer{{ answer.task.id }}"
                                                                   rows="6"
                                                                   style="resize:vertical">{{ answer.text }}</textarea>
                                                     </div>
@@ -107,15 +108,16 @@
                                             </div>
                                             <div class="tab-pane fade" id="approach{{ forloop.parentloop.counter }}">
                                                 <div class="modalOverflow">
-                                                    <table class="table table-hover">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>Tid</th>
-                                                            <th>Operasjon</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        {% if geo.data %}
+                                                    {% if geo.data %}
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Tid</th>
+                                                                <th>Operasjon</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+
                                                             {% split_geo geo.data as approach %}
                                                             {% for test in approach %}
                                                                 {% split_geo2 test as geoapproach %}
@@ -131,13 +133,13 @@
                                                                     {% endfor %}
                                                                 </tr>
                                                             {% endfor %}
-                                                        {% endif %}
-                                                        </tbody>
-                                                    </table>
+                                                            </tbody>
+                                                        </table>
+                                                    {% else %}
+                                                        <h3 style="padding-top: 10px;">Geogebra ble ikke brukt.</h3>
+                                                    {% endif %}
+
                                                 </div>
-                                                <h4 style="margin-top: 25px"><strong>Tid brukt på
-                                                    oppgave: </strong>{{ answer.timespent }}
-                                                    sekunder</h4>
                                             </div>
                                         </div>
                                     </div>
@@ -155,7 +157,8 @@
                                     {% if answer.task.answertype == 1 %}
                                         <div id="textanswerdiv">
                                             <label for="textanswer{{ answer.task.id }}">Tekstsvar</label>
-                                            <textarea readonly class="form-control" id="textanswer{{ answer.task.id }}" rows="6"
+                                            <textarea readonly class="form-control" id="textanswer{{ answer.task.id }}"
+                                                      rows="6"
                                                       style="resize:vertical">{{ answer.text }}</textarea>
                                         </div>
                                     {% elif answer.task.answertype == 2 %}
@@ -175,7 +178,8 @@
                                     {% if answer.task.reasoning %}
                                         <div id="reasoningdiv">
                                             <label for="reasoning{{ answer.task.id }}">Begrunnelse</label>
-                                            <textarea readonly class="form-control" id="reasoning{{ answer.task.id }}" rows="6"
+                                            <textarea readonly class="form-control" id="reasoning{{ answer.task.id }}"
+                                                      rows="6"
                                                       style="resize:vertical">{{ answer.reasoning }}</textarea>
                                         </div>
                                     {% endif %}
@@ -231,7 +235,7 @@
             toolbar: false,
             menubar: false,
             statusbar: false,
-            height: ''+(divheight-25),
+            height: '' + (divheight - 25),
             readonly: 1,
             body_id: 'tasktextID'
         });
@@ -246,7 +250,7 @@
                 readonly: 1
             });
         }
-        if ($('#reasoning' +taskid).length) {
+        if ($('#reasoning' + taskid).length) {
             tinymce.init({
                 selector: '#reasoning' + taskid,
                 plugins: 'placeholder',
