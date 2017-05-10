@@ -147,7 +147,7 @@
                                     <td>{{ group.group_name }}</td>
                                     <td>{{ group.creator.get_full_name }}</td>
                                     <td>
-                                        <button id="{{ group.id }}" value="{{ group.group_name }}"
+                                        <button id="{{ group.id }}" value="{{ group.group_name }}" type="button"
                                                 class='btn btn-default'
                                                 data-toggle='modal'
                                                 data-target='#groupMemberModal' onclick="groupMemberBtn(this)">
