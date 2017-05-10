@@ -41,6 +41,8 @@ class AnswerCheck(views.UserPassesTestMixin):
                         return True
                 else:
                     test_id = self.kwargs.get('test_pk')
+                    if Answer.objects.filter(test_id=test_id, user=user).exists():
+                        return False
                     if Person.objects.filter(id=user.id, tests__id=test_id).exists():
                         return True
                     elif Grade.objects.filter(person=user, tests__id=test_id).exists():
@@ -64,6 +66,20 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
+        if self.request.user.role == 2:
+            user = Person.objects.get(username=self.request.user.username)
+            tests = Test.objects.filter(person=user)
+            context['tests'] = tests
+            tabOne = []
+            tabTwo = []
+            ans = Answer.objects.filter(test__in=tests).order_by('-id')
+            task_count = 0
+            for a in ans:
+                if task_count == 0:
+                    tabTwo.append(a)
+                    task_count = a.test.task_collection.tasks.count()
+                task_count -= 1
+            context['lastanswers'] = tabTwo[:15]
         if self.request.user.role == 4:
             context['answers'] = Answer.objects.count()
             context['users'] = Person.objects.count()
@@ -72,14 +88,14 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             context['grades'] = Grade.objects.count()
             context['groups'] = Gruppe.objects.count()
             context['lasttests'] = Test.objects.all().order_by('-id')[:15]
-            tabOne = []
             tabTwo = []
             ans = Answer.objects.all().order_by('-id')
+            task_count = 0
             for a in ans:
-                if a.test.id not in tabOne:
-                    tabOne.append(a.test.id)
+                if task_count == 0:
                     tabTwo.append(a)
-
+                    task_count = a.test.task_collection.tasks.count()
+                task_count -= 1
             context['lastanswers'] = tabTwo[:15]
 
         if self.request.user.role == 3:
@@ -618,7 +634,6 @@ class TestCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Create
             order_table = order_list.split('|||||')
             x = 1
             for order in order_table:
-                print(order)
                 taskorder = TaskOrder(test=test, task_id=order, order=x)
                 taskorder.save()
                 x += 1
@@ -661,7 +676,6 @@ class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
         elif self.request.user.role == 2:
             grades = Grade.objects.filter(person=self.request.user)
             context['students'] = Person.objects.filter(tests__exact=test, role=1, grades__in=grades).distinct()
-            print(context['students'])
             context['grades'] = grades.filter(tests__exact=test)
             context['groups'] = Gruppe.objects.filter(tests__exact=test, grade__in=grades)
         else:
@@ -763,8 +777,10 @@ class TestListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
        **ListView:**
             Inherits Django's ListView that makes a page representing a list of objects.
     """
-    model = Test
     template_name = 'maths/test_list.html'
+
+    def get_queryset(self):
+        return Test.objects.filter(person=self.request.user)
 
     def get_ajax(self, request, *args, **kwargs):
         """
@@ -847,9 +863,9 @@ class TestListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
             :return: Updated context
         """
         context = super(TestListView, self).get_context_data(**kwargs)
-        user = Person.objects.get(username=self.kwargs.get('slug'))
-        context['object_list'] = Test.objects.filter(person=user)
-        context['grades'] = Grade.objects.filter(person=user)
+        context['grades'] = Grade.objects.filter(person=self.request.user)
+        if self.kwargs.get('test_pk'):
+            context['modal'] = self.kwargs.get('test_pk')
         return context
 
 
@@ -862,7 +878,7 @@ class AnswerListView(AnswerCheck, generic.ListView):
     **ListView:**
         Inherits Django's ListView that makes a page representing a list of objects.
     """
-    template_name = 'maths/answer_detail.html'
+    template_name = 'maths/answer_list.html'
 
     def get_queryset(self):
         """
