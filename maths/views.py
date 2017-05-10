@@ -82,6 +82,14 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
             context['lastanswers'] = tabTwo[:15]
 
+        if self.request.user.role == 3:
+            schools = School.objects.filter(school_administrator=self.request.user.id)
+            persons = Person.objects.filter(grades__school_id__in=schools).distinct()
+            context['persons'] = persons
+            context['schools'] = schools
+            grades = Grade.objects.filter(school__in=schools)
+            context['grades'] = grades
+
         if self.request.user.role == 1:
             answers = Answer.objects.filter(user=self.request.user)
             tests = Test.objects.filter(

@@ -128,7 +128,8 @@
                 <div class="col-xs-2">
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                         <div class="panel panel-primary">
-                            <div class="panel-heading box" style="background-color: #34495E" role="tab" id="headingOne" data-toggle="collapse"
+                            <div class="panel-heading box" style="background-color: #34495E" role="tab" id="headingOne"
+                                 data-toggle="collapse"
                                  data-parent="#accordion" href="#collapseOne"
                                  aria-expanded="true" aria-controls="collapseOne">
                                 <h4 class="panel-title">
@@ -152,7 +153,8 @@
                             </div>
                         </div>
                         <div class="panel panel-primary">
-                            <div class="panel-heading box" style="background-color: #34495E" role="tab" id="headingTwo" data-toggle="collapse"
+                            <div class="panel-heading box" style="background-color: #34495E" role="tab" id="headingTwo"
+                                 data-toggle="collapse"
                                  data-parent="#accordion"
                                  href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                 <h4 class="panel-title">
@@ -179,7 +181,8 @@
                             </div>
                         </div>
                         <div class="panel panel-primary">
-                            <div class="panel-heading box" style="background-color: #34495E" role="tab" id="headingThree" data-toggle="collapse"
+                            <div class="panel-heading box" style="background-color: #34495E" role="tab"
+                                 id="headingThree" data-toggle="collapse"
                                  data-parent="#accordion"
                                  href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                 <h4 class="panel-title">
@@ -203,7 +206,8 @@
                             </div>
                         </div>
                         <div class="panel panel-primary">
-                            <div class="panel-heading box" style="background-color: #34495E" role="tab" id="headingFour" data-toggle="collapse"
+                            <div class="panel-heading box" style="background-color: #34495E" role="tab" id="headingFour"
+                                 data-toggle="collapse"
                                  data-parent="#accordion"
                                  href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
                                 <h4 class="panel-title">
@@ -227,7 +231,8 @@
                             </div>
                         </div>
                         <div class="panel panel-primary">
-                            <div class="panel-heading box" style="background-color: #34495E" role="tab" id="headingFive" data-toggle="collapse"
+                            <div class="panel-heading box" style="background-color: #34495E" role="tab" id="headingFive"
+                                 data-toggle="collapse"
                                  data-parent="#accordion"
                                  href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
                                 <h4 class="panel-title">
@@ -313,45 +318,77 @@
 
     {% elif request.user.role == 3 %}
         <!-- School Administrator User Dashboard -->
-        <div class="col-lg-8">
-            <div class="col-lg-12">
-                <a class="btn btn-default" href="{% url 'administration:myPage' request.user.username %}"
-                   id="myPageBtn"><span
-                        style="font-size:10em; color: #ff9933" class="glyphicon glyphicon-user"></span><br>Min Side</a>
-                <a class="btn btn-default" href="{% url 'maths:taskCollectionCreate' %}"><span
-                        style="font-size:10em; color: #ff9933"
-                        class="glyphicon glyphicon-book"></span><br>Lag
-                    Test</a>
-                <a class="btn btn-default" href="statisticview"><span style="font-size:10em; color: #ff9933"
-                                                                      class="glyphicon glyphicon-signal"></span><br>Statistikk</a>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4>Brukere</h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-hover table-striped table-responsive">
+                            <thead>
+                            <tr>
+                                <th>Navn</th>
+                                <th>Brukernavn</th>
+                                <th>Brukertype</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for person in persons %}
+                                <tr class="clickable-row"
+                                    data-href="{% url 'administration:personDetail' person.username %}"
+                                    style="cursor: pointer">
+                                    <td>{{ person.first_name }} {{ person.last_name }}</td>
+                                    <td>{{ person.username }}</td>
+                                    <td>
+                                        {% if person.role == 1 %}
+                                            Elev
+                                        {% elif person.role == 2 %}
+                                            Lærer
+                                        {% elif person.role == 3 %}
+                                            Skoleadministrator
+                                        {% elif person.role == 4 %}
+                                            Superbruker
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-12">
-                <a class="btn btn-default" href="createfunctiontaskview"><span
-                        style="font-size:10em; color: #ffcc33" class="glyphicon glyphicon-road"></span><br>Lag
-                    Funksjonsoppgave</a>
-                <a class="btn btn-default" href="createtaskview"><span style="font-size:10em; color: #ffcc33"
-                                                                       class="glyphicon glyphicon-th"></span><br>Lag
-                    Brøkoppgave</a>
-                <a class="btn btn-default" href="creategeometrytaskview"><span
-                        style="font-size:10em; color: #ffcc33" class="glyphicon glyphicon-triangle-top"></span><br>Lag
-                    Geometrioppgave</a>
+            <div class="col-sm-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4>Skoler</h4>
+                    </div>
+                    <div class="panel-body">
+                        {% for school in schools %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4>{{ school.school_name }}</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <table class="table table-hover table-striped table-responsive">
+                                        <tbody>
+                                        {% for grade in grades %}
+                                            <tr class="clickable-row"
+                                                data-href="{% url 'administration:gradeDetail' school.id grade.id %}"
+                                                style="cursor: pointer">
+                                                {% if grade.school == school %}
+                                                    <td>{{ grade.grade_name }}</td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-12">
-                <a class="btn btn-default" href="{% url 'maths:taskCollectionList' %}"><span
-                        style="font-size:10em; color: #ff6600"
-                        class="glyphicon glyphicon-align-left"></span><br>Testoversikt</a>
-                <a class="btn btn-default" href="{% url 'administration:personList' %}"><span
-                        style="font-size:10em; color: #ff6600" class="glyphicon glyphicon-align-center"></span><br>Brukeroversikt</a>
-                <a class="btn btn-default" href="{% url 'administration:schoolList' %}"><span
-                        style="font-size:10em; color: #ff6600" class="glyphicon glyphicon-align-right"></span><br>Skoleoversikt</a>
-                <hr>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <h1>Administratorpanel</h1>
-            <a class="btn btn-default" href="{% url 'administration:personCreate' %}" id="addNewUserBtn"><span
-                    style="font-size:10em; color: #ff4400" class="glyphicon glyphicon-plus"></span><br>Legg til ny
-                bruker</a>
         </div>
 
     {% elif request.user.role == 1 %}
@@ -363,7 +400,8 @@
                         <h4>Agenda ({{ notanswered|length }})</h4>
                     </div>
                     <div class="panel-body">
-                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="max-height: 75vh; overflow: auto">
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"
+                             style="max-height: 75vh; overflow: auto">
                             {% for test in notanswered %}
                                 <div id="panel{{ forloop.counter }}" class="panel panel-default">
                                     <div class="panel-heading box" role="tab" id="heading{{ forloop.counter }}"
