@@ -86,4 +86,5 @@ class MyPageDetailViewTestCase(LiveServerTestCase):
         self.selenium.find_element_by_id('id_date_of_birth').send_keys('1995-10-13')
         self.selenium.find_element_by_id('saveNewInfoBtn').click()
         time.sleep(0.2)
-        Person.objects.filter(first_name='newName', last_name='newSurname', email='new@email.test', date_of_birth='1995-10-13')
+        Person.objects.filter(first_name='newName', last_name='newSurname', email='new@email.test',
+                              date_of_birth='1995-10-13')

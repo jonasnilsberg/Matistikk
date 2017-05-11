@@ -468,7 +468,7 @@
         if ($(('#textanswer' + taskid)).exists()) {
             tinymce.init({
                 selector: '#textanswer' + taskid,
-                plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table ',
+                plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table placeholder',
                 content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
                 toolbar: [
                     'bold italic underline fontsizeselect | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen '
@@ -481,7 +481,7 @@
         if ($(('#reasoning' + taskid)).exists()) {
             tinymce.init({
                 selector: '#reasoning' + taskid,
-                plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table ',
+                plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table placeholder ',
                 content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
                 toolbar: [
                     'bold italic underline fontsizeselect | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen '
