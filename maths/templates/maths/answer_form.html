@@ -446,9 +446,7 @@
     var taskTimerStart;
     var taskcount = document.getElementById('taskcount').innerHTML;
     var divheight = document.getElementById('tasktextdiv').clientHeight;
-    /**
-     * This function runs when the document is ready.
-     */
+
     for (var i = 0; i < taskcount; i++) {
         var div = $('#task' + (i + 1));
         var taskid = div.data('taskid');
@@ -490,6 +488,9 @@
             });
         }
     }
+     /**
+     * This function runs when the document is ready.
+     */
     $(document).ready(function () {
         start = Date.now();
 
