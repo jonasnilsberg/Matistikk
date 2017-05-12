@@ -92,9 +92,9 @@
                                 <td>{{ test.published }}</td>
                                 <td>{{ test.task_collection.author.get_full_name }}</td>
                                 <td>
-                                    <button class="btn btn-default" type="button" value="{{ test.id }}"><i
-                                            class="fa fa-tasks" aria-hidden="true"></i> Oppgaver
-                                    </button>
+                                    <a class="btn btn-default" href="{% url 'maths:answerCreate' test.id %}" type="button" value="{{ test.id }}"><i
+                                            class="fa fa-tasks" aria-hidden="true"></i> Se gjennom test
+                                    </a>
                                 </td>
                             </tr>
                         {% endfor %}

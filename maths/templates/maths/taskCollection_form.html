@@ -68,8 +68,8 @@
                                    placeholder="Søk etter oppgave...">
                         </div>
                     </div>
-                    <div class="col-md-3" style="padding-left: 20px;">
-                        <select class="hidden" id="selectCategory" multiple="multiple">
+                    <div class="col-md-2 text-center" style="margin-bottom:10px;">
+                        <select id="selectCategory" class="hidden" multiple="multiple">
                             {% for category in categories %}
                                 <option id="{{ category.id }}" value="{{ category }}">{{ category }}</option>
                             {% endfor %}
@@ -192,7 +192,7 @@
                 },
                 buttonText: function (options, select) {
                     if (options.length === 0) {
-                        return 'Filtrer oppgaver etter kategori';
+                        return 'Filtrer etter kategori';
                     }
                     else if (options.length > 3) {
                         return 'Mer enn 3 alternativer valgt';

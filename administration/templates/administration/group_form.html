@@ -53,12 +53,17 @@
                 var id = $(this).val();
                 $('#btn' + id).click();
             });
+            var fromGrade = $('#id_grade');
+            if (fromGrade.val()){
+                gradeChange(fromGrade.val());
+                $("#filterStudents").show();
+                $("#gradeDropStudent").val(fromGrade.val());
+            }
             $("#id_grade").change(function () {
                 var id = $(this).val();
                 gradeChange(id);
                 $("#filterStudents").show();
                 $("#gradeDropStudent").val(id);
-
 
             });
             $("#schoolDropStudent").change(function () {
@@ -231,7 +236,7 @@
                             </div>
                         </div>
                         <div class="col-xs-2">
-                            <button id="filterUserBtn" type="button" class="btn btn-primary"
+                            <button id="filterUserBtn" type="button" class="btn btn-primary filterBtn"
                                     onclick="filterButtonStudent()">
                                 Sorter<span
                                     class="caret"></span>
