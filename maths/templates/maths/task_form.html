@@ -53,7 +53,7 @@
                 <label for="taskname">Oppgavenavn</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-tasks"></i></span>
-                    <input type="text" class="form-control input-lg" id="taskname" placeholder="Oppgavenavn">
+                    <input type="text" class="form-control input-lg" id="taskname" placeholder="Oppgavenavn" autofocus>
                 </div>
                 <label for="choosetype">Velg kategori</label><br>
                 <div class="input-group">
@@ -63,7 +63,7 @@
                         {% endfor %}
                     </select>
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" data-toggle="modal" data-target="#addCategory"><i
+                        <button class="btn btn-warning  " type="button" data-toggle="modal" data-target="#addCategory"><i
                                 class="fa fa-plus"></i></button>
                     </span>
                 </div>
@@ -204,6 +204,7 @@
             "id": "ggbApplet",
             "width": 1200,
             "height": 750,
+            "preventFocus": true,
             "language": "nb",
             "showToolBar": true,
             "borderColor": null,
@@ -217,8 +218,7 @@
             "errorDialogsActive": true,
             "showTutorialLink": false,
             "showLogging": false,
-            "useBrowserForJS": false,
-            "preventFocus": true
+            "useBrowserForJS": false
         };
 
         // Applet som inneholder GeoGebra-vinduet som lastes inn i createfunctiontask.jsp

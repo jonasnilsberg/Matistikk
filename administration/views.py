@@ -16,6 +16,7 @@ from .models import Grade, Person, School, Gruppe
 from maths.models import Test, TaskCollection
 
 from django.db.models import Q
+from django.http import Http404
 
 
 class AdministratorCheck(views.UserPassesTestMixin):
@@ -76,6 +77,8 @@ class SchoolCheck(views.UserPassesTestMixin):
             if user.role == 4:
                 return True
             elif user.role == 3:
+                if self.request.is_ajax():
+                    return True
                 if self.kwargs.get('school_pk'):
                     school = School.objects.get(id=self.kwargs.get('school_pk'))
                     if user.id == school.school_administrator.id:
@@ -481,7 +484,10 @@ class PersonCreateView(RoleCheck, generic.CreateView):
             self.success_url = reverse_lazy('administration:gradeDetail',
                                             kwargs={'school_pk': self.kwargs.get('school_pk'),
                                                     'grade_pk': self.kwargs.get('grade_pk')})
-            return {'role': self.role, 'grades': self.kwargs.get('grade_pk')}
+            initial = super(PersonCreateView, self).get_initial()
+            initial['grades'] = [self.kwargs.get('grade_pk')]
+            initial['role'] = self.role
+            return initial
 
     def form_valid(self, form):
         """
@@ -645,6 +651,12 @@ class PersonDeleteView(SchoolAdministratorCheck, generic.DeleteView):
     """
     slug_field = 'username'
     model = Person
+
+    def get_object(self, queryset=None):
+        obj = super(PersonDeleteView, self).get_object()
+        if not obj.last_login:
+            return obj
+        raise Http404
 
     def get_success_url(self):
         success_url = reverse_lazy('administration:personList')

@@ -151,13 +151,13 @@
                                 <td>{{ group.group_name }}</td>
                                 <td>{{ group.creator.get_full_name }}</td>
                                 {% if request.user.role == 4 %}
-                                    <td><a class="btn btn-default"
+                                    <td><a class="btn btn-info"
                                            href="{% url 'administration:groupDetail' group.id %}"><i class="fa fa-users"
                                                                                                      aria-hidden="true"></i>
                                         Se gruppeinfo</a></td>
                                 {% endif %}
                                 <td>
-                                    <button id="{{ group.id }}" value="{{ group.group_name }}" class='btn btn-default'
+                                    <button id="{{ group.id }}" value="{{ group.group_name }}" class='btn btn-info'
                                             data-toggle='modal'
                                             data-target='#groupMemberModal' onclick="memberBtn(this)">
                                         <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
@@ -189,7 +189,7 @@
                                 <td>{{ test.published }}</td>
                                 <td>{{ test.task_collection.author.get_full_name }}</td>
                                 <td>
-                                    <a href="{% url 'maths:answerCreate' test.id %}" class="btn btn-default"
+                                    <a href="{% url 'maths:answerCreate' test.id %}" class="btn btn-info"
                                        type="button" value="{{ test.id }}"><i
                                             class="fa fa-tasks" aria-hidden="true"></i> Se gjennom test
                                     </a>
@@ -595,6 +595,9 @@
                     'grade': {{ grade.id }},
                     'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
                 },
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
                 dataType: 'json',
                 success: searchSuccess,
                 error: searchError
@@ -731,7 +734,7 @@
                             </div>
                         </div>
                         <div class="col-xs-2">
-                            <button class="filterBtn" type="button" class="btn btn-primary"
+                            <button class="filterBtn btn btn-primary" type="button" class="btn btn-primary"
                                     onclick="filterButtonStudent()">
                                 Sorter<span class="caret"></span>
                             </button>

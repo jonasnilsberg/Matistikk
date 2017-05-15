@@ -103,7 +103,7 @@
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                        <button type="button" class="btn btn-default" value="{{ test.id }}"><span
+                                        <button type="button" class="btn btn-info" value="{{ test.id }}"><span
                                                 class="glyphicon glyphicon-eye-open"></span> Publisert til
                                         </button>
                                     </div>
@@ -148,7 +148,7 @@
                                 </td>
                                 <td>
                                     <button value="{{ task.id }}" type="button" onclick="previewTask(this)"
-                                            class="btn btn-default btn-sm"><span
+                                            class="btn btn-info btn-sm"><span
                                             class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
                                     </button>
                                 </td>
@@ -388,7 +388,7 @@
                     }
                     $.each(students, function (index, value) {
                         $('#studenttable tr:last').after('<tr><td>' + value.first_name + '</td><td>' + value.last_name +
-                            '</td><td>' + value.username + '</td><td><a id=' + value.username + ' type="button" class="btn btn-default btn-sm">' +
+                            '</td><td>' + value.username + '</td><td><a id=' + value.username + ' type="button" class="btn btn-info btn-sm">' +
                             '<i class="fa fa-user-circle" aria-hidden="true"></i> Gå til bruker</a></td></tr>');
                         $('#' + value.username).attr("href", '{% url 'administration:personDetail' slug=12345 %}'.replace(/12345/, value.username));
                     });
@@ -396,7 +396,7 @@
                         $('#publishedToTeacher').removeClass('hidden');
                         $.each(teachers, function (index, value) {
                             $('#teachertable tr:last').after('<tr><td>' + value.first_name + '</td><td>' + value.last_name +
-                                '</td><td>' + value.username + '</td><td><a id=' + value.username + ' type="button" class="btn btn-default btn-sm">' +
+                                '</td><td>' + value.username + '</td><td><a id=' + value.username + ' type="button" class="btn btn-info btn-sm">' +
                                 '<i class="fa fa-user-circle" aria-hidden="true"></i> Gå til bruker</a></td></tr>');
                             $('#' + value.username).attr("href", '{% url 'administration:personDetail' slug=12345 %}'.replace(/12345/, value.username));
                         });
@@ -407,7 +407,7 @@
                         $('#publishedToGrades').removeClass('hidden');
                         $.each(grades, function (index, value) {
                             $('#gradetable tr:last').after('<tr><td>' + value.grade_name + '</td><td>' + value.school +
-                                '</td><td><a id="grade' + value.id + '" type="button" class="btn btn-default btn-sm">' +
+                                '</td><td><a id="grade' + value.id + '" type="button" class="btn btn-info btn-sm">' +
                                 '<i class="fa fa-user-circle" aria-hidden="true"></i> Gå til klasse</a></td></tr>');
                             $('#grade' + value.id).attr("href", '{% url 'administration:gradeDetail' grade_pk=12345 school_pk=67899 %}'.replace(/12345/, value.id).replace(/67899/, value.school_id));
                         });
@@ -418,7 +418,7 @@
                         $('#publishedToGroups').removeClass('hidden');
                         $.each(groups, function (index, value) {
                             $('#grouptable tr:last').after('<tr><td>' + value.group_name + '</td><td>' + value.grade +
-                                '</td><td>' + value.creator + '</td><td><a id="group' + value.id + '" type="button" class="btn btn-default btn-sm">' +
+                                '</td><td>' + value.creator + '</td><td><a id="group' + value.id + '" type="button" class="btn btn-info btn-sm">' +
                                 '<i class="fa fa-user-circle" aria-hidden="true"></i> Gå til gruppe</a></td></tr>');
                             $('#group' + value.id).attr("href", '{% url 'administration:groupDetail' group_pk=12345 %}'.replace(/12345/, value.id));
                         });

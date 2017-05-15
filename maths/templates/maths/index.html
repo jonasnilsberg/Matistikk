@@ -531,7 +531,7 @@
                                                     <p><strong>Starttidspunkt: </strong>{{ test.published }}</p>
                                                     <span id="publishdate{{ forloop.counter }}"
                                                           hidden>{{ test.published.isoformat }}</span>
-                                                    <p><strong>Frist: </strong>{{ test.dueDate }}</p>
+                                                    <p><strong>Frist: </strong>{% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen Frist.{% endif %}</p>
                                                     <p><strong>Antall
                                                         Oppgaver: </strong>{{ test.task_collection.tasks.count }}</p>
                                                     <p><strong>Laget
