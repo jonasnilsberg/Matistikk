@@ -443,9 +443,7 @@
     var taskTimerStart;
     var taskcount = document.getElementById('taskcount').innerHTML;
     var divheight = document.getElementById('tasktextdiv').clientHeight;
-    /**
-     * This function runs when the document is ready.
-     */
+
     for (var i = 0; i < taskcount; i++) {
         var div = $('#task' + (i + 1));
         var taskid = div.data('taskid');
@@ -463,7 +461,7 @@
         if ($(('#textanswer' + taskid)).exists()) {
             tinymce.init({
                 selector: '#textanswer' + taskid,
-                plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table ',
+                plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table placeholder',
                 content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
                 toolbar: [
                     'bold italic underline fontsizeselect | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen '
@@ -476,7 +474,7 @@
         if ($(('#reasoning' + taskid)).exists()) {
             tinymce.init({
                 selector: '#reasoning' + taskid,
-                plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table ',
+                plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table placeholder ',
                 content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
                 toolbar: [
                     'bold italic underline fontsizeselect | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen '
@@ -487,6 +485,9 @@
             });
         }
     }
+     /**
+     * This function runs when the document is ready.
+     */
     $(document).ready(function () {
         start = Date.now();
 

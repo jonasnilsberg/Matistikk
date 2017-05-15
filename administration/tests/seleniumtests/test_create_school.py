@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 
 
-class SchoolDetailViewTestCase(LiveServerTestCase):
+class CreateSchoolTestCase(LiveServerTestCase):
     def setUp(self):
         # DB setup
         obj = mixer.blend('administration.Person', role=4, username='admin')
@@ -20,12 +20,13 @@ class SchoolDetailViewTestCase(LiveServerTestCase):
         #  Webdriver setup
         self.selenium = webdriver.Chrome()
         self.selenium.maximize_window()
-        super(SchoolDetailViewTestCase, self).setUp()
+        super(CreateSchoolTestCase, self).setUp()
 
     def tearDown(self):
         self.selenium.quit()
-        super(SchoolDetailViewTestCase, self).tearDown()
+        super(CreateSchoolTestCase, self).tearDown()
 
+    # Confirms scenario 2.5
     def test_admin_can_create_school_without_schooladministrator(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
@@ -49,6 +50,7 @@ class SchoolDetailViewTestCase(LiveServerTestCase):
         time.sleep(0.1)
         self.assertEqual(1, len(School.objects.filter(school_name='testSchool')))
 
+    # Confirms scenario 2.5
     def test_admin_can_create_school_with_new_schooladministrator(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
