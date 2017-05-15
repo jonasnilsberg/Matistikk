@@ -116,7 +116,7 @@
                                     </td>
                                     <td>
                                         <button type="button" disabled='disabled' id="{{ student.username }}"
-                                                class='btn btn-default button goToAnswer'>
+                                                class='btn btn-success button goToAnswer'>
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
                                             Besvarelse
                                         </button>
@@ -147,7 +147,7 @@
                                     <td>
                                         <button disabled='disabled' id="{{ teacher.username }}"
                                                 value="{{ teacher.username }}"
-                                                class='btn btn-default goToAnswer'>
+                                                class='btn btn-info goToAnswer'>
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
                                             Besvarelse
                                         </button>
@@ -268,7 +268,7 @@
                                     </td>
                                     <td>
                                         <button value="{{ task.id }}" type="button" onclick="previewTask(this)"
-                                                class="btn btn-default btn-sm"><span
+                                                class="btn btn-info btn-sm"><span
                                                 class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
                                         </button>
                                     </td>
@@ -298,7 +298,7 @@
                                     </td>
                                     <td>
                                         <button value="{{ task.task.id }}" type="button" onclick="previewTask(this)"
-                                                class="btn btn-default btn-sm"><span
+                                                class="btn btn-info btn-sm"><span
                                                 class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
                                         </button>
                                     </td>
@@ -771,7 +771,7 @@
                                         <td>{{ student.first_name }}</td>
                                         <td>{{ student.last_name }}</td>
                                         <td>{{ student.username }}</td>
-                                        <td><a class="btn btn-default"
+                                        <td><a class="btn btn-info"
                                                href="{% url 'administration:personDetail' student.username %}"><span
                                                 class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
                                             Brukerinfo</a>
@@ -803,7 +803,7 @@
                                         <td>{{ teacher.first_name }}</td>
                                         <td>{{ teacher.last_name }}</td>
                                         <td>{{ teacher.username }}</td>
-                                        <td><a class="btn btn-default"
+                                        <td><a class="btn btn-info"
                                                href="{% url 'administration:personDetail' teacher.username %}"><span
                                                 class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
                                             Brukerinfo</a>
@@ -833,7 +833,7 @@
                                                    value="{{ grade.id }}"></td>
                                         <td>{{ grade.grade_name }}</td>
                                         <td>{{ grade.school.school_name }}</td>
-                                        <td><a class="btn btn-default"
+                                        <td><a class="btn btn-info"
                                                href="{% url 'administration:gradeDetail' school_pk=grade.school_id grade_pk=grade.id %}"><span
                                                 class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
                                             Klasseinfo</a>
@@ -865,7 +865,7 @@
                                         <td>{{ group.group_name }}</td>
                                         <td>{% if group.grade %}{{ group.grade }}{% else %}-{% endif %}</td>
                                         <td>{{ group.creator.get_full_name }}</td>
-                                        <td><a class="btn btn-default"
+                                        <td><a class="btn btn-info"
                                                href="{% url 'administration:groupDetail' group_pk=group.id %}"><span
                                                 class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
                                             Gruppeinfo</a>
@@ -897,7 +897,7 @@
                                         <td>{{ school.school_name }}</td>
                                         <td>{{ school.school_address }}</td>
                                         <td>{{ school.school_administrator.get_full_name }}</td>
-                                        <td><a class="btn btn-default"
+                                        <td><a class="btn btn-info"
                                                href="{% url 'administration:schoolDetail' school_pk=school.id %}"><span
                                                 class="glyphicon glyphicon-user" aria-hidden="true"></span> Se
                                             Skoleinfo</a>
