@@ -9,7 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class PersonCreateViewTestCase(LiveServerTestCase):
+class CreateUsersTestCase(LiveServerTestCase):
     def setUp(self):
         obj = mixer.blend('administration.Person', role=4, username='admin')
         obj.set_password('admin')  # Password has to be set like this because of the hash-function
@@ -31,11 +31,11 @@ class PersonCreateViewTestCase(LiveServerTestCase):
         #  Webdriver setup
         self.selenium = webdriver.Chrome()
         self.selenium.maximize_window()
-        super(PersonCreateViewTestCase, self).setUp()
+        super(CreateUsersTestCase, self).setUp()
 
     def tearDown(self):
         self.selenium.quit()
-        super(PersonCreateViewTestCase, self).tearDown()
+        super(CreateUsersTestCase, self).tearDown()
 
     # Confirms scenario 2.2.1
     def test_admin_can_create_student_teacher_and_schooladmin_without_school(self):
@@ -132,6 +132,7 @@ class PersonCreateViewTestCase(LiveServerTestCase):
         self.assertEqual(1, len(Person.objects.filter(role=3, first_name='testNameSAdmin'))), \
         'Should be a schooladministrator object saved in the database'
 
+    #  Confirms scenario 2.8.1
     def test_admin_can_create_teacher_student_in_grade(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
@@ -327,6 +328,7 @@ class PersonCreateViewTestCase(LiveServerTestCase):
         self.assertEqual(1, len(Person.objects.filter(role=2, first_name='testTeacher'))), \
         'Should be a teacher object saved in the database'
 
+    #  Confirms scenario 2.8.1
     def test_schooladmin_can_create_teacher_student_with_school(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")

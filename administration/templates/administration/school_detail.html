@@ -3,7 +3,7 @@
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h2>{{ school.school_name }}</h2>
+            <h2 id="schoolNameField">{{ school.school_name }}</h2>
             <h5>Adresse: {{ school.school_address }}</h5>
             <h5>Kontaktperson:
                 {% if school.school_administrator.username %}
@@ -90,8 +90,8 @@
             <div class="panel-footer">
                 <a class="btn btn-primary" href="{% url 'administration:schoolUpdate' school.id %}"><span
                         class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater skole</a>
-                <a class="btn btn-primary" href="{% url 'administration:gradeCreate' school.id %}"><span
-                        class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til klasse</a>
+                <a class="btn btn-primary" href="{% url 'administration:gradeCreate' school.id %}" id="addNewGradeBtn">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span> Legg til klasse</a>
             </div>
         {% endif %}
     </div>

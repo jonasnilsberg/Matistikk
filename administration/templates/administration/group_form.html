@@ -29,13 +29,13 @@
                         </tbody>
                     </table>
                 </div>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStudents">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStudents" id="addStudentsBtn">
                     Legg til elever
                 </button>
                 {% bootstrap_field form.visible %}
                 {% bootstrap_field form.is_active %}
                 {% buttons %}
-                    <button type="submit" class="btn btn-success">
+                    <button type="submit" class="btn btn-success" id="addGroupBtn">
                         {% bootstrap_icon "check" %} Lagre
                     </button>
                 {% endbuttons %}
@@ -282,7 +282,7 @@
 
                             <tbody id="studentTable" class="tableBody">
                             {% for student in students %}
-                                <tr id="{{ student.id }}" value="{{ student.username }}">
+                                <tr id="{{ student.id }}TR" value="{{ student.username }}">
                                     <td>{{ student }}
                                     </td>
                                     <td>
@@ -301,7 +301,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalBtn">Lukk</button>
                 </div>
             </div>
         </div>

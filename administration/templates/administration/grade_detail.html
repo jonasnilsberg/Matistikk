@@ -218,7 +218,7 @@
                 <li><a href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}" id="addNewStudentBtn">Opprett
                     ny
                     elev</a></li>
-                <li><a data-toggle='modal' href='#AddStudentModal'>Legg til eksisterende elev</a></li>
+                <li><a data-toggle='modal' href='#AddStudentModal' id="addExistingStudent">Legg til eksisterende elev</a></li>
                 <li><a data-toggle='modal' href='#masseregModal'>Masseregistrering av elever</a></li>
             </ul>
         </div>
@@ -233,7 +233,7 @@
                     <li><a href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"
                            id="addNewTeacherBtn">Opprett ny
                         lærer</a></li>
-                    <li><a data-toggle='modal' href='#AddTeacherModal'>Legg til eksisterende lærer</a></li>
+                    <li><a data-toggle='modal' href='#AddTeacherModal' id="addExistingTeacherBtn">Legg til eksisterende lærer</a></li>
                 </ul>
             </div>
 
@@ -781,12 +781,12 @@
                             <div>
                                 <tbody id="existingStudentTable">
                                 {% for existingStudent in existingStudents %}
-                                    <tr id="{{ existingStudent.username }}" value="{{ existingStudent.username }}">
+                                    <tr id="{{ existingStudent.username }}TR" >
                                         <td>{{ existingStudent }}
                                         </td>
                                         <td>
                                             <button class="btn btn-success btn-xs" type="button"
-                                                    id="{{ existingStudent.username }}"
+                                                    id="{{ existingStudent.username }}" value="{{ existingStudent.username }}"
                                                     onclick="addExistingPerson(this)">Legg til
                                             </button>
                                         </td>
@@ -871,7 +871,7 @@
                         </thead>
                         <tbody id="existingTeacherTable">
                         {% for existingTeacher in existingTeachers %}
-                            <tr id="{{ existingTeacher.username }}" value="{{ existingTeacher.username }}">
+                            <tr id="{{ existingTeacher.username }}TR" value="{{ existingTeacher.username }}">
                                 <td>{{ existingTeacher }}
                                 </td>
                                 <td>
