@@ -62,16 +62,16 @@
                                             name="{{ test.task_collection.test_name }}"
                                             type="button"
                                             onclick="publishTest(this)"
-                                            class="btn btn-default publish"><i class="fa fa-book"
+                                            class="btn btn-info publish"><i class="fa fa-book"
                                                                                aria-hidden="true"></i></span>
                                         Publisering
                                     </button>
                                     <a type="button" href='{% url 'maths:answerCreate' test.id %}'
-                                       class="btn btn-default"
+                                       class="btn btn-info"
                                        value="{{ test.id }}"><i class="fa fa-tasks" aria-hidden="true"></i> Se test
                                     </a>
 
-                                    <a type="button" href='{% url "maths:testDetail" test.id %}' class="btn btn-default"
+                                    <a type="button" href='{% url "maths:testDetail" test.id %}' class="btn btn-info"
                                        value="{{ test.id }}"><span
                                             class="glyphicon glyphicon-eye-open"></span> Se besvarelser
                                     </a>

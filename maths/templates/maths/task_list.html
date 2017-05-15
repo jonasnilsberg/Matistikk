@@ -81,8 +81,8 @@
                 <tr>
                     <th class="col-sm-1">ID</th>
                     <th class="col-sm-2">Oppgavenavn</th>
-                    <th class="col-sm-2">Kategori</th>
-                    <th class="col-sm-2">Laget av</th>
+                    <th class="col-sm-3">Kategori</th>
+                    <th class="col-sm-3">Laget av</th>
                     <th class="col-sm-5">Alternativer</th>
                 </tr>
 
@@ -104,12 +104,11 @@
                         <td>{{ task.author.get_full_name }}</td>
                         <td>
                             <div class="btn-group btn-group-sm" role="group" aria-label="...">
-                                <a class="btn btn-default"
-                                   href="{% url 'maths:taskUpdate' task.id %}"
-                                   style="background-color: inherit"><span
+                                <a class="btn btn-info"
+                                   href="{% url 'maths:taskUpdate' task.id %}"><span
                                         class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater
                                 </a>
-                                <button type="button" value="{{ task.id }}" class="btn btn-default"
+                                <button type="button" value="{{ task.id }}" class="btn btn-info"
                                         onclick="previewTask(this)"
                                         href="#previewTaskModal"><span
                                         class="glyphicon glyphicon-eye-open"></span> Forhåndsvis

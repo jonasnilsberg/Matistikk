@@ -24,6 +24,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
     <script type="text/javascript" src="{% static 'maths/js/bootstrap-clockpicker.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'maths/css/bootstrap-clockpicker.min.css' %}" type="text/css"/>
@@ -34,7 +35,7 @@
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
-         tinymce.init({
+        tinymce.init({
             selector: '#previewtasktext',
             plugins: 'placeholder',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
@@ -141,7 +142,7 @@
                                         <td>{{ student.username }}</td>
                                         <td>
                                             <button id="{{ student.username }}" value="{{ student.username }}"
-                                                    class='btn btn-default'>
+                                                    class='btn btn-info'>
                                                 <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
                                                 Se brukerinfo
                                             </button>
@@ -174,7 +175,7 @@
                                         <td>{{ teacher.username }}</td>
                                         <td>
                                             <button id="{{ teacher.username }}" value="{{ teacher.username }}"
-                                                    class="btn btn-default">
+                                                    class="btn btn-info">
                                                 <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
                                                 Se brukerinfo
                                             </button>
@@ -205,7 +206,7 @@
                                         <td>{{ grade.school.school_name }}</td>
                                         <td>
                                             <button id="grade{{ grade.id }}" value="{{ grade.id }}"
-                                                    class='btn btn-default' data-target="{{ grade.school_id }}">
+                                                    class='btn btn-info' data-target="{{ grade.school_id }}">
                                                 <i class="fa fa-graduation-cap" aria-hidden="true"></i>
                                                 Se klasseinfo
                                             </button>
@@ -237,7 +238,7 @@
                                         <td>{% if group.grade %}{{ group.grade }}{% else %} - {% endif %}</td>
                                         <td>{{ group.creator.get_full_name }}</td>
                                         <td>
-                                            <button class='btn btn-default' type="button" value="{{ group.id }}">
+                                            <button class='btn btn-info' type="button" value="{{ group.id }}">
                                                 <i class="fa fa-users" aria-hidden="true"></i>
                                                 Se medlemmer
                                             </button>
@@ -266,7 +267,7 @@
                                         <td>{{ school.school_address }}</td>
                                         <td>{{ school.school_administrator.get_full_name }}</td>
                                         <td>
-                                            <button class='btn btn-default' type="button">
+                                            <button class='btn btn-info' type="button">
                                                 <i class="fa fa-building" aria-hidden="true"></i>
                                                 Se medlemmer
                                             </button>
@@ -317,7 +318,7 @@
                                     </td>
                                     <td>
                                         <button value="{{ task.id }}" type="button" onclick="preview(this)"
-                                                class="btn btn-default"><span
+                                                class="btn btn-info"><span
                                                 class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
                                         </button>
                                     </td>
@@ -325,8 +326,11 @@
                             {% endfor %}
                             </tbody>
                         </table>
-                        <div class="row">
-                            <div class="col-md-2">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="col-md-11">
+
                                 <ul class="list-group">
                                     <li class="list-group-item">
                                         Tilfeldig rekkefølge
@@ -338,11 +342,19 @@
                                     </li>
                                 </ul>
                             </div>
+                            <div class="col-md-1">
+                                <button id="randomInfoBtn" class="btn btn-info orderinfo"><i class="fa fa-info"
+                                                                                                aria-hidden="true"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                        <div class="col-md-11">
                             <ul class="list-group">
                                 <li class="list-group-item">
-                                    Lås rekkefølge
+                                    Låst rekkefølge
+
                                     <div class="material-switch pull-right">
                                         <input id="strictOrderCheckbox" name="strictOrderCheckbox" type="checkbox"
                                                onclick="strictOrder()"/>
@@ -350,6 +362,11 @@
                                     </div>
                                 </li>
                             </ul>
+                        </div>
+                        <div class="col-md-1">
+                            <button id="lockedInfoBtn" class="btn btn-info orderinfo"><i class="fa fa-info"
+                                                                                            aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -749,6 +766,22 @@
             });
         }
 
+        $('#randomInfoBtn').click(function () {
+            bootbox.alert({
+                title: "Tilfeldig rekkefølge!",
+                message: "Hvis tilfeldig rekkefølge blir valgt, vil rekkefølgen på oppgavene være tilfeldig for hver enkelt elev som tar testen.",
+                backdrop: true
+            });
+        });
+
+        $('#lockedInfoBtn').click(function () {
+            bootbox.alert({
+                title: "Låst rekkefølge!",
+                message: "Hvis låst rekkefølge er valgt, vil eleven ikke ha mulighet til å hoppe mellom oppgaver. Eleven vil heller ikke kunne gå tilbake til tidligere oppgaver.",
+                backdrop: true
+            });
+        });
+
 
         $("#studenttable tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
@@ -763,7 +796,7 @@
                     $(this).addClass('success');
                     var text = $("#id_persons option[value=" + $checkbox.val() + "]").text();
                     $('#selectedUserTable').append('<tr id="selected' + $checkbox.val() + '"><td>' + text +
-                        '</td><td><button type="button" class="btn btn-default btn-sm" onclick="removeUser(this)" value=' + $checkbox.val() + '>' +
+                        '</td><td><button type="button" class="btn btn-danger btn-sm" onclick="removeUser(this)" value=' + $checkbox.val() + '>' +
                         '<i class="fa fa-trash-o" aria-hidden="true"></i></td></tr>');
                 } else {
                     $('#id_persons option[value=' + $checkbox.val() + ']').attr('selected', false);
@@ -788,7 +821,7 @@
                     $(this).addClass('success');
                     var text = $("#id_persons option[value=" + $checkbox.val() + "]").text();
                     $('#selectedUserTable').append('<tr id="selected' + $checkbox.val() + '"><td>' + text +
-                        '</td><td><button type="button" class="btn btn-default btn-sm" onclick="removeUser(this)" value=' + $checkbox.val() + '>' +
+                        '</td><td><button type="button" class="btn btn-danger btn-sm" onclick="removeUser(this)" value=' + $checkbox.val() + '>' +
                         '<i class="fa fa-trash-o" aria-hidden="true"></i></td></tr>');
                 } else {
                     $('#id_persons option[value=' + $checkbox.val() + ']').attr('selected', false);
@@ -848,7 +881,7 @@
                     $(this).addClass('success');
                     var text = $("#id_grades option[value=" + $checkbox.val() + "]").text();
                     $('#selectedUserTable').append('<tr id="selectedGrade' + $checkbox.val() + '"><td>' + text + '</td>' +
-                        '<td><button type="button" class="btn btn-default btn-sm" onclick="removeGrade(this)" value=' + $checkbox.val() + '>' +
+                        '<td><button type="button" class="btn btn-danger btn-sm" onclick="removeGrade(this)" value=' + $checkbox.val() + '>' +
                         '<i class="fa fa-trash-o" aria-hidden="true"></i></td></tr>');
                 } else {
                     $('#id_grades option[value=' + $checkbox.val() + ']').attr('selected', false);
@@ -902,7 +935,7 @@
                     $(this).addClass('success');
                     var text = $("#id_groups option[value=" + $checkbox.val() + "]").text();
                     $('#selectedUserTable').append('<tr id="selectedGroup' + $checkbox.val() + '"><td>' + text + '</td>' +
-                        '<td><button type="button" class="btn btn-default btn-sm" onclick="removeGroup(this)" value=' + $checkbox.val() + '>' +
+                        '<td><button type="button" class="btn btn-danger btn-sm" onclick="removeGroup(this)" value=' + $checkbox.val() + '>' +
                         '<i class="fa fa-trash-o" aria-hidden="true"></i></td></tr>');
                 } else {
                     $('#id_groups option[value=' + $checkbox.val() + ']').attr('selected', false);
@@ -934,7 +967,7 @@
                     $(this).addClass('success');
                     var text = $("#id_schools option[value=" + $checkbox.val() + "]").text();
                     $('#selectedUserTable').append('<tr id="selectedSchool' + $checkbox.val() + '"><td>' + text + '</td>' +
-                        '<td><button type="button" class="btn btn-default btn-sm" onclick="removeSchool(this)" value=' + $checkbox.val() + '>' +
+                        '<td><button type="button" class="btn btn-danger btn-sm" onclick="removeSchool(this)" value=' + $checkbox.val() + '>' +
                         '<i class="fa fa-trash-o" aria-hidden="true"></i></td></tr>');
                 } else {
                     $('#id_schools option[value=' + $checkbox.val() + ']').attr('selected', false);
@@ -1318,7 +1351,8 @@
                                 <div class="panel-body">
                                     <div id="previewtextanswerdiv">
                                         <label for="previewtextanswer">Tekstsvar</label>
-                                        <textarea class="form-control" id="previewtextanswer" rows="6" style="resize:vertical"
+                                        <textarea class="form-control" id="previewtextanswer" rows="6"
+                                                  style="resize:vertical"
                                                   placeholder="Skriv svaret ditt her..."></textarea>
                                     </div>
 
@@ -1331,7 +1365,8 @@
 
                                     <div id="previewreasoningdiv">
                                         <label for="previewreasoning">Begrunnelse</label>
-                                        <textarea class="form-control" id="previewreasoning" rows="6" style="resize:vertical"
+                                        <textarea class="form-control" id="previewreasoning" rows="6"
+                                                  style="resize:vertical"
                                                   placeholder="Begrunn svaret ditt..."></textarea>
                                     </div>
 

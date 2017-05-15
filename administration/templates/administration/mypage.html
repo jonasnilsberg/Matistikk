@@ -57,14 +57,14 @@
                                     <td>
                                         {% if person.role == 2 %}
                                             <a type="button" id="{{ grade.id }}" value="{{ grade }}"
-                                               class='btn btn-default'
+                                               class='btn btn-info'
                                                href="{% url 'administration:gradeDetail' grade.school.id grade.id %}">
                                                 <i class="fa fa-graduation-cap" aria-hidden="true"></i>
                                                 Gå til klasse
                                             </a>
                                         {% endif %}
                                         <button id="{{ grade.id }}" value="{{ grade }}"
-                                                class='btn btn-default'
+                                                class='btn btn-info'
                                                 data-toggle='modal'
                                                 data-target='#gradeMemberModal' onclick="gradeMemberBtn(this)">
                                             <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
@@ -94,7 +94,7 @@
                                     style="cursor: pointer">
                                     <td>{{ school.school_name }}</td>
                                     <td>{{ school.school_address }}</td>
-                                    <td><a class="btn btn-default"
+                                    <td><a class="btn btn-info"
                                            href="{% url 'administration:schoolDetail' school.id %}"><span
                                             class="glyphicon glyphicon-home" aria-hidden="true"></span> Se
                                         Skoleinfo</a></td>
@@ -121,7 +121,7 @@
                                     <td>{{ test.id }}</td>
                                     <td>{{ test.test_name }}</td>
                                     <td>
-                                        <button class="btn btn-default"><i class="fa fa-book" aria-hidden="true"></i> Se
+                                        <button class="btn btn-info"><i class="fa fa-book" aria-hidden="true"></i> Se
                                             testinfo
                                         </button>
                                     </td>
@@ -149,7 +149,7 @@
                                     <td>{{ group.creator.get_full_name }}</td>
                                     <td>
                                         <button id="{{ group.id }}" value="{{ group.group_name }}" type="button"
-                                                class='btn btn-default'
+                                                class='btn btn-info'
                                                 data-toggle='modal'
                                                 data-target='#groupMemberModal' onclick="groupMemberBtn(this)">
                                             <span class='glyphicon glyphicon-user' aria-hidden='true'></span>

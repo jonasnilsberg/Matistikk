@@ -377,3 +377,10 @@ html, body {
 #tasktextdiv{
     height: 20%;
 }
+
+.orderinfo {
+    border-radius: 10px !important;
+    height: 42px;
+    width: 42px;
+    margin-left: 3px;
+}

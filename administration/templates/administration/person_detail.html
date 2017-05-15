@@ -67,7 +67,7 @@
                                 </td>
                                 <td>
                                     <button value="{{ grade.id }}" disabled="disabled" onclick="goToGrade(this)"
-                                            class='btn btn-default' data-school="{{ grade.school.id }}"
+                                            class='btn btn-info' data-school="{{ grade.school.id }}"
                                             data-available="{% grade_check grade request.user %}">
                                         <i class="fa fa-graduation-cap" aria-hidden="true"></i> Gå til klasse
                                     </button>
@@ -96,7 +96,7 @@
                                     <td>{% if group.grade %}{{ group.grade }}{% else %}-{% endif %}</td>
                                     <td>
                                         <button id="{{ group.id }}" value="{{ group.group_name }}"
-                                                class='btn btn-default'
+                                                class='btn btn-info'
                                                 data-toggle='modal'
                                                 data-target='#groupMemberModal' onclick="groupMemberBtn(this)">
                                             <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
@@ -130,7 +130,7 @@
                                     <td>{% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen svarfrist{% endif %}</td>
                                     <td>{% if answer %}{{ answer.date_answered }}{% else %}-{% endif %}</td>
                                     <td>
-                                        <button class='btn btn-default goToAnswer' disabled="disabled"
+                                        <button class='btn btn-info goToAnswer' disabled="disabled"
                                                 {% if answer %}value="{{ answer.id }}"{% else %}value=""{% endif %} data-test="{{ test.id }}">
                                             <i class="fa fa-eye" aria-hidden="true"></i>
                                             Se besvarelse
