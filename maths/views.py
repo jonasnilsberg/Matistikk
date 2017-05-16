@@ -364,6 +364,8 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
             :return: calls super with the new form.
         """
         task = form.save(commit=False)
+        if self.request.POST.get('create_new', False):
+            task.pk = None
         task.save()
 
         if task.extra:
