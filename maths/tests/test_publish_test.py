@@ -71,3 +71,4 @@ class PublishTestTestCase(LiveServerTestCase):
         self.selenium.find_element_by_id('submitBtn').click()
         time.sleep(10)
         self.assertEqual(1, len(Test.objects.all()))
+

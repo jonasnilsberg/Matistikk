@@ -56,6 +56,7 @@ class UpdateTaskTestCase(LiveServerTestCase):
         WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "update1")))
         self.selenium.find_element_by_id('update1').click()
         WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "extraField")))
+        time.sleep(2)  # wait for geogebra to be out of focus (removing this makes the test very unreliable)
         self.selenium.find_element_by_id('extraField').click()
         self.selenium.execute_script("tinyMCE.get('tasktext').setContent('<h1>New task text</h1>')")
         time.sleep(0.5)  # wait for js to remove extra

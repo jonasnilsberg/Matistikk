@@ -27,15 +27,9 @@ class ViewAvaliableTestsTestCase(LiveServerTestCase):
         testobj = mixer.blend('maths.Test', task_collection=taskcollectionobj)
         testobj.save()
 
-        gradeobj = mixer.blend('administration.Grade', gradename='testGrade', tests=testobj)
-        gradeobj.save()
-
-        obj = mixer.blend('administration.Person', role=2, username='teacher', grades=gradeobj)
+        obj = mixer.blend('administration.Person', role=2, username='teacher', tests = testobj)
         obj.set_password('teacher')  # Password has to be set like this because of the hash-function
         obj.save()
-
-        studentobj = mixer.blend('administration.Person', role=1, username='student')
-        studentobj.save()
 
         #  Webdriver setup
         self.selenium = webdriver.Chrome()
@@ -62,7 +56,6 @@ class ViewAvaliableTestsTestCase(LiveServerTestCase):
         self.selenium.find_element_by_id('testOverview').click()
         test_list = self.selenium.find_element_by_id('publishedtable')
         eval = False
-        time.sleep(10)
         for el in test_list.find_elements_by_tag_name('td'):
             if el.text == 'test':
                 eval = True
