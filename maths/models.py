@@ -26,9 +26,12 @@ class Task(models.Model):
     """The base of a task
 
     :title: The title, max 100 letters
-    :task_type: The task type, can be t.ex. functions or fractions
     :text: The text that describes what the task is, max 32700 letters
+    :answertype: What kind of answer should the user give. (text, multiple choice etc.)
+    :reasoning: Reason behind the users answer.
+    :extra: Says if the tasks contains any extra information (geogebra etc.)
     :author: The person that made the task
+    :category: Which categories fits the task. 
     """
     title = models.CharField(max_length=100, default="")
     text = models.TextField(max_length=32700, blank=True)
@@ -37,6 +40,9 @@ class Task(models.Model):
     extra = models.BooleanField()
     author = models.ForeignKey(Person)
     category = models.ManyToManyField(Category)
+
+    class Meta:
+        ordering = ['-id']
 
     def __str__(self):
         return str(self.id) + " - " + self.title
@@ -64,6 +70,7 @@ class GeogebraTask(models.Model):
 
     :task: The task the geogebra extension belongs to.
     :base64: The geogebra string.
+    :preview: Preview of the geogebra, in form of an image. 
     """
     task = models.ForeignKey(Task)
     base64 = models.CharField(max_length=32700)
@@ -76,6 +83,7 @@ class TaskCollection(models.Model):
 
     :tasks: The tasks.
     :test_name: The name of the test.
+    :author: The person that created the Task Collection.
     """
     tasks = models.ManyToManyField(Task, verbose_name='oppgaver')
     test_name = models.CharField(max_length=100, verbose_name='test navn')
@@ -99,7 +107,7 @@ class Test(models.Model):
     :published: Date the test was published.
     :dueDate: Due date for the test
     :randomOrder: Says if the order of the tasks should be in a random order or not.
-   
+    :strictOrder: Says if the order of the tasks should be locked in a chronological order. 
     """
     task_collection = models.ForeignKey(TaskCollection)
     published = models.DateTimeField(verbose_name='Publisert')
@@ -124,7 +132,9 @@ class TaskOrder(models.Model):
     """
     test = models.ForeignKey(Test)
     task = models.ForeignKey(Task)
-    order = models.IntegerField()
+
+    def __str__(self):
+        return self.test.id + " - " + self.test.task_collection.test_name + " - " + self.task.title
 
 
 class Answer(models.Model):
@@ -155,6 +165,7 @@ class GeogebraAnswer(models.Model):
 
     :answer: The answer.
     :base64: The base64 string.
+    :data: How the user used geogebra to solve the task. (Data from listeners)
     """
     answer = models.ForeignKey(Answer)
     base64 = models.CharField(max_length=32700)
