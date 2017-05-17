@@ -5,13 +5,13 @@
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
 {% block head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <script type="text/javascript" src="{% static 'administration/../../static/maths/js/deployggb.js' %}"></script>
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
     <script type="text/javascript"
             src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
     <script>
-        kantrykke = true;
-        configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}'
+        configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
         tinymce.init({
@@ -28,28 +28,20 @@
         });
 
 
-
     </script>
 {% endblock %}
 
 {% block body %}
     <div class="panel panel-info">
-        <div class="panel-heading">
-            <h2>Oppdater "{{ task.title }}"</h2>
+        <div class="panel-heading text-center">
+            <h2> <span id="taskTitle">{{ task.title }}</span> <i class="fa fa-pencil box updateTitle" style="cursor:pointer;" aria-hidden="true"></i>
+            </h2>
         </div>
         <div class="panel-body">
             <form class="form-horizontal form-margin hidden" action="" method="POST"
                   enctype="multipart/form-data">
                 {% csrf_token %}
-                {% bootstrap_field form.title %}
-                {% bootstrap_field form.text %}
-                {% bootstrap_field form.answertype %}
-                {% bootstrap_field form.reasoning %}
-                {% bootstrap_field form.extra %}
-                {% bootstrap_field form.options %}
-                {% bootstrap_field form.category %}
-                {% bootstrap_field form.base64 %}
-                {% bootstrap_field form.preview %}
+                {% bootstrap_form form %}
                 <button type="submit" id="submitbutton" class="btn btn-success">
                     {% bootstrap_icon "check" %} Lagre
                 </button>
@@ -151,15 +143,15 @@
                     </div> <!-- #inner panel-body -->
                     <div class="panel-footer">
                         <div class="btn-group" role="group" aria-label="...">
-                            <button type="button" onclick="" class="btn btn-success" id="saveAsNewTaskBtn"><span
+                            <button type="button" onclick="updateTask(true)" class="btn btn-success" id="saveAsNewTaskBtn"><span
                                     class="glyphicon glyphicon-check"
                                     aria-hidden="true"></span> Lagre som ny oppgave
                             </button>
                             {% if not task.answer_set.all %}
-                            <button type="button" class="btn btn-warning" onclick="updateTask()" id="updateTaskBtn"><span
-                                    class="glyphicon glyphicon-refresh"
-                                    aria-hidden="true"></span> Oppdater eksisterende
-                            </button>
+                                <button type="button" class="btn btn-warning" onclick="updateTask(false)" id="updateTaskBtn"><span
+                                        class="glyphicon glyphicon-refresh"
+                                        aria-hidden="true"></span> Oppdater eksisterende
+                                </button>
                             {% endif %}
                         </div> <!-- #btn-group -->
                     </div> <!-- #inner panel-footer -->
@@ -231,11 +223,33 @@
             var geobase64 = document.getElementById('hiddenbase64').value;
         }
 
+        $('.updateTitle').click(function () {
+            bootbox.prompt({
+                title: "Skriv inn ny oppgavetittel!",
+                placeholder: 'Skriv inn en ny oppgavetittel!',
+                value: $('#taskTitle').text(),
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Avbryt'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Endre'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        $('#taskTitle').text(result);
+                        $('#id_title').val(result);
+                    }
+                }
+            });
+        });
+
         /**
          * This function parse data from custom input fields into the hidden django-form
          * and clicks the submit-button in the django-form when its done.
          */
-        function updateTask() {
+        function updateTask(createNew) {
             var tasktext = tinyMCE.activeEditor.getContent();
             var tasktext2 = document.getElementById('id_text');
             var answertype = $('input[name=answer_type]:checked').val();
@@ -253,8 +267,10 @@
             var optionsi = optionsdiv.getElementsByTagName('i');
             var optionsspan = optionsdiv.getElementsByTagName('span');
             var options = document.getElementById('id_options');
-
-            document.getElementById('tasktext').innerHTML = tasktext
+            if (createNew) {
+                $('#id_create_new').attr('checked', true);
+            }
+            document.getElementById('tasktext').innerHTML = tasktext;
             options.value = "";
 
             if (reasoning.checked) {
