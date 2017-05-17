@@ -46,7 +46,7 @@ class CreateTaskTestCase(LiveServerTestCase):
         self.selenium.find_element_by_id('id_category_title').send_keys('testKategori')
         self.selenium.find_element_by_id('saveCategoryBtn').click()
         time.sleep(0.5)  # wait for modal close
-        self.selenium.find_element_by_id('tasktext_ifr').send_keys('Dette er oppgaveteksten')
+        self.selenium.execute_script("tinyMCE.get('tasktext').setContent('<h1>New task text</h1>')")
         self.selenium.find_element_by_id('textAnswerRadio').click()
         self.selenium.find_element_by_id('extraField').click()
         self.selenium.find_element_by_id('saveTaskBtn').click()
