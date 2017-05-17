@@ -157,7 +157,7 @@
                id="updatePasswordModalBtn">
                 <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
             {% if person.last_login is None %}
-                <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
+                <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal' id="deleteUserBtn">
                     <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
             {% endif %}
         {% elif request.user.role == 3 and person.role == 2 or person.role == 1 %}
@@ -168,7 +168,7 @@
                id="updatePasswordModalBtn">
                 <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
             {% if person.last_login is None %}
-                <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
+                <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal' id="deleteUserBtn">
                     <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
             {% endif %}
         {% elif request.user.role == 2 and person.role == 1 %}
@@ -179,7 +179,7 @@
                id="updatePasswordModalBtn">
                 <span class='glyphicon glyphicon-refresh' aria-hidden='true'></span> Endre passord</a>
             {% if person.last_login is None %}
-                <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>
+                <a class='btn btn-danger' data-toggle='modal' data-target='#deleteModal' id="deleteUserBtn">
                     <span class='glyphicon glyphicon-trash' aria-hidden='true'></span> Slett bruker</a>
             {% endif %}
         {% endif %}
@@ -296,11 +296,11 @@
                 <div class="modal-footer">
                     {% if grade_pk and school_pk %}
                         <a class="btn btn-danger"
-                           href="{% url 'administration:personDeleteGrade' school_pk grade_pk person.username %}"><span
+                           href="{% url 'administration:personDeleteGrade' school_pk grade_pk person.username %}" id="deleteUserModalBtn"><span
                                 class="glyphicon glyphicon-trash" aria-hidden="true"></span>Slett bruker</a>
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Avbryt</button>
                     {% else %}
-                        <a class="btn btn-danger" href="{% url 'administration:personDelete' person.username %}"><span
+                        <a class="btn btn-danger" href="{% url 'administration:personDelete' person.username %}" id="deleteUserModalBtn"><span
                                 class="glyphicon glyphicon-trash" aria-hidden="true"></span>Slett bruker</a>
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Avbryt</button>
                     {% endif %}

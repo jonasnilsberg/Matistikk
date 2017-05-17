@@ -9,7 +9,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+
 class AddExistingUsersInGradeTestCase(LiveServerTestCase):
+
     def setUp(self):
         # DB setup
         obj = mixer.blend('administration.Person', role=4, username='admin')
@@ -34,12 +36,8 @@ class AddExistingUsersInGradeTestCase(LiveServerTestCase):
         teacherobj2 = mixer.blend('administration.Person', role=2, username='teacher2', first_name='teacher2firstname')
         teacherobj2.save()
 
-        studentobj = mixer.blend('administration.Person', role=1, first_name='studentfirstname')
+        studentobj = mixer.blend('administration.Person', role=1, first_name='studentfirstname', username='student')
         studentobj.save()
-
-
-
-
         #  Webdriver setup
         self.selenium = webdriver.Chrome()
         self.selenium.maximize_window()
@@ -87,7 +85,7 @@ class AddExistingUsersInGradeTestCase(LiveServerTestCase):
         self.assertEqual(1, len(person.grades.filter(grade_name='testGrade')))
 
     # Confirms scenario 2.8.1
-    def test_schooladmin_can_add_existing_teacher_in_grade(self):
+    def test_schooladmin_can_add_existing_student_in_grade(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
         )
@@ -111,13 +109,13 @@ class AddExistingUsersInGradeTestCase(LiveServerTestCase):
             if el.text == 'testGrade':
                 el.click()
                 break
-        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addTeacherDropdown")))
-        self.selenium.find_element_by_id('addTeacherDropdown').click()
-        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addExistingTeacherBtn")))
-        self.selenium.find_element_by_id('addExistingTeacherBtn').click()
-        WebDriverWait(self.selenium, 10).until(EC.visibility_of_element_located((By.ID, "teacher2")))
-        self.selenium.find_element_by_id('teacher2').click()
-        person = Person.objects.get(username='teacher2')
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addStudentDropdown")))
+        self.selenium.find_element_by_id('addStudentDropdown').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "addExistingStudent")))
+        self.selenium.find_element_by_id('addExistingStudent').click()
+        WebDriverWait(self.selenium, 10).until(EC.visibility_of_element_located((By.ID, "student")))
+        self.selenium.find_element_by_id('student').click()
+        person = Person.objects.get(username='student')
         time.sleep(0.2)
         self.assertEqual(1, len(person.grades.filter(grade_name='testGrade')))
 

@@ -44,12 +44,12 @@
                             <li><a href="{% url 'administration:groupList' %}" id="groupOverview">Gruppeoversikt</a>
                             </li>
                             <li class="divider"></li>
-                            <li><a href="{% url 'maths:taskList' %}">Oppgaveoversikt</a></li>
-                            <li><a href="{% url 'maths:taskCollectionList' %}">Testoversikt</a></li>
+                            <li><a href="{% url 'maths:taskList' %}" id="taskOverview">Oppgaveoversikt</a></li>
+                            <li><a href="{% url 'maths:taskCollectionList' %}" id="testOverview">Testoversikt</a></li>
                         </ul>
                     </li>
-                    <li><a href="{% url 'maths:taskCollectionCreate' %}">Lag Test</a></li>
-                    <li><a href="{% url 'maths:createTask' %}">Lag Oppgave</a></li>
+                    <li><a href="{% url 'maths:taskCollectionCreate' %}" id="createTestBtn">Lag Test</a></li>
+                    <li><a href="{% url 'maths:createTask' %}" id="createTask">Lag Oppgave</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
