@@ -636,7 +636,7 @@ class TestCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Create
             order_table = order_list.split('|||||')
             x = 1
             for order in order_table:
-                taskorder = TaskOrder(test=test, task_id=order, order=x)
+                taskorder = TaskOrder(test=test, task_id=order)
                 taskorder.save()
                 x += 1
         return super(TestCreateView, self).form_valid(form)
