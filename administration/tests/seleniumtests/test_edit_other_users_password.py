@@ -33,7 +33,7 @@ class EditOtherUsersPasswordTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(EditOtherUsersPasswordTestCase, self).tearDown()
 
-    # Confirms scenario 2.15
+    # Confirms scenario 15
     def test_teacher_can_set_students_password(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")

@@ -52,7 +52,7 @@ class PersonDetailViewTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(PersonDetailViewTestCase, self).tearDown()
 
-    # Confirms scenario 2.4
+    # Confirms scenario 4
     def test_teacher_can_edit_student_information(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")

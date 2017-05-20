@@ -43,7 +43,7 @@ class GradeOverviewTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(GradeOverviewTestCase, self).tearDown()
 
-        #Confirms scenario 2.9
+        #Confirms scenario 9
     def test_teacher_can_view_grade_information(self):
         # student
         self.selenium.get(

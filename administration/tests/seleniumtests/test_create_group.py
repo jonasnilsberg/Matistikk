@@ -37,7 +37,7 @@ class CreateGroupTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(CreateGroupTestCase, self).tearDown()
 
-    # Confirms scenario 2.11
+    # Confirms scenario 11
     def test_admin_can_create_group(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")

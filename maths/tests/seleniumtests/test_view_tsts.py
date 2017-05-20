@@ -1,5 +1,4 @@
 from django.test import LiveServerTestCase
-from maths.models import Test
 from mixer.backend.django import mixer
 from selenium import webdriver
 import time
@@ -9,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class ViewAvaliableTestsTestCase(LiveServerTestCase):
+class ViewAvaliableTstsTestCase(LiveServerTestCase):
     def setUp(self):
 
         catObj = mixer.blend('maths.Category', category_title='matte')
@@ -34,14 +33,14 @@ class ViewAvaliableTestsTestCase(LiveServerTestCase):
         #  Webdriver setup
         self.selenium = webdriver.Chrome()
         self.selenium.maximize_window()
-        super(ViewAvaliableTestsTestCase, self).setUp()
+        super(ViewAvaliableTstsTestCase, self).setUp()
 
     def tearDown(self):
         self.selenium.quit()
-        super(ViewAvaliableTestsTestCase, self).tearDown()
+        super(ViewAvaliableTstsTestCase, self).tearDown()
 
-    # Confirms scenario 2.16
-    def test_teacher_can_view_avaliable_tests(self):
+    # Confirms scenario 22
+    def test_teacher_can_view_avaliable_tsts(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
         )

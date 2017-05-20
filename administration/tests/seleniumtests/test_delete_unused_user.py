@@ -28,7 +28,7 @@ class DeleteUserTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(DeleteUserTestCase, self).tearDown()
 
-    # Confirms scenario 2.13
+    # Confirms scenario 13
     def test_admin_can_create_student_teacher_and_schooladmin_without_school(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")

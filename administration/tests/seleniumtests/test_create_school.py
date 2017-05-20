@@ -26,7 +26,7 @@ class CreateSchoolTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(CreateSchoolTestCase, self).tearDown()
 
-    # Confirms scenario 2.5
+    # Confirms scenario 5
     def test_admin_can_create_school_without_schooladministrator(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
@@ -50,7 +50,7 @@ class CreateSchoolTestCase(LiveServerTestCase):
         time.sleep(0.1)
         self.assertEqual(1, len(School.objects.filter(school_name='testSchool')))
 
-    # Confirms scenario 2.5
+    # Confirms scenario 5
     def test_admin_can_create_school_with_new_schooladministrator(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")

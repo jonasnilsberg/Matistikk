@@ -41,7 +41,7 @@ class UserOverviewTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(UserOverviewTestCase, self).tearDown()
 
-        #Confirms scenario 2.3
+        #Confirms scenario 3
     def test_admin_can_view_schooladmin_teacher_and_student_information(self):
 
         # student
@@ -187,7 +187,7 @@ class UserOverviewTestCase(LiveServerTestCase):
         self.assertEqual(username, 'Brukernavn - teacher')
         'Schooladmin should be able to view information about a teacher'
 
-    # Confirms scenario 2.3
+    # Confirms scenario 3
     def test_teacher_can_view_student_information(self):
         """ Checks that a teacher can edit the surname of a student in one of their classes"""
         self.selenium.get(

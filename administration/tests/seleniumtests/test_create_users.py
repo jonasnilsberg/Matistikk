@@ -37,7 +37,7 @@ class CreateUsersTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(CreateUsersTestCase, self).tearDown()
 
-    # Confirms scenario 2.2.1
+    # Confirms scenario 2.1
     def test_admin_can_create_student_teacher_and_schooladmin_without_school(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
@@ -132,7 +132,7 @@ class CreateUsersTestCase(LiveServerTestCase):
         self.assertEqual(1, len(Person.objects.filter(role=3, first_name='testNameSAdmin'))), \
         'Should be a schooladministrator object saved in the database'
 
-    #  Confirms scenario 2.8.1
+    #  Confirms scenario 8.1
     def test_admin_can_create_teacher_student_in_grade(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
@@ -261,7 +261,7 @@ class CreateUsersTestCase(LiveServerTestCase):
         self.assertEqual('testGrade', usersGradesList2[0].grade_name), \
         'Should be a teacher object saved in the database'
 
-    # Confirms scenario 2.2.2
+    # Confirms scenario 2.2
     def test_schooladmin_can_create_teacher_student_without_school(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
@@ -328,7 +328,7 @@ class CreateUsersTestCase(LiveServerTestCase):
         self.assertEqual(1, len(Person.objects.filter(role=2, first_name='testTeacher'))), \
         'Should be a teacher object saved in the database'
 
-    #  Confirms scenario 2.8.1
+    #  Confirms scenario 8.1
     def test_schooladmin_can_create_teacher_student_with_school(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
@@ -437,7 +437,7 @@ class CreateUsersTestCase(LiveServerTestCase):
         self.assertEqual('testGrade', gradelist2[0].grade_name), \
         'Should be a teacher object saved in the database'
 
-    # Confirms scenario 2.2.3
+    # Confirms scenario 2.3
     def test_teacher_can_create_student_without_a_class(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")

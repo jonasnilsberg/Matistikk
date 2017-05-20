@@ -34,7 +34,7 @@ class CreateTaskCollectionTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(CreateTaskCollectionTestCase, self).tearDown()
 
-    # Confirms scenario 2.16
+    # Confirms scenario 20
     def test_admin_can_create_taskcollection(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")

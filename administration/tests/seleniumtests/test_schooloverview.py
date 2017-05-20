@@ -31,7 +31,7 @@ class SchoolOverViewTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(SchoolOverViewTestCase, self).tearDown()
 
-        #Confirms scenario 2.6
+        #Confirms scenario 6
     def test_admin_can_view_school_information(self):
 
         # student
@@ -59,7 +59,7 @@ class SchoolOverViewTestCase(LiveServerTestCase):
         self.assertEqual(username, 'testSchool')
         'admin should be able to view information about a school'
 
-    # Confirms scenario 2.6
+    # Confirms scenario 6
     def test_schooladmin_can_view_school_information(self):
 
         self.selenium.get(
