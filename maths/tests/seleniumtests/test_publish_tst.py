@@ -1,5 +1,4 @@
 from django.test import LiveServerTestCase
-from maths.models import Test
 from mixer.backend.django import mixer
 from selenium import webdriver
 import time
@@ -9,13 +8,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-class PublishTestTestCase(LiveServerTestCase):
+class PublishTstTestCase(LiveServerTestCase):
     def setUp(self):
         obj = mixer.blend('administration.Person', role=4, username='admin')
         obj.set_password('admin')  # Password has to be set like this because of the hash-function
         obj.save()
 
         studentobj = mixer.blend('administration.Person', role=1, username='student')
+        studentobj.set_password('student')
         studentobj.save()
 
         catObj = mixer.blend('maths.Category', category_title='matte')
@@ -33,14 +33,14 @@ class PublishTestTestCase(LiveServerTestCase):
         #  Webdriver setup
         self.selenium = webdriver.Chrome()
         self.selenium.maximize_window()
-        super(PublishTestTestCase, self).setUp()
+        super(PublishTstTestCase, self).setUp()
 
     def tearDown(self):
         self.selenium.quit()
-        super(PublishTestTestCase, self).tearDown()
+        super(PublishTstTestCase, self).tearDown()
 
-    # Confirms scenario 2.16
-    def test_admin_can_create_publish_test(self):
+    # Confirms scenario 21
+    def test_admin_can_create_publish_tst(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
         )
@@ -69,6 +69,19 @@ class PublishTestTestCase(LiveServerTestCase):
         self.selenium.find_element_by_id('overviewBtn').click()
         WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "submitBtn")))
         self.selenium.find_element_by_id('submitBtn').click()
-        time.sleep(10)
-        self.assertEqual(1, len(Test.objects.all()))
-
+        # In pytest you cannot import a class called Test
+        # The following code replaces this statement: self.assertEqual(1, len(Test.objects.all()))
+        self.selenium.find_element_by_id('logout').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_username")))
+        self.selenium.get(
+            '%s%s' % (self.live_server_url, "/")
+        )
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "id_username")))
+        # Fill login information of admin
+        username = self.selenium.find_element_by_id('id_username')
+        username.send_keys("student")
+        password = self.selenium.find_element_by_id('id_password')
+        password.send_keys("student")
+        self.selenium.find_element_by_id('logInBtn').click()
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "accordion")))
+        self.assertIn('test', self.selenium.find_element_by_id('test').text)

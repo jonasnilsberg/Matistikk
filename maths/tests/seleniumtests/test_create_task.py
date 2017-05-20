@@ -26,7 +26,7 @@ class CreateTaskTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(CreateTaskTestCase, self).tearDown()
 
-    # Confirms scenario 2.16
+    # Confirms scenario 16
     def test_admin_can_create_task(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")

@@ -28,7 +28,7 @@ class SetUserInactiveTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(SetUserInactiveTestCase, self).tearDown()
 
-    # Confirms scenario 2.14
+    # Confirms scenario 14
     def test_admin_can_set_teacher_inactive(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")

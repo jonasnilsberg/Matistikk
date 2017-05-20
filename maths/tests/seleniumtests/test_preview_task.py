@@ -8,10 +8,11 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import UnexpectedAlertPresentException
 import time
 
 
-class UpdateTaskTestCase(LiveServerTestCase):
+class PreviewTaskTestCase(LiveServerTestCase):
     def setUp(self):
         # DB setup
         obj = mixer.blend('administration.Person', role=4, username='admin')
@@ -21,19 +22,19 @@ class UpdateTaskTestCase(LiveServerTestCase):
         catObj = mixer.blend('maths.Category', category_title='matte')
         catObj.save()
 
-        taskObj = mixer.blend('maths.Task', title='testOppgave', category=catObj, id=1)
+        taskObj = mixer.blend('maths.Task', title='testOppgave', category=catObj, id=1, text='testText', extra=False)
         taskObj.save()
         #  Webdriver setup
         self.selenium = webdriver.Chrome()
         self.selenium.maximize_window()
-        super(UpdateTaskTestCase, self).setUp()
+        super(PreviewTaskTestCase, self).setUp()
 
     def tearDown(self):
         self.selenium.quit()
-        super(UpdateTaskTestCase, self).tearDown()
+        super(PreviewTaskTestCase, self).tearDown()
 
-    # Confirms scenario 2.18
-    def test_admin_can_update_existing_task(self):
+    # Enables scenario 19
+    def test_admin_can_view_task_preview(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
         )
@@ -53,13 +54,9 @@ class UpdateTaskTestCase(LiveServerTestCase):
             if el.text == 'testOppgave':
                 el.click()
                 break
-        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "update1")))
-        self.selenium.find_element_by_id('update1').click()
-        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "extraField")))
-        time.sleep(2)  # wait for geogebra to be out of focus (removing this makes the test very unreliable)
-        self.selenium.find_element_by_id('extraField').click()
-        self.selenium.execute_script("tinyMCE.get('tasktext').setContent('<h1>New task text</h1>')")
-        time.sleep(0.5)  # wait for js to remove extra
-        self.selenium.find_element_by_id('updateTaskBtn').click()
-        time.sleep(0.2)
-        self.assertEqual(1, len(Task.objects.filter(text='<h1>New task text</h1>')))
+        WebDriverWait(self.selenium, 10).until(EC.presence_of_element_located((By.ID, "preview1")))
+        self.selenium.find_element_by_id('preview1').click()
+        eval = False
+        if self.selenium.find_element_by_id('previewTaskModal').is_displayed:
+            eval = True
+        self.assertTrue(eval)

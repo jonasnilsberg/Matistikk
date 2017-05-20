@@ -33,7 +33,7 @@ class EditOwnInformationTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(EditOwnInformationTestCase, self).tearDown()
 
-    # Confirms scenario 2.10.1
+    # Confirms scenario 10.1
     def test_schooladmin_can_change_own_password(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
@@ -66,7 +66,7 @@ class EditOwnInformationTestCase(LiveServerTestCase):
         self.assertNotIn('login', self.selenium.current_url), \
         'Login should not be in the url if the user was logged in successfully using the new password'
 
-    # Confirms scenario 2.10.1
+    # Confirms scenario 10.1
     def test_schooladmin_can_edit_own_information(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
@@ -95,7 +95,7 @@ class EditOwnInformationTestCase(LiveServerTestCase):
         Person.objects.filter(first_name='newName', last_name='newSurname', email='new@email.test',
                               date_of_birth='1995-10-13')
 
-    # Confirms 2.10.2
+    # Confirms 10.2
     def test_student_can_edit_password(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
@@ -128,7 +128,7 @@ class EditOwnInformationTestCase(LiveServerTestCase):
         self.assertNotIn('login', self.selenium.current_url), \
             'Login should not be in the url if the user was logged in successfully using the new password'
 
-    # Confirms 2.10.2
+    # Confirms 10.2
     def test_student_can_edit_email(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")

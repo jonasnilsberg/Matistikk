@@ -47,7 +47,7 @@ class AddExistingUsersInGradeTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(AddExistingUsersInGradeTestCase, self).tearDown()
 
-    # Confirms scenario 2.8.1
+    # Confirms scenario 8.1
     def test_admin_can_add_existing_teacher_in_grade(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
@@ -84,7 +84,7 @@ class AddExistingUsersInGradeTestCase(LiveServerTestCase):
         time.sleep(0.2)
         self.assertEqual(1, len(person.grades.filter(grade_name='testGrade')))
 
-    # Confirms scenario 2.8.1
+    # Confirms scenario 8.1
     def test_schooladmin_can_add_existing_student_in_grade(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")

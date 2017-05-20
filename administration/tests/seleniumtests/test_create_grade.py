@@ -34,7 +34,7 @@ class CreateGradeTestCase(LiveServerTestCase):
         self.selenium.quit()
         super(CreateGradeTestCase, self).tearDown()
 
-    # Confirms scenario 2.7
+    # Confirms scenario 7
     def test_admin_can_create_grade(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
@@ -63,7 +63,7 @@ class CreateGradeTestCase(LiveServerTestCase):
         time.sleep(0.1)
         self.assertEqual(1, len(Grade.objects.filter(grade_name='testGrade')))
 
-    # Confirms scenario 2.7
+    # Confirms scenario 7
     def test_schooladmin_can_create_grade(self):
         self.selenium.get(
             '%s%s' % (self.live_server_url, "/")
