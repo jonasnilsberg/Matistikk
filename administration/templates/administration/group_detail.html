@@ -27,7 +27,8 @@
                 <span class="input-group-addon">
                         <i class="fa fa-search"></i>
                     </span>
-                <input type="text" class="form-control" id="search" onkeyup="allSearch('persontable'); allSearch('testtable')"
+                <input type="text" class="form-control" id="search"
+                       onkeyup="allSearch('persontable'); allSearch('testtable')"
                        placeholder="Søk etter bruker">
             </div>
         </div>
@@ -92,7 +93,8 @@
                                 <td>{{ test.published }}</td>
                                 <td>{{ test.task_collection.author.get_full_name }}</td>
                                 <td>
-                                    <a class="btn btn-default" href="{% url 'maths:answerCreate' test.id %}" type="button" value="{{ test.id }}"><i
+                                    <a class="btn btn-default" href="{% url 'maths:answerCreate' test.id %}"
+                                       type="button" value="{{ test.id }}"><i
                                             class="fa fa-tasks" aria-hidden="true"></i> Se gjennom test
                                     </a>
                                 </td>
@@ -118,14 +120,11 @@
                 window.document.location = $(this).data("href");
             });
         });
-
+        /**
+         * This function runs when a row in the testtable gets clicked on and changes the url to that tests detailView.
+         */
         $("#testtable tbody tr").click(function (e) {
-            var $button = $(this).find(':button');
-            if ($(e.target).is(":button")) {
-                alert('$button');
-            } else {
-                window.document.location = $(this).data("href");
-            }
+            window.document.location = $(this).data("href");
         });
         /**
          * This function matches the text in the search field with the content in the table with all users, students,

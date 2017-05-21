@@ -14,8 +14,8 @@
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
-         kantrykke = false;
-         tinymce.init({
+        kantrykke = false;
+        tinymce.init({
             selector: '#tasktext',
             plugins: 'placeholder',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
@@ -124,11 +124,13 @@
         </div>
     </div>
     <script>
-
+        /**
+         * Function that selects the clicked on tablerow and adds success to it.
+         */
         $("#table tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
             var $button = $(this).find(':button');
-            if ($(e.target).is(":button")) {
+            if ($(e.target).is(":button") || $(e.target).is('span')) {
                 preview($button);
             }
             else if (e.target.type == "checkbox") {

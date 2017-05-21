@@ -150,8 +150,10 @@
                         <div class="col-sm-2"></div>
                         <div class="col-sm-8">
                             <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4>{{ answer.task.text | safe }}</h4>
+                                <div class="panel-heading" id="tasktextdiv">
+                                    <textarea id="tasktext{{ answer.task.id }}">
+                                        <h4>{{ answer.task.text | safe }}</h4>
+                                    </textarea>
                                 </div>
                                 <div class="panel-body">
                                     {% if answer.task.answertype == 1 %}
@@ -222,6 +224,9 @@
 
 
 <script>
+    /**
+     * Adds tinymce to the textareas.
+     */
     var taskcount = $('.section').length;
     var divheight = document.getElementById('tasktextdiv').clientHeight;
     for (var i = 0; i < taskcount; i++) {
@@ -319,6 +324,9 @@
         app.setPreviewImage('http://bildr.no/image/cEtUd3R6.jpeg', 'https://www.geogebra.org/images/GeoGebra_loading.png?v=1490705653', 'https://www.geogebra.org/images/applet_play.png?v=1490705653');
         applet.push(app);
     }
+    /**
+     * Function that runs when the document is ready, and sets up the fullpage plugin.
+     */
     $(document).ready(function () {
         $('#fullpage').fullpage({
             menu: '#taskBtnList',
@@ -343,6 +351,12 @@
                 }
             }
         });
+        if (geocount == 0) {
+            geoFinished = true;
+            goToTask(1);
+            $(".sk-cube-grid").remove();
+            $('#tasknav').removeClass('hidden');
+        }
         for (var k = 0; k < taskcount; k++) {
             if (document.getElementById('applet_container' + (k + 1)) != null) {
                 applet[k].inject('applet_container' + (k + 1), 'preferhtml5');
@@ -355,7 +369,9 @@
     $(':radio,:checkbox').click(function () {
         return false;
     });
-
+    /**
+     * Keeps the page from scrolling to focus the geogebra applet. Only in google chrome browser.
+     */
     $(window).scroll(function () {
         if (window.chrome) {
             if (onLeave == false) {
@@ -364,16 +380,22 @@
         }
     });
 
-
+    /**
+     * Function that moves the view to the next task.
+     */
     function goToTask(task) {
         var nextIndex = parseInt(task) + 1;
         $('#fullpage').fullpage.moveTo(nextIndex);
     }
-
+    /**
+     * Function that returns the user to the previous page visited.
+     */
     function goBack() {
         window.history.back();
     }
-
+    /**
+     * Runs when left or right arrow is released, takes the user to the next or previous task.
+     */
     $(document).on('keyup', function (e) {
         if (e.keyCode == 37) {
             if (!$('#prevTaskBtn').is(':disabled')) {
@@ -384,11 +406,15 @@
             $('#nextTaskBtn').click()
         }
     });
-
+    /**
+     * Function that moves the view to the next task.
+     */
     function nextTask() {
         $('#fullpage').fullpage.moveSectionDown();
     }
-
+    /**
+     * Function that moves the view to the previous task.
+     */
     function previousTask() {
         $('#fullpage').fullpage.moveSectionUp();
     }

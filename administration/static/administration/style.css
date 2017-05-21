@@ -283,6 +283,7 @@ html, body {
     transform: translate(-50%, -50%);
 }
 
+/* This code is from http://tobiasahlin.com/spinkit/ */
 .sk-cube-grid {
     position: absolute;
     top: 50%;
@@ -368,7 +369,7 @@ html, body {
         transform: scale3D(0, 0, 1);
     }
 }
-
+/* End */
 .box:hover {
     background-color: darkgray; /* make this whatever you want */
     cursor: pointer;

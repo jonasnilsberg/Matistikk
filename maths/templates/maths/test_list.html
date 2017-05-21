@@ -63,7 +63,7 @@
                                             type="button"
                                             onclick="publishTest(this)"
                                             class="btn btn-info publish"><i class="fa fa-book"
-                                                                               aria-hidden="true"></i></span>
+                                                                            aria-hidden="true"></i></span>
                                         Publisering
                                     </button>
                                     <a type="button" href='{% url 'maths:answerCreate' test.id %}'
@@ -175,7 +175,7 @@
             }
         }
         /**
-         * This functions .
+         * This functions checks who the test is already published to and makes them unavailable.
          */
         function publishTest(elem) {
             var username = "{{ request.user.username }}";
@@ -247,7 +247,9 @@
             });
             $('#publishTestModal').modal('show');
         }
-
+        /**
+         * This function publishes the test to the selected objects.
+         */
         function publish(elem) {
             var grades = [];
             var groups = [];
@@ -427,7 +429,9 @@
     </div>
 
     <script>
-
+        /**
+         * This function removes the selected objects if the modal is closed.
+         */
         $('#publishTestModal').on('hidden.bs.modal', function () {
             var gradetable = $("#gradetable tbody tr");
             gradetable.each(function () {
@@ -448,6 +452,9 @@
                 }
             });
         });
+        /**
+         * This function selects the grade row that is clicked on.
+         */
         $("#gradetable tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
             if (e.target.type == "checkbox") {
@@ -461,6 +468,9 @@
                 $checkbox.click();
             }
         });
+        /**
+         * This function selects the group row that is clicked on.
+         */
         $("#grouptable tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
             if (e.target.type == "checkbox") {
@@ -474,6 +484,9 @@
                 $checkbox.click();
             }
         });
+        /**
+         * This function selects the student row that is clicked on.
+         */
         $("#studenttable tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
             if (e.target.type == "checkbox") {

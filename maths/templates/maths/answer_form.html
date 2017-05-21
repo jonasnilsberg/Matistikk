@@ -421,7 +421,7 @@
                     Ta meg tilbake til testen
                 </button>
                 <button type="button" class="btn btn-danger" onclick="window.history.back()"
-                   style="width: 49%; height: 10em"><br><span
+                        style="width: 49%; height: 10em"><br><span
                         class="glyphicon glyphicon-remove" aria-hidden="true" style="font-size: 5em"></span><br>
                     Avslutt test
                 </button>
@@ -435,6 +435,7 @@
     jQuery.fn.exists = function () {
         return jQuery(this).length > 0;
     }
+    var geocount = document.getElementById('geocount').innerHTML;
     var geoFinished = false;
     var onLeave = false;
     var goToNextTask = false;
@@ -443,9 +444,6 @@
     var taskTimerStart;
     var taskcount = document.getElementById('taskcount').innerHTML;
     var divheight = document.getElementById('tasktextdiv').clientHeight;
-    /**
-     * This function runs when the document is ready.
-     */
     for (var i = 0; i < taskcount; i++) {
         var div = $('#task' + (i + 1));
         var taskid = div.data('taskid');
@@ -487,6 +485,9 @@
             });
         }
     }
+    /**
+     * Function that gets all the memebers in a group.
+     */
     $(document).ready(function () {
         start = Date.now();
 
@@ -525,6 +526,8 @@
                     if (nextIndex == tasksnr) {
                         if (tasksnr == 2) {
                             $('#prevTaskBtn').attr('disabled', 'disabled');
+                        } else {
+                            $('#prevTaskBtn').attr('disabled', false);
                         }
                         $('#nextTaskBtnText').text('Oppsummering');
                         $('#nextTaskBtn').attr('disabled', false);
@@ -573,7 +576,9 @@
                                 var confirmBtnText = "Gå til neste oppgave";
                                 var confirmText = "Denne testen har låst rekkefølge. Det vil si at du ikke kan gå tilbake til tidligere oppgaver. Gjør deg derfor helt ferdig før du går videre til neste oppgave.";
                                 if (nextIndex == summary) {
-                                    $('#nextTaskBtn').attr('disabled', 'disabled');
+                                    if (goToNextTask) {
+                                        $('#nextTaskBtn').attr('disabled', 'disabled');
+                                    }
                                     checkTest();
                                     confirmBtnText = "Gå til oppsummering";
                                     confirmText = "Dette var den siste oppgave i denne testen. Gå videre til oppsummeringen for å levere.";
@@ -603,7 +608,7 @@
                                 bootbox.alert({
                                     title: "Fyll ut alle svarfelter!",
                                     message: "Vennligst fyll ut alle svarfelter før du går videre til neste oppgave.",
-                                    backdrop: true,
+                                    backdrop: true
                                 });
                             }
 
@@ -615,7 +620,12 @@
                 }
             }
         });
-
+        if (geocount == 0) {
+            geoFinished = true;
+            goToTask(1);
+            $(".sk-cube-grid").remove();
+            $('#tasknav').removeClass('hidden');
+        }
         for (var k = 0; k < taskcount; k++) {
             if (document.getElementById('applet_container' + (k + 1)) != null) {
                 applet[k].inject('applet_container' + (k + 1), 'preferhtml5');
@@ -655,6 +665,9 @@
             $('#fullpage').fullpage.moveTo(nextIndex);
         }
     }
+    /**
+     * Changes the taskview with the left and right arrow.
+     */
     $(document).on('keyup', function (e) {
         if (e.keyCode == 37) {
             if (!$('#prevTaskBtn').is(':disabled')) {
@@ -665,7 +678,9 @@
             $('#nextTaskBtn').click()
         }
     });
-
+    /**
+     * Keeps the page from scrolling to focus the geogebra applet. Only in google chrome browser.
+     */
     $(window).scroll(function () {
         if (window.chrome) {
             if (onLeave == false) {
@@ -676,7 +691,6 @@
 
     var viewPortWidth = 1200;
     var viewPortHeight = 750;
-    var geocount = document.getElementById('geocount').innerHTML;
     var geoloaded = 0;
     var base64;
     var parameters;

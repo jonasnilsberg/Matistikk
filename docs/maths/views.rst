@@ -34,10 +34,10 @@
     :members: TaskListView
     :show-inheritance:
 
-*CreateTaskView*
+*TaskCreateView*
 ++++++++++++++
 .. automodule:: maths.views
-    :members: CreateTaskView
+    :members: TaskCreateView
     :show-inheritance:
 
 *TaskUpdateView*

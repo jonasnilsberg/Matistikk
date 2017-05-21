@@ -442,7 +442,9 @@
                                                     </p>
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <button id="publishBtn{{ forloop.counter }}" value="{{ test.id }}" type="button" class="btn btn-info publish pull-right" onclick="publish(this)">
+                                                    <button id="publishBtn{{ forloop.counter }}" value="{{ test.id }}"
+                                                            type="button" class="btn btn-info publish pull-right"
+                                                            onclick="publish(this)">
                                                         <i class="fa fa-book" aria-hidden="true"></i> Publisering
                                                     </button>
                                                     <a type="button" href='{% url 'maths:answerCreate' test.id %}'
@@ -531,7 +533,8 @@
                                                     <p><strong>Starttidspunkt: </strong>{{ test.published }}</p>
                                                     <span id="publishdate{{ forloop.counter }}"
                                                           hidden>{{ test.published.isoformat }}</span>
-                                                    <p><strong>Frist: </strong>{% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen Frist.{% endif %}</p>
+                                                    <p><strong>Frist: </strong>{% if test.dueDate %}
+                                                        {{ test.dueDate }}{% else %}Ingen Frist.{% endif %}</p>
                                                     <p><strong>Antall
                                                         Oppgaver: </strong>{{ test.task_collection.tasks.count }}</p>
                                                     <p><strong>Laget
@@ -615,6 +618,10 @@
     {% endif %}
 
     <script>
+        /**
+         * Function that runs when the page is fully loaded. Calculates the time left to the duedate on the available
+         * tasks.
+         */
         window.onload = function () {
             var inputs = document.getElementById('accordion').getElementsByTagName('input');
 
@@ -658,16 +665,19 @@
 
         };
 
-        /**
-         * This function makes the rows of the user-, student-, teacher- and admintable clickable
-         */
+
         jQuery(document).ready(function ($) {
+            /**
+             * This function makes the rows of the user-, student-, teacher- and admintable clickable
+             */
             $(".clickable-row").click(function () {
                 window.document.location = $(this).data("href");
             });
-
+            /**
+             * Function that opens a modal and gives the user a choice to go to the answer of the clicked task.
+             */
             $(".clickable-answer").click(function () {
-                var url =  $(this).data("href");
+                var url = $(this).data("href");
                 var row = $(this);
                 row.addClass('info');
                 bootbox.confirm({
@@ -694,7 +704,9 @@
                 });
             })
         });
-
+        /**
+         * Function that redirects the user to the publish test view. Only for teachers.
+         */
         function publish(btn) {
             var testID = btn.value;
             var username = "{{ request.user.username }}";
@@ -702,7 +714,9 @@
             window.document.location = publishURL;
 
         }
-
+        /**
+         * Functions that changes the arrows from pointing right to down when div not collapsed.
+         */
         $('#collapseOne').on('show.bs.collapse', function () {
             $('#arrowOne').removeClass().addClass('fa fa-arrow-down pull-right');
         });

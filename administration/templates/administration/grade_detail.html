@@ -646,24 +646,6 @@
                 }
             });
         }
-
-        $(document).on('keyup', function (e) {
-            if (e.keyCode == 37) {
-                $('.pagination > .active').prev('li').find('a').trigger('click');
-            }
-            if (e.keyCode == 39) {
-                $('.pagination > .active').next('li').find('a').trigger('click');
-            }
-        });
-
-        function previusTab() {
-            $('.pagination > .active').prev('li').find('a').trigger('click');
-        }
-
-        function nextTab() {
-            $('.pagination > .active').next('li').find('a').trigger('click');
-        }
-
     </script>
 
 {% endblock %}

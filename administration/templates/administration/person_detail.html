@@ -4,6 +4,14 @@
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
 {% load customtags %}
+{% load static %}
+
+{% block head %}
+    <script>
+        var username = "{{ person.username }}";
+
+    </script>
+{% endblock %}
 
 {% block body %}
     <div class="panel panel-info">
@@ -131,7 +139,8 @@
                                     <td>{% if answer %}{{ answer.date_answered }}{% else %}-{% endif %}</td>
                                     <td>
                                         <button class='btn btn-info goToAnswer' disabled="disabled"
-                                                {% if answer %}value="{{ answer.id }}"{% else %}value=""{% endif %} data-test="{{ test.id }}">
+                                                {% if answer %}value="{{ answer.id }}"{% else %}value=""{% endif %}
+                                                data-test="{{ test.id }}">
                                             <i class="fa fa-eye" aria-hidden="true"></i>
                                             Se besvarelse
                                         </button>
@@ -186,6 +195,10 @@
     </div>
 
     <script>
+        /**
+         * Function that runs when the document is ready, checks if a test is been answered and if the logged in user
+         * has permissions to go to the grades detail view.
+         */
         $(document).ready(function () {
 
             var grades = $('#gradetable tr').not(':first');
@@ -204,19 +217,27 @@
                 }
             });
         });
+        /**
+         * Function that redirects the the answer of the test clicked on.
+         */
         $('.goToAnswer').click(function () {
             var username = "{{ person.username }}";
             var testID = $(this).data('test');
             var url = "{% url 'maths:answerDetail' test_pk=1234 slug=5678 %}".replace(/1234/, testID).replace(/5678/, username);
             document.location.href = url;
         });
-
+        /**
+         * Functions that redirects to the grades detailView.
+         */
         function goToGrade(button) {
             var grade = button.value;
             var school = $(button).data('school');
             var url = "{% url 'administration:gradeDetail' school_pk=1234 grade_pk=5678 %}".replace(/1234/, school).replace(/5678/, grade);
             document.location.href = url;
         }
+        /**
+         * Function that gets all the memebers in a group.
+         */
         function groupMemberBtn(group) {
             $("#groupMemberTable tr").remove();
             var group_id = group.id;

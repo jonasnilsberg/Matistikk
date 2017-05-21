@@ -35,7 +35,8 @@
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading text-center">
-            <h2> <span id="taskTitle">{{ task.title }}</span> <i class="fa fa-pencil box updateTitle" style="cursor:pointer;" aria-hidden="true"></i>
+            <h2><span id="taskTitle">{{ task.title }}</span> <i class="fa fa-pencil box updateTitle"
+                                                                style="cursor:pointer;" aria-hidden="true"></i>
             </h2>
         </div>
         <div class="panel-body">
@@ -166,6 +167,10 @@
 
     <script>
         var ggbOnInitCounter = 1;
+        /**
+         * This function is called from every GeoGebra-applet when the applet is finished loading.
+         * @param param - The id of the applet that called the function
+         */
         function ggbOnInit(param) {
             if (ggbOnInitCounter == 1) {
                 if (geobase64 == null || geobase64 == "") {
@@ -223,7 +228,9 @@
         if (document.getElementById('hiddenbase64')) {
             var geobase64 = document.getElementById('hiddenbase64').value;
         }
-
+        /**
+         * This function opens a modal that lets the user change the title of the task.
+         */
         $('.updateTitle').click(function () {
             bootbox.prompt({
                 title: "Skriv inn ny oppgavetittel!",
