@@ -11,7 +11,6 @@
     <script type="text/javascript"
             src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
     <script>
-        kantrykke = true;
         configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
@@ -136,7 +135,7 @@
                             </li>
                             <li class="list-group-item">
                                 Bruk tillegg (Geogebra, puslespill, rekkefølge etc..)
-                                <div class="material-switch pull-right">
+                                <div class="material-switch pull-right" id="extraField">
                                     <input id="extra" name="extra1" type="checkbox"/>
                                     <label for="extra" class="label-success"></label>
                                 </div>
@@ -145,12 +144,12 @@
                     </div> <!-- #inner panel-body -->
                     <div class="panel-footer">
                         <div class="btn-group" role="group" aria-label="...">
-                            <button type="button" onclick="updateTask(true)" class="btn btn-success"><span
+                            <button type="button" onclick="updateTask(true)" class="btn btn-success" id="saveAsNewTaskBtn"><span
                                     class="glyphicon glyphicon-check"
                                     aria-hidden="true"></span> Lagre som ny oppgave
                             </button>
                             {% if not task.answer_set.all %}
-                                <button type="button" class="btn btn-warning" onclick="updateTask(false)"><span
+                                <button type="button" class="btn btn-warning" onclick="updateTask(false)" id="updateTaskBtn"><span
                                         class="glyphicon glyphicon-refresh"
                                         aria-hidden="true"></span> Oppdater eksisterende
                                 </button>
@@ -512,7 +511,7 @@
                             {% else %}
                                 <li class="list-group-item">
                                     {{ category }}
-                                    <div class="material-switch pull-right">
+                                    <div class="material-switch pull-right" id="extraField">
                                         <input id="category{{ forloop.counter }}" name="{{ category }}"
                                                type="checkbox" onchange="changeCategory(this.name, this.checked)"/>
                                         <label for="category{{ forloop.counter }}" class="label-success"></label>

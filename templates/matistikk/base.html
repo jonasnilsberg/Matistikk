@@ -44,16 +44,16 @@
                             <li><a href="{% url 'administration:groupList' %}" id="groupOverview">Gruppeoversikt</a>
                             </li>
                             <li class="divider"></li>
-                            <li><a href="{% url 'maths:taskList' %}">Oppgaveoversikt</a></li>
-                            <li><a href="{% url 'maths:taskCollectionList' %}">Testoversikt</a></li>
+                            <li><a href="{% url 'maths:taskList' %}" id="taskOverview">Oppgaveoversikt</a></li>
+                            <li><a href="{% url 'maths:taskCollectionList' %}" id="testOverview">Testoversikt</a></li>
                         </ul>
                     </li>
-                    <li><a href="{% url 'maths:taskCollectionCreate' %}">Lag Test</a></li>
-                    <li><a href="{% url 'maths:createTask' %}">Lag Oppgave</a></li>
+                    <li><a href="{% url 'maths:taskCollectionCreate' %}" id="createTestBtn">Lag Test</a></li>
+                    <li><a href="{% url 'maths:createTask' %}" id="createTask">Lag Oppgave</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'administration:myPage' request.user.username %}"><i class="fa fa-user-circle-o"
+                    <li><a href="{% url 'administration:myPage' request.user.username %}" id="myPageBtn"><i class="fa fa-user-circle-o"
                                                                                              aria-hidden="true"></i> {{ request.user.first_name }} {{ request.user.last_name }}
                     </a></li>
                     <li><a href="{% url 'logout' %}" id="logout"><span class="glyphicon glyphicon-log-out"></span>Logg
@@ -81,11 +81,11 @@
             <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
-                    <li><a href="{% url 'administration:personList' %}">Brukeroversikt</a></li>
-                    <li><a href="{% url 'administration:schoolList' %}">Skoler</a></li>
+                    <li><a href="{% url 'administration:personList' %}" id="userOverview">Brukeroversikt</a></li>
+                    <li><a href="{% url 'administration:schoolList' %}" id="schoolOverview">Skoler</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'administration:myPage' request.user.username %}"><i class="fa fa-user-circle-o"
+                    <li><a href="{% url 'administration:myPage' request.user.username %}" id="myPageBtn"><i class="fa fa-user-circle-o"
                                                                                              aria-hidden="true"></i> {{ request.user.first_name }} {{ request.user.last_name }}
                     </a></li>
                     <li><a href="{% url 'logout' %}" id="logout"><span class="glyphicon glyphicon-log-out"></span>Logg
@@ -113,12 +113,12 @@
             <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
-                    <li><a href="{% url 'administration:gradeList' %}">Mine klasser</a></li>
-                    <li><a href="{% url 'maths:testList' request.user.username %}">Tilgjengelige tester</a></li>
-                    <li><a href="{% url 'administration:personList' %}">Brukeroversikt</a></li>
+                    <li><a href="{% url 'administration:gradeList' %}" id="gradeOverview">Mine klasser</a></li>
+                    <li><a href="{% url 'maths:testList' request.user.username %}" id="testOverview">Tilgjengelige tester</a></li>
+                    <li><a href="{% url 'administration:personList' %}" id="userOverview">Brukeroversikt</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'administration:myPage' request.user.username %}"><i class="fa fa-user-circle-o"
+                    <li><a href="{% url 'administration:myPage' request.user.username %}" id="myPageBtn"><i class="fa fa-user-circle-o"
                                                                                              aria-hidden="true"></i> {{ request.user.first_name }} {{ request.user.last_name }}
                     </a></li>
                     <li><a href="{% url 'logout' %}" id="logout"><span class="glyphicon glyphicon-log-out"></span>Logg
@@ -149,7 +149,7 @@
                     <li><a href="{% url 'index' %}"><span class="glyphicon glyphicon-home "></span></a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'administration:myPage' request.user.username %}"><i class="fa fa-user-circle-o"
+                    <li><a href="{% url 'administration:myPage' request.user.username %}" id="myPageBtn"><i class="fa fa-user-circle-o"
                                                                                              aria-hidden="true"></i> {{ request.user.first_name }} {{ request.user.last_name }}
                     </a></li>
                     <li><a href="{% url 'logout' %}" id="logout"><span class="glyphicon glyphicon-log-out"></span> Logg

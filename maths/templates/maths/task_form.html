@@ -63,7 +63,7 @@
                         {% endfor %}
                     </select>
                     <span class="input-group-btn">
-                        <button class="btn btn-warning  " type="button" data-toggle="modal"
+                        <button class="btn btn-warning" type="button" data-toggle="modal" id="addCategoryBtn"
                                 data-target="#addCategory"><i
                                 class="fa fa-plus"></i></button>
                     </span>
@@ -81,7 +81,7 @@
                             <h4 class="panel-title">
                                 <label><input type="radio" name="answer_type" value="1" data-toggle="collapse"
                                               data-parent="#accordion" data-target="#collapse5"
-                                              onclick="radioClick(this)" required>
+                                              onclick="radioClick(this)" required id="textAnswerRadio">
                                     Tekstsvar</label>
                             </h4>
                         </div>
@@ -147,8 +147,8 @@
                     </li>
                     <li class="list-group-item">
                         Bruk tillegg (Geogebra, puslespill, rekkefølge etc..)
-                        <div class="material-switch pull-right">
-                            <input id="extra" name="extra1" type="checkbox" checked/>
+                        <div class="material-switch pull-right" id="extraField">
+                            <input id="extra" name="extra1" type="checkbox" id="useToolBtn" checked/>
                             <label for="extra" class="label-success"></label>
                         </div>
                     </li>
@@ -188,7 +188,7 @@
         </div>
         <div class="panel-footer">
             <div class="btn-group" role="group" aria-label="...">
-                <button type="button" onclick="onSubmit()" class="btn btn-success"><span
+                <button type="button" onclick="onSubmit()" class="btn btn-success" id="saveTaskBtn"><span
                         class="glyphicon glyphicon-check"
                         aria-hidden="true"></span> Lagre Oppgave
                 </button>
@@ -464,7 +464,7 @@
                         {% csrf_token %}
                         {% bootstrap_form categoryForm %}
                         {% buttons %}
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" class="btn btn-success" id="saveCategoryBtn">
                                 {% bootstrap_icon "check" %} Lagre
                             </button>
                         {% endbuttons %}

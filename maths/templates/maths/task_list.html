@@ -105,12 +105,12 @@
                         <td>
                             <div class="btn-group btn-group-sm" role="group" aria-label="...">
                                 <a class="btn btn-info"
-                                   href="{% url 'maths:taskUpdate' task.id %}"><span
+                                   href="{% url 'maths:taskUpdate' task.id %}" id="update{{ task.id }}"><span
                                         class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater
                                 </a>
                                 <button type="button" value="{{ task.id }}" class="btn btn-info"
                                         onclick="previewTask(this)"
-                                        href="#previewTaskModal"><span
+                                        href="#previewTaskModal" id="preview{{ task.id }}"><span
                                         class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
                                 </button>
                             </div>
@@ -264,7 +264,6 @@
                     }
                 },
                 error: function (xhr) {
-                    alert('error');
                     alert(xhr.responseText);
                 }
             });
@@ -322,7 +321,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalBtn">Lukk</button>
                 </div>
             </div>
         </div>
