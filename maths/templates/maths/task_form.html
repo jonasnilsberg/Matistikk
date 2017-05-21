@@ -63,7 +63,8 @@
                         {% endfor %}
                     </select>
                     <span class="input-group-btn">
-                        <button class="btn btn-warning  " type="button" data-toggle="modal" data-target="#addCategory" id="addCategoryBtn"><i
+                        <button class="btn btn-warning" type="button" data-toggle="modal" id="addCategoryBtn"
+                                data-target="#addCategory"><i
                                 class="fa fa-plus"></i></button>
                     </span>
                 </div>
@@ -278,7 +279,11 @@
          * This function parse data from custom input fields into the hidden django-form
          * and clicks the submit-button in the django-form when its done.
          */
+        var submit = false;
         function onSubmit() {
+            if (submit){
+                return 0;
+            }
             var taskname1 = document.getElementById('taskname');
             var taskname2 = document.getElementById('id_title');
             var tasktext1 = tinyMCE.activeEditor.getContent();
@@ -358,6 +363,7 @@
             }
 
             document.getElementById('submitbutton').click();
+            submit = true;
         }
     </script>
 
@@ -506,7 +512,8 @@
 
                                     <div id="reasoningdiv">
                                         <label for="reasoning">Begrunnelse</label>
-                                        <textarea class="form-control" id="previewreasoning" rows="6" style="resize:vertical"
+                                        <textarea class="form-control" id="previewreasoning" rows="6"
+                                                  style="resize:vertical"
                                                   placeholder="Begrunn svaret ditt..."></textarea>
                                     </div>
 
@@ -525,6 +532,10 @@
         </div>
     </div>
     <script>
+        /**
+         * This function runs when the previewTaskModal is opened and shows the information about the task that
+         * were selected.
+         */
         $('#previewTaskModal').on('show.bs.modal', function () {
             $('#geogebradiv').hide();
             $('#textanswerdiv').hide();

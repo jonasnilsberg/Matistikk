@@ -333,10 +333,12 @@
 
 
     <script>
-
-
+        /**
+         * Function that runs when the document is ready. Checks if the dueDate is passed and adds the success
+         * class to all users that have answered the test.
+         */
         $(document).ready(function () {
-            var date = "{{ test.dueDate }}";
+            var date = "{{ test.dueDate.isoformat }}";
             var dueDate = new Date(date);
             var now = new Date();
             if (date == 'None') {
@@ -389,7 +391,9 @@
                 $(this).find('.label-danger').text(danger);
             });
         });
-
+        /**
+         * Sets up the datepicker.
+         */
         $(function () {
             $("#datepickerUpdateDue").datepicker($.datepicker.regional["no"]);
             $("#datepickerUpdateDue").datepicker("option", "showButtonPanel", true);
@@ -400,6 +404,9 @@
             return false;
         });
 
+        /**
+         * Redirects the user to the answer of the clicked test.
+         */
         $('.goToAnswer').click(function () {
             var username = this.id;
             var testID = "{{ test.id }}";
@@ -409,6 +416,9 @@
 
         });
 
+        /**
+         * Adds the success class to the row that is clicked on.
+         */
         $('.list-group-item').not(".small").on('click', function () {
             var $this = $(this);
             if ($this.hasClass('active')) {
@@ -418,6 +428,10 @@
                 $this.addClass('active');
             }
         });
+        /**
+         * Opens a modal depending on if the row has the class success. If the row has the class the user has the
+         * option to be redirected to see the answer to that test.
+         */
         $('.list-group-item.small').on('click', function () {
             var $this = $(this);
             var name = $this.text();
@@ -460,16 +474,23 @@
                 })
             }
         });
+        /**
+         * Opens the publishModal
+         */
         function publishModal() {
             $('#publishModal').modal('show');
         }
-
+        /**
+         * Redirects the user to a page that downloads all the answers on that test.
+         */
         function download() {
             var testID = "{{ test.id }}";
             var exportURL = "{% url 'maths:answerExport' test_pk=1234 %}".replace(/1234/, testID);
             document.location.href = exportURL;
         }
-
+        /**
+         * Function that publishes the test to the selected users in the modal.
+         */
         function publish() {
             var username = "{{ request.user.username }}";
             var testID = "{{ test.id }}";
@@ -523,40 +544,50 @@
             });
 
         }
-
+        /**
+         * Function that updates the dueDate to the test.
+         */
         function updateDueDate() {
             var newDueDate = new Date($("#datepickerUpdateDue").datepicker("getDate"));
             var strNewDueDate = newDueDate.getFullYear() + "-" + (newDueDate.getMonth() + 1) + "-" + newDueDate.getDate();
             var newDueTime = $('#timepickerUpdateDue').val();
             var newDueDateAndTime = strNewDueDate + " " + newDueTime;
-            $.ajax({
-                type: 'POST',
-                url: '{% url 'maths:testCreate'  taskCollection_pk=12345%}'.replace(/12345/, {{ test.task_collection.id }}),
-                data: {
-                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
-                    'id': {{ test.id }},
-                    'dueDate': newDueDateAndTime
-                },
-                dataType: 'json',
-                success: function (json) {
-                    var date = $('#datepickerUpdateDue').val();
-                    $('#id_dueDate').html('<strong>Frist for besvarelse: </strong>' + date + " " + newDueTime);
-                    $('#newDate').text('Frist for besvarelse ble oppdatert til ' + date + " " + newDueTime);
-                    $('#successDueDate').removeClass('hidden');
-                    setTimeout(function () {
-                        $('#updateDueDateModal').modal('hide');
-                        $('#successDueDate').addClass('hidden');
-                    }, 2000);
-                },
-                error: function (xhr) {
-                    alert('error');
-                    alert(xhr.responseText);
-                }
-            });
+            if (newDueTime && newDueDate) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'maths:testCreate'  taskCollection_pk=12345%}'.replace(/12345/, {{ test.task_collection.id }}),
+                    data: {
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                        'id': {{ test.id }},
+                        'dueDate': newDueDateAndTime
+                    },
+                    dataType: 'json',
+                    success: function (json) {
+                        var date = $('#datepickerUpdateDue').val();
+                        $('#id_dueDate').html('<strong>Frist for besvarelse: </strong>' + date + " " + newDueTime);
+                        $('#newDate').text('Frist for besvarelse ble oppdatert til ' + date + " " + newDueTime);
+                        $('#successDueDate').removeClass('hidden');
+                        setTimeout(function () {
+                            $('#updateDueDateModal').modal('hide');
+                            $('#successDueDate').addClass('hidden');
+                        }, 2000);
+                        $('#addPublish').attr('disabled', false);
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                        alert(xhr.responseText);
+                    }
+                });
+            } else {
+                $('#errorDueDate').removeClass('hidden');
+                setTimeout(function () {
+                    $('#errorDueDate').addClass('hidden');
+                }, 4000);
+            }
         }
 
         /**
-         * This function sets up the taskinformation gotten inside a modal from the ajax GET request.
+         * This function previews a task in t a the previewTaskModal.
          */
         function previewTask(e) {
             var id = e.value;
@@ -689,6 +720,10 @@
                     </div>
                     <div id="successDueDate" class="alert alert-success hidden" style="margin-top: 10px">
                         <strong>Fullført!</strong> <h5 id="newDate"></h5>
+                    </div>
+                    <div id="errorDueDate" class="alert alert-danger hidden" style="margin-top: 10px">
+                        <strong>Noe gikk desverre galt!</strong> Vennligst fyll ut alle feltene før du trykker på
+                        oppdater knappen.
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -927,7 +962,9 @@
         $('.clockpicker').clockpicker({
             autoclose: true
         });
-
+        /**
+         * Function that alters the placeholder and dropdownlists depending on which tap in the modal the user is on.
+         */
         $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
             var search = $('#search');
             var schoolDrop = $('#schoolDropList');
@@ -961,7 +998,9 @@
                 schoolDrop.val("").change();
             }
         });
-
+        /**
+         * Selects the tablerow and adds the success class when the row is clicked.
+         */
         $(".tableclick tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
             if (e.target.type == "checkbox") {
@@ -975,7 +1014,9 @@
                 $checkbox.click();
             }
         });
-
+        /**
+         * Function that shows only the users matching the input in the search field.
+         */
         function searchTable(inputTable) {
             var input, filter, table, tr, td, i, td1, td2;
             input = document.getElementById("search");
@@ -998,9 +1039,11 @@
                 }
             }
         }
-
+        /**
+         * Function that shows only the grades matching the input in the search field.
+         */
         function searchGradeTable(inputTable) {
-            var input, filter, table, tr, td, i, td1, td2;
+            var input, filter, table, tr, td, i, td1;
             input = document.getElementById("search");
             filter = input.value.toUpperCase();
             table = document.getElementById(inputTable);
@@ -1018,6 +1061,10 @@
                 }
             }
         }
+        /**
+         * Function that runs when the school dropdown list is changed. Changes the tables so that only objects
+         * that relate to the school will show.
+         */
         $("#schoolDropList").change(function () {
             $("#gradeDropList").val('');
             var school_id = $(this).val();
@@ -1037,7 +1084,10 @@
                 }
             });
         });
-
+        /**
+         * Function that runs when the grade dropdown list is changed. Changes the tables so that only objects
+         * that relate to the grade will show.
+         */
         $("#gradeDropList").change(function () {
             var grade_id = $(this).val();
             if (grade_id != "") {

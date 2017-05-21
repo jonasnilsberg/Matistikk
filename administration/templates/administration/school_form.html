@@ -25,14 +25,21 @@
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-success" onclick="submit()" id="saveNewSchoolBtnVisible">
-                    {% bootstrap_icon "check" %} Lagre
-                </button>
+                {% bootstrap_icon "check" %} Lagre
+            </button>
         </div>
     </div>
 
     <script>
+        /**
+         * Function that runs when the document is ready, and hides the modalError div.
+         */
         $(document).ready(function () {
             $("#modalError").hide();
+            /**
+             * Function that prevents the default submit and does an ajax-post call instead to create a new
+             * school administrator user.
+             */
             $('#schoolAdministratorForm').submit(function (e) {
                 e.preventDefault();
                 var first_name = $.trim($('#id_first_name').val());
@@ -58,13 +65,21 @@
             });
 
         });
+        /**
+         * Function that clicks the saveNewSchoolBtn button.
+         */
         function submit() {
             $('#saveNewSchoolBtn').click();
         }
-
+        /**
+         * Function that clicks the administratorCreate button.
+         */
         function modalsubmit() {
             $('#administratorCreate').click();
         }
+        /**
+         * Function that runs when the ajax-post call is successful and shows some successfields.
+         */
         function success(data) {
             var field = $('#id_school_administrator');
             if (data.message) {
@@ -82,10 +97,15 @@
                 $("#modalError").hide();
             }
         }
+        /**
+         * Function that runs when the ajax-post call is not successful and prints out the errormessage.
+         */
         function error(xhr) {
             alert(xhr.responseText)
         }
-
+        /**
+         * Function that shows error messages.
+         */
         function errorMessage(message) {
             $("#modalError").show();
             $('#liError').remove();
@@ -126,7 +146,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id='administratorCreateVisible' type="button" class="btn btn-success" onclick="modalsubmit()">
+                    <button id='administratorCreateVisible' type="button" class="btn btn-success"
+                            onclick="modalsubmit()">
                         {% bootstrap_icon "check" %} Lagre
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>

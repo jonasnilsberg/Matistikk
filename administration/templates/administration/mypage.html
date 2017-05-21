@@ -192,11 +192,18 @@
     </div>
 
     <script>
+        /**
+         * Function that runs the the document is ready, opens the changepasswordModal if an error occured when trying
+         * to change the password
+         */
         $(document).ready(function () {
             if ($("#passwordChangeError").length) {
                 $('#updatePasswordModal').modal('show');
             }
-
+            /**
+             * Functions that cancels the normal submit and does a ajax post call instead to change the email
+             * to the user.
+             */
             $('#updateEmailForm').submit(function (e) {
                 e.preventDefault();
                 var newEmail = $('#newEmail').val().trim();
@@ -231,16 +238,20 @@
                 }
             });
         });
-
+        /**
+         * Function that changes the pagelocation
+         */
         $(".clickable-row").click(function (e) {
-            if (e.target.type != "button") {
+            if (!$(e.target).is(':button') && !$(e.target).is("span")) {
                 window.document.location = $(this).data("href");
             } else if (!$(this).find(':button').val()) {
                 window.document.location = $(this).data("href");
             }
         });
 
-
+        /**
+         * Function that gets all the memebers in a group and shows them in the groupMemberTable.
+         */
         function groupMemberBtn(group) {
             $("#groupMemberTable tr").remove();
             var group_id = group.id;
@@ -264,11 +275,16 @@
             });
         }
 
+        /**
+         * Clicks the submitPasswordBtn.
+         */
         function submitForm() {
             $('#submitPasswordBtn').click();
         }
 
-
+        /**
+         * Function that gets all the members in a grade and shows them in the gradeMemberTable.
+         */
         function gradeMemberBtn(grade) {
             $("#gradeMemberTable tr").remove();
             var grade_id = grade.id;

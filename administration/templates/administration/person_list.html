@@ -1,5 +1,6 @@
 {% extends 'matistikk/base.html' %}
 
+
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading"> <!-- #Panel-heading -->
@@ -244,12 +245,16 @@
                 $("#gradeDropList").val("");
 
             });
-
+            /**
+             * Function that runs when an ajax call is sent.
+             */
             $(document).ajaxSend(function (event, request, settings) {
                 $('.loading-indicator').show();
                 $('.tableBody').addClass('hidden');
             });
-
+            /**
+             * Function that runs when the ajax call is completed.
+             */
             $(document).ajaxComplete(function (event, request, settings) {
                 $('.loading-indicator').hide();
                 $('.tableBody').removeClass('hidden')
@@ -363,9 +368,6 @@
                 $("#inactivetable tr").show();
             }
         }
-    </script>
-
-    <script>
 
         /**
          * This function matches the text in the search field with the content in the table given in the parameter.

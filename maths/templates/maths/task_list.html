@@ -16,7 +16,7 @@
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
-         tinymce.init({
+        tinymce.init({
             selector: '#tasktext',
             plugins: 'placeholder',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
@@ -89,7 +89,7 @@
                 </thead>
                 <tbody>
                 {% for task in object_list %}
-                    <tr id="task{{ task.id }}" class="clickable-row" data-href="" style="cursor: pointer">
+                    <tr id="task{{ task.id }}">
                         <td>{{ task.id }}</td>
                         <td>{{ task.title }}</td>
                         <td>
@@ -127,10 +127,15 @@
     </div> <!-- #Panel-footer -->
 
     <script>
+        /**
+         * This function runs when a ajax-call is sent.
+         */
         $(document).ajaxSend(function (event, request, settings) {
             $('#loading-indicator').show();
         });
-
+        /**
+         * This function runs when the ajax-call is completed.
+         */
         $(document).ajaxComplete(function (event, request, settings) {
             $('#loading-indicator').hide();
             $('#previewBody').removeClass('hidden');

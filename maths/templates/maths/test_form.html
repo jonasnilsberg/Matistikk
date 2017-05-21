@@ -22,8 +22,6 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
     <script type="text/javascript" src="{% static 'maths/js/bootstrap-clockpicker.min.js' %}"></script>
@@ -344,7 +342,7 @@
                             </div>
                             <div class="col-md-1">
                                 <button id="randomInfoBtn" class="btn btn-info orderinfo"><i class="fa fa-info"
-                                                                                                aria-hidden="true"></i>
+                                                                                             aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
@@ -365,7 +363,7 @@
                         </div>
                         <div class="col-md-1">
                             <button id="lockedInfoBtn" class="btn btn-info orderinfo"><i class="fa fa-info"
-                                                                                            aria-hidden="true"></i>
+                                                                                         aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>
@@ -539,6 +537,9 @@
     </form>
     <script>
         $('body').css(["padding-bottom: 70px;"]);
+        /**
+         * This function dragable task table.
+         */
         $(function () {
             $("#sortable").sortable({
                 helper: "original",
@@ -548,7 +549,9 @@
             });
             $("#sortable").disableSelection();
         });
-
+        /**
+         * This function sets up the datepicker for the published date.
+         */
         $(function () {
             $("#datepickerPublish").datepicker($.datepicker.regional["no"]);
             $("#datepickerPublish").datepicker("option", "showButtonPanel", true);
@@ -556,14 +559,18 @@
             $("#datepickerPublish").datepicker("option", "dateFormat", "DD, d MM, yy");
             $("#datepickerPublish").datepicker("option", "minDate", "0");
         });
-
+        /**
+         * This function sets up the clockpicker.
+         */
         $(function () {
             $('.clockpicker').clockpicker({
                 autoclose: true,
                 'default': 'now'
             });
         });
-
+        /**
+         * This function sets up the datepicker for the dueDate.
+         */
         $(function () {
             $("#datepickerTimeLimit").datepicker($.datepicker.regional["no"]);
             $("#datepickerTimeLimit").datepicker("option", "showButtonPanel", true);
@@ -571,6 +578,9 @@
             $("#datepickerTimeLimit").datepicker("option", "minDate", "0");
         });
 
+        /**
+         * This functions saves the order of the tasks after the user have altered it.
+         */
         function getOrder() {
             var string = "";
             $('#sortable tr').each(function () {
@@ -582,7 +592,9 @@
             orderField.value = string.slice(0, -5);
         }
 
-
+        /**
+         * This function handles the random order checkbox.
+         */
         function randomOrder() {
             if ($('#id_randomOrder').attr('checked')) {
                 $('#id_randomOrder').attr('checked', false);
@@ -601,7 +613,9 @@
                 $('#randomText').removeClass('hidden');
             }
         }
-
+        /**
+         * This function handels the strict order checkbox.
+         */
         function strictOrder() {
             if ($('#id_strictOrder').attr('checked')) {
                 $('#id_strictOrder').attr('checked', false);
@@ -621,7 +635,9 @@
 
             }
         }
-
+        /**
+         * This functions submits the test.
+         */
         function submit() {
             getOrder();
             var publishedDate = new Date($("#datepickerPublish").datepicker("getDate"));
@@ -653,7 +669,9 @@
                 $("#createTest").click();
             }
         }
-
+        /**
+         * This function updates the order of the tasks in the taskoverview table.
+         */
         function updateSelectedTasks() {
             $("#taskOverview").find("tr:gt(0)").remove();
             $('#sortable tr').each(function () {
@@ -662,7 +680,10 @@
                 $('#taskOverview').append('<tr><td>' + this.id + '</td><td>' + taskName + '</td><td>' + categories + '</td>');
             });
         }
-
+        /**
+         * This functions runs when it registers a key up. If the keyup is from eieter left or right arrow it switches
+         * to the next or previous tab.
+         */
         $(document).on('keyup', function (e) {
             if (e.keyCode == 37) {
                 $('.pagination > .active').prev('li').find('a').trigger('click');
@@ -672,7 +693,10 @@
             }
         });
 
-
+        /**
+         * This functions alters the placeholder in the search field and enables / disables the dropdown lists
+         * depending on which tab the user is in.
+         */
         $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
             var search = $('#search');
             var schoolDrop = $('#schoolDropList');
@@ -721,14 +745,21 @@
             e.relatedTarget // previous tab
         });
 
+        /**
+         * This function opens the previous tab.
+         */
         function previusTab() {
             $('.pagination > .active').prev('li').find('a').trigger('click');
         }
-
+        /**
+         * This function opens the next tab.
+         */
         function nextTab() {
             $('.pagination > .active').next('li').find('a').trigger('click');
         }
-
+        /**
+         * This get the information about a person from an ajax GET request.
+         */
         function personDetail(button) {
             $('#personInfoTable').addClass('hidden');
             $('#loadingPerson').show();
@@ -766,6 +797,9 @@
             });
         }
 
+        /**
+         * This function opens a modal explaining random order.
+         */
         $('#randomInfoBtn').click(function () {
             bootbox.alert({
                 title: "Tilfeldig rekkefølge!",
@@ -774,6 +808,9 @@
             });
         });
 
+        /**
+         * This functions opens a modal explaining strict Order.
+         */
         $('#lockedInfoBtn').click(function () {
             bootbox.alert({
                 title: "Låst rekkefølge!",
@@ -782,11 +819,13 @@
             });
         });
 
-
+        /**
+         * This functions selects the student that the user clicks on and adds it to the selected table.
+         */
         $("#studenttable tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
             var $button = $(this).find(':button');
-            if ($(e.target).is(":button")) {
+            if ($(e.target).is(":button") || $(e.target).is('span')) {
                 personDetail($button);
             }
             else if (e.target.type == "checkbox") {
@@ -807,11 +846,13 @@
                 $checkbox.click();
             }
         });
-
+        /**
+         * This functions selects the teacher that the user clicks on and adds it to the selected table.
+         */
         $("#teachertable tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
             var $button = $(this).find(':button');
-            if ($(e.target).is(":button")) {
+            if ($(e.target).is(":button") || $(e.target).is('span')) {
                 personDetail($button);
             }
             else if (e.target.type == "checkbox") {
@@ -832,17 +873,22 @@
                 $checkbox.click();
             }
         });
-
+        /**
+         * This functions removes the person that the user clicks on from the selected table and unselects it
+         * from the student or teachertable.
+         */
         function removeUser(elem) {
             $('#id_persons option[value=' + elem.value + ']').attr('selected', false);
             $('#selected' + elem.value).remove();
             $('#user' + elem.value).find(':checkbox').click();
         }
-
+        /**
+         * This functions selects the grade that the user clicks on and adds it to the selected table.
+         */
         $("#gradetable tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
             var $button = $(this).find(':button');
-            if ($(e.target).is(":button")) {
+            if ($(e.target).is(":button") || $(e.target).is('i')) {
                 $('#loadingGrade').show();
                 $('#gradeInfoTable').addClass('hidden');
                 $('#gradeMemberModal').modal('show');
@@ -893,17 +939,22 @@
                 $checkbox.click();
             }
         });
-
+        /**
+         * This functions removes the grade that the user clicks on from the selected table and unselects it
+         * from the gradetable.
+         */
         function removeGrade(elem) {
             $('#id_grades option[value=' + elem.value + ']').attr('selected', false);
             $('#selectedGrade' + elem.value).remove();
             $('#grade' + elem.value).find(':checkbox').click();
         }
-
+        /**
+         * This functions selects the group that the user clicks on and adds it to the selected table.
+         */
         $("#grouptable tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
             var $button = $(this).find(':button');
-            if (e.target.type == "button") {
+            if (e.target.type == "button" || $(e.target).is('i')) {
                 $('#loadingGroup').show();
                 $('#groupInfoTable').addClass('hidden');
                 $('#groupMemberModal').modal('show');
@@ -947,16 +998,20 @@
                 $checkbox.click();
             }
         });
-
+        /**
+         * This functions removes the clicked on group from the selected table and unselects it from the grouptable
+         */
         function removeGroup(elem) {
             $('#id_groups option[value=' + elem.value + ']').attr('selected', false);
             $('#selectedGroup' + elem.value).remove();
             $('#group' + elem.value).find(':checkbox').click();
         }
-
+        /**
+         * This functions selects the school that the user clicks on and adds it to the selected table.
+         */
         $("#schooltable tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
-            if (e.target.type == "button") {
+            if (e.target.type == "button" || $(e.target).is('i')) {
                 e.stopPropagation();
                 alert('knapp');
             }
@@ -978,6 +1033,9 @@
                 $checkbox.click();
             }
         });
+        /**
+         * This function removes the school from the selected table and unselects it from the schooltable.
+         */
         function removeSchool(elem) {
             $('#id_schools option[value=' + elem.value + ']').attr('selected', false);
             $('#selectedSchool' + elem.value).remove();
@@ -1012,7 +1070,10 @@
                 }
             }
         }
-
+        /**
+         * Function that filters the grades in the inputtable after the input in the search field.
+         * @param inputTable
+         */
         function searchGradeTable(inputTable) {
             var input, filter, table, tr, td, i, td1, td2;
             input = document.getElementById("search");
@@ -1150,7 +1211,7 @@
         }
 
         /**
-         * This function sets up the taskinformation gotten inside a modal from the ajax GET request.
+         * This function sets up the taskinformation gotten from the ajax GET request inside a modal.
          */
         function preview(e) {
             $('#loadingPreview').show();

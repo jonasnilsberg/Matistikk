@@ -47,6 +47,9 @@
 
     </script>
     <script>
+        /**
+         * Function that runs when the page if ready.
+         */
         $(document).ready(function ($) {
             $("#filterStudents").hide();
             $('#id_persons option:selected').each(function () {
@@ -54,11 +57,14 @@
                 $('#btn' + id).click();
             });
             var fromGrade = $('#id_grade');
-            if (fromGrade.val()){
+            if (fromGrade.val()) {
                 gradeChange(fromGrade.val());
                 $("#filterStudents").show();
                 $("#gradeDropStudent").val(fromGrade.val());
             }
+            /**
+             * Checks if the a grade is chosen and sets filters the students in the modal after it.
+             */
             $("#id_grade").change(function () {
                 var id = $(this).val();
                 gradeChange(id);
@@ -66,6 +72,9 @@
                 $("#gradeDropStudent").val(id);
 
             });
+            /**
+             * Checks if the school drop down list is changed, filters the students in the modal after it.
+             */
             $("#schoolDropStudent").change(function () {
                 $("#gradeDropStudent").val('');
                 var school_id = $(this).val();
@@ -85,13 +94,18 @@
                     }
                 });
             });
-
+            /**
+             * Checks if the grade drop down list is changed, filters the students in the modal after it.
+             */
             $("#gradeDropStudent").change(function () {
                 var grade_id = $(this).val();
                 gradeChange(grade_id);
             });
         });
 
+        /**
+         * Gets all the students in that school and shows them in the modal.
+         */
         function updateExistingStudents(school) {
             var school_id = school;
             if (school_id != "") {
@@ -128,7 +142,9 @@
                 });
             }
         }
-
+        /**
+         * Gets all the students in that grade and shows them in the modal.
+         */
         function gradeChange(grade) {
             var grade_id = grade;
             if (grade_id != "") {
@@ -161,7 +177,9 @@
                 updateExistingStudents(school_id);
             }
         }
-
+        /**
+         * Function that shows or hides the grade and school drop down lists.
+         */
         function filterButtonStudent() {
             var field = $("#filterStudents");
             if (field.is(":visible")) {
@@ -170,21 +188,27 @@
                 field.show();
             }
         }
-
+        /**
+         * Function that adds the student to the tableDiv table
+         */
         function addStudent(elem) {
             var data = $.parseJSON($(elem).attr('data-button'));
             $('#id_persons option[value=' + data.id + ']').attr('selected', 'selected');
             $("#table > tbody").append("<tr id=row" + data.id + "><td>" + data.first_name + "</td><td>" + data.last_name + "</td><td>" + data.username + "</td><td><button value=" + data.id + " type='button' onclick='removeStudent(this)' class='btn btn-primary btn-xs'>Fjern</button></td></tr>");
             $('#' + data.id).hide();
         }
-
+        /**
+         * Function that removes the student from the tableDiv table
+         */
         function removeStudent(elem) {
             var value = (elem.value);
             $('#row' + value).remove();
             $('#' + value).show();
             $('#id_persons option[value=' + value + ']').attr('selected', false);
         }
-
+        /**
+         * Function that filters the students in the modal from the searchfield.
+         */
         function userSearch(search, table) {
             var input, filter, table, tr, td, i;
             input = document.getElementById(search);
@@ -203,12 +227,16 @@
                 }
             }
         }
-
+        /**
+         * Function that runs when ajax runs.
+         */
         $(document).ajaxSend(function (event, request, settings) {
             $('.loading-indicator-modal').show();
             $('.tableBody').addClass('hidden');
         });
-
+        /**
+         * Function that runs when an ajax call is completed.
+         */
         $(document).ajaxComplete(function (event, request, settings) {
             $('.loading-indicator-modal').hide();
             $('.tableBody').removeClass('hidden')
@@ -269,7 +297,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modalOverflow">
+                    <div class="modalOverflow" style="margin-top: 10px">
 
                         <table class="table table-hover table-striped table-responsive table-condensed"
                                id="addtable">

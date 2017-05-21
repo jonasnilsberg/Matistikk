@@ -167,15 +167,22 @@
         </div>
     </div>
     <script>
+        /**
+         * Function that runs when an ajax-call is sent.
+         */
         $(document).ajaxSend(function (event, request, settings) {
             $('.loading-indicator').show();
         });
-
+        /**
+         * Function that runs when an ajax-call is completed.
+         */
         $(document).ajaxComplete(function (event, request, settings) {
             $('.loading-indicator').hide();
             $('#previewBody').removeClass('hidden');
         });
-
+        /**
+         * Function that runs when the user switches between the published test tab and task tabs.
+         */
         $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
             var tab = $(e.target).attr('href');
             if (tab == '#A') {
@@ -190,8 +197,8 @@
 
         $("#publishedtable tbody tr").click(function (e) {
             var $button = $(this).find(':button');
-            if ($(e.target).is(":button")) {
-                previewPublishedTask($button);
+            if ($(e.target).is(":button") || $(e.target).is("span")) {
+                previewPublishedTest($button);
             } else {
                 window.document.location = $(this).data("href");
             }
@@ -326,8 +333,11 @@
                 }
             });
         }
-
-        function previewPublishedTask(elem) {
+        /**
+         * Function that gets all the students, teachers, grades and schools the task and adds them to the modal tables.
+         * @param elem - The test
+         */
+        function previewPublishedTest(elem) {
             var id = elem.val();
             $('#publishedHeader').text("{{ taskcollection.test_name }}");
             $.ajax({
@@ -352,12 +362,13 @@
                     $("#students").addClass('active').removeClass('fade');
                     $("#teachers").removeClass('active').addClass('fade');
                     $("#grades").removeClass('active').addClass('fade');
-                    $("#groups").removeClass('active').addClass('face');
+                    $("#groups").removeClass('active').addClass('fade');
                     $("#schools").removeClass('active').addClass('fade');
                     $("#publishedToTeacher").removeClass('active');
                     $("#publishedToGroups").removeClass('active');
                     $("#publishedToGrades").removeClass('active');
                     $("#publishedToSchools").removeClass('active');
+                    $("#publishedToSchools").addClass('hidden'); //
                     if (students.length == 0) {
                         $("#publishedToStudent").addClass('hidden');
                         $("#students").removeClass('active');
@@ -383,6 +394,7 @@
                                     $("#schools").addClass('active');
                                     $("#publishedToSchools").addClass('active');
                                 }
+
                             }
                         }
                     }
@@ -425,7 +437,7 @@
                     } else {
                         $('#publishedToGroups').addClass('hidden');
                     }
-                    $('#previewPublishedTaskModal').modal('show');
+                    $('#previewPublishedTestModal').modal('show');
                 },
                 error: function (xhr) {
                     alert('error');
@@ -495,7 +507,7 @@
     </div>
 
 
-    <div class="modal fade" id="previewPublishedTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="previewPublishedTestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
