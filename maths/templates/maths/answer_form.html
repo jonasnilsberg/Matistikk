@@ -102,7 +102,7 @@
                             <h3 class="text-center">Oppgave {{ forloop.counter }}</h3>
                         </div>
                         {% if forloop.first %}
-                            <span id="geocount" hidden>{{ geogebratask.count }}</span>
+                            <span id="geocount" hidden>{{geogebratask.count}}</span>
                             <span id="taskcount" hidden>{{ test.task_collection.tasks.all.count }}</span>
                         {% endif %}
                         {% if task.extra %}
@@ -252,7 +252,7 @@
                             <h3 class="text-center">Oppgave {{ forloop.counter }}</h3>
                         </div>
                         {% if forloop.first %}
-                            <span id="geocount" hidden>{{ geogebratask.count }}</span>
+                            <span id="geocount" hidden>{{geogebratask.count}}</span>
                             <span id="taskcount" hidden>{{ test.task_collection.tasks.all.count }}</span>
                         {% endif %}
                         {% if taskorder.task.extra %}
