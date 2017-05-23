@@ -21,6 +21,26 @@ A Django middleware to read, manipulate and write data in different excel format
 
 See more at: http://django-excel.readthedocs.io/en/latest/
 
+*Fullpagejs*
+-------------
+https://alvarotrigo.com/fullPage/
+
+*Bootboxjs*
+----------
+http://bootboxjs.com/
+
+*Datepicker*
+-------------
+https://jqueryui.com/datepicker/
+
+*Clockpicker*
+---------------
+http://weareoutman.github.io/clockpicker/
+
+*Bootstrap-multiselect*
+------------------------
+http://jquery-plugins.net/bootstrap-multiselect
+
 *Mixer*
 -----------
 http://mixer.readthedocs.io/en/latest/quickstart.html
@@ -29,6 +49,14 @@ http://mixer.readthedocs.io/en/latest/quickstart.html
 ----------
 http://doc.pytest.org/en/latest/
 
-*Django-ckeditor*
+*pytest-cov*
+-------------
+https://pypi.python.org/pypi/pytest-cov
+
+*pytest-django*
+-----------------
+https://pytest-django.readthedocs.io/en/latest/
+
+*TinyMCE*
 ------------------
-http://django-ckeditor.readthedocs.io/en/latest/INSTALL/
+https://www.tinymce.com/docs/
