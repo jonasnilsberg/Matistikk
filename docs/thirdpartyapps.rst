@@ -4,22 +4,16 @@
 .. _example:
 *Django braces*
 ----------------
-Reusable, generic View and Form mixins for Django.
-
-See more at: https://django-braces.readthedocs.io/en/latest/.
+https://django-braces.readthedocs.io/en/latest/.
 
 
 *Django-Bootstrap3*
 -------------------
-Write Django as usual, and let django-bootstrap3 make template output into Bootstrap 3 code.
-
-See more at: https://django-bootstrap3.readthedocs.io/en/latest/
+https://django-bootstrap3.readthedocs.io/en/latest/
 
 *Django-excel*
 --------------
-A Django middleware to read, manipulate and write data in different excel formats: csv, ods, xls, xlsx and xlsm.
-
-See more at: http://django-excel.readthedocs.io/en/latest/
+http://django-excel.readthedocs.io/en/latest/
 
 *Fullpagejs*
 -------------
