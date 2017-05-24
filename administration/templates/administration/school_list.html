@@ -1,5 +1,6 @@
 {% extends 'matistikk/base.html' %}
-
+{% load bootstrap3 %}
+{% bootstrap_messages %}
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
@@ -8,11 +9,13 @@
                     <span class="input-group-addon">
                             <i class="fa fa-search"></i>
                         </span>
-                <input type="text" class="form-control" id="search" onkeyup="schoolSearch('schooltable'); schoolSearch('inactivetable');"
+                <input type="text" class="form-control" id="search"
+                       onkeyup="schoolSearch('schooltable'); schoolSearch('inactivetable');"
                        placeholder="Søk etter skole">
             </div>
         </div>
         <div class="panel-body">
+            {% bootstrap_messages %}
             <ul class="nav nav-tabs">
                 <li class="nav active"><a href="#A" data-toggle="tab">Alle skoler</a></li>
                 <li class="nav"><a href="#B" data-toggle="tab">Inaktive</a></li>
@@ -110,6 +113,9 @@
          * This function makes table rows clickable.
          */
         jQuery(document).ready(function ($) {
+            $(".alert-success").fadeTo(5000, 500).slideUp(500, function () {
+                $('.alert-success').slideUp(500);
+            });
             $(".clickable-row").click(function () {
                 window.document.location = $(this).data("href");
             });

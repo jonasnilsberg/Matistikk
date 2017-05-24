@@ -1,4 +1,6 @@
 {% extends 'matistikk/base.html' %}
+{% load bootstrap3 %}
+{% bootstrap_messages %}
 
 
 {% block body %}
@@ -16,6 +18,7 @@
         </div> <!-- #Panel-heading -->
 
         <div class="panel-body"><!-- #Panel-body -->
+            {% bootstrap_messages %}
             <ul class="nav nav-tabs">
                 <li class="nav active"><a href="#A" data-toggle="tab">Alle brukere</a></li>
                 <li class="nav"><a href="#B" data-toggle="tab">Elever</a></li>
@@ -239,6 +242,9 @@
          * This function makes the rows of the user-, student-, teacher- and admintable clickable
          */
         jQuery(document).ready(function ($) {
+            $(".alert-success").fadeTo(5000, 500).slideUp(500, function () {
+                $('.alert-success').slideUp(500);
+            });
             $(".clickable-row").click(function () {
                 window.document.location = $(this).data("href");
                 $("#schoolDropList").val("");
