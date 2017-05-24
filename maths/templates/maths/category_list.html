@@ -1,4 +1,6 @@
 {% extends 'matistikk/base.html' %}
+{% load bootstrap3 %}
+{% bootstrap_messages %}
 
 {% block body %}
     <div class="panel panel-info">
@@ -13,6 +15,7 @@
             </div>
         </div>
         <div class="panel-body">
+            {% bootstrap_messages %}
             <div class="tab-content">
                 {% if object_list %}
                     <table class="table table-hover table-striped table-responsive" id="categoryTable">
@@ -26,7 +29,8 @@
                         {% for category in object_list %}
                             <tr>
                                 <td>{{ category }}</td>
-                                <td><a class="btn btn-primary btn-sm" href="{% url 'maths:categoryUpdate' category.id %}">Oppdater</a></td>
+                                <td><a class="btn btn-primary btn-sm"
+                                       href="{% url 'maths:categoryUpdate' category.id %}">Oppdater</a></td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -43,6 +47,11 @@
         </div>
     </div>
     <script>
+        $(document).ready(function () {
+            $(".alert-success").fadeTo(5000, 500).slideUp(500, function () {
+                $('.alert-success').slideUp(500);
+            });
+        });
         /**
          * This function matches the text in the search field with the content in the table with all categories
          * and removes rows that don't match the search criteria.

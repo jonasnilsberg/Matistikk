@@ -1,4 +1,5 @@
 from django.views import generic
+from django.contrib import messages
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm
@@ -172,6 +173,7 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
         """
         task = form.save(commit=False)
         task.author = self.request.user
+        messages.success(self.request, 'Oppgave med navnet: ' + task.title + " ble opprettet.")
         task.save()
 
         if task.answertype == 2:
@@ -242,6 +244,11 @@ class CategoryCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Cr
             'category_id': category.id
         }
         return JsonResponse(data)
+
+    def form_valid(self, form):
+        category = form.save(commit=False)
+        messages.success(self.request, 'Kategori med navnet: ' + category.category_title + " ble opprettet.")
+        return super(CategoryCreateView, self).form_valid(form)
 
 
 class CategoryUpdateView(AdministratorCheck, generic.UpdateView):
