@@ -1,9 +1,15 @@
+<!--Extends the base.html file that includes different imports and the navbar-->
 {% extends 'matistikk/base.html' %}
+<!-- loads the static files of the project-->
 {% load static %}
 {% block head %}
+    <!--Import bootstrap multiselect-->
     <script type="text/javascript" src="{% static 'maths/js/bootstrap-multiselect.js' %}"></script>
+    <!--Import bootstrap multiselect css-->
     <link rel="stylesheet" href="{% static 'maths/css/bootstrap-multiselect.css' %}" type="text/css"/>
+    <!--Import bootstrap tinymce-->
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <!--Import bootstrap mathquill-->
     <script type="text/javascript"
             src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
     <script>

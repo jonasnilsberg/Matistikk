@@ -1,8 +1,13 @@
+<!--Extends the base.html file that includes different imports and the navbar-->
 {% extends 'matistikk/base.html' %}
+<!--Loads the tag library-->
 {% load bootstrap3 %}
+<!-- loads the static files of the project-->
 {% load static %}
+<!-- Loads CSS and javascript-->
 {% bootstrap_css %}
 {% bootstrap_javascript %}
+<!--Display django.contrib.messages as Bootstrap alerts-->
 {% bootstrap_messages %}
 
 {% block body %}

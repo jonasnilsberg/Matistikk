@@ -6,7 +6,7 @@ from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAns
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, \
     GeogebraAnswer
 from braces import views
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
 import json
 from django.db.models import Q

@@ -1,16 +1,27 @@
+<!--Extends the base.html file that includes different imports and the navbar-->
 {% extends 'matistikk/base.html' %}
+<!--Loads the tag library-->
 {% load bootstrap3 %}
+<!--Loads the staticfiles-->
 {% load staticfiles %}
+<!-- Loads CSS and javascript--
 {% bootstrap_css %}
 {% bootstrap_javascript %}
+<!--Display django.contrib.messages as Bootstrap alerts-->
 {% bootstrap_messages %}
 {% block head %}
+    <!--Imports geogebra-->
     <script type="text/javascript" src="{% static 'maths/js/deployggb.js' %}"></script>
+    <!--Imports bootstrap select css-->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+    <!--Imports bootstrap select-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+    <!--Imports bootstrap select-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/i18n/defaults-*.min.js"></script>
+    <!--Imports Tinymce-->
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <!--Imports mathquill-->
     <script type="text/javascript"
             src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
     <script>
