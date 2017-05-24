@@ -524,9 +524,13 @@ class TaskCollectionDetailView(AdministratorCheck, views.AjaxResponseMixin, gene
                 'school_id': grade.school.id
             })
         for group in group_list:
+            if group.grade:
+                grade = group.grade.school.school_name + " - " + group.grade.grade_name
+            else:
+                grade = "-"
             groups.append({
                 'group_name': group.group_name,
-                'grade': group.grade.school.school_name + " - " + group.grade.grade_name,
+                'grade': grade,
                 'creator': group.creator.get_full_name(),
                 'id': group.id
 
