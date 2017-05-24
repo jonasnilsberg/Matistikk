@@ -513,6 +513,7 @@ class PersonCreateView(RoleCheck, generic.CreateView):
         person.username = username
         person.set_password('ntnu123')
         person.save()
+        messages.success(self.request, person.get_full_name() + " ble opprettet med brukernavnet: " + person.username)
         return super(PersonCreateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -791,6 +792,16 @@ class SchoolCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Crea
         context['administratorForm'] = SchoolAdministratorForm()
         return context
 
+    def form_valid(self, form):
+        """
+        Overrides generic.CreateViews form_valid and adds a success message to the request.
+        :param form: represents the form object
+        :return: calls super
+        """
+        school = form.save()
+        messages.success(self.request, 'Skole med navnet: ' + school.school_name + " ble opprettet!")
+        return super(SchoolCreateView, self).form_valid(form)
+
 
 class SchoolUpdateView(SchoolCheck, generic.UpdateView):
     """
@@ -1023,7 +1034,7 @@ class GradeCreateView(SchoolCheck, generic.CreateView):
         grade = form.save(commit=False)
         grade.school_id = self.kwargs['school_pk']
         grade.save()
-
+        messages.success(self.request, 'Klasse med navnet: ' + grade.grade_name + " ble opprettet.")
         return super(GradeCreateView, self).form_valid(form)
 
 
@@ -1185,6 +1196,8 @@ class GroupCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Creat
         """
         gruppe = form.save(commit=False)
         gruppe.creator_id = self.request.user.id
+        gruppe.save()
+        messages.success(self.request, 'Gruppe med navnet: ' + gruppe.group_name + " ble opprettet.")
         return super(GroupCreateView, self).form_valid(form)
 
 

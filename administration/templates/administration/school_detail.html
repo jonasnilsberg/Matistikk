@@ -1,4 +1,6 @@
 {% extends 'matistikk/base.html' %}
+{% load bootstrap3 %}
+{% bootstrap_messages %}
 
 {% block body %}
     <div class="panel panel-info">
@@ -20,7 +22,7 @@
             </div>
         </div>
         <div class="panel-body">
-
+            {% bootstrap_messages %}
             <ul class="nav nav-tabs">
                 <li class="nav active"><a href="#A" data-toggle="tab">Alle klasser</a></li>
                 <li class="nav"><a href="#B" data-toggle="tab">Inaktive</a></li>
@@ -91,7 +93,7 @@
                 <a class="btn btn-primary" href="{% url 'administration:schoolUpdate' school.id %}"><span
                         class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater skole</a>
                 <a class="btn btn-primary" href="{% url 'administration:gradeCreate' school.id %}" id="addNewGradeBtn">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span> Legg til klasse</a>
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til klasse</a>
             </div>
         {% endif %}
     </div>
@@ -101,6 +103,9 @@
          * This function makes table rows clickable
          */
         jQuery(document).ready(function ($) {
+            $(".alert-success").fadeTo(5000, 500).slideUp(500, function () {
+                $('.alert-success').slideUp(500);
+            });
             $(".clickable-row").click(function () {
                 window.document.location = $(this).data("href");
             });
