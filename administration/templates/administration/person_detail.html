@@ -1,17 +1,16 @@
+<!--Extends the base.html file that includes different imports and the navbar-->
 {% extends 'matistikk/base.html' %}
+<!--Loads the tag library-->
 {% load bootstrap3 %}
+<!-- Loads CSS and javascript-->
 {% bootstrap_css %}
 {% bootstrap_javascript %}
+<!--Display django.contrib.messages as Bootstrap alerts-->
 {% bootstrap_messages %}
+<!--Loads the customtags-->
 {% load customtags %}
+<!-- loads the static files of the project-->
 {% load static %}
-
-{% block head %}
-    <script>
-        var username = "{{ person.username }}";
-
-    </script>
-{% endblock %}
 
 {% block body %}
     <div class="panel panel-info">

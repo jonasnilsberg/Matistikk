@@ -61,7 +61,7 @@ class MultipleChoiceTask(models.Model):
     correct = models.BooleanField()
 
     def __str__(self):
-        return self.option
+        return self.task.title + " - Flervalg: " + self.option
 
 
 class GeogebraTask(models.Model):
@@ -75,6 +75,9 @@ class GeogebraTask(models.Model):
     task = models.ForeignKey(Task)
     base64 = models.CharField(max_length=32700)
     preview = models.TextField(null=True)
+
+    def __str__(self):
+        return "Geogebra: " + self.task.title
 
 
 class TaskCollection(models.Model):
@@ -134,7 +137,7 @@ class TaskOrder(models.Model):
     task = models.ForeignKey(Task)
 
     def __str__(self):
-        return self.test.id + " - " + self.test.task_collection.test_name + " - " + self.task.title
+        return str(self.test.id) + " - " + self.test.task_collection.test_name + " - " + self.task.title
 
 
 class Answer(models.Model):

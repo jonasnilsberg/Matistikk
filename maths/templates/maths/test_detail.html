@@ -1,16 +1,26 @@
+    <!--Extends the base.html file that includes different imports and the navbar-->
 {% extends 'matistikk/base.html' %}
+<!-- loads the static files of the project-->
 {% load staticfiles %}
 {% load static %}
+<!-- loads the customtags created-->
 {% load customtags %}
 {% block head %}
+    <!--Imports bootbox-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <!--Imports extra Jquery css, including Datepicker css-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!--Imports extra Jquery features, including Datepicker-->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!--Imports extra Jquery features, including Datepicker-->
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
-
+    <!--Imports bootstrap clockpicker-->
     <script type="text/javascript" src="{% static 'maths/js/bootstrap-clockpicker.min.js' %}"></script>
+    <!--Imports bootstrap clockpicker css-->
     <link rel="stylesheet" href="{% static 'maths/css/bootstrap-clockpicker.min.css' %}" type="text/css"/>
+    <!--Imports tinymce-->
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <!--Imports mathquill-->
     <script type="text/javascript"
             src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
     <script>

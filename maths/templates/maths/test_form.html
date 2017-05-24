@@ -1,9 +1,14 @@
+<!--Extends the base.html file that includes different imports and the navbar-->
 {% extends 'matistikk/base.html' %}
+<!--Loads the tag library-->
 {% load bootstrap3 %}
-{% bootstrap_css %}
+<!-- loads the static files of the project-->
 {% load staticfiles %}
 {% load static %}
+<!-- Loads CSS and javascript-->
+{% bootstrap_css %}
 {% bootstrap_javascript %}
+<!--Display django.contrib.messages as Bootstrap alerts-->
 {% bootstrap_messages %}
 {% block head %}
     <style>
@@ -19,14 +24,21 @@
         }
 
     </style>
+    <!--Imports extra Jquery ui css-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!--Imports extra Jquery ui-->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!--Imports extra Jquery ui-->
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
+    <!--Imports bootbox-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
-
+    <!--Imports clockpicker-->
     <script type="text/javascript" src="{% static 'maths/js/bootstrap-clockpicker.min.js' %}"></script>
+    <!--Imports clockpicker css-->
     <link rel="stylesheet" href="{% static 'maths/css/bootstrap-clockpicker.min.css' %}" type="text/css"/>
+    <!--Imports tinymce-->
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <!--Imports mathquill-->
     <script type="text/javascript"
             src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
     <script>
@@ -259,13 +271,13 @@
                                 </thead>
                                 <tbody>
                                 {% for school in schools %}
-                                    <tr id="school{{ school.id }}" style="cursor: pointer">
+                                    <tr id="school{{ school.id }}" style="cursor: pointer ">
                                         <td class="test"><input type="checkbox" value="{{ school.id }}"></td>
                                         <td>{{ school.school_name }}</td>
                                         <td>{{ school.school_address }}</td>
                                         <td>{{ school.school_administrator.get_full_name }}</td>
                                         <td>
-                                            <button class='btn btn-info' type="button">
+                                            <button class='btn btn-info' type="button" disabled>
                                                 <i class="fa fa-building" aria-hidden="true"></i>
                                                 Se medlemmer
                                             </button>
@@ -274,6 +286,9 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
+                            <div class="alert alert-danger">
+                                <strong>Ikke implementert!</strong> Skoler som blir valgt blir ikke lagert i databasen.
+                            </div>
                         </div>
                     </div>
                 </div>

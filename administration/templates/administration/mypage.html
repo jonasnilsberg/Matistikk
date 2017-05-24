@@ -1,7 +1,11 @@
+<!--Extends the base.html file that includes different imports and the navbar-->
 {% extends 'matistikk/base.html' %}
+<!--Loads the tag library-->
 {% load bootstrap3 %}
+<!-- Loads CSS and javascript-->
 {% bootstrap_css %}
 {% bootstrap_javascript %}
+<!--Display django.contrib.messages as Bootstrap alerts-->
 {% bootstrap_messages %}
 {% block body %}
     <div class="panel panel-info" xmlns="http://www.w3.org/1999/html">
