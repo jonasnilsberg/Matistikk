@@ -498,6 +498,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
+                        <div class="col-md-3 hidden" id="notGeogebraDiv"></div>
                         <div class="col-sm-6" id="geogebradiv">
                             <img id='previewbilde' alt='' width="100%"/>
                         </div>
@@ -552,6 +553,7 @@
             $('#textanswerdiv').hide();
             $('#reasoningdiv').hide();
             $('#multiplechoicediv').hide();
+            var notGeo = $('#notGeogebraDiv');
             var answertype = $("input[type='radio'][name='answer_type']:checked").val();
             var previewtext = tinyMCE.get('tasktext').getContent()
 
@@ -561,6 +563,13 @@
                 $('#geogebradiv').show();
                 var geogebrapreview = ggbApplet.getPNGBase64(1, false);
                 $("#previewbilde").attr("src", 'data:image/png;base64,' + (geogebrapreview));
+                if(!notGeo.hasClass('hidden')){
+                    notGeo.addClass('hidden');
+                }
+            } else {
+                if(notGeo.hasClass('hidden')){
+                    notGeo.removeClass('hidden');
+                }
             }
 
             if (answertype == 1) {

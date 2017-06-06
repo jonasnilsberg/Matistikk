@@ -8,7 +8,8 @@
 <!--Display django.contrib.messages as Bootstrap alerts-->
 {% bootstrap_messages %}
 <!--Loads the customtags-->
-{% load customtags %}
+{% load maths_extras %}
+{% load administration_extras %}
 <!-- loads the static files of the project-->
 {% load static %}
 
@@ -18,7 +19,8 @@
             <h2><i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ person.get_full_name }}</h2>
             <div class="row">
                 <div class="col-md-2">
-                    <h5 id="usernameField"><i class="fa fa-user" aria-hidden="true" ></i> Brukernavn - {{ person.username }}</h5>
+                    <h5 id="usernameField"><i class="fa fa-user" aria-hidden="true"></i> Brukernavn
+                        - {{ person.username }}</h5>
                     <h5><i class="fa fa-user-o" aria-hidden="true"></i> Brukertype - {% if person.role == 4 %}
                         Administrator
                     {% elif person.role == 3 %}
@@ -45,16 +47,25 @@
         </div>
         <div class="panel-body">
             <ul class="nav nav-tabs">
-                <li class="nav active"><a href="#A" data-toggle="tab">Klasser</a></li>
+                <li class="nav active"><a href="#gradeTab" data-toggle="tab">Klasser</a></li>
                 {% if groups %}
-                    <li class="nav"><a href="#B" data-toggle="tab">Grupper</a></li>
+                    <li class="nav"><a href="#groupTab" data-toggle="tab">Grupper</a></li>
                 {% endif %}
                 {% if person.role == 1 or person.role == 2 %}
-                    <li class="nav"><a href="#C" data-toggle="tab">Tester</a></li>
+                    <li class="nav"><a href="#testTab" data-toggle="tab">Tester</a></li>
                 {% endif %}
+                <div class="col-md-6 pull-right">
+                    <div class="form-group">
+                        <select class="form-control" id="answeredDropList" disabled>
+                            <option value="">Alle tester</option>
+                            <option value="1">Besvarte tester</option>
+                            <option value="2">Ikke besvarte tester</option>
+                        </select>
+                    </div>
+                </div>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane fade in active" id="A">
+                <div class="tab-pane fade in active" id="gradeTab">
                     <table class="table table-hover table-striped table-responsive" id="gradetable">
                         <thead>
                         <tr>
@@ -85,13 +96,14 @@
                     </table>
                 </div>
                 {% if groups %}
-                    <div class="tab-pane fade" id="B">
+                    <div class="tab-pane fade" id="groupTab">
                         <table class="table table-hover table-striped table-responsive" id="grouptable">
                             <thead>
                             <tr>
                                 <th>Gruppenavn</th>
                                 <th>Ansvarlig</th>
                                 <th>Klassetilhørighet</th>
+                                <th>Gruppeinformasjon</th>
                                 <th>Se medlemmer</th>
                             </tr>
                             </thead>
@@ -101,6 +113,16 @@
                                     <td>{{ group.group_name }}</td>
                                     <td>{{ group.creator.get_full_name }}</td>
                                     <td>{% if group.grade %}{{ group.grade }}{% else %}-{% endif %}</td>
+                                    {% if request.user.role == 4 or request.user.role == 3 %}
+                                        <td>
+                                            <button class="btn btn-info" value="{{ group.id }}" disabled="disabled"
+                                                    data-available="{% group_check group request.user %}"><i
+                                                    class="fa fa-users"
+                                                    aria-hidden="true"></i>
+                                                Se gruppeinfo
+                                            </button>
+                                        </td>
+                                    {% endif %}
                                     <td>
                                         <button id="{{ group.id }}" value="{{ group.group_name }}"
                                                 class='btn btn-info'
@@ -117,7 +139,7 @@
                     </div>
                 {% endif %}
                 {% if person.role == 1 or person.role == 2 %}
-                    <div class="tab-pane fade" id="C">
+                    <div class="tab-pane fade" id="testTab">
                         <table class="table table-hover table-striped table-responsive" id="testtable">
                             <thead>
                             <tr>
@@ -207,6 +229,13 @@
                     button.attr('disabled', false);
                 }
             });
+            var groups = $('#grouptable tr').not(':first');
+            groups.each(function () {
+                var button = $(this).find(':button');
+                if (button.data('available') == 'True') {
+                    button.attr('disabled', false);
+                }
+            });
             var tests = $('#testtable tr').not(':first');
             tests.each(function () {
                 var button = $(this).find(':button');
@@ -215,6 +244,42 @@
                     button.removeAttr('disabled');
                 }
             });
+        });
+        /**
+         * This function runs when the user switches between tabs.
+         */
+        $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+            var tab = $(e.target).attr('href');
+            if (tab == '#gradeTab') {
+                $('#answeredDropList').prop('disabled', true)
+            } else if (tab == '#groupTab') {
+                $('#answeredDropList').prop('disabled', true)
+            } else if (tab == '#testTab') {
+                $('#answeredDropList').prop('disabled', false)
+            }
+        });
+        /**
+         * This function sorts the test table after the selected choice.
+         */
+        $('#answeredDropList').change(function () {
+            var val = $(this).val();
+            var rows = $('#testtable').find('> tbody > tr');
+            rows.each(function (index) {
+                $(this).show();
+            });
+            if (val == 1) {
+                rows.each(function (index) {
+                    if (!$(this).hasClass('success')) {
+                        $(this).hide();
+                    }
+                });
+            } else if (val == 2) {
+                rows.each(function (index) {
+                    if ($(this).hasClass('success')) {
+                        $(this).hide();
+                    }
+                });
+            }
         });
         /**
          * Function that redirects the the answer of the test clicked on.
@@ -316,11 +381,13 @@
                 <div class="modal-footer">
                     {% if grade_pk and school_pk %}
                         <a class="btn btn-danger"
-                           href="{% url 'administration:personDeleteGrade' school_pk grade_pk person.username %}" id="deleteUserModalBtn"><span
+                           href="{% url 'administration:personDeleteGrade' school_pk grade_pk person.username %}"
+                           id="deleteUserModalBtn"><span
                                 class="glyphicon glyphicon-trash" aria-hidden="true"></span>Slett bruker</a>
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Avbryt</button>
                     {% else %}
-                        <a class="btn btn-danger" href="{% url 'administration:personDelete' person.username %}" id="deleteUserModalBtn"><span
+                        <a class="btn btn-danger" href="{% url 'administration:personDelete' person.username %}"
+                           id="deleteUserModalBtn"><span
                                 class="glyphicon glyphicon-trash" aria-hidden="true"></span>Slett bruker</a>
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Avbryt</button>
                     {% endif %}

@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a3dadf1e-2e4f-489f-9312-8d2daafdb0f5" name="IdeaFiles" comment="Testa">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.coveragerc" afterPath="$PROJECT_DIR$/.coveragerc" />
+    <list default="true" id="a3dadf1e-2e4f-489f-9312-8d2daafdb0f5" name="IdeaFiles" comment="Små endringer overalt">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/administration/templatetags/administration_extras.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/maths/templatetags/customtags.py" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/maths/templatetags/__init__.py" afterPath="$PROJECT_DIR$/administration/templatetags/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/static/administration/style.css" afterPath="$PROJECT_DIR$/administration/static/administration/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/grade_detail.html" afterPath="$PROJECT_DIR$/administration/templates/administration/grade_detail.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/group_form.html" afterPath="$PROJECT_DIR$/administration/templates/administration/group_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/person_detail.html" afterPath="$PROJECT_DIR$/administration/templates/administration/person_detail.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/views.py" afterPath="$PROJECT_DIR$/administration/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/models.py" afterPath="$PROJECT_DIR$/maths/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_list.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/index.html" afterPath="$PROJECT_DIR$/maths/templates/maths/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/tests/seleniumtests/test_take_tst.py" afterPath="$PROJECT_DIR$/maths/tests/seleniumtests/test_take_tst.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/tests/seleniumtests/test_view_answered_test.py" afterPath="$PROJECT_DIR$/maths/tests/seleniumtests/test_view_answered_test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/taskCollection_detail.html" afterPath="$PROJECT_DIR$/maths/templates/maths/taskCollection_detail.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_list.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/test_detail.html" afterPath="$PROJECT_DIR$/maths/templates/maths/test_detail.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/test_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/test_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/test_list.html" afterPath="$PROJECT_DIR$/maths/templates/maths/test_list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/views.py" afterPath="$PROJECT_DIR$/maths/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/matistikk/settings.py" afterPath="$PROJECT_DIR$/matistikk/settings.py" />
     </list>
     <list id="de22f9bb-0d8d-43b9-a0ab-d5e54da7af91" name="Failed commit: IdeaFiles" comment="Endringer på personCreateView" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -33,124 +47,115 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="test_take_tst.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/maths/tests/seleniumtests/test_take_tst.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="625">
-                  <caret line="57" column="22" lean-forward="false" selection-start-line="57" selection-start-column="22" selection-end-line="57" selection-end-column="22" />
-                  <folding>
-                    <element signature="e#0#42#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/../lib/python3.5/site-packages/django/db/models/fields/__init__.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="239">
-                  <caret line="1428" column="0" lean-forward="false" selection-start-line="1428" selection-start-column="0" selection-end-line="1428" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/maths/models.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1447">
-                  <caret line="37" column="38" lean-forward="false" selection-start-line="37" selection-start-column="38" selection-end-line="37" selection-end-column="38" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="test_view_answered_test.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/maths/tests/seleniumtests/test_view_answered_test.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="595">
-                  <caret line="60" column="23" lean-forward="false" selection-start-line="60" selection-start-column="23" selection-end-line="60" selection-end-column="23" />
-                  <folding>
-                    <element signature="e#0#42#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name=".coveragerc" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/.coveragerc">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="192">
-                  <caret line="12" column="11" lean-forward="false" selection-start-line="12" selection-start-column="11" selection-end-line="12" selection-end-column="11" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="answer_form.html" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="160">
-                  <caret line="104" column="77" lean-forward="false" selection-start-line="104" selection-start-column="77" selection-end-line="104" selection-end-column="77" />
-                  <folding>
-                    <marker date="1495475321905" expanded="true" signature="38276:96657" ph="..." />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="answer_list.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="734">
-                  <caret line="60" column="50" lean-forward="false" selection-start-line="60" selection-start-column="48" selection-end-line="60" selection-end-column="50" />
-                  <folding>
-                    <marker date="1495400534423" expanded="true" signature="21483:21578" ph="..." />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="test_view_tsts.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/maths/tests/seleniumtests/test_view_tsts.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="16">
-                  <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/maths/templates/maths/index.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="682">
-                  <caret line="574" column="154" lean-forward="false" selection-start-line="574" selection-start-column="154" selection-end-line="574" selection-end-column="154" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/maths/models.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1475">
-                  <caret line="37" column="38" lean-forward="false" selection-start-line="37" selection-start-column="38" selection-end-line="37" selection-end-column="38" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="grade_detail.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/administration/templates/administration/grade_detail.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="80">
+              <caret line="146" column="78" lean-forward="false" selection-start-line="146" selection-start-column="78" selection-end-line="146" selection-end-column="78" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_detail.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_detail.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="352">
+              <caret line="73" column="126" lean-forward="false" selection-start-line="73" selection-start-column="126" selection-end-line="73" selection-end-column="126" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="task_list.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_list.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-528">
+              <caret line="261" column="60" lean-forward="false" selection-start-line="261" selection-start-column="60" selection-end-line="261" selection-end-column="60" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/administration/static/administration/style.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-5446">
+              <caret line="12" column="1" lean-forward="true" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/maths/templates/maths/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="336">
+              <caret line="263" column="61" lean-forward="false" selection-start-line="263" selection-start-column="61" selection-end-line="263" selection-end-column="61" />
+              <folding>
+                <element signature="e#5516#5562#0#HTML" expanded="true" />
+                <element signature="e#9523#9556#0#HTML" expanded="true" />
+                <element signature="e#14992#15012#0#HTML" expanded="true" />
+                <element signature="e#16487#16508#0#HTML" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="answer_form.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="191">
+              <caret line="936" column="35" lean-forward="false" selection-start-line="936" selection-start-column="35" selection-end-line="936" selection-end-column="35" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="taskCollection_detail.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/maths/templates/maths/taskCollection_detail.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="207">
+              <caret line="302" column="33" lean-forward="false" selection-start-line="302" selection-start-column="16" selection-end-line="302" selection-end-column="33" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/maths/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="447">
+              <caret line="121" column="45" lean-forward="false" selection-start-line="121" selection-start-column="45" selection-end-line="121" selection-end-column="45" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="person_detail.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_detail.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="222">
+              <caret line="265" column="0" lean-forward="false" selection-start-line="265" selection-start-column="0" selection-end-line="265" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_list.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_list.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="479">
+              <caret line="151" column="13" lean-forward="true" selection-start-line="134" selection-start-column="12" selection-end-line="151" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -162,36 +167,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>FormView</find>
-      <find>formview</find>
-      <find>post</find>
-      <find>AjaxResponseMixin</find>
-      <find>get_ajax</find>
-      <find>post_ajax</find>
-      <find>get_context_data</find>
-      <find>ListView</find>
-      <find>task.</find>
-      <find>place</find>
-      <find>for</find>
-      <find>tinymce</find>
-      <find>taskcount</find>
-      <find>checktask</find>
+      <find>taskCollectionDetail</find>
+      <find>username</find>
+      <find>== 4</find>
+      <find>static</find>
+      <find>taskOverview</find>
+      <find>previewTaskModal</find>
+      <find>preview</find>
+      <find>previewBody</find>
+      <find>groupCreateV</find>
+      <find>groupUpdate</find>
+      <find>g</find>
+      <find>grade</find>
+      <find>grade_</find>
+      <find>grade_che</find>
+      <find>grade_check</find>
+      <find>c</find>
+      <find>custo</find>
+      <find>custom</find>
+      <find>customtags</find>
+      <find>allschools</find>
+      <find>available</find>
+      <find>medlemmer</find>
+      <find>tasktimer</find>
+      <find>tilf</find>
+      <find>alert</find>
+      <find>geogebradiv</find>
+      <find>textanswerdiv</find>
+      <find>reasoningdiv</find>
+      <find>multiplechoicediv</find>
       <find>timespent</find>
-      <find>answer_deta</find>
-      <find>textanswer</find>
-      <find>endb</find>
-      <find>getcontent</find>
-      <find>task.id</find>
-      <find>panel-body</find>
-      <find>checkt</find>
-      <find>checktest</find>
-      <find>answer</find>
-      <find>tasktextdiv</find>
-      <find>init</find>
-      <find>agenda</find>
-      <find>tasktext</find>
-      <find>accordion2</find>
-      <find>geocount</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -205,44 +210,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/administration/templates/administration/grade_detail.html" />
-        <option value="$PROJECT_DIR$/administration/static/administration/style.css" />
-        <option value="$PROJECT_DIR$/maths/forms.py" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/test_form.html" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/test_detail.html" />
-        <option value="$PROJECT_DIR$/maths/templatetags/customtags.py" />
-        <option value="$PROJECT_DIR$/administration/templates/administration/person_detail.html" />
-        <option value="$PROJECT_DIR$/administration/templates/administration/person_form.html" />
-        <option value="$PROJECT_DIR$/administration/templates/administration/mypage.html" />
-        <option value="$PROJECT_DIR$/administration/urls.py" />
-        <option value="$PROJECT_DIR$/maths/urls.py" />
-        <option value="$PROJECT_DIR$/administration/views.py" />
-        <option value="$PROJECT_DIR$/maths/views.py" />
-        <option value="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/plugin.min.js" />
-        <option value="$PROJECT_DIR$/maths/models.py" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/answer_detail.html" />
-        <option value="$PROJECT_DIR$/templates/matistikk/base.html" />
-        <option value="$PROJECT_DIR$/maths/tests/test_view_avaliable_tests.py" />
-        <option value="$PROJECT_DIR$/maths/tests/test_view_tests.py" />
-        <option value="$PROJECT_DIR$/maths/tests/test_publish_test.py" />
-        <option value="$PROJECT_DIR$/maths/tests/test_update_task.py" />
-        <option value="$PROJECT_DIR$/maths/tests/test_create_taskcollection.py" />
-        <option value="$PROJECT_DIR$/maths/tests/test_preview_task.py" />
-        <option value="$PROJECT_DIR$/maths/tests/test_publish_tst.py" />
-        <option value="$PROJECT_DIR$/maths/tests/test_view_tsts.py" />
-        <option value="$PROJECT_DIR$/matistikk/settings.py" />
-        <option value="$PROJECT_DIR$/maths/tests/test_take_tst.py" />
-        <option value="$PROJECT_DIR$/maths/tests/unittests/testforms.py" />
-        <option value="$PROJECT_DIR$/maths/tests/unittests/test_forms.py" />
-        <option value="$PROJECT_DIR$/maths/tests/seleniumtests/test_create_task.py" />
-        <option value="$PROJECT_DIR$/maths/tests/seleniumtests/test_preview_task.py" />
-        <option value="$PROJECT_DIR$/administration/tests/seleniumtests/test_add_existing_user_in_grade.py" />
-        <option value="$PROJECT_DIR$/administration/tests/seleniumtests/test_create_grade.py" />
-        <option value="$PROJECT_DIR$/administration/tests/seleniumtests/test_create_group.py" />
-        <option value="$PROJECT_DIR$/administration/tests/seleniumtests/test_create_school.py" />
-        <option value="$PROJECT_DIR$/administration/tests/seleniumtests/test_create_users.py" />
-        <option value="$PROJECT_DIR$/administration/tests/seleniumtests/test_delete_unused_user.py" />
-        <option value="$PROJECT_DIR$/administration/tests/seleniumtests/test_edit_other_users_password.py" />
         <option value="$PROJECT_DIR$/administration/tests/seleniumtests/test_edit_own_information.py" />
         <option value="$PROJECT_DIR$/administration/tests/seleniumtests/test_gradeoverview.py" />
         <option value="$PROJECT_DIR$/administration/tests/seleniumtests/test_schooloverview.py" />
@@ -251,11 +218,49 @@
         <option value="$PROJECT_DIR$/administration/tests/seleniumtests/test_update_user_information.py" />
         <option value="$PROJECT_DIR$/administration/tests/seleniumtests/test_useroverview.py" />
         <option value="$PROJECT_DIR$/administration/tests/seleniumtests/test_view_person_detail_page.py" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/index.html" />
         <option value="$PROJECT_DIR$/maths/tests/seleniumtests/test_view_answered_test.py" />
         <option value="$PROJECT_DIR$/maths/tests/seleniumtests/test_take_tst.py" />
         <option value="$PROJECT_DIR$/.coveragerc" />
+        <option value="$PROJECT_DIR$/templates/matistikk/base.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/grade_form.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/grade_list.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/group_detail.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/group_list.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/login.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/mypage.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/person_form.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/person_list.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/school_detail.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/school_form.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/school_list.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/category_form.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/category_list.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/equation_editor.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/task_update.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/taskCollection_list.html" />
+        <option value="$PROJECT_DIR$/matistikk/settings.py" />
+        <option value="$PROJECT_DIR$/maths/models.py" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/test_form.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/task_list.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/group_form.html" />
+        <option value="$PROJECT_DIR$/administration/views.py" />
+        <option value="$PROJECT_DIR$/administration/templatetags/customtags.py" />
+        <option value="$PROJECT_DIR$/administration/templatetags/administationtags.py" />
+        <option value="$PROJECT_DIR$/templatetags/customtags.py" />
+        <option value="$PROJECT_DIR$/maths/templatetags/customtags.py" />
+        <option value="$PROJECT_DIR$/administration/templatetags/administration_extras.py" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/test_list.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/person_detail.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/grade_detail.html" />
+        <option value="$PROJECT_DIR$/administration/static/administration/style.css" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/index.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/taskCollection_detail.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/test_detail.html" />
         <option value="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
+        <option value="$PROJECT_DIR$/maths/views.py" />
       </list>
     </option>
   </component>
@@ -266,9 +271,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="30" />
+    <option name="y" value="-1" />
     <option name="width" value="1920" />
-    <option name="height" value="1050" />
+    <option name="height" value="1053" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -342,20 +347,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="matistikk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="matistikk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="matistikk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="maths" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -374,29 +365,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="matistikk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="matistikk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maths" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="seleniumtests" />
+              <option name="myItemId" value="templatetags" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -432,6 +401,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="maths" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="maths" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matistikk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matistikk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="administration" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -450,29 +441,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="matistikk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="matistikk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="administration" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="seleniumtests" />
+              <option name="myItemId" value="templatetags" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -516,10 +485,58 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matistikk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matistikk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="administration" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="administration" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matistikk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="matistikk" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="administration" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="administration" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="images" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -535,18 +552,18 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/maths" />
+      <recent name="$PROJECT_DIR$/" />
       <recent name="$PROJECT_DIR$/maths/tests/seleniumtests" />
       <recent name="$PROJECT_DIR$/maths/static/maths/js" />
       <recent name="C:\Users\Sondre\PycharmProjects\matistikk3\administration\static\administration" />
-      <recent name="C:\Users\Sondre\PycharmProjects\matistikk3\maths\static\maths" />
-      <recent name="$PROJECT_DIR$/templates/matistikk" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/administration/templatetags" />
+      <recent name="$PROJECT_DIR$/administration/static/administration/images" />
       <recent name="$PROJECT_DIR$/maths/static/maths/js" />
       <recent name="$PROJECT_DIR$/maths/static/maths/css" />
       <recent name="C:\Users\Sondre\PycharmProjects\matistikk3\maths\static\maths" />
-      <recent name="$PROJECT_DIR$/administration/static/administration/images" />
-      <recent name="$PROJECT_DIR$/templates/matistikk" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -810,7 +827,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
         <env name="DJANGO_SETTINGS_MODULE" value="matistikk.settings" />
       </envs>
-      <option name="SDK_HOME" value="$PROJECT_DIR$/../bin/python3.5" />
+      <option name="SDK_HOME" value="/usr/bin/python3.5" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -864,27 +881,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1485778837143</updated>
-    </task>
-    <task id="LOCAL-00023" summary="Lagt inn django-bootstrap3">
-      <created>1486464171122</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1486464171122</updated>
-    </task>
-    <task id="LOCAL-00024" summary="Endring av usermodel">
-      <created>1486507169434</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1486507169434</updated>
-    </task>
-    <task id="LOCAL-00025" summary="Endring av usermodel">
-      <created>1486545829230</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1486545829230</updated>
     </task>
     <task id="LOCAL-00026" summary="Endringer på personCreateView">
       <created>1486548657556</created>
@@ -1208,7 +1204,28 @@
       <option name="project" value="LOCAL" />
       <updated>1495400556047</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="Små endringer overalt">
+      <created>1495615172189</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1495615172189</updated>
+    </task>
+    <task id="LOCAL-00073" summary="Små endringer overalt">
+      <created>1495616319806</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1495616319806</updated>
+    </task>
+    <task id="LOCAL-00074" summary="Små endringer overalt">
+      <created>1495622863500</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1495622863500</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1221,20 +1238,20 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="30" width="1920" height="1050" extended-state="6" />
-    <editor active="true" />
+    <frame x="0" y="-1" width="1920" height="1053" extended-state="6" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18836713" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32867885" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34479055" sideWeight="0.5149413" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39479393" sideWeight="0.47812167" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24704619" sideWeight="0.4850587" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39312568" sideWeight="0.47812167" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32760474" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13232104" sideWeight="0.4850587" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2607296" sideWeight="0.48720682" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19477054" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32867885" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24958768" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26100966" sideWeight="0.48720682" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977587" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1243,7 +1260,6 @@
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="99" y="75" width="1722" height="879" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32867885" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -1314,11 +1330,11 @@
     <MESSAGE value="Endringer på models" />
     <MESSAGE value="lagt til testDetailView og testhåndtering" />
     <MESSAGE value="Endringer i dokumentasjon" />
-    <MESSAGE value="Små endringer overalt" />
     <MESSAGE value="equations i answer_form" />
     <MESSAGE value="Tester" />
     <MESSAGE value="view_answered_test" />
-    <option name="LAST_COMMIT_MESSAGE" value="view_answered_test" />
+    <MESSAGE value="Små endringer overalt" />
+    <option name="LAST_COMMIT_MESSAGE" value="Små endringer overalt" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1327,436 +1343,10 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/skin.ie7.min.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="34904" lean-forward="false" selection-start-line="0" selection-start-column="34904" selection-end-line="0" selection-end-column="34904" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/mathquill.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7240">
-          <caret line="362" column="1" lean-forward="false" selection-start-line="362" selection-start-column="1" selection-end-line="362" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/equation_editor.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
-          <caret line="39" column="0" lean-forward="true" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/static/tinymce/js/tinymce/skins/lightgray/skin.min.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="38232" lean-forward="false" selection-start-line="0" selection-start-column="38232" selection-end-line="0" selection-end-column="38232" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/equation_editor.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="10" column="7" lean-forward="false" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="115" column="22" lean-forward="false" selection-start-line="115" selection-start-column="22" selection-end-line="115" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/tests/test_view_avaliable_tests.py" />
-    <entry file="file://$PROJECT_DIR$/administration/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1380">
-          <caret line="72" column="0" lean-forward="false" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8060">
-          <caret line="265" column="39" lean-forward="false" selection-start-line="265" selection-start-column="39" selection-end-line="265" selection-end-column="39" />
-          <folding>
-            <marker date="1495400534423" expanded="true" signature="5837:11403" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="5837:11419" ph="{% block body ... %}" />
-            <marker date="1495400534423" expanded="true" signature="5907:6015" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="6056:7973" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="6070:6163" ph="/** Sets up the multiselect widget for the category filtering. ...*/" />
-            <marker date="1495400534423" expanded="true" signature="6209:7961" ph="{&quot;buttonClass&quot;: 'form-control'...}" />
-            <marker date="1495400534423" expanded="true" signature="6317:7098" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="6482:7077" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="6685:6861" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="6759:6835" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="6907:6978" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="6984:7055" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="7155:7947" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="7203:7274" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="7324:7410" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="7436:7929" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="7528:7850" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="7599:7698" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="7732:7824" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="7985:8211" ph="/** This function matches the text in the search field with the content in the table given in the parameter. ...*/" />
-            <marker date="1495400534423" expanded="true" signature="8252:9289" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="8574:9279" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="8836:9265" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="9170:9247" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="9299:9416" ph="/** This function sets up the taskinformation gotten inside a modal from the ajax GET request. ...*/" />
-            <marker date="1495400534423" expanded="true" signature="9449:11389" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="9761:11377" ph="{&quot;type&quot;: 'GET'...}" />
-            <marker date="1495400534423" expanded="true" signature="9865:9918" ph="{&quot;task_id&quot;: id...}" />
-            <marker date="1495400534423" expanded="true" signature="9995:11259" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="10097:10278" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="10543:10618" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="10665:10739" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="10781:11241" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="11074:11217" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="11299:11363" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="11421:14500" ph="{% block modal ... %}" />
-            <marker date="1495400534423" expanded="true" signature="11547:14484" ph="..." />
-            <marker date="1495400534423" expanded="false" signature="11590:11601" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="11602:14473" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="11642:14458" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="11685:11950" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="11782:11858" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="11788:11849" ph="..." />
-            <marker date="1495400534423" expanded="false" signature="11836:11843" ph="×" />
-            <marker date="1495400534423" expanded="false" signature="11999:12016" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="12017:14253" ph="..." />
-            <marker date="1495400534423" expanded="false" signature="12120:12132" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="12196:14230" ph="..." />
-            <marker date="1495400534423" expanded="false" signature="12268:12288" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="12289:12427" ph="..." />
-            <marker date="1495400534423" expanded="false" signature="12369:12394" ph="..." />
-            <marker date="1495400534423" expanded="false" signature="12482:12500" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="12501:14203" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="12563:14172" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="12623:12735" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="12792:13943" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="12853:13191" ph="..." />
-            <marker date="1495400534423" expanded="false" signature="13032:13047" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="13048:13148" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="13257:13498" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="13407:13455" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="13559:13903" ph="..." />
-            <marker date="1495400534423" expanded="false" signature="13746:13761" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="13762:13860" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="14002:14137" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="14402:14439" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1581">
-          <caret line="51" column="12" lean-forward="false" selection-start-line="51" selection-start-column="12" selection-end-line="51" selection-end-column="12" />
-          <folding>
-            <marker date="1495400534423" expanded="true" signature="26413:27943" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="26924:27147" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="27182:27241" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/matistikk/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1000">
-          <caret line="50" column="90" lean-forward="false" selection-start-line="50" selection-start-column="90" selection-end-line="50" selection-end-column="90" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/matistikk/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4247">
-          <caret line="137" column="0" lean-forward="false" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/tests/unittests/__init__.py" />
-    <entry file="file://$PROJECT_DIR$/administration/tests/unittests/test_forms.py" />
-    <entry file="file://$PROJECT_DIR$/maths/tests/unittests/test_forms.py" />
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_views.py" />
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_view_person_detail_page.py" />
-    <entry file="file://$PROJECT_DIR$/maths/forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="20" column="33" lean-forward="false" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/static/tinymce/tests/tinymce/Editor.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11501">
-          <caret line="371" column="58" lean-forward="false" selection-start-line="371" selection-start-column="58" selection-end-line="371" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_update.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="589">
-          <caret line="19" column="88" lean-forward="false" selection-start-line="19" selection-start-column="79" selection-end-line="19" selection-end-column="88" />
-          <folding>
-            <marker date="1495400534423" expanded="true" signature="12764:24319" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="12809:13542" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="12838:13530" ph="{&quot;title&quot;: &quot;Skriv inn ny oppgavetittel!&quot;...}" />
-            <marker date="1495400534423" expanded="true" signature="13029:13289" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="13059:13150" ph="{&quot;label&quot;: '&lt;i class=&quot;fa fa-times&quot;&gt;&lt;/i&gt; Avbryt'...}" />
-            <marker date="1495400534423" expanded="true" signature="13181:13271" ph="{&quot;label&quot;: '&lt;i class=&quot;fa fa-check&quot;&gt;&lt;/i&gt; Endre'...}" />
-            <marker date="1495400534423" expanded="true" signature="13335:13516" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="13369:13498" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="13554:13732" ph="/** This function parse data from custom input fields into the hidden django-form ...*/" />
-            <marker date="1495400534423" expanded="true" signature="13772:18349" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="14961:15035" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="15174:15232" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="15250:15309" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="15342:15516" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="15534:15626" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="15660:16048" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="16118:16181" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="16244:16312" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="16348:16709" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="16762:17022" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="16829:17008" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="16907:16990" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="17108:18131" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="17151:17519" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="17741:18117" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="18193:18277" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="18359:18788" ph="/** This function changes the &quot;option&quot;-radio-button with associated text to a ...*/" />
-            <marker date="1495400534423" expanded="true" signature="18822:19374" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="19384:19835" ph="/** This function is called when the user has updated the text of a multiple choice option ...*/" />
-            <marker date="1495400534423" expanded="true" signature="19874:20386" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="20396:20605" ph="/** This function adds a input field to the div that contaions the multiple choice options ...*/" />
-            <marker date="1495400534423" expanded="true" signature="20635:21317" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="21354:21895" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="21573:21885" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="21607:21728" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="21750:21871" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="21905:22081" ph="/** This function hides all the parts of the task when the document get loaded, ...*/" />
-            <marker date="1495400534423" expanded="true" signature="22126:23374" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="22401:22558" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="22621:22687" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="22758:22910" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="22985:23137" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="23212:23364" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="23386:23558" ph="/** This function changes the visibility of the reasoning-div when the user ...*/" />
-            <marker date="1495400534423" expanded="true" signature="23599:23898" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="23783:23888" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="23910:24068" ph="/** This function changes the visibility of the extra-div when the user ...*/" />
-            <marker date="1495400534423" expanded="true" signature="24108:24304" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="24240:24294" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="24468:26747" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="24519:26736" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="24559:26721" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="24602:24882" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="24699:24775" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="24705:24766" ph="..." />
-            <marker date="1495400534423" expanded="false" signature="24753:24760" ph="×" />
-            <marker date="1495400534423" expanded="true" signature="24923:26535" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="24967:26512" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="25152:25750" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="25280:25712" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="25385:25555" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="25850:26409" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="25993:26409" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="25994:26371" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="26099:26214" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="26578:26702" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="26863:30269" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="26914:30258" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="26954:30243" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="26997:27275" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="27094:27170" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="27100:27161" ph="..." />
-            <marker date="1495400534423" expanded="false" signature="27148:27155" ph="×" />
-            <marker date="1495400534423" expanded="true" signature="27316:30057" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="27392:30034" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="27466:28246" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="27534:27907" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="27591:27872" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="27635:27834" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="27707:27816" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="27988:28215" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="28045:28180" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="28324:29152" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="28391:28797" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="28447:28762" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="28491:28725" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="28563:28663" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="28878:29121" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="28935:29086" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="29224:30007" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="29292:29656" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="29348:29621" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="29392:29584" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="29464:29564" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="29737:29976" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="29794:29941" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="30100:30224" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="30283:32135" ph="..." />
-            <marker date="1495400534423" expanded="true" signature="30294:30429" ph="/** This function selects the already chosen answertype when the user opens the ...*/" />
-            <marker date="1495400534423" expanded="true" signature="30498:30609" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="30621:30812" ph="/** This function changes the visibility of the answer type-divs when the user closes the ...*/" />
-            <marker date="1495400534423" expanded="true" signature="30881:31538" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="30992:31144" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="31184:31336" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="31376:31528" ph="{...}" />
-            <marker date="1495400534423" expanded="true" signature="31550:31756" ph="/** This function adds and removes categories in the view when the user has changed the ...*/" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_add_existing_user_in_grade.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2387">
-          <caret line="86" column="24" lean-forward="false" selection-start-line="86" selection-start-column="24" selection-end-line="86" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_create_grade.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-264">
-          <caret line="58" column="49" lean-forward="true" selection-start-line="58" selection-start-column="49" selection-end-line="58" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_create_group.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-78">
-          <caret line="39" column="24" lean-forward="false" selection-start-line="39" selection-start-column="24" selection-end-line="39" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_create_school.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1333">
-          <caret line="52" column="24" lean-forward="false" selection-start-line="52" selection-start-column="24" selection-end-line="52" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_create_users.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9873">
-          <caret line="439" column="24" lean-forward="false" selection-start-line="439" selection-start-column="24" selection-end-line="439" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_delete_unused_user.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="682">
-          <caret line="30" column="24" lean-forward="true" selection-start-line="30" selection-start-column="24" selection-end-line="30" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_edit_other_users_password.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="837">
-          <caret line="35" column="24" lean-forward="false" selection-start-line="35" selection-start-column="24" selection-end-line="35" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_edit_own_information.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="130" column="15" lean-forward="false" selection-start-line="130" selection-start-column="15" selection-end-line="130" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_gradeoverview.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="449">
-          <caret line="45" column="27" lean-forward="false" selection-start-line="45" selection-start-column="27" selection-end-line="45" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_schooloverview.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="376">
-          <caret line="61" column="24" lean-forward="false" selection-start-line="61" selection-start-column="24" selection-end-line="61" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_set_user_inactive.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="682">
-          <caret line="30" column="24" lean-forward="false" selection-start-line="30" selection-start-column="24" selection-end-line="30" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_update_group.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-977">
-          <caret line="12" column="25" lean-forward="false" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_update_user_information.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3984">
-          <caret line="54" column="24" lean-forward="false" selection-start-line="54" selection-start-column="24" selection-end-line="54" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/tests/seleniumtests/test_useroverview.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2896">
-          <caret line="189" column="24" lean-forward="false" selection-start-line="189" selection-start-column="24" selection-end-line="189" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/tests/seleniumtests/test_update_task.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="34" column="24" lean-forward="false" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/tests/seleniumtests/test_create_task.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="521">
-          <caret line="48" column="8" lean-forward="true" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="100" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/tests/seleniumtests/test_preview_task.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="36" column="40" lean-forward="false" selection-start-line="36" selection-start-column="40" selection-end-line="36" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/tests/seleniumtests/test_taskoverview.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-135">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/maths/tests/seleniumtests/test_create_taskcollection.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="624">
           <caret line="48" column="100" lean-forward="false" selection-start-line="48" selection-start-column="100" selection-end-line="48" selection-end-column="100" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1764,49 +1354,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="601">
           <caret line="86" column="76" lean-forward="false" selection-start-line="84" selection-start-column="8" selection-end-line="86" selection-end-column="76" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../lib/python3.5/site-packages/django/db/models/fields/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="1428" column="0" lean-forward="false" selection-start-line="1428" selection-start-column="0" selection-end-line="1428" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1447">
-          <caret line="37" column="38" lean-forward="false" selection-start-line="37" selection-start-column="38" selection-end-line="37" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="734">
-          <caret line="60" column="50" lean-forward="false" selection-start-line="60" selection-start-column="48" selection-end-line="60" selection-end-column="50" />
-          <folding>
-            <marker date="1495400534423" expanded="true" signature="21483:21578" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="682">
-          <caret line="574" column="154" lean-forward="false" selection-start-line="574" selection-start-column="154" selection-end-line="574" selection-end-column="154" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../lib/python3.5/site-packages/django/db/models/fields/__init__.py" />
     <entry file="file://$PROJECT_DIR$/maths/tests/seleniumtests/test_view_tsts.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="16">
           <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1814,25 +1369,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="595">
           <caret line="60" column="23" lean-forward="false" selection-start-line="60" selection-start-column="23" selection-end-line="60" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.coverage">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/.coverage" />
     <entry file="file://$PROJECT_DIR$/.coveragerc">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="192">
           <caret line="12" column="11" lean-forward="false" selection-start-line="12" selection-start-column="11" selection-end-line="12" selection-end-column="11" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1840,18 +1384,350 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="625">
           <caret line="57" column="22" lean-forward="false" selection-start-line="57" selection-start-column="22" selection-end-line="57" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/grade_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="20" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/grade_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="80" lean-forward="false" selection-start-line="0" selection-start-column="80" selection-end-line="0" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/group_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="80" lean-forward="false" selection-start-line="0" selection-start-column="80" selection-end-line="0" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/group_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="3" column="21" lean-forward="false" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/matistikk/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="12" column="42" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/mypage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6080">
+          <caret line="7" column="58" lean-forward="false" selection-start-line="7" selection-start-column="58" selection-end-line="7" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="4" column="33" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/school_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="2" column="20" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/school_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="7" column="26" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/school_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="2" column="19" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-464">
+          <caret line="4" column="32" lean-forward="false" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="20" column="25" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="21" column="25" lean-forward="false" selection-start-line="21" selection-start-column="25" selection-end-line="21" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/category_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="22" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/category_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/equation_editor.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="2" column="21" lean-forward="false" selection-start-line="2" selection-start-column="21" selection-end-line="2" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_update.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="18" column="25" lean-forward="false" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/taskCollection_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="32">
+          <caret line="2" column="0" lean-forward="true" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16">
+          <caret line="64" column="15" lean-forward="false" selection-start-line="64" selection-start-column="15" selection-end-line="64" selection-end-column="15" />
           <folding>
-            <element signature="e#0#42#0" expanded="true" />
+            <element signature="e#0#40#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="1251" column="39" lean-forward="false" selection-start-line="1251" selection-start-column="28" selection-end-line="1251" selection-end-column="39" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#0;n#div#5;n#!!top" expanded="false" />
+            <element signature="n#style#0;n#img#0;n#div#1;n#div#0;n#div#1;n#div#0;n#div#0;n#div#5;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="444">
+          <caret line="570" column="49" lean-forward="false" selection-start-line="570" selection-start-column="49" selection-end-line="570" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/group_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="75" column="80" lean-forward="false" selection-start-line="75" selection-start-column="80" selection-end-line="75" selection-end-column="80" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1110">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="575">
+          <caret line="1245" column="63" lean-forward="false" selection-start-line="1245" selection-start-column="63" selection-end-line="1245" selection-end-column="63" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/matistikk/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="25" column="1" lean-forward="false" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templatetags/administationtags.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templatetags/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templatetags/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templatetags/maths_extras.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="39" column="0" lean-forward="false" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#27#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="346">
+          <caret line="146" column="109" lean-forward="true" selection-start-line="146" selection-start-column="109" selection-end-line="146" selection-end-column="109" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templatetags/administration_extras.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="512">
+          <caret line="32" column="23" lean-forward="false" selection-start-line="32" selection-start-column="23" selection-end-line="32" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#27#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="479">
+          <caret line="151" column="13" lean-forward="true" selection-start-line="134" selection-start-column="12" selection-end-line="151" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="265" column="0" lean-forward="false" selection-start-line="265" selection-start-column="0" selection-end-line="265" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/grade_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="146" column="78" lean-forward="false" selection-start-line="146" selection-start-column="78" selection-end-line="146" selection-end-column="78" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/static/administration/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5446">
+          <caret line="12" column="1" lean-forward="true" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="263" column="61" lean-forward="false" selection-start-line="263" selection-start-column="61" selection-end-line="263" selection-end-column="61" />
+          <folding>
+            <element signature="e#5516#5562#0#HTML" expanded="true" />
+            <element signature="e#9523#9556#0#HTML" expanded="true" />
+            <element signature="e#14992#15012#0#HTML" expanded="true" />
+            <element signature="e#16487#16508#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-528">
+          <caret line="261" column="60" lean-forward="false" selection-start-line="261" selection-start-column="60" selection-end-line="261" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/taskCollection_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="302" column="33" lean-forward="false" selection-start-line="302" selection-start-column="16" selection-end-line="302" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="73" column="126" lean-forward="false" selection-start-line="73" selection-start-column="126" selection-end-line="73" selection-end-column="126" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="104" column="77" lean-forward="false" selection-start-line="104" selection-start-column="77" selection-end-line="104" selection-end-column="77" />
+        <state relative-caret-position="191">
+          <caret line="936" column="35" lean-forward="false" selection-start-line="936" selection-start-column="35" selection-end-line="936" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="447">
+          <caret line="121" column="45" lean-forward="false" selection-start-line="121" selection-start-column="45" selection-end-line="121" selection-end-column="45" />
           <folding>
-            <marker date="1495475321905" expanded="true" signature="38276:96657" ph="..." />
+            <element signature="e#0#32#0" expanded="true" />
           </folding>
         </state>
       </provider>

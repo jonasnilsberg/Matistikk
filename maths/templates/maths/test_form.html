@@ -405,7 +405,7 @@
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="tasks">
-                                <table class="table table-striped" id="taskOverview">
+                                <table class="table table-striped" id="testTaskOverview">
                                     <thead>
                                     <tr>
                                         <th class="col-md-1">ID</th>
@@ -685,14 +685,14 @@
             }
         }
         /**
-         * This function updates the order of the tasks in the taskoverview table.
+         * This function updates the order of the tasks in the testTaskoverview table.
          */
         function updateSelectedTasks() {
-            $("#taskOverview").find("tr:gt(0)").remove();
+            $("#testTaskOverview").find("tr:gt(0)").remove();
             $('#sortable tr').each(function () {
                 var taskName = $(this).find("td").eq(1).html();
                 var categories = $(this).find("td").eq(2).html();
-                $('#taskOverview').append('<tr><td>' + this.id + '</td><td>' + taskName + '</td><td>' + categories + '</td>');
+                $('#testTaskOverview').append('<tr><td>' + this.id + '</td><td>' + taskName + '</td><td>' + categories + '</td>');
             });
         }
         /**
@@ -1245,11 +1245,18 @@
                 },
                 dataType: 'json',
                 success: function (json) {
-
+                    var notGeo = $('#notgeogebradiv');
                     var task = (json);
                     if (task.geogebra_preview != undefined) {
                         $("#previewbilde").attr("src", 'data:image/png;base64,' + (task.geogebra_preview));
                         $('#geogebradiv').show();
+                        if (!notGeo.hasClass('hidden')) {
+                            notGeo.addClass('hidden');
+                        }
+                    } else {
+                        if(notGeo.hasClass('hidden')){
+                            notGeo.removeClass('hidden');
+                        }
                     }
                     tinyMCE.get('previewtasktext').setContent(task.task_text);
 
@@ -1416,6 +1423,7 @@
                     <img src="http://dkclasses.com/images/loading.gif" id="loadingPreview" class="loading-indicator"
                          style="display:none"/>
                     <div id="taskpreview" class="row">
+                        <div id="notgeogebradiv" class="col-md-3 hidden"></div>
                         <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
                             <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
                         </div>

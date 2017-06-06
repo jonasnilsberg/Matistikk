@@ -1,5 +1,6 @@
 from django import template
 from maths.models import Answer, GeogebraAnswer, MultipleChoiceTask
+from administration.models import Gruppe, Person, Grade
 
 register = template.Library()
 
@@ -36,25 +37,6 @@ def get_mutiplechoice(task):
     :return: The MultipleChoiceTask.
     """
     return MultipleChoiceTask.objects.filter(task=task)
-
-
-@register.simple_tag
-def grade_check(grade, person):
-    """
-    Check if a person has permission to se the gradeDetailView of a grade.
-    :param grade: The grade
-    :param person: The person
-    :return: Boolean value, true if the person has access.
-    """
-    if person.role == 4:
-        return True
-    elif person.role == 3:
-        return True
-    elif person.role == 2:
-        for teacherGrade in person.grades.all():
-            if grade == teacherGrade:
-                return True
-    return False
 
 
 @register.simple_tag
