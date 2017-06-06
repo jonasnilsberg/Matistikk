@@ -61,8 +61,8 @@ class MultipleChoiceTask(models.Model):
     correct = models.BooleanField()
 
     def __str__(self):
-        return self.task.title + " - Flervalg: " + self.option
-
+       # return self.task.title + " - Flervalg: " + self.option
+        return self.option
 
 class GeogebraTask(models.Model):
     """

@@ -1,10 +1,10 @@
-    <!--Extends the base.html file that includes different imports and the navbar-->
+<!--Extends the base.html file that includes different imports and the navbar-->
 {% extends 'matistikk/base.html' %}
 <!-- loads the static files of the project-->
 {% load staticfiles %}
 {% load static %}
 <!-- loads the customtags created-->
-{% load customtags %}
+{% load maths_extras %}
 {% block head %}
     <!--Imports bootbox-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
@@ -70,8 +70,8 @@
                 <div class="col-md-2">
                     <h5><strong><i class="fa fa-calendar" aria-hidden="true"></i>
                         Publisert:</strong> {{ test.published }}</h5>
-                    <h5><strong><i class="fa fa-random" aria-hidden="true"></i> Tilfeldig rekkefølge:</strong>
-                        {% if test.randomOrder %}Ja{% else %}Nei{% endif %}</h5>
+                    <h5><strong><i class="fa fa-random" aria-hidden="true"></i> Tilfeldig / Låst rekkefølge:</strong>
+                        {% if test.randomOrder %}Ja{% else %}Nei{% endif %} / {% if test.strictOrder %}Ja{% else %}Nei{% endif %}</h5>
                 </div>
                 <div class="col-md-2">
                     <h5 id="id_dueDate"><strong><i class="fa fa-calendar" aria-hidden="true"></i>
@@ -351,12 +351,12 @@
             var date = "{{ test.dueDate.isoformat }}";
             var dueDate = new Date(date);
             var now = new Date();
-            if (date == 'None') {
+            if (!date) {
                 $('#addPublish').attr('disabled', false);
-                $('#addPublish').attr('title', 'Legg til ');
+                $('#addPublish').attr('title', 'Publiser testen til flere elever, klasser, grupper eller skoler.');
             } else if (dueDate > now) {
                 $('#addPublish').attr('disabled', false);
-                $('#addPublish').attr('title', 'Legg til ');
+                $('#addPublish').attr('title', 'Publiser testen til flere elever, klasser, grupper eller skoler.');
             }
             if ($("#studentTab").length == 0) {
                 $('#teacherTab').addClass('active');
@@ -424,6 +424,20 @@
             document.location.href = url;
 
 
+        });
+
+        /**
+         * Function that runs when an ajax-call is sent.
+         */
+        $(document).ajaxSend(function (event, request, settings) {
+            $('.loading-indicator').show();
+        });
+        /**
+         * Function that runs when an ajax-call is completed.
+         */
+        $(document).ajaxComplete(function (event, request, settings) {
+            $('.loading-indicator').hide();
+            $('#previewBody').removeClass('hidden');
         });
 
         /**
@@ -601,6 +615,8 @@
          */
         function previewTask(e) {
             var id = e.value;
+            $('#previewBody').addClass('hidden');
+            $('#previewTaskModal').modal('show');
             $('#geogebradiv').hide();
             $('#textanswerdiv').hide();
             $('#reasoningdiv').hide();
@@ -613,11 +629,18 @@
                 },
                 dataType: 'json',
                 success: function (json) {
-
                     var task = (json);
+                    var notGeo = $('#notGeogebraDiv');
                     if (task.geogebra_preview != undefined) {
                         $("#previewbilde").attr("src", 'data:image/png;base64,' + (task.geogebra_preview));
                         $('#geogebradiv').show();
+                        if (!notGeo.hasClass('hidden')) {
+                            notGeo.addClass('hidden');
+                        }
+                    } else {
+                        if (notGeo.hasClass('hidden')) {
+                            notGeo.removeClass('hidden');
+                        }
                     }
                     tinyMCE.get('previewtasktext').setContent(task.task_text);
 
@@ -625,7 +648,6 @@
                     if (answertype == 1) {
                         $('#previewtextanswerdiv').show();
                     }
-
                     if (task.task_reasoning) {
                         $('#reasoningdiv').show();
                     }
@@ -638,7 +660,6 @@
                             div.innerHTML += "<input type='radio' name='optionsradio'> " + (value.option) + "<br>";
                         });
                     }
-                    $('#previewTaskModal').modal('show');
                 },
                 error: function (xhr) {
                     alert('error');
@@ -658,8 +679,10 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Forhåndsvis oppgave</h4>
                 </div>
-                <div class="modal-body">
-                    <div class="row">
+                <div class="modal-body" style="min-height: 30vh;">
+                    <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator" style="display:none"/>
+                    <div class="row hidden" id="previewBody">
+                        <div class="col-md-3 hidden" id="notGeogebraDiv"></div>
                         <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
                             <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
                         </div>
@@ -669,7 +692,7 @@
                                     <textarea id="previewtasktext"></textarea>
                                 </div>
                                 <div class="panel-body">
-                                    <div id="previewtextanswerdiv">
+                                    <div id="textanswerdiv">
                                         <label for="previewtextanswer">Tekstsvar</label>
                                         <textarea class="form-control" id="previewtextanswer" rows="6"
                                                   style="resize:vertical"
@@ -683,7 +706,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="previewreasoningdiv">
+                                    <div id="reasoningdiv">
                                         <label for="previewreasoningreasoning">Begrunnelse</label>
                                         <textarea class="form-control" id="previewreasoning" rows="6"
                                                   style="resize:vertical"

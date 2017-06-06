@@ -1115,7 +1115,7 @@ class GroupDetailView(views.AjaxResponseMixin, generic.DetailView):
         return JsonResponse(data)
 
 
-class GroupCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.CreateView):
+class GroupCreateView(SchoolAdministratorCheck, views.AjaxResponseMixin, generic.CreateView):
     """
     Class that displays information about a single grade object based on the grade_id
 
@@ -1182,9 +1182,14 @@ class GroupCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Creat
         :return: returns the updated context
         """
         context = super(GroupCreateView, self).get_context_data(**kwargs)
-        context['schools'] = School.objects.all()
-        context['grades'] = Grade.objects.all()
-        context['students'] = Person.objects.filter(role=1)
+        if self.request.user.role == 3:
+            context['schools'] = School.objects.filter(school_administrator=self.request.user)
+            context['grades'] = Grade.objects.filter(school__school_administrator=self.request.user)
+            context['students'] = Person.objects.filter(grades__school__school_administrator=self.request.user, role=1)
+        else:
+            context['schools'] = School.objects.all()
+            context['grades'] = Grade.objects.all()
+            context['students'] = Person.objects.filter(role=1)
         return context
 
     def form_valid(self, form):
@@ -1200,7 +1205,7 @@ class GroupCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Creat
         return super(GroupCreateView, self).form_valid(form)
 
 
-class GroupUpdateView(AdministratorCheck, generic.UpdateView):
+class GroupUpdateView(SchoolAdministratorCheck, generic.UpdateView):
     """
     Class to update a specific group object bases on the group_id
 
@@ -1231,7 +1236,12 @@ class GroupUpdateView(AdministratorCheck, generic.UpdateView):
         :return: returns the updated context
         """
         context = super(GroupUpdateView, self).get_context_data(**kwargs)
-        context['schools'] = School.objects.all()
-        context['grades'] = Grade.objects.all()
-        context['students'] = Person.objects.filter(role=1)
+        if self.request.user.role == 3:
+            context['schools'] = School.objects.filter(school_administrator=self.request.user)
+            context['grades'] = Grade.objects.filter(school__school_administrator=self.request.user)
+            context['students'] = Person.objects.filter(grades__school__school_administrator=self.request.user, role=1)
+        else:
+            context['schools'] = School.objects.all()
+            context['grades'] = Grade.objects.all()
+            context['students'] = Person.objects.filter(role=1)
         return context

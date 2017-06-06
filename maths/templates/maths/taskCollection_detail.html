@@ -88,6 +88,7 @@
                             <th>Publisert</th>
                             <th>Svarfrist</th>
                             <th>Tilfeldig rekkefølge</th>
+                            <th>Låst rekkefølge</th>
                             <th>Alternativer</th>
                         </tr>
                         </thead>
@@ -107,6 +108,7 @@
                                 <td>
                                     {% if test.randomOrder %}Ja{% else %}Nei{% endif %}
                                 </td>
+                                <td>{% if test.strictOrder %}Ja{% else %}Nei{% endif %}</td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group" aria-label="...">
                                         <button type="button" class="btn btn-info" value="{{ test.id }}"><span
@@ -307,11 +309,18 @@
                 },
                 dataType: 'json',
                 success: function (json) {
-
+                    var notGeo = $('#notGeogebraDiv');
                     var task = (json);
                     if (task.geogebra_preview != undefined) {
                         $("#previewbilde").attr("src", 'data:image/png;base64,' + (task.geogebra_preview));
                         $('#geogebradiv').show();
+                        if (!notGeo.hasClass('hidden')) {
+                            notGeo.addClass('hidden');
+                        }
+                    } else {
+                        if (notGeo.hasClass('hidden')) {
+                            notGeo.removeClass('hidden');
+                        }
                     }
                     tinyMCE.get('previewtasktext').setContent(task.task_text);
 
@@ -467,6 +476,7 @@
                 <div class="modal-body" style="min-height: 30vh;">
                     <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator" style="display:none"/>
                     <div id="previewBody" class="row hidden">
+                        <div class="col-md-3 hidden" id="notGeogebraDiv"></div>
                         <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
                             <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
                         </div>
@@ -476,7 +486,7 @@
                                     <h4><textarea id="previewtasktext"></textarea></h4>
                                 </div>
                                 <div class="panel-body">
-                                    <div id="previewtextanswerdiv">
+                                    <div id="textanswerdiv">
                                         <label for="answer">Tekstsvar</label>
                                         <textarea class="form-control" id="previewtextanswer" rows="6"
                                                   style="resize:vertical"

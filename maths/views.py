@@ -108,15 +108,23 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             context['grades'] = grades
 
         if self.request.user.role == 1:
+            answeredTests = []
             answers = Answer.objects.filter(user=self.request.user)
+            print(answers)
             tests = Test.objects.filter(
                 Q(person=self.request.user) | Q(grade__in=self.request.user.grades.all()) | Q(
                     gruppe__in=self.request.user.gruppe_set.all())).distinct()
             answered = tests.filter(answer__in=answers).distinct().order_by('-answer__date_answered')
-            context['answered'] = answered
+            print(tests)
+            print(answered.values('id').distinct())
+            for test in answered:
+                if test not in answeredTests:
+                    answeredTests.append(test)
+
+            context['answered'] = answeredTests
             notanswered = []
             for test in tests:
-                if test not in answered:
+                if test not in answeredTests:
                     notanswered.append(test)
             context['notanswered'] = notanswered
         return context
