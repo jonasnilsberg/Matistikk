@@ -385,3 +385,7 @@ html, body {
     width: 42px;
     margin-left: 3px;
 }
+
+.itemrow {
+    cursor: pointer;
+}

@@ -1,0 +1,204 @@
+{% extends 'matistikk/base.html' %}
+{% load staticfiles %}
+{% load maths_extras %}
+
+{% block head %}
+    <script type="text/javascript" src="{% static 'administration/../../static/maths/js/deployggb.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4 class="text-center">{{ task.title }} - items</h4></div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-5 variableList" style="overflow: auto">
+                    <div class="list-group">
+                        {% get_variable_count items.first as variable_count %}
+                        <table class="table table-striped table-responsive table-hover">
+                            <thead>
+                            <tr>
+                                <th class="col-md-1"></th>
+                                {% for x in variable_count %}
+                                    <th>Variabel {{ forloop.counter }}</th>
+                                {% endfor %}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in items %}
+                                <tr class="itemrow">
+                                    <td><input type="radio" name="itemradio"></td>
+                                    {% get_variable_count item as variables %}
+                                    {% for variable in variables %}
+                                        <td>{{ variable }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-7" style="padding-left: 15px">
+                    <div id="applet_container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-md-3">
+                    <button class="btn btn-primary addItem"><i class="fa fa-plus" aria-hidden="true"></i>
+                        Legg til nytt item
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var variableCount = $("table > tbody > tr:first > td").length - 1;
+        var viewPortWidth = 1200;
+        var viewPortHeight = 750;
+        var base64 = "{{ geogebra.base64 }}";
+
+        if (typeof window.innerWidth != 'undefined') {
+            viewPortWidth = window.innerWidth * 0.55;
+            viewPortHeight = window.innerHeight * 0.75;
+            $('.variableList').css('max-height', viewPortHeight);
+        }
+        var parameters = {
+            "id": "ggbApplet",
+            "width": viewPortWidth,
+            "height": viewPortHeight,
+            "showToolBar": true,
+            "borderColor": null,
+            "showMenuBar": true,
+            "allowStyleBar": true,
+            "showAlgebraInput": true,
+            "enableLabelDrags": false,
+            "enableShiftDragZoom": true,
+            "capturingThreshold": null,
+            "showToolBarHelp": false,
+            "errorDialogsActive": true,
+            "showTutorialLink": false,
+            "showLogging": false,
+            "language": "nb",
+            "preventFocus": true,
+            "useBrowserForJS": false,
+            "ggbBase64": base64
+        };
+
+        parameters.appletOnLoad = function () {
+            for (var i = 1; i <= variableCount; i++) {
+                var variable = $("tr").eq(1).find("td").eq(i).html();
+                ggbApplet.setValue('variabel' + i, variable);
+            }
+        };
+
+        // Applet som inneholder GeoGebra-vinduet som lastes inn i createfunctiontask.jsp
+        var applet = new GGBApplet(parameters, '5.0', 'applet_container');
+        //  when used with Math Apps Bundle, uncomment this:
+        // applet.setHTML5Codebase('GeoGebra/HTML5/5.0/web3d/');
+        applet.setPreviewImage('http://bildr.no/image/cEtUd3R6.jpeg', 'https://www.geogebra.org/images/GeoGebra_loading.png?v=1490705653', 'https://www.geogebra.org/images/applet_play.png?v=1490705653');
+
+        // Metoden benyttes til å legge GeoGebra med forhåndsvalgt konfigurasjon inn i en applet
+        window.onload = function () {
+            applet.inject('applet_container', 'preferhtml5');
+        };
+        $(document).ready(function () {
+            $("tr").eq(1).addClass('success').find(':radio').prop('checked', true);
+            $('#variabelForm').submit(function (e) {
+                e.preventDefault();
+                var task_id = "{{ task.id }}";
+                var variableTable = [];
+                var variabelInputField = "";
+                for (var i = 1; i <= variableCount; i++) {
+                    var input = $('#variabel' + i).val();
+                    variableTable.push(input);
+                    var prevValue = variabelInputField;
+                    variabelInputField = prevValue + input + "|||||";
+                }
+                var variables = variabelInputField.slice(0, -5);
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'maths:taskDetail' task_pk=1234 %}'.replace(/1234/, task_id),
+                    data: {
+                        'variables': variables,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        $("table > tbody").append("<tr id='item" + data.id + "'><td><input type='radio' name='itemradio'></td></tr>");
+                        for (var i = 0; i < variableTable.length; i++) {
+                            $('#item' + data.id).append("<td>" + variableTable[i] + "</td>");
+                        }
+                        $('#item' + data.id).addClass('itemrow');
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+                $('#addVariablesModal').modal('hide');
+            });
+        });
+
+        $(document).on('click', '.itemrow', function () {
+            $('.itemrow').removeClass('success');
+            $(this).find(':radio').prop('checked', true);
+            $(this).addClass('success');
+
+            for (var i = 1; i <= variableCount; i++) {
+                var variable = $(this).find("td").eq(i).html();
+                ggbApplet.setValue('variabel' + i, variable);
+            }
+        });
+
+
+        $('.addItem').click(function () {
+            $('.variabelFormGroup').remove();
+            for (var i = 1; i <= variableCount; i++) {
+                $('#variabelForm').append("<div class='form-group variabelFormGroup'><label for='variabel" + i + "'>Variabel " + i + ":</label> <input type='variabel" + i + "' placeholder='Skriv inn verdien for variabel " + i + "' class='form-control' id='variabel" + i + "'required></div>");
+            }
+            $('#variabelForm').append('<button type="submit" class="btn btn-success variabelFormGroup"><i class="fa fa-floppy-o"aria-hidden="true"></i>Sett inn parameter</button>');
+            $('#addVariablesModal').modal('show');
+
+        })
+
+    </script>
+
+{% endblock %}
+
+{% block modal %}
+    <div class="modal fade" id="addVariablesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: whitesmoke">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title text-center" id="myModalLabel">Legg til nytt item</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination" style="margin: 0;">
+                                <li class="active"><a href="#setVariable" data-toggle="tab">Velg variable</a></li>
+                                <li><a href="#setRandom" data-toggle="tab">Tilfeldig variable</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="tab-content" id="tabs">
+                        <div class="tab-pane active" id="setVariable">
+                            <form id="variabelForm">
+                                {% csrf_token %}
+                            </form>
+                        </div>
+                        <div class="tab-pane" id="setRandom">
+                            <p>Test</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

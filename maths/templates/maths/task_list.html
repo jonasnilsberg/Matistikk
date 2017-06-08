@@ -114,6 +114,12 @@
                         <td>{{ task.author.get_full_name }}</td>
                         <td>
                             <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                                <button type="button" value="{{ task.id }}" class="btn btn-info items"
+                                {% if not task.variableTask %}
+                                disabled="disabled"
+                                {% endif %}><i
+                                        class="fa fa-sitemap" aria-hidden="true"></i> Items
+                                </button>
                                 <a class="btn btn-info"
                                    href="{% url 'maths:taskUpdate' task.id %}" id="update{{ task.id }}"><span
                                         class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater
@@ -201,6 +207,12 @@
             });
         });
 
+        $('.items').click(function () {
+            var id = $(this).val();
+            var url = "{% url 'maths:taskDetail' task_pk=1234 %}".replace(/1234/, id);
+            window.location.href = url;
+        });
+
         /**
          * This function matches the text in the search field with the content in the table given in the parameter.
          * and removes rows that don't match the search criteria.
@@ -254,11 +266,11 @@
                     if (task.geogebra_preview != undefined) {
                         $("#previewbilde").attr("src", 'data:image/png;base64,' + (task.geogebra_preview));
                         $('#geogebradiv').show();
-                        if(!notGeoDiv.hasClass('hidden')){
+                        if (!notGeoDiv.hasClass('hidden')) {
                             notGeoDiv.addClass('hidden');
                         }
                     } else {
-                        if(notGeoDiv.hasClass('hidden')){
+                        if (notGeoDiv.hasClass('hidden')) {
                             notGeoDiv.removeClass('hidden');
                         }
                     }
@@ -302,7 +314,8 @@
                     <h4 class="modal-title">Forhåndsvis oppgave</h4>
                 </div>
                 <div class="modal-body" style="min-height: 30vh;">
-                    <img src="http://dkclasses.com/images/loading.gif" id="loading-indicator" class="loading-indicator" style="display:none"/>
+                    <img src="http://dkclasses.com/images/loading.gif" id="loading-indicator" class="loading-indicator"
+                         style="display:none"/>
                     <div id="previewBody" class="row hidden">
                         <div class="col-md-3 hidden" id="notgeogebradiv"></div>
                         <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">

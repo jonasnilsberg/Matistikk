@@ -4,7 +4,7 @@ from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, \
-    GeogebraAnswer
+    GeogebraAnswer, Item
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
@@ -182,8 +182,14 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
         task = form.save(commit=False)
         task.author = self.request.user
         messages.success(self.request, 'Oppgave med navnet: ' + task.title + " ble opprettet.")
+        variable_task = self.request.POST['variables']
+        if variable_task:
+            task.variableTask = True
         task.save()
 
+        if task.variableTask:
+            item = Item(task=task, variables=variable_task)
+            item.save()
         if task.answertype == 2:
             options = self.request.POST['options']
             optiontable = options.split('|||||')
@@ -334,6 +340,40 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
         context = super(TaskListView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         context['geogebratask'] = GeogebraTask.objects.all()
+        return context
+
+
+class TaskDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.DetailView):
+    """
+        Class that displays information about a single task object based on the task_id.
+
+        :func:`AdministratorCheck`:
+            inherited permission check, checks if the logged in user is an administrator.
+        **AjaxResponseMixin:**
+            This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
+        **DetailView:**
+            Inherits generic.DetailView that makes a page representing a specific object.
+    """
+    template_name = 'maths/task_detail.html'
+    model = Task
+    pk_url_kwarg = 'task_pk'
+
+    def post_ajax(self, request, *args, **kwargs):
+        variables = request.POST['variables']
+        item = Item(task_id=self.kwargs.get('task_pk'), variables=variables)
+        item.save()
+        data = {
+            'id': item.id
+        }
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super(TaskDetailView, self).get_context_data(**kwargs)
+        task_id = self.kwargs.get('task_pk')
+        items = Item.objects.filter(task_id=task_id)
+        geogebra = GeogebraTask.objects.get(task_id=task_id)
+        context['items'] = items
+        context['geogebra'] = geogebra
         return context
 
 
@@ -918,8 +958,6 @@ class AnswerListView(AnswerCheck, generic.ListView):
         if self.kwargs.get('grade_pk'):
             context['fromGrade'] = self.kwargs.get('grade_pk')
         return context
-
-
 
 
 def export_data(request, test_pk):

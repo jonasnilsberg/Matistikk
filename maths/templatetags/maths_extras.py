@@ -71,3 +71,14 @@ def get_answered(test, username):
     """
     answer = Answer.objects.filter(test=test, user__username=username).first()
     return answer
+
+
+@register.simple_tag
+def get_variable_count(item):
+    """
+    Returns the variable count of a task.
+    :param item: item of a task
+    :return: variable count.
+    """
+    variable_table = item.variables.split('|||||')
+    return variable_table

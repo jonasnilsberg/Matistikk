@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'matistikk.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-"""     THIS DATABASE WAS USED IN DEVELOPMENT """
+"""     THIS DATABASE WAS USED IN DEVELOPMENT
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -94,7 +94,7 @@ DATABASES = {
 
         },
     }
-}
+}"""
 
 ALLOWED_HOSTS = ["192.168.1.113", "127.0.0.1", "localhost", "192.168.1.22", "158.38.120.33"]
 # Password validation
@@ -144,6 +144,12 @@ DATABASES = {
         'NAME': os.path.join(PROJECT_DIR, 'lokaldb.db'),
     }
 }"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
+    }
+}
 
 AUTH_USER_MODEL = 'administration.Person'
 

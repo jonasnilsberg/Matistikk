@@ -38,6 +38,7 @@ class Task(models.Model):
     answertype = models.IntegerField()
     reasoning = models.BooleanField()
     extra = models.BooleanField()
+    variableTask = models.BooleanField(default=False)
     author = models.ForeignKey(Person)
     category = models.ManyToManyField(Category)
 
@@ -46,6 +47,14 @@ class Task(models.Model):
 
     def __str__(self):
         return str(self.id) + " - " + self.title
+
+
+class Item(models.Model):
+    task = models.ForeignKey(Task)
+    variables = models.CharField(max_length=500)
+
+    def __str__(self):
+        return self.task.title + " - " + self.variables
 
 
 class MultipleChoiceTask(models.Model):
@@ -61,8 +70,8 @@ class MultipleChoiceTask(models.Model):
     correct = models.BooleanField()
 
     def __str__(self):
-       # return self.task.title + " - Flervalg: " + self.option
         return self.option
+
 
 class GeogebraTask(models.Model):
     """
