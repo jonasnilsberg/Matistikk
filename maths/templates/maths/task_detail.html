@@ -1,9 +1,38 @@
 {% extends 'matistikk/base.html' %}
 {% load staticfiles %}
 {% load maths_extras %}
+<!--Loads the tag library-->
+{% load bootstrap3 %}
+<!-- Loads CSS and javascript-->
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<!--Display django.contrib.messages as Bootstrap alerts-->
+{% bootstrap_messages %}
 
 {% block head %}
     <script type="text/javascript" src="{% static 'administration/../../static/maths/js/deployggb.js' %}"></script>
+    <!--Imports Tinymce-->
+    <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <!--Imports mathquill-->
+    <script type="text/javascript"
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+    <script>
+        var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
+        tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
+        tinymce.init({
+            selector: '#descriptionText',
+            plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: [
+                'bold italic underline fontsizeselect | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen '
+            ],
+            menubar: false,
+            statusbar: false,
+            body_id: 'tasktextID',
+            width: '100%',
+            height: '250px'
+        });
+    </script>
 {% endblock %}
 
 {% block body %}
@@ -25,7 +54,7 @@
                             </thead>
                             <tbody>
                             {% for item in items %}
-                                <tr class="itemrow">
+                                <tr class="itemrow" id="item{{ item.id }}">
                                     <td><input type="radio" name="itemradio"></td>
                                     {% get_variable_count item as variables %}
                                     {% for variable in variables %}
@@ -43,13 +72,13 @@
             </div>
         </div>
         <div class="panel-footer">
-            <div class="row">
-                <div class="col-md-3">
-                    <button class="btn btn-primary addItem"><i class="fa fa-plus" aria-hidden="true"></i>
-                        Legg til nytt item
-                    </button>
-                </div>
-            </div>
+            {% bootstrap_messages %}
+            <button class="btn btn-primary addItem"><i class="fa fa-plus" aria-hidden="true"></i>
+                Legg til nytt item
+            </button>
+            <button class="btn btn-primary variableDescription" data-toggle="modal" data-target="#descriptionModal">
+                <i class="fa fa-info-circle" aria-hidden="true"></i> Beskrivelse av Variable
+            </button>
         </div>
     </div>
 
@@ -102,6 +131,8 @@
         // Metoden benyttes til å legge GeoGebra med forhåndsvalgt konfigurasjon inn i en applet
         window.onload = function () {
             applet.inject('applet_container', 'preferhtml5');
+            setContenteditable(false);
+            $('.mce-toolbar-grp').addClass('hidden');
         };
         $(document).ready(function () {
             $("tr").eq(1).addClass('success').find(':radio').prop('checked', true);
@@ -121,16 +152,22 @@
                     type: 'POST',
                     url: '{% url 'maths:taskDetail' task_pk=1234 %}'.replace(/1234/, task_id),
                     data: {
+                        'updateDescription': false,
                         'variables': variables,
                         'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
                     },
                     dataType: 'json',
                     success: function (data) {
-                        $("table > tbody").append("<tr id='item" + data.id + "'><td><input type='radio' name='itemradio'></td></tr>");
-                        for (var i = 0; i < variableTable.length; i++) {
-                            $('#item' + data.id).append("<td>" + variableTable[i] + "</td>");
+                        if ($('#item' + data.id).length == 0) {
+                            $("table > tbody").append("<tr id='item" + data.id + "'></tr>");
+                            $('#item' + data.id).append("<td><input type='radio' name='itemradio'></td>");
+                            for (var i = 0; i < variableTable.length; i++) {
+                                $('#item' + data.id).append("<td>" + variableTable[i] + "</td>");
+                            }
+                            $('#item' + data.id).addClass('itemrow').click().focus();
+                        } else {
+                            $('#item' + data.id).click();
                         }
-                        $('#item' + data.id).addClass('itemrow');
                     },
                     error: function (xhr) {
                         alert(xhr.responseText);
@@ -160,7 +197,46 @@
             $('#variabelForm').append('<button type="submit" class="btn btn-success variabelFormGroup"><i class="fa fa-floppy-o"aria-hidden="true"></i>Sett inn parameter</button>');
             $('#addVariablesModal').modal('show');
 
-        })
+        });
+
+        function setContenteditable(value) {
+            tinymce.get('descriptionText').getBody().setAttribute('contenteditable', value);
+        }
+
+        function updateDescription(btn) {
+            var task_id = "{{ task.id }}";
+            if ($(btn).hasClass('btn-primary')) {
+                setContenteditable(true);
+                $(btn).removeClass('btn-primary').addClass('btn-success').find('span').text(' Lagre endringer');
+                $('.mce-toolbar-grp').removeClass('hidden');
+                tinymce.execCommand('mceFocus', false, 'descriptionText');
+
+            } else {
+                var description = tinymce.get('descriptionText').getContent();
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'maths:taskDetail' task_pk=1234 %}'.replace(/1234/, task_id),
+                    data: {
+                        'updateDescription': true,
+                        'description': description,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#descriptionSuccess').removeClass('hidden');
+                        $("#descriptionSuccess").fadeTo(5000, 500).slideUp(500, function () {
+                            $('#descriptionSuccess').slideUp(500);
+                        });
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+                $(btn).removeClass('btn-success').addClass('btn-primary').find('span').text(' Oppdater beskrivelse');
+                setContenteditable(false);
+                $('.mce-toolbar-grp').addClass('hidden');
+            }
+        }
 
     </script>
 
@@ -196,6 +272,35 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="descriptionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: whitesmoke">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title text-center" id="myModalLabel">Beskrivelse av variablene</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-10 col-centered">
+                    <textarea id="descriptionText">
+                        {% if task.variableDescription %}{{ task.variableDescription }}{% else %}Ingen
+                            beskrivelse.{% endif %}
+                    </textarea>
+                        <div id="descriptionSuccess" class="alert alert-success hidden" style="margin-top: 10px;">
+                            <strong>Oppdatert!</strong> Beskrivelsen av variablene ble oppdatert.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary pull-left" onclick="updateDescription(this)">
+                        <i class="fa fa-pencil" aria-hidden="true"></i> <span>Oppdater beskrivelse</span>
+                    </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                 </div>
             </div>

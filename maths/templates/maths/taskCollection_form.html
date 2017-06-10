@@ -51,6 +51,16 @@
             statusbar: false,
             readonly: 1
         });
+        tinymce.init({
+            selector: '#taskVariableDescription',
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            readonly: 1,
+            height: '150px'
+        });
     </script>
 {% endblock %}
 {% block body %}
@@ -63,6 +73,7 @@
                 {% csrf_token %}
                 {% bootstrap_field form.test_name addon_before='<i class="fa fa-book" aria-hidden="true"></i>' %}
                 {% bootstrap_field form.tasks field_class='hidden' %}
+                {% bootstrap_field form.items show_label=false field_class='hidden' %}
                 <div id="selectTaskWarning" class="alert alert-warning hidden">
                     <strong>Ikke lagret!</strong> Vennligst velg noen oppgaver.
                 </div>
@@ -99,7 +110,7 @@
                         </thead>
                         <tbody>
                         {% for task in tasks %}
-                            <tr style="cursor: pointer">
+                            <tr id="task{{ task.id }}" style="cursor: pointer" data-variable="{{ task.variableTask }}">
                                 <td class="test"><input type="checkbox" value="{{ task.id }}"
                                 ></td>
                                 <td>{{ task.id }}</td>
@@ -123,7 +134,8 @@
                         </tbody>
                     </table>
                 </div>
-                <button id='submitPasswordBtn' type="submit" class="hidden"></button>
+                <h4>Antall valgte oppgaver: <span id="itemsSelected">0</span></h4>
+                <button id='submitTaskCollectionBtn' type="submit" class="hidden"></button>
             </form>
         </div>
         <div class="panel-footer">
@@ -133,41 +145,138 @@
         </div>
     </div>
     <script>
+        $(document).ajaxSend(function (event, request, settings) {
+            $('#loading-indicator').removeClass('hidden');
+        });
+        /**
+         * This function runs when the ajax-call is completed.
+         */
+        $(document).ajaxComplete(function (event, request, settings) {
+            $('#loading-indicator').addClass('hidden');
+            $('.previewBody').removeClass('hidden');
+        });
         /**
          * Function that selects the clicked on tablerow and adds success to it.
          */
         $("#table tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
             var $button = $(this).find(':button');
+            var variableTask = $(this).data('variable');
             if ($(e.target).is(":button") || $(e.target).is('span')) {
                 preview($button);
             }
             else if (e.target.type == "checkbox") {
                 e.stopPropagation();
+                $('#tasktitlespan').text($(this).find('td').eq(2).text());
                 if ($checkbox.is(':checked')) {
                     $('#id_tasks option[value=' + $checkbox.val() + ']').attr('selected', true);
-                    $(this).addClass('success');
+                    if (variableTask == 'True') {
+                        $(this).addClass('info');
+                        getVariables($checkbox.val());
+                    } else {
+                        // Select item. Oppgaven har bare 1 item.
+                        $(this).addClass('success');
+                    }
                 } else {
-                    $('#id_tasks option[value=' + $checkbox.val() + ']').attr('selected', false);
-                    $(this).removeClass('success');
+                    if (variableTask == "True") {
+                        if ($(this).hasClass('success')) {
+                            $checkbox.prop('checked', true);
+                        }
+                        getVariables($checkbox.val());
+                    } else {
+                        $('#id_tasks option[value=' + $checkbox.val() + ']').attr('selected', false);
+                        $(this).removeClass('info success');
+                        $checkbox.prop('checked', false);
+
+                    }
                 }
             } else {
                 $checkbox.click();
             }
         });
+
+        function getVariables(id) {
+            $('.previewBody').addClass('hidden');
+            $('#itemTaskID').text(id);
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'maths:taskCollectionCreate' %}',
+                data: {
+                    'id': id
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('.itemHead > tr > th').not(':first').remove();
+                    $('.itemBody > tr').remove();
+                    tinyMCE.get('taskVariableDescription').getBody().style.backgroundColor = "#f5f5f5";
+                    if (data.description) {
+                        tinyMCE.get('taskVariableDescription').setContent(data.description);
+                    } else {
+                        tinyMCE.get('taskVariableDescription').setContent('<h5>Ingen beskrivelse er gitt<h5>');
+                    }
+                    var ids = data.ids;
+                    var variables = data.variables;
+                    var parameterCount = variables[0].split('|||||').length;
+                    for (var i = 1; i <= parameterCount; i++) {
+                        $('.itemHead > tr').append('<th>Variabel ' + i + '</th>')
+                    }
+                    for (var i = 0; i < ids.length; i++) {
+                        $('.itemBody').append('<tr id="item' + ids[i] + '" class="itemrow"><td><input type="checkbox" value="' + ids[i] + '"></td></tr>');
+                        var variableTable = variables[i].split('|||||');
+                        for (var x = 0; x < variableTable.length; x++) {
+                            $('#item' + ids[i]).append("<td>" + variableTable[x] + "</td>");
+                        }
+                        if ($('#id_items option[value=' + ids[i] + ']').is(':selected')) {
+                            $('#item' + ids[i]).addClass('success').find(':checkbox').prop('checked', true);
+                        }
+                    }
+                    $('#itemModal').modal('show');
+                },
+                error: function () {
+                    alert('error');
+                }
+            });
+        }
+        /**
+         * Function that selects the clicked on itemrow and adds success to it.
+         */
+        $(document).on('click', '.itemrow', function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            if (e.target.type == "checkbox") {
+                if ($checkbox.is(':checked')) {
+                    $(this).addClass('success');
+                    $('#id_items option[value=' + $checkbox.val() + ']').attr('selected', true);
+                    itemCount();
+                } else {
+                    $('#id_items option[value=' + $checkbox.val() + ']').attr('selected', false);
+                    $(this).removeClass('success');
+                    itemCount();
+
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
+
+        function itemCount() {
+            var selectedItems = $("#id_items :selected").length;
+            $('#itemsSelected').text(selectedItems);
+        }
+
+
         /**
          * Function that tries to submit the form and gives feedback in form of a success or error message depending
          * ot how it goes.
          */
         function submitForm() {
-            $('#submitPasswordBtn').click();
+            $('#submitTaskCollectionBtn').click();
             var taskCheck = false;
             $('#id_tasks option').each(function () {
                 if (this.selected)
                     taskCheck = true;
             });
             if (taskCheck == true) {
-                $('#submitPasswordBtn').click();
+                $('#submitTaskCollectionBtn').click();
             } else {
                 $("#selectTaskWarning").removeClass("hidden");
                 $("#selectTaskWarning").fadeTo(5000, 500).slideUp(500, function () {
@@ -176,6 +285,7 @@
 
             }
         }
+
         $(document).ready(function () {
             /**
              * Sets up the multiselect widget for the category filtering.
@@ -258,6 +368,7 @@
          */
         function preview(e) {
             var id = e.val();
+            $('.previewBody').addClass('hidden');
             $('#geogebradiv').hide();
             $('#textanswerdiv').hide();
             $('#reasoningdiv').hide();
@@ -307,6 +418,46 @@
 {% endblock %}
 
 {% block modal %}
+    <div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document" style="width: 90%">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: whitesmoke">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title text-center" id="myModalLabel"><span id="tasktitlespan"></span> - Velg items
+                    </h3>
+                </div>
+                <div class="modal-body previewBody hidden">
+                    <span class="hidden" id="itemTaskID"></span>
+                    <img src="{% static 'administration/images/loading.gif' %}" class="loading-indicator hidden">
+                    <div class="row">
+                        <div class="col-md-6" style="padding-right: 10px">
+                            <label for="taskVariableDescription" style="padding-bottom: 5px; padding-top: 5px;">Beskrivelse
+                                av variablene.</label>
+                            <textarea id="taskVariableDescription"></textarea>
+                        </div>
+                        <div class="col-md-6 modalOverflow">
+                            <table class="table table-striped">
+                                <thead class="itemHead">
+                                <tr>
+                                    <th class="col-md-1"></th>
+                                </tr>
+                                </thead>
+                                <tbody class="itemBody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="previewTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" style="width: 95%">
             <div class="modal-content">
@@ -315,7 +466,8 @@
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Forhåndsvis oppgave</h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body previewBody">
+                    <img src="{% static 'administration/images/loading.gif' %}" class="loading-indicator hidden">
                     <div class="row">
                         <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
                             <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
@@ -359,4 +511,17 @@
             </div>
         </div>
     </div>
+    <script>
+        $('#itemModal').on('hidden.bs.modal', function () {
+            var testID = $('#itemTaskID').text();
+            var taskRow = $('#task' + testID);
+            if ($('.itemBody .success').length > 0) {
+                taskRow.removeClass('info').addClass('success');
+                taskRow.find(':checkbox').prop('checked', true);
+            } else {
+                taskRow.find(':checkbox').prop('checked', false);
+                taskRow.removeClass('info success');
+            }
+        })
+    </script>
 {% endblock %}

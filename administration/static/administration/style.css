@@ -369,13 +369,14 @@ html, body {
         transform: scale3D(0, 0, 1);
     }
 }
+
 /* End */
 .box:hover {
     background-color: darkgray; /* make this whatever you want */
     cursor: pointer;
 }
 
-#tasktextdiv{
+#tasktextdiv {
     height: 20%;
 }
 
@@ -388,4 +389,9 @@ html, body {
 
 .itemrow {
     cursor: pointer;
+}
+
+.col-centered {
+    float: none;
+    margin: 0 auto;
 }

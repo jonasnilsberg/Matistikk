@@ -1,5 +1,6 @@
 <!--Extends the base.html file that includes different imports and the navbar-->
 {% extends 'matistikk/base.html' %}
+{% load static %}
 <!--Loads the tag library-->
 {% load bootstrap3 %}
 <!--Display django.contrib.messages as Bootstrap alerts-->
@@ -64,7 +65,7 @@
                             <th>Brukerinfo</th>
                         </tr>
                         </thead>
-                        <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator"
+                        <img src="{% static 'administration/images/loading.gif' %}" class="loading-indicator"
                              style="display:none"/>
                         <tbody class="tableBody">
                         {% for person in object_list %}
@@ -97,7 +98,7 @@
                             <th>Brukerinfo</th>
                         </tr>
                         </thead>
-                        <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator"
+                        <img src="{% static 'administration/images/loading.gif' %}" class="loading-indicator"
                              style="display:none"/>
                         <tbody class="tableBody">
                         {% for person in object_list %}
@@ -130,7 +131,7 @@
                             <th>Brukerinfo</th>
                         </tr>
                         </thead>
-                        <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator"
+                        <img src="{% static 'administration/images/loading.gif' %}" class="loading-indicator"
                              style="display:none"/>
                         <tbody class="tableBody">
                         {% for person in object_list %}
@@ -164,7 +165,7 @@
                             <th>Brukerinfo</th>
                         </tr>
                         </thead>
-                        <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator"
+                        <img src="{% static 'administration/images/loading.gif' %}" class="loading-indicator"
                              style="display:none"/>
                         <tbody class="tableBody">
                         {% for person in object_list %}
@@ -208,7 +209,7 @@
                             <th>Brukerinfo</th>
                         </tr>
                         </thead>
-                        <img src="http://dkclasses.com/images/loading.gif" class="loading-indicator"
+                        <img src="{% static 'administration/images/loading.gif' %}" class="loading-indicator"
                              style="display:none"/>
                         <tbody class="tableBody">
                         {% for person in object_list %}

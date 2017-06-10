@@ -49,6 +49,20 @@
             readonly: 1,
             body_id: 'tasktextID'
         });
+        tinymce.init({
+            selector: '#variableDescription',
+            plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: [
+                'bold italic underline fontsizeselect | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen '
+            ],
+            statusbar: false,
+            fontsize_formats: '8pt 10pt 12pt 14pt 18pt',
+            menubar: false,
+            height: '250px',
+            width: '100%'
+        });
+
     </script>
 
 {% endblock %}
@@ -275,7 +289,7 @@
             }
             for (var i = 1; i <= parseInt(variableCount); i++) {
                 $('#variabelForm').append("<div class='form-group variabelFormGroup'><label for='variabel" + i + "'>Variabel " + i + ":</label> <input type='variabel" + i + "' placeholder='Skriv inn verdien for variabel " + i + "' class='form-control' id='variabel" + i + "'required></div>");
-                $('#variabel' + i).val(ggbApplet.getValue('variabel'+i));
+                $('#variabel' + i).val(ggbApplet.getValue('variabel' + i));
             }
             $('#variabelForm').append('<button type="submit" class="btn btn-success variabelFormGroup"><i class="fa fa-floppy-o"aria-hidden="true"></i>Sett inn parameter</button>');
             $('#addVariablesModal').modal('show');
@@ -314,8 +328,10 @@
             }
             var taskname1 = document.getElementById('taskname');
             var taskname2 = document.getElementById('id_title');
-            var tasktext1 = tinyMCE.activeEditor.getContent();
+            var tasktext1 = tinyMCE.get('tasktext').getContent();
             var tasktext2 = document.getElementById('id_text');
+            var variableDescription = tinyMCE.get('variableDescription').getContent();
+            $('#id_variableDescription').val(variableDescription);
             var reasoning1 = document.getElementById('reasoning');
             var reasoning2 = document.getElementById('id_reasoning');
             var extra1 = document.getElementById('extra');
@@ -448,7 +464,7 @@
                     variabelInputField.val(prevValue + input + "|||||")
                 }
                 var input = variabelInputField.val();
-                variabelInputField.val(input.slice(0,-5));
+                variabelInputField.val(input.slice(0, -5));
                 $('#addVariablesModal').modal('hide');
             });
             /**
@@ -531,7 +547,7 @@
                         <nav aria-label="Page navigation">
                             <ul class="pagination" style="margin: 0;">
                                 <li class="active"><a href="#setVariable" data-toggle="tab">Velg variable</a></li>
-                                <li><a href="#setRandom" data-toggle="tab">Tilfeldig variable</a></li>
+                                <li><a href="#description" data-toggle="tab">Beskrivelse</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -540,8 +556,12 @@
                             <form id="variabelForm">
                             </form>
                         </div>
-                        <div class="tab-pane" id="setRandom">
-                            <p>Test</p>
+                        <div class="tab-pane" id="description">
+                            <div class="col-md-10 col-centered">
+                                <form id="descriptionForm" style="margin-top: 15px;">
+                                    <textarea id="variableDescription" placeholder="Legg til en beskrivelse av variablene i denne oppgaven."></textarea>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

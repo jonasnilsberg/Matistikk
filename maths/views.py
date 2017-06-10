@@ -359,12 +359,29 @@ class TaskDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.Detail
     pk_url_kwarg = 'task_pk'
 
     def post_ajax(self, request, *args, **kwargs):
-        variables = request.POST['variables']
-        item = Item(task_id=self.kwargs.get('task_pk'), variables=variables)
-        item.save()
-        data = {
-            'id': item.id
-        }
+        update_description = request.POST['updateDescription']
+        print(update_description)
+        if update_description in 'true':
+            description = request.POST['description']
+            task = Task.objects.get(id=self.kwargs.get('task_pk'))
+            task.variableDescription = description
+            task.save()
+            data = {
+                'id': task.id
+            }
+        else:
+            variables = request.POST['variables']
+            if not Item.objects.filter(task_id=self.kwargs.get('task_pk'), variables=variables).exists():
+                item = Item(task_id=self.kwargs.get('task_pk'), variables=variables)
+                item.save()
+                data = {
+                    'id': item.id
+                }
+            else:
+                item = Item.objects.get(task_id=self.kwargs.get('task_pk'), variables=variables)
+                data = {
+                    'id': item.id
+                }
         return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
@@ -465,7 +482,7 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
         return super(TaskUpdateView, self).form_valid(form)
 
 
-class TaskCollectionCreateView(AdministratorCheck, generic.CreateView):
+class TaskCollectionCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.CreateView):
     """
     Class that creates a taskCollection.
 
@@ -477,7 +494,22 @@ class TaskCollectionCreateView(AdministratorCheck, generic.CreateView):
     """
     template_name = 'maths/taskCollection_form.html'
     model = TaskCollection
-    fields = ['test_name', 'tasks']
+    fields = ['test_name', 'tasks', 'items']
+
+    def get_ajax(self, request, *args, **kwargs):
+        ids = []
+        variables = []
+        id = request.GET['id']
+        items = Item.objects.filter(task_id=id)
+        for item in items:
+            ids.append(item.id)
+            variables.append(item.variables)
+        data = {
+            'ids': ids,
+            'variables': variables,
+            'description': item.task.variableDescription
+        }
+        return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         """

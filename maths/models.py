@@ -39,6 +39,7 @@ class Task(models.Model):
     reasoning = models.BooleanField()
     extra = models.BooleanField()
     variableTask = models.BooleanField(default=False)
+    variableDescription = models.CharField(max_length=10000, null=True)
     author = models.ForeignKey(Person)
     category = models.ManyToManyField(Category)
 
@@ -98,6 +99,7 @@ class TaskCollection(models.Model):
     :author: The person that created the Task Collection.
     """
     tasks = models.ManyToManyField(Task, verbose_name='oppgaver')
+    items = models.ManyToManyField(Item)
     test_name = models.CharField(max_length=100, verbose_name='test navn')
     author = models.ForeignKey(Person)
 
