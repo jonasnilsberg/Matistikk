@@ -1,5 +1,6 @@
 <!--Extends the base.html file that includes different imports and the navbar-->
 {% extends 'matistikk/base.html' %}
+{% load static %}
 <!--Loads the tag library-->
 {% load bootstrap3 %}
 <!-- Loads CSS and javascript-->
@@ -40,7 +41,7 @@
                         </tbody>
                     </table>
                 </div>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStudents"
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStudents" style="margin-top: 5px "
                         id="addStudentsBtn">
                     Legg til elever
                 </button>

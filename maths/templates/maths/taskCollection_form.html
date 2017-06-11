@@ -73,7 +73,7 @@
                 {% csrf_token %}
                 {% bootstrap_field form.test_name addon_before='<i class="fa fa-book" aria-hidden="true"></i>' %}
                 {% bootstrap_field form.tasks field_class='hidden' %}
-                {% bootstrap_field form.items show_label=false field_class='hidden' %}
+                {% bootstrap_field form.items show_label=false field_class='' %}
                 <div id="selectTaskWarning" class="alert alert-warning hidden">
                     <strong>Ikke lagret!</strong> Vennligst velg noen oppgaver.
                 </div>
@@ -175,7 +175,9 @@
                         getVariables($checkbox.val());
                     } else {
                         // Select item. Oppgaven har bare 1 item.
+                        getVariables($checkbox.val());
                         $(this).addClass('success');
+
                     }
                 } else {
                     if (variableTask == "True") {
@@ -206,31 +208,37 @@
                 },
                 dataType: 'json',
                 success: function (data) {
-                    $('.itemHead > tr > th').not(':first').remove();
-                    $('.itemBody > tr').remove();
-                    tinyMCE.get('taskVariableDescription').getBody().style.backgroundColor = "#f5f5f5";
-                    if (data.description) {
-                        tinyMCE.get('taskVariableDescription').setContent(data.description);
-                    } else {
-                        tinyMCE.get('taskVariableDescription').setContent('<h5>Ingen beskrivelse er gitt<h5>');
-                    }
                     var ids = data.ids;
-                    var variables = data.variables;
-                    var parameterCount = variables[0].split('|||||').length;
-                    for (var i = 1; i <= parameterCount; i++) {
-                        $('.itemHead > tr').append('<th>Variabel ' + i + '</th>')
-                    }
-                    for (var i = 0; i < ids.length; i++) {
-                        $('.itemBody').append('<tr id="item' + ids[i] + '" class="itemrow"><td><input type="checkbox" value="' + ids[i] + '"></td></tr>');
-                        var variableTable = variables[i].split('|||||');
-                        for (var x = 0; x < variableTable.length; x++) {
-                            $('#item' + ids[i]).append("<td>" + variableTable[x] + "</td>");
+                    if (data.variableTask) {
+                        $('.itemHead > tr > th').not(':first').remove();
+                        $('.itemBody > tr').remove();
+                        tinyMCE.get('taskVariableDescription').getBody().style.backgroundColor = "#f5f5f5";
+                        if (data.description) {
+                            tinyMCE.get('taskVariableDescription').setContent(data.description);
+                        } else {
+                            tinyMCE.get('taskVariableDescription').setContent('<h5>Ingen beskrivelse er gitt<h5>');
                         }
-                        if ($('#id_items option[value=' + ids[i] + ']').is(':selected')) {
-                            $('#item' + ids[i]).addClass('success').find(':checkbox').prop('checked', true);
+                        var variables = data.variables;
+                        var parameterCount = variables[0].split('|||||').length;
+                        for (var i = 1; i <= parameterCount; i++) {
+                            $('.itemHead > tr').append('<th>Variabel ' + i + '</th>')
                         }
+                        for (var i = 0; i < ids.length; i++) {
+                            $('.itemBody').append('<tr id="item' + ids[i] + '" class="itemrow"><td><input type="checkbox" value="' + ids[i] + '"></td></tr>');
+                            var variableTable = variables[i].split('|||||');
+                            for (var x = 0; x < variableTable.length; x++) {
+                                $('#item' + ids[i]).append("<td>" + variableTable[x] + "</td>");
+                            }
+                            if ($('#id_items option[value=' + ids[i] + ']').is(':selected')) {
+                                $('#item' + ids[i]).addClass('success').find(':checkbox').prop('checked', true);
+                            }
+                        }
+                        $('#itemModal').modal('show');
+                    } else {
+                        alert('test');
+                        $('#id_items option[value=' + ids + ']').attr('selected', true);
+                        itemCount();
                     }
-                    $('#itemModal').modal('show');
                 },
                 error: function () {
                     alert('error');
@@ -414,6 +422,26 @@
                 }
             });
         }
+
+        function randomRow(val) {
+            var numRows = $('.itemrow').length;
+            if (val == 0) {
+                val = $('#randomInputVal').val();
+            }
+            if (val > numRows) {
+                val = numRows;
+            }
+            $('#itemTable tr.success').click();
+            while ($('#itemTable tr.success').length < val) {
+                var randomNum = Math.floor(Math.random() * numRows) + 1;
+                var randomtr = $('#itemTable tr').eq(randomNum);
+                if (!randomtr.hasClass('success')) {
+                    randomtr.click();
+                }
+            }
+
+
+        }
     </script>
 {% endblock %}
 
@@ -435,9 +463,32 @@
                             <label for="taskVariableDescription" style="padding-bottom: 5px; padding-top: 5px;">Beskrivelse
                                 av variablene.</label>
                             <textarea id="taskVariableDescription"></textarea>
+                            <label for="btnGroup" style="padding-top: 10px">Velg antall tilfeldige items.</label>
+                            <div id="btnGroup" class="btn-group" role="group" aria-label="...">
+                                <button type="button" class="btn btn-primary" onclick="randomRow(1)">1</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(2)">2</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(3)">3</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(4)">4</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(5)">5</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(6)">6</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(7)">7</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(8)">8</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(9)">9</button>
+                                <div class="input-group">
+                                    <input type="text" id="randomInputVal" class="form-control"
+                                           placeholder="Antall tilfeldig items"
+                                           aria-describedby="btnGroupAddon">
+                                    <span class="input-group-btn">
+        <button class="btn btn-primary" type="button" onclick="randomRow(0)">Velg</button>
+      </span>
+
+                                </div>
+
+
+                            </div>
                         </div>
                         <div class="col-md-6 modalOverflow">
-                            <table class="table table-striped">
+                            <table id="itemTable" class="table table-striped">
                                 <thead class="itemHead">
                                 <tr>
                                     <th class="col-md-1"></th>
@@ -522,6 +573,6 @@
                 taskRow.find(':checkbox').prop('checked', false);
                 taskRow.removeClass('info success');
             }
-        })
+        });
     </script>
 {% endblock %}

@@ -39,7 +39,7 @@ class Task(models.Model):
     reasoning = models.BooleanField()
     extra = models.BooleanField()
     variableTask = models.BooleanField(default=False)
-    variableDescription = models.CharField(max_length=10000, null=True)
+    variableDescription = models.CharField(max_length=10000, null=True, blank=True)
     author = models.ForeignKey(Person)
     category = models.ManyToManyField(Category)
 
@@ -52,7 +52,7 @@ class Task(models.Model):
 
 class Item(models.Model):
     task = models.ForeignKey(Task)
-    variables = models.CharField(max_length=500)
+    variables = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
         return self.task.title + " - " + self.variables

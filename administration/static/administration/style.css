@@ -8,7 +8,7 @@
     width: 300px;
 }
 
-* {
+.border-radius {
     border-radius: 0 !important;
 }
 
@@ -21,9 +21,7 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .btn {
-    border: 2px solid black;
     color: black;
-    border: 1px solid white;
 }
 
 .btn-primary {

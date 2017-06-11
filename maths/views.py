@@ -186,10 +186,8 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
         if variable_task:
             task.variableTask = True
         task.save()
-
-        if task.variableTask:
-            item = Item(task=task, variables=variable_task)
-            item.save()
+        item = Item(task=task, variables=variable_task)
+        item.save()
         if task.answertype == 2:
             options = self.request.POST['options']
             optiontable = options.split('|||||')
@@ -507,7 +505,8 @@ class TaskCollectionCreateView(AdministratorCheck, views.AjaxResponseMixin, gene
         data = {
             'ids': ids,
             'variables': variables,
-            'description': item.task.variableDescription
+            'description': item.task.variableDescription,
+            'variableTask': item.task.variableTask
         }
         return JsonResponse(data)
 
