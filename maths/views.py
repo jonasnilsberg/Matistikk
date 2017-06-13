@@ -110,13 +110,10 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         if self.request.user.role == 1:
             answeredTests = []
             answers = Answer.objects.filter(user=self.request.user)
-            print(answers)
             tests = Test.objects.filter(
                 Q(person=self.request.user) | Q(grade__in=self.request.user.grades.all()) | Q(
                     gruppe__in=self.request.user.gruppe_set.all())).distinct()
             answered = tests.filter(answer__in=answers).distinct().order_by('-answer__date_answered')
-            print(tests)
-            print(answered.values('id').distinct())
             for test in answered:
                 if test not in answeredTests:
                     answeredTests.append(test)
@@ -356,9 +353,17 @@ class TaskDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.Detail
     model = Task
     pk_url_kwarg = 'task_pk'
 
+    def get_ajax(self, request, *args, **kwargs):
+        item_id = request.GET['item_id']
+        item = Item.objects.get(id=item_id)
+        data = {
+            'description': item.task.variableDescription,
+            'variables': item.variables
+        }
+        return JsonResponse(data)
+
     def post_ajax(self, request, *args, **kwargs):
         update_description = request.POST['updateDescription']
-        print(update_description)
         if update_description in 'true':
             description = request.POST['description']
             task = Task.objects.get(id=self.kwargs.get('task_pk'))
@@ -492,7 +497,7 @@ class TaskCollectionCreateView(AdministratorCheck, views.AjaxResponseMixin, gene
     """
     template_name = 'maths/taskCollection_form.html'
     model = TaskCollection
-    fields = ['test_name', 'tasks', 'items']
+    fields = ['test_name', 'items']
 
     def get_ajax(self, request, *args, **kwargs):
         ids = []
@@ -726,7 +731,7 @@ class TestCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Create
             order_table = order_list.split('|||||')
             x = 1
             for order in order_table:
-                taskorder = TaskOrder(test=test, task_id=order)
+                taskorder = TaskOrder(test=test, item_id=order)
                 taskorder.save()
                 x += 1
         return super(TestCreateView, self).form_valid(form)
@@ -812,16 +817,13 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
         """
         context = super(AnswerCreateView, self).get_context_data(**kwargs)
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
-        geogebratasks = GeogebraTask.objects.filter(task__in=test.task_collection.tasks.all())
-        options = MultipleChoiceTask.objects.filter(task__in=test.task_collection.tasks.all())
-        randomtest = sorted(test.task_collection.tasks.all(), key=lambda x: random.random())
         context['test'] = test
-        context['randomtest'] = randomtest
-        context['geogebratask'] = geogebratasks
-        context['options'] = options
+        if test.randomOrder:
+            randomtest = sorted(test.task_collection.items.all(), key=lambda x: random.random())
+            context['randomtest'] = randomtest
         z = 0
         forms = []
-        for task in test.task_collection.tasks.all():
+        for item in test.task_collection.items.all():
             forms.append(CreateAnswerForm(prefix="task" + str(z)))
             z += 1
         context['formlist'] = forms
@@ -838,19 +840,19 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
         """
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
         y = 0
-        for task in test.task_collection.tasks.all():
+        for item in test.task_collection.items.all():
             text = request.POST["task" + str(y) + "-text"]
             reasoning = request.POST["task" + str(y) + "-reasoning"]
-            taskid = request.POST["task" + str(y) + "-task"]
+            itemid = request.POST["task" + str(y) + "-item"]
             timespent = request.POST["task" + str(y) + "-timespent"]
-            task = Task.objects.get(id=taskid)
-            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, task=task,
+            item = Item.objects.get(id=itemid)
+            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, item=item,
                             timespent=timespent)
             answer.date_answered = datetime.datetime.now()
             answer.save()
             base64 = request.POST["task" + str(y) + "-base64answer"]
             geogebradata = request.POST["task" + str(y) + "-geogebradata"]
-            if task.extra:
+            if item.task.extra:
                 geogebraanswer = GeogebraAnswer(answer=answer, base64=base64, data=geogebradata)
                 geogebraanswer.save()
             y += 1
@@ -1002,7 +1004,7 @@ def export_data(request, test_pk):
     if request.user.role is not 1:
         test = Test.objects.get(id=test_pk)
         answers = Answer.objects.filter(test=test)
-        column_names = ['task_id', 'user_id', 'text', 'reasoning', 'timespent', 'date_answered']
+        column_names = ['item_id', 'user_id', 'text', 'reasoning', 'timespent', 'date_answered']
         return excel.make_response_from_query_sets(answers, column_names, 'xlsx',
                                                    file_name=test.task_collection.test_name)
     else:

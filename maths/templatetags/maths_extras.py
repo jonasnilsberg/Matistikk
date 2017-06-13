@@ -1,5 +1,5 @@
 from django import template
-from maths.models import Answer, GeogebraAnswer, MultipleChoiceTask
+from maths.models import Answer, GeogebraAnswer, MultipleChoiceTask, GeogebraTask
 from administration.models import Gruppe, Person, Grade
 
 register = template.Library()
@@ -27,6 +27,20 @@ def get_geogebra(answer):
     :return: The geogebra answer.
     """
     return GeogebraAnswer.objects.filter(answer=answer)
+
+
+@register.simple_tag
+def get_geogebra_task(task):
+    return GeogebraTask.objects.get(task=task)
+
+
+@register.simple_tag
+def get_geogebra_count(test):
+    count = 0
+    for item in test.task_collection.items.all():
+        if item.task.extra:
+            count += 1
+    return count
 
 
 @register.simple_tag

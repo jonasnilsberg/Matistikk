@@ -145,10 +145,10 @@ class TaskOrder(models.Model):
     :task: The task
     """
     test = models.ForeignKey(Test)
-    task = models.ForeignKey(Task)
+    item = models.ForeignKey(Item, null=True)
 
     def __str__(self):
-        return str(self.test.id) + " - " + self.test.task_collection.test_name + " - " + self.task.title
+        return str(self.test.id) + " - " + self.test.task_collection.test_name + " - " + self.item.task.title + str(self.id)
 
 
 class Answer(models.Model):
@@ -161,7 +161,8 @@ class Answer(models.Model):
     :reasoning: Users reasoning behind the answer.
     :text: The answer.
     """
-    task = models.ForeignKey(Task)
+    task = models.ForeignKey(Task, null=True)
+    item = models.ForeignKey(Item, null=True)
     test = models.ForeignKey(Test)
     user = models.ForeignKey(Person)
     reasoning = models.CharField(max_length=32700, null=True)
@@ -170,7 +171,7 @@ class Answer(models.Model):
     timespent = models.FloatField(null=True)
 
     def __str__(self):
-        return "Svar: " + self.test.task_collection.test_name + " - " + self.task.title + " - " + self.user.get_full_name()
+        return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - " + self.user.get_full_name()
 
 
 class GeogebraAnswer(models.Model):
@@ -186,4 +187,4 @@ class GeogebraAnswer(models.Model):
     data = models.CharField(max_length=2000, null=True)
 
     def __str__(self):
-        return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.task.title + " - " + self.answer.user.get_full_name()
+        return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - " + self.answer.user.get_full_name()

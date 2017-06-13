@@ -57,6 +57,17 @@
             statusbar: false,
             readonly: 1
         });
+        tinymce.init({
+            selector: '#descriptionText',
+            plugins: 'placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: false,
+            menubar: false,
+            statusbar: false,
+            width: '100%',
+            height: '300px',
+            readonly: 1
+        });
 
 
     </script>
@@ -71,7 +82,8 @@
                     <h5><strong><i class="fa fa-calendar" aria-hidden="true"></i>
                         Publisert:</strong> {{ test.published }}</h5>
                     <h5><strong><i class="fa fa-random" aria-hidden="true"></i> Tilfeldig / Låst rekkefølge:</strong>
-                        {% if test.randomOrder %}Ja{% else %}Nei{% endif %} / {% if test.strictOrder %}Ja{% else %}Nei{% endif %}</h5>
+                        {% if test.randomOrder %}Ja{% else %}Nei{% endif %} / {% if test.strictOrder %}Ja{% else %}
+                            Nei{% endif %}</h5>
                 </div>
                 <div class="col-md-2">
                     <h5 id="id_dueDate"><strong><i class="fa fa-calendar" aria-hidden="true"></i>
@@ -92,6 +104,9 @@
         </div>
         <div class="panel-body">
             <ul class="nav nav-tabs">
+                {% if not students and not teachers and not grades and not groups %}
+                    <li id="studentTab" class="nav active"><a href="#notPublished" data-toggle="tab">Besvarelser</a></li>
+                {% endif %}
                 {% if students %}
                     <li id="studentTab" class="nav active"><a href="#A" data-toggle="tab">Elever</a></li>{% endif %}
                 {% if teachers %}
@@ -103,6 +118,11 @@
                 <li class="nav"><a href="#E" data-toggle="tab">Oppgaver</a></li>
             </ul>
             <div class="tab-content">
+                {% if not students and not teachers and not grades and not groups %}
+                    <div class="tab-pane fade in active" id="notPublished">
+                    <h3>Denne testen er ikke publisert til noen.</h3>
+                    </div>
+                {% endif %}
                 {% if students %}
                     <div class="tab-pane fade in active" id="A">
                         <table class="table table-hover table-striped table-responsive" id="studenttable">
@@ -255,17 +275,17 @@
                         </thead>
                         <tbody>
                         {% if test.randomOrder %}
-                            {% for task in test.task_collection.tasks.all %}
+                            {% for item in test.task_collection.items.all %}
                                 <tr class="clickable-row"
                                     data-href="#">
                                     <td>
-                                        {{ task.id }}
+                                        {{ item.id }}
                                     </td>
                                     <td>
-                                        {{ task.title }}
+                                        {{ item.task.title }}
                                     </td>
                                     <td>
-                                        {% for category in task.category.all %}
+                                        {% for category in item.task.category.all %}
                                             {% if forloop.last %}
                                                 {{ category }}
                                             {% else %}
@@ -274,10 +294,17 @@
                                         {% endfor %}
                                     </td>
                                     <td>
-                                        {{ task.author.get_full_name }}
+                                        {{ item.task.author.get_full_name }}
                                     </td>
                                     <td>
-                                        <button value="{{ task.id }}" type="button" onclick="previewTask(this)"
+                                        <button value="{{ item.task.id }}" data-item="{{ item.id }}" type="button"
+                                                onclick="itemDescription(this)"
+                                                {% if not item.task.variableTask %}disabled{% endif %}
+                                                class="btn btn-info btn-sm"><i class="fa fa-sitemap"
+                                                                               aria-hidden="true"></i>
+                                            Item
+                                        </button>
+                                        <button value="{{ item.task.id }}" type="button" onclick="previewTask(this)"
                                                 class="btn btn-info btn-sm"><span
                                                 class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
                                         </button>
@@ -285,17 +312,17 @@
                                 </tr>
                             {% endfor %}
                         {% else %}
-                            {% for task in test.taskorder_set.all %}
+                            {% for taskorder in test.taskorder_set.all %}
                                 <tr class="clickable-row"
                                     data-href="#">
                                     <td>
-                                        {{ task.task.id }}
+                                        {{ taskorder.item.id }}
                                     </td>
                                     <td>
-                                        {{ task.task.title }}
+                                        {{ taskorder.item.task.title }}
                                     </td>
                                     <td>
-                                        {% for category in task.task.category.all %}
+                                        {% for category in taskorder.item.task.category.all %}
                                             {% if forloop.last %}
                                                 {{ category }}
                                             {% else %}
@@ -304,10 +331,19 @@
                                         {% endfor %}
                                     </td>
                                     <td>
-                                        {{ task.task.author.get_full_name }}
+                                        {{ taskorder.item.task.author.get_full_name }}
                                     </td>
                                     <td>
-                                        <button value="{{ task.task.id }}" type="button" onclick="previewTask(this)"
+                                        <button value="{{ taskorder.item.task.id }}" data-item="{{ taskorder.item.id }}"
+                                                type="button"
+                                                onclick="itemDescription(this)"
+                                                {% if not taskorder.item.task.variableTask %}disabled{% endif %}
+                                                class="btn btn-info btn-sm"><i class="fa fa-sitemap"
+                                                                               aria-hidden="true"></i>
+                                            Item
+                                        </button>
+                                        <button value="{{ taskorder.item.task.id }}" type="button"
+                                                onclick="previewTask(this)"
                                                 class="btn btn-info btn-sm"><span
                                                 class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
                                         </button>
@@ -370,6 +406,12 @@
                         $('#groupTab').addClass('active');
                         $('#D').removeClass('fade');
                         $('#D').addClass('active');
+                        if ($('#groupTab').length == 0) {
+                            alert('test');
+                            $('#studentTab').addClass('active');
+                            $('#A').removeClass('fade');
+                            $('#A').addClass('active');
+                        }
                     }
                 }
             }
@@ -667,6 +709,40 @@
                 }
             });
         }
+        function itemDescription(btn) {
+            var taskID = btn.value;
+            var itemID = $(btn).data('item');
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'maths:taskDetail' 1234 %}'.replace(/1234/, taskID),
+                data: {
+                    'item_id': itemID
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.description) {
+                        tinyMCE.get('descriptionText').setContent(data.description);
+                    } else {
+                        tinyMCE.get('descriptionText').setContent('<h5>Ingen beskrivelse er gitt<h5>');
+                    }
+                    var variables = data.variables;
+                    var variableTable = variables.split('|||||');
+                    $('#variableTable tbody tr').remove();
+                    $('#variableTable thead tr th').remove();
+                    $('#variableTable tbody').append('<tr></tr>');
+                    for (var i = 0; i < variableTable.length; i++) {
+                        $('#variableTable thead tr').append('<th>Variabel ' + parseInt(i + 1) + '</th>');
+                        $('#variableTable tbody tr').append('<td>' + variableTable[i] + '</td>');
+                    }
+                    $('#descriptionModal').modal('show');
+
+                },
+                error: function (xhr) {
+                    alert('error');
+                    alert(xhr.responseText);
+                }
+            });
+        }
     </script>
 {% endblock %}
 
@@ -680,7 +756,8 @@
                     <h4 class="modal-title">Forhåndsvis oppgave</h4>
                 </div>
                 <div class="modal-body" style="min-height: 30vh;">
-                    <img src="{% static 'administration/images/loading.gif' %}" class="loading-indicator" style="display:none"/>
+                    <img src="{% static 'administration/images/loading.gif' %}" class="loading-indicator"
+                         style="display:none"/>
                     <div class="row hidden" id="previewBody">
                         <div class="col-md-3 hidden" id="notGeogebraDiv"></div>
                         <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
@@ -990,7 +1067,36 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="descriptionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: whitesmoke">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title text-center" id="myModalLabel">Beskrivelse av variablene</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-10 col-centered">
+                        <ul id="variabelList">
+                        </ul>
+                        <table id="variableTable" class="table table-bordered table-responsive">
+                            <thead>
+                            <tr></tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <textarea id="descriptionText">
+                    </textarea>
 
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         $('.clockpicker').clockpicker({
             autoclose: true

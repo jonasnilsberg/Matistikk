@@ -261,7 +261,7 @@
                 </div>
                 <div class="col-sm-5">
                     <div class="panel panel-info" style="border-right: 1px solid">
-                        <div class="panel-heading" style="pad">
+                        <div class="panel-heading">
                             <h4>Siste Publiserte Tester</h4>
                         </div>
                         <div class="panel-body" style="padding: 5px">
@@ -536,7 +536,7 @@
                                                     <p><strong>Frist: </strong>{% if test.dueDate %}
                                                         {{ test.dueDate }}{% else %}Ingen Frist.{% endif %}</p>
                                                     <p><strong>Antall
-                                                        Oppgaver: </strong>{{ test.task_collection.tasks.count }}</p>
+                                                        Oppgaver: </strong>{{ test.task_collection.items.count }}</p>
                                                     <p><strong>Laget
                                                         av: </strong>{{ test.task_collection.author.first_name }} {{ test.task_collection.author.last_name }}
                                                     </p>

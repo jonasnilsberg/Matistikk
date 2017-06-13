@@ -89,4 +89,4 @@ class CreateAnswerForm(forms.ModelForm):
 
     class Meta:
         model = Answer
-        fields = ['task', 'reasoning', 'text', 'timespent']
+        fields = ['reasoning', 'text', 'timespent', 'item']

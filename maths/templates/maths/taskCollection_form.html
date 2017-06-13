@@ -72,8 +72,7 @@
             <form class="form-margin" action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% bootstrap_field form.test_name addon_before='<i class="fa fa-book" aria-hidden="true"></i>' %}
-                {% bootstrap_field form.tasks field_class='hidden' %}
-                {% bootstrap_field form.items show_label=false field_class='' %}
+                {% bootstrap_field form.items show_label=false field_class='hidden' %}
                 <div id="selectTaskWarning" class="alert alert-warning hidden">
                     <strong>Ikke lagret!</strong> Vennligst velg noen oppgaver.
                 </div>
@@ -169,7 +168,6 @@
                 e.stopPropagation();
                 $('#tasktitlespan').text($(this).find('td').eq(2).text());
                 if ($checkbox.is(':checked')) {
-                    $('#id_tasks option[value=' + $checkbox.val() + ']').attr('selected', true);
                     if (variableTask == 'True') {
                         $(this).addClass('info');
                         getVariables($checkbox.val());
@@ -186,10 +184,11 @@
                         }
                         getVariables($checkbox.val());
                     } else {
-                        $('#id_tasks option[value=' + $checkbox.val() + ']').attr('selected', false);
+                        var itemID = $(this).attr('data-id');
+                        $('#id_items option[value=' + itemID + ']').attr('selected', false);
                         $(this).removeClass('info success');
                         $checkbox.prop('checked', false);
-
+                        itemCount();
                     }
                 }
             } else {
@@ -235,8 +234,8 @@
                         }
                         $('#itemModal').modal('show');
                     } else {
-                        alert('test');
                         $('#id_items option[value=' + ids + ']').attr('selected', true);
+                        $('#task' + id).attr('data-id', ids);
                         itemCount();
                     }
                 },
@@ -279,7 +278,7 @@
         function submitForm() {
             $('#submitTaskCollectionBtn').click();
             var taskCheck = false;
-            $('#id_tasks option').each(function () {
+            $('#id_items option').each(function () {
                 if (this.selected)
                     taskCheck = true;
             });
