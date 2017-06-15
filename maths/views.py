@@ -13,9 +13,9 @@ from django.db.models import Q
 import django_excel as excel
 from administration.views import AdministratorCheck, RoleCheck
 import datetime
-
 import random
 from django.http import HttpResponseRedirect
+import requests
 
 
 class AnswerCheck(views.UserPassesTestMixin):
@@ -95,7 +95,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             for a in ans:
                 if task_count == 0:
                     tabTwo.append(a)
-                    task_count = a.test.task_collection.tasks.count()
+                    task_count = a.test.task_collection.items.count()
                 task_count -= 1
             context['lastanswers'] = tabTwo[:15]
 
@@ -818,14 +818,20 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
         context = super(AnswerCreateView, self).get_context_data(**kwargs)
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
         context['test'] = test
+        """
+        Henter ut tilfedlige variable fra en annen server.
+        data = {
+            'variables': 3,
+        }
+        r = requests.get('http://127.0.0.1:8005/', params=data)
+        json_data = json.loads(r.text)
+        """
         if test.randomOrder:
             randomtest = sorted(test.task_collection.items.all(), key=lambda x: random.random())
             context['randomtest'] = randomtest
-        z = 0
         forms = []
-        for item in test.task_collection.items.all():
+        for z in range(0, len(test.task_collection.items.all())):
             forms.append(CreateAnswerForm(prefix="task" + str(z)))
-            z += 1
         context['formlist'] = forms
         return context
 
@@ -839,8 +845,7 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             :return: HttpResponseRedirect to the index page.
         """
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
-        y = 0
-        for item in test.task_collection.items.all():
+        for y in range(0, len(test.task_collection.items.all())):
             text = request.POST["task" + str(y) + "-text"]
             reasoning = request.POST["task" + str(y) + "-reasoning"]
             itemid = request.POST["task" + str(y) + "-item"]
@@ -855,7 +860,6 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             if item.task.extra:
                 geogebraanswer = GeogebraAnswer(answer=answer, base64=base64, data=geogebradata)
                 geogebraanswer.save()
-            y += 1
         url = reverse('maths:index')
         return HttpResponseRedirect(url)
 

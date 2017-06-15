@@ -73,6 +73,25 @@ class MultipleChoiceTask(models.Model):
     def __str__(self):
         return self.option
 
+"""
+class MultipleChoiceTask(models.Model):
+    Multiple choice options for a task
+
+    :task: The task that the multiple choice options are for.
+    :option: The multiple choice options
+    :correct: The correct answer
+    task = models.ForeignKey(Task)
+    question = models.CharField(max_length=500)
+
+    def __str__(self):
+        return self.task
+
+
+class MultipleChoice(models.Model):
+    option = models.CharField(max_length=500)
+    correct = models.BooleanField()
+"""
+
 
 class GeogebraTask(models.Model):
     """
@@ -98,7 +117,6 @@ class TaskCollection(models.Model):
     :test_name: The name of the test.
     :author: The person that created the Task Collection.
     """
-    tasks = models.ManyToManyField(Task, verbose_name='oppgaver')
     items = models.ManyToManyField(Item)
     test_name = models.CharField(max_length=100, verbose_name='test navn')
     author = models.ForeignKey(Person)

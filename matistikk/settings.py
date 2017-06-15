@@ -12,10 +12,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -43,7 +41,6 @@ INSTALLED_APPS = [
     'maths',
     'administration',
 
-
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -57,6 +54,7 @@ MIDDLEWARE_CLASSES = [
 ]
 
 ROOT_URLCONF = 'matistikk.urls'
+
 
 TEMPLATES = [
     {
@@ -76,7 +74,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'matistikk.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -115,7 +112,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
@@ -129,7 +125,6 @@ USE_L10N = True
 DATE_FORMAT = 'd.m.Y'
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%Y-%m-%d', '%d.%m.%Y')
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
@@ -157,10 +152,8 @@ AUTH_USER_MODEL = 'administration.Person'
 FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
                         "django_excel.TemporaryExcelFileUploadHandler")
 
-
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
     },
 }
-

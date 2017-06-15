@@ -393,3 +393,10 @@ html, body {
     float: none;
     margin: 0 auto;
 }
+
+ul.scrollbar::-webkit-scrollbar {
+    height: 0px;
+    width: 0px; /* remove scrollbar space */
+    background: transparent; /* optional: just make scrollbar invisible */
+}
+

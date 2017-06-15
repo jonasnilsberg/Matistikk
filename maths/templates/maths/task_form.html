@@ -104,9 +104,11 @@
                     <div class="panel panel-default" id="tekstRadio">
                         <div class=" panel-heading" role="tab">
                             <h4 class="panel-title">
-                                <label><input type="radio" name="answer_type" value="1" data-toggle="collapse"
-                                              data-parent="#accordion" data-target="#collapse5"
-                                              onclick="radioClick(this)" required id="textAnswerRadio">
+                                <label style="cursor: pointer"><input type="radio" name="answer_type" value="1"
+                                                                      data-toggle="collapse"
+                                                                      data-parent="#accordion" data-target="#collapse5"
+                                                                      onclick="radioClick(this)" required
+                                                                      id="textAnswerRadio">
                                     Tekstsvar</label>
                             </h4>
                         </div>
@@ -120,9 +122,10 @@
                     <div class="panel panel-default" id="flervalgRadio">
                         <div class="panel-heading" role="tab">
                             <p class="panel-title">
-                                <label><input type="radio" name="answer_type" value="2" data-toggle="collapse"
-                                              data-parent="#accordion" data-target="#collapse6"
-                                              onclick="radioClick(this)"> Flervalgstest</label>
+                                <label style="cursor: pointer"><input type="radio" name="answer_type" value="2"
+                                                                      data-toggle="collapse"
+                                                                      data-parent="#accordion" data-target="#collapse6"
+                                                                      onclick="radioClick(this)"> Flervalgstest</label>
                             </p>
                         </div>
                         <div id="collapse6" class="panel-collapse collapse">
@@ -147,12 +150,30 @@
                             </div>
                         </div>
                     </div>
+                    <div class="panel panel-default" id="flervalgExtraRadio">
+                        <div class=" panel-heading" role="tab">
+                            <h4 class="panel-title">
+                                <label style="cursor: pointer"><input type="radio" name="answer_type" value="4"
+                                                                      data-toggle="collapse" data-target="#collapse8"
+                                                                      data-parent="#accordion"
+                                                                      onclick="radioClick(this)" required
+                                                                      id="textMutipleRadio">
+                                    Flervalgstest</label>
+                            </h4>
+                        </div>
+                        <div id="collapse8" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Legg til dine flervalgsspørsmål i modalen som åpner seg.
+                            </div>
+                        </div>
+                    </div>
                     <div class="panel panel-default" id="geoRadio">
                         <div class=" panel-heading" role="tab">
                             <p class="panel-title">
-                                <label><input type="radio" name="answer_type" value="3" data-toggle="collapse"
-                                              data-parent="#accordion" data-target="#collapse7"
-                                              onclick="radioClick(this)"> Kun tillegg</label>
+                                <label style="cursor: pointer"><input type="radio" name="answer_type" value="3"
+                                                                      data-toggle="collapse"
+                                                                      data-parent="#accordion" data-target="#collapse7"
+                                                                      onclick="radioClick(this)"> Kun tillegg</label>
                             </p>
                         </div>
                         <div id="collapse7" class="panel-collapse collapse">
@@ -297,6 +318,69 @@
             $('#addVariablesModal').modal('show');
         });
 
+        function AddQuestion() {
+            $('#removeQuestionBtn').prop('disabled', false);
+            var questionDiv = $('#addMultipleChocice .modal-body .multiplechoice');
+            var numQuestions = questionDiv.length;
+            var ModalBody = $('#addMultipleChocice .modal-body');
+            var nextQuestion = parseInt(numQuestions + 1);
+            ModalBody.append('<div id="MutipleChoice' + nextQuestion + '" class="multiplechoice"><div><div class="form-group">' +
+                '<label for="question' + nextQuestion + '">Spørsmål:</label> <input type="text" class="form-control" id="question' + nextQuestion + '"' +
+                'placeholder="Skriv inn spørsmålet"></div><div class="row"><div id="choicesDiv' + nextQuestion + '" class="col-md-10">' +
+                '<label class="checkbox-inline"><input type="checkbox"><input type="text" placeholder="Alternativ 1"></label> ' +
+                '<label class="checkbox-inline"><input type="checkbox"><input type="text" placeholder="Alternativ 2"></label>' +
+                '<label class="checkbox-inline"><input type="checkbox"><input type="text" placeholder="Alternativ 3"></label> ' +
+                '</div><div class="col-md-2" id="choicesBtn' + nextQuestion + '"> <button style = "margin-right:4px;" class="btn btn-primary btn-sm border-radius" onclick="AddChoice(' + nextQuestion + ')">Legg til alternativ</button>' +
+                '<button class="btn btn-danger btn-sm border-radius" onclick="RemoveChoice(' + nextQuestion + ')">Fjern alternativ</button></div></div></div><hr></div>');
+        }
+
+        function RemoveQuestion() {
+            var questionDiv = $('#addMultipleChocice .modal-body .multiplechoice');
+            var numQuestions = questionDiv.length;
+            var lastQuestion = parseInt(numQuestions);
+            $('#MutipleChoice' + lastQuestion).remove();
+            if (numQuestions <= 2) {
+                $('#removeQuestionBtn').prop('disabled', true);
+            }
+        }
+
+        function AddChoice(num, btn) {
+            var numChoices = $('#choicesDiv' + num + ' :input[type=checkbox]').length + 1;
+            $('#choicesDiv' + num).append('<label class="checkbox-inline"><input type="checkbox"><input type="text" placeholder="Alternativ ' + numChoices + '"></label>');
+            if (numChoices >= 6) {
+                $('#choicesBtn' + num + ' .btn').first().prop('disabled', true);
+            } else if (numChoices > 2) {
+                $('#choicesBtn' + num + ' .btn').last().prop('disabled', false);
+            }
+        }
+
+        function RemoveChoice(num, btn) {
+            $('#choicesDiv' + num + ' .checkbox-inline').last().remove();
+            var numChoices = $('#choicesDiv' + num + ' :input[type=checkbox]').length - 1;
+            if (numChoices < 2) {
+                $('#choicesBtn' + num + ' .btn').last().prop('disabled', true);
+            } else if (numChoices < 6) {
+                $('#choicesBtn' + num + ' .btn').first().prop('disabled', false);
+
+            }
+        }
+
+        function Save() {
+            var questionDiv = $('#addMultipleChocice .modal-body .multiplechoice');
+            var numQuestions = questionDiv.length;
+            for (var i = 1; i <= numQuestions; i++) {
+                alert('MutipleChoice' + i);
+                $("#MutipleChoice" + i + " :input[type=text]").each(function () {
+                    alert($(this).val());
+                });
+                $("#MutipleChoice" + i + " :input[type=checkbox]").each(function () {
+                    alert($(this).is(':checked'));
+                });
+
+            }
+
+        }
+
 
         /**
          * This function changes the color of the "choose answertype"-panel
@@ -308,14 +392,26 @@
                 document.getElementById('tekstRadio').className = "panel panel-success";
                 document.getElementById('flervalgRadio').className = "panel panel-default";
                 document.getElementById('geoRadio').className = "panel panel-default";
+                document.getElementById('flervalgExtraRadio').className = "panel panel-default";
             } else if (valg == 2) {
                 document.getElementById('tekstRadio').className = "panel panel-default";
                 document.getElementById('flervalgRadio').className = "panel panel-success";
                 document.getElementById('geoRadio').className = "panel panel-default";
-            } else {
+                document.getElementById('flervalgExtraRadio').className = "panel panel-default";
+
+            } else if (valg == 3) {
                 document.getElementById('tekstRadio').className = "panel panel-default";
                 document.getElementById('flervalgRadio').className = "panel panel-default";
                 document.getElementById('geoRadio').className = "panel panel-success";
+                document.getElementById('flervalgExtraRadio').className = "panel panel-default";
+
+            } else {
+                document.getElementById('tekstRadio').className = "panel panel-default";
+                document.getElementById('flervalgRadio').className = "panel panel-default";
+                document.getElementById('geoRadio').className = "panel panel-default";
+                document.getElementById('flervalgExtraRadio').className = "panel panel-success";
+                $('#addMultipleChocice').modal('show');
+
             }
         }
 
@@ -561,7 +657,8 @@
                         <div class="tab-pane" id="description">
                             <div class="col-md-10 col-centered">
                                 <form id="descriptionForm" style="margin-top: 15px;">
-                                    <textarea id="variableDescription" placeholder="Legg til en beskrivelse av variablene i denne oppgaven."></textarea>
+                                    <textarea id="variableDescription"
+                                              placeholder="Legg til en beskrivelse av variablene i denne oppgaven."></textarea>
                                 </form>
                             </div>
                         </div>
@@ -625,6 +722,56 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addMultipleChocice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document" style="width: 80vw;">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: whitesmoke">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title text-center" id="myModalLabel">Flervalgsspørsmål</h3> <h5
+                        class="text-center">Velg alternativet som er korrekt</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="MutipleChoice1" class="multiplechoice">
+                        <div>
+                            <div class="form-group">
+                                <label for="question1">Spørsmål:</label>
+                                <input type="text" class="form-control" id="question1"
+                                       placeholder="Skriv inn spørsmålet">
+                            </div>
+                            <div class="row">
+                                <div id="choicesDiv1" class="col-md-10">
+                                    <label class="checkbox-inline"><input type="checkbox"><input type="text"
+                                                                                                 placeholder="Alternativ 1"></label>
+                                    <label class="checkbox-inline"><input type="checkbox"><input type="text"
+                                                                                                 placeholder="Alternativ 2"></label>
+                                    <label class="checkbox-inline"><input type="checkbox"><input type="text"
+                                                                                                 placeholder="Alternativ 3"></label>
+                                </div>
+                                <div class="col-md-2" id="choicesBtn1">
+                                    <button class="btn btn-primary btn-sm border-radius" onclick="AddChoice(1)">
+                                        Legg til alternativ
+                                    </button>
+                                    <button class="btn btn-danger btn-sm border-radius"
+                                            onclick="RemoveChoice(1)">Fjern alternativ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" onclick="Save()">Lagre</button>
+                    <button class="btn btn-primary" onclick="AddQuestion()">Legg til flere spørsmål</button>
+                    <button class="btn btn-danger" onclick="RemoveQuestion()" id="removeQuestionBtn"
+                            disabled="disabled">Fjern spørsmål
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                 </div>
             </div>
         </div>
