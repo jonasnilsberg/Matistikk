@@ -18,10 +18,12 @@ class CreateTaskForm(forms.ModelForm):
     :base64: Geogebra string.
 
     """
-    options = forms.CharField(max_length=10000, required=False)
+    options = forms.CharField(max_length=100000, required=False)
     base64 = forms.CharField(max_length=32700, required=False)
     preview = forms.CharField(max_length=500000, required=False)
     create_new = forms.BooleanField(required=False)
+    questions = forms.CharField(max_length=100000, required=False)
+    correct = forms.CharField(max_length=100000, required=False)
     variables = forms.CharField(max_length=500, required=False)
 
     class Meta:
@@ -86,6 +88,7 @@ class CreateAnswerForm(forms.ModelForm):
     text = forms.CharField(max_length=32700, required=False)
     timespent = forms.FloatField(required=False)
     geogebradata = forms.CharField(max_length=500000, required=False)
+    correct = forms.CharField(max_length=100, required=False)
 
     class Meta:
         model = Answer

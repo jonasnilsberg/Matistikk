@@ -4,6 +4,7 @@
 {% load bootstrap3 %}
 <!-- loads the static files of the project-->
 {% load staticfiles %}
+{% load maths_extras %}
 <!-- Loads CSS and javascript-->
 {% bootstrap_css %}
 {% bootstrap_javascript %}
@@ -79,61 +80,57 @@
                                     style="font-size: 1em; display: inline-block"></i> Endre kategorier</a>
                             <br>
                         {% endif %}
-                        <div class="form-group" id="multiplechoicediv">
-                            <label style="margin-top: 10px">Svaralternativer</label>
-                            <a class="btn btn-default" data-toggle='modal' href='#changeAnswerTypeModal'><i
-                                    class="fa fa-exchange" aria-hidden="true"
-                                    style="font-size: 1em"></i> Endre svarmåte</a><br>
-                            <div class="form-group" id="optionsdiv">
-                                {% if options %} <!-- If the task contains multiple choice options -->
-                                    {% for option in options %}
-                                        <a class="btn btn-default" id="option{{ forloop.counter }}button"
-                                           onclick="updateOption({{ forloop.counter }});"><span
-                                                style="font-size:1em;" id="option{{ forloop.counter }}span"
-                                                class="glyphicon glyphicon-pencil"></span> </a>
-                                        <input type="radio" id="option{{ forloop.counter }}" name="options">
-                                        <span id="option{{ forloop.counter }}value">{{ option }}</span>
-                                        {% if option.correct %}
-                                            <a class="btn btn-default" onclick="changeCorrect({{ forloop.counter }})"><i
-                                                    class="fa fa-check" id="correct{{ forloop.counter }}"
-                                                    aria-hidden="true"
-                                                    style="font-size: 1.5em; color: #00A000"></i></a>
-                                        {% else %}
-                                            <a class="btn btn-default" onclick="changeCorrect({{ forloop.counter }})"><i
-                                                    class="fa fa-times" id="correct{{ forloop.counter }}"
-                                                    aria-hidden="true"
-                                                    style="font-size: 1.5em; color: #A00000"></i></a>
-                                        {% endif %}
-                                        <br>
-                                    {% endfor %}
-                                {% endif %}
+
+                        <label for="accordion" style="margin-top: 15px;">Velg svartype</label>
+                        <div id="accordion" class="panel-group" role="tablist">
+                            <div class="panel panel-default answertype" id="textanswer" style="cursor: pointer">
+                                <div class=" panel-heading" role="tab">
+                                    <h4 class="panel-title">
+                                        <label style="cursor: pointer"><input type="radio" name="answer_type" value="1"
+                                                                              data-parent="#accordion" required
+                                                                              id="textAnswerRadio">
+                                            Tekstsvar</label>
+                                    </h4>
+                                </div>
+                                <div id="collapse5" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        Hvis dette alternativet velges, vil eleven svare med tekst.
+                                    </div>
+                                </div>
                             </div>
-                            <a class="btn btn-default" onclick="addOption()"><i
-                                    class="fa fa-plus" aria-hidden="true"
-                                    style="font-size: 1em"></i> Legg til alternativ</a><br>
+                            <div class="panel panel-default answertype" id="multiplechoiceanswer"
+                                 style="cursor: pointer">
+                                <div class=" panel-heading" role="tab">
+                                    <h4 class="panel-title">
+                                        <label style="cursor: pointer"><input type="radio" name="answer_type" value="2"
+                                                                              data-parent="#accordion" required
+                                                                              id="textMutipleRadio">
+                                            Flervalgstest</label>
+                                    </h4>
+                                </div>
+                                <div id="collapse8" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        Legg til dine flervalgsspørsmål i modalen som åpner seg.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-default answertype" id="onlyExtraanswer" style="cursor: pointer">
+                                <div class=" panel-heading" role="tab">
+                                    <p class="panel-title">
+                                        <label style="cursor: pointer"><input type="radio" name="answer_type" value="3"
+                                                                              data-parent="#accordion"> Kun
+                                            tillegg</label>
+                                    </p>
+                                </div>
+                                <div id="collapse7" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        Hvis dette alternativet velges, vil eleven kunne svare kun med tillegg.
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group" id="textanswerdiv">
-                            <label for="answer" style="margin-top: 10px">Tekstsvar</label>
-                            <a class="btn btn-default" data-toggle='modal' href='#changeAnswerTypeModal'><i
-                                    class="fa fa-exchange" aria-hidden="true"
-                                    style="font-size: 1em"></i> Endre svarmåte</a><br>
-                            <textarea class="form-control" id="answer" rows="6" style="resize:vertical"
-                                      placeholder="Skriv svaret ditt her..."></textarea>
-                        </div>
 
-                        <div class="form-group" id="extraanswerdiv">
-                            <label style="margin-top: 10px">Valgt svarmåte er 'kun tillegg'</label>
-                            <a class="btn btn-default" data-toggle='modal' href='#changeAnswerTypeModal'><i
-                                    class="fa fa-exchange" aria-hidden="true"
-                                    style="font-size: 1em"></i> Endre svarmåte</a><br>
-                        </div>
-
-                        <div class="form-group" id="reasoningdiv">
-                            <label for="reasoning" style="margin-top: 10px">Begrunnelse</label>
-                            <textarea class="form-control" id="reasoning" rows="6" style="resize:vertical"
-                                      placeholder="Begrunn svaret ditt..."></textarea>
-                        </div>
                         <ul class="list-group">
                             <li class="list-group-item">
                                 Felt for begrunnelse
@@ -153,12 +150,15 @@
                     </div> <!-- #inner panel-body -->
                     <div class="panel-footer">
                         <div class="btn-group" role="group" aria-label="...">
-                            <button type="button" onclick="updateTask(true)" class="btn btn-success" id="saveAsNewTaskBtn"><span
+                            <button type="button" onclick="updateTask(true)" class="btn btn-success"
+                                    id="saveAsNewTaskBtn"><span
                                     class="glyphicon glyphicon-check"
                                     aria-hidden="true"></span> Lagre som ny oppgave
                             </button>
-                            {% if not task.answer_set.all %}
-                                <button type="button" class="btn btn-warning" onclick="updateTask(false)" id="updateTaskBtn"><span
+                            {% task_answered task as answered %}
+                            {% if not answered %}
+                                <button type="button" class="btn btn-warning" onclick="updateTask(false)"
+                                        id="updateTaskBtn"><span
                                         class="glyphicon glyphicon-refresh"
                                         aria-hidden="true"></span> Oppdater eksisterende
                                 </button>
@@ -261,6 +261,28 @@
             });
         });
 
+        $('.answertype').click(function (e) {
+            if ($(e.target).is(":radio")) {
+                e.preventDefault();
+            } else {
+                if ($(this).hasClass('panel-success')) {
+                    if ($(this).find(':radio').val() == 2) {
+                        $('#addMultipleChocice').modal('show');
+                    }
+                } else {
+                    $('.collapse.in').collapse('toggle');
+                    $('.panel-success').removeClass('panel-success');
+                    $(this).find('.collapse').collapse('toggle');
+                    $(this).addClass('panel-success');
+                    $(this).find(':radio').prop('checked', true);
+                    if ($(this).find(':radio').val() == 2) {
+                        $('#addMultipleChocice').modal('show');
+                    }
+                }
+            }
+
+        });
+
         /**
          * This function parse data from custom input fields into the hidden django-form
          * and clicks the submit-button in the django-form when its done.
@@ -279,9 +301,6 @@
             var categories = document.getElementById('id_category');
             var spans = document.getElementById('categorydiv').getElementsByTagName('span');
             var categoryoptions = categories.getElementsByTagName('option');
-            var optionsdiv = document.getElementById('optionsdiv');
-            var optionsi = optionsdiv.getElementsByTagName('i');
-            var optionsspan = optionsdiv.getElementsByTagName('span');
             var options = document.getElementById('id_options');
             if (createNew) {
                 $('#id_create_new').attr('checked', true);
@@ -332,26 +351,44 @@
                     }
                 }
             }
+            if(answertype == 2){
+                var correct = document.getElementById('id_correct');
+                var questionsField = document.getElementById('id_questions');
+                var questionDiv = $('#addMultipleChocice .modal-body .multiplechoice');
+                var numQuestions = questionDiv.length;
 
-            var flag = false;
-            for (var z = 0; z < optionsi.length; z++) {
-                if (optionsi.length < 2) {
-                    optionsdiv.innerHTML += '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops!</strong> Du må ha minst to svaralternativer i en flervalgsprøve </div>';
-                    return 0;
+                for (var i = 1; i <= numQuestions; i++) {
+                    var fields = $("#MutipleChoice" + i + " :input[type=text]");
+                    var question = fields.first().val();
+                    questionsField.value += question + '|||||';
+                    var choices = fields.slice(1);
+                    var breakFunction = false;
+                    choices.each(function () {
+                        if ($(this).val()) {
+                            options.value += $(this).val() + '|||||';
+                        } else {
+                            breakFunction = true;
+                        }
+                    });
+                    if (breakFunction) {
+                        $('#multipleChoiceWarning').removeClass('hidden');
+                        $("#multipleChoiceWarning").fadeTo(5000, 500).slideUp(500, function () {
+                            $('#multipleChoiceWarning').slideUp(500);
+                        });
+                        $('#addMultipleChocice').modal('show');
+                        return 0;
+                    }
+                    $("#MutipleChoice" + i + " :input[type=checkbox]").each(function () {
+                        correct.value += $(this).is(':checked') + '|||||'
+                    });
+                    options.value = options.value.slice(0, -5);
+                    correct.value = correct.value.slice(0, -5);
+                    options.value += '<--->';
+                    correct.value += '<--->';
                 }
-                if (optionsi[z].className == 'fa fa-check') {
-                    options.value += z + 1;
-                    flag = true;
-                }
-
-                if (z == optionsi.length - 1 && flag == false) {
-                    optionsdiv.innerHTML += '<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Oops!</strong> Du må velge et riktig alternativ før du kan sende inn oppgaven </div>';
-                    return 0;
-                }
-            }
-
-            for (var x = 1; x < optionsspan.length; x += 2) {
-                options.value += "|||||" + optionsspan[x].innerHTML;
+                options.value = options.value.slice(0, -5);
+                correct.value = correct.value.slice(0, -5);
+                questionsField.value = questionsField.value.slice(0, -5);
             }
 
             document.getElementById('submitbutton').click();
@@ -435,11 +472,14 @@
             $('#textanswerdiv').hide();
             $('#multiplechoicediv').hide();
             $('#extraanswerdiv').hide();
+            var questionDiv = $('#addMultipleChocice .modal-body .multiplechoice');
+            var numQuestions = questionDiv.length;
+            if (numQuestions >= 2) {
+                $('#removeQuestionBtn').prop('disabled', false);
+            }
 
             if (document.getElementById('id_reasoning').checked) {
                 $('#reason').prop('checked', true);
-                $('#reasoning').show();
-                $('label[for=reasoning]').show();
             }
 
             if (document.getElementById('id_extra').checked) {
@@ -447,19 +487,22 @@
             }
 
             if (document.getElementById('id_answertype').value == 1) {
-                $('#textanswerdiv').show();
-                $('#multiplechoicediv').hide();
-                $('#extraanswerdiv').hide();
+                var textanswer = $('#textanswer');
+                textanswer.addClass('panel-success');
+                textanswer.find(':radio').prop('checked', true);
+                textanswer.find('.collapse').collapse('toggle');
             }
             else if (document.getElementById('id_answertype').value == 2) {
-                $('#textanswerdiv').hide();
-                $('#multiplechoicediv').show();
-                $('#extraanswerdiv').hide();
+                var multiplechoice = $('#multiplechoiceanswer');
+                multiplechoice.addClass('panel-success');
+                multiplechoice.find(':radio').prop('checked', true);
+                multiplechoice.find('.collapse').collapse('toggle');
             }
             else if (document.getElementById('id_answertype').value == 3) {
-                $('#textanswerdiv').hide();
-                $('#multiplechoicediv').hide();
-                $('#extraanswerdiv').show();
+                var onlyExtra = $('#onlyExtraanswer');
+                onlyExtra.addClass('panel-success');
+                onlyExtra.find(':radio').prop('checked', true);
+                onlyExtra.find('.collapse').collapse('toggle');
             }
         });
 
@@ -490,6 +533,52 @@
                 $('#extradiv').hide();
             }
         });
+        function AddQuestion() {
+            $('#removeQuestionBtn').prop('disabled', false);
+            var questionDiv = $('#addMultipleChocice .modal-body .multiplechoice');
+            var numQuestions = questionDiv.length;
+            var ModalBody = $('#addMultipleChocice .modal-body');
+            var nextQuestion = parseInt(numQuestions + 1);
+            ModalBody.append('<div id="MutipleChoice' + nextQuestion + '" class="multiplechoice"><div><div class="form-group">' +
+                '<label for="question' + nextQuestion + '">Spørsmål:</label> <input type="text" class="form-control" id="question' + nextQuestion + '"' +
+                'placeholder="Skriv inn spørsmålet"></div><div class="row"><div id="choicesDiv' + nextQuestion + '" class="col-md-10">' +
+                '<label class="checkbox-inline"><input type="checkbox"><input type="text" placeholder="Alternativ 1"></label> ' +
+                '<label class="checkbox-inline"><input type="checkbox"><input type="text" placeholder="Alternativ 2"></label>' +
+                '<label class="checkbox-inline"><input type="checkbox"><input type="text" placeholder="Alternativ 3"></label> ' +
+                '</div><div class="col-md-2" id="choicesBtn' + nextQuestion + '"> <button style = "margin-right:4px;" class="btn btn-primary btn-sm border-radius" onclick="AddChoice(' + nextQuestion + ')">Legg til alternativ</button>' +
+                '<button class="btn btn-danger btn-sm border-radius" onclick="RemoveChoice(' + nextQuestion + ')">Fjern alternativ</button></div></div></div><hr></div>');
+        }
+
+        function RemoveQuestion() {
+            var questionDiv = $('#addMultipleChocice .modal-body .multiplechoice');
+            var numQuestions = questionDiv.length;
+            var lastQuestion = parseInt(numQuestions);
+            $('#MutipleChoice' + lastQuestion).remove();
+            if (numQuestions <= 2) {
+                $('#removeQuestionBtn').prop('disabled', true);
+            }
+        }
+
+        function AddChoice(num, btn) {
+            var numChoices = $('#choicesDiv' + num + ' :input[type=checkbox]').length + 1;
+            $('#choicesDiv' + num).append('<label class="checkbox-inline"><input type="checkbox"><input type="text" placeholder="Alternativ ' + numChoices + '"></label>');
+            if (numChoices >= 6) {
+                $('#choicesBtn' + num + ' .btn').first().prop('disabled', true);
+            } else if (numChoices > 2) {
+                $('#choicesBtn' + num + ' .btn').last().prop('disabled', false);
+            }
+        }
+
+        function RemoveChoice(num, btn) {
+            $('#choicesDiv' + num + ' .checkbox-inline').last().remove();
+            var numChoices = $('#choicesDiv' + num + ' :input[type=checkbox]').length - 1;
+            if (numChoices < 2) {
+                $('#choicesBtn' + num + ' .btn').last().prop('disabled', true);
+            } else if (numChoices < 6) {
+                $('#choicesBtn' + num + ' .btn').first().prop('disabled', false);
+
+            }
+        }
     </script>
 
 {% endblock %}
@@ -591,6 +680,93 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addMultipleChocice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document" style="width: 80vw;">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: whitesmoke">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title text-center" id="myModalLabel">Flervalgsspørsmål</h3> <h5
+                        class="text-center">Velg alternativet som er korrekt</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="multipleChoiceWarning" class="alert alert-danger hidden">
+                        <strong>Tomt alternativ!</strong> Oppgaven kan ikke ha tomme svaralternativ. Vennligst fyll ut
+                        alle felter som vises.
+                    </div>
+                    {% if task.answertype == 2 %}
+                        {% for multiplechoice in task.multiplechoicetask_set.all %}
+                            <div id="MutipleChoice{{ forloop.counter }}" class="multiplechoice">
+                                <div class="form-group">
+                                    <label for="question{{ forloop.counter }}">Spørsmål:</label>
+                                    <input type="text" class="form-control" id="question1"
+                                           placeholder="Skriv inn spørsmålet" value="{{ multiplechoice.question }}">
+                                </div>
+                                <div class="row">
+                                    <div id="choicesDiv{{ forloop.counter }}" class="col-md-10">
+                                        {% get_multiplechoice_options multiplechoice as options %}
+                                        {% for option in options %}
+                                            <label class="checkbox-inline"><input type="checkbox"
+                                                                                  {% if option.correct %}checked{% endif %}>
+                                                <input type="text"
+                                                       placeholder="Alternativ 1"
+                                                       value="{{ option.option }}"></label>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col-md-2" id="choicesBtn{{ forloop.counter }}">
+                                        <button class="btn btn-primary btn-sm border-radius"
+                                                onclick="AddChoice({{ forloop.counter }})">
+                                            Legg til alternativ
+                                        </button>
+                                        <button class="btn btn-danger btn-sm border-radius"
+                                                onclick="RemoveChoice({{ forloop.counter }})">Fjern alternativ
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div id="MutipleChoice1" class="multiplechoice">
+                            <div>
+                                <div class="form-group">
+                                    <label for="question1">Spørsmål:</label>
+                                    <input type="text" class="form-control" id="question1"
+                                           placeholder="Skriv inn spørsmålet">
+                                </div>
+                                <div class="row">
+                                    <div id="choicesDiv1" class="col-md-10">
+                                        <label class="checkbox-inline"><input type="checkbox"><input type="text"
+                                                                                                     placeholder="Alternativ 1"></label>
+                                        <label class="checkbox-inline"><input type="checkbox"><input type="text"
+                                                                                                     placeholder="Alternativ 2"></label>
+                                        <label class="checkbox-inline"><input type="checkbox"><input type="text"
+                                                                                                     placeholder="Alternativ 3"></label>
+                                    </div>
+                                    <div class="col-md-2" id="choicesBtn1">
+                                        <button class="btn btn-primary btn-sm border-radius" onclick="AddChoice(1)">
+                                            Legg til alternativ
+                                        </button>
+                                        <button class="btn btn-danger btn-sm border-radius"
+                                                onclick="RemoveChoice(1)">Fjern alternativ
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                    {% endif %}
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="AddQuestion()">Legg til flere spørsmål</button>
+                    <button class="btn btn-danger" onclick="RemoveQuestion()" id="removeQuestionBtn"
+                            disabled="disabled">Fjern spørsmål
+                    </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                 </div>
             </div>

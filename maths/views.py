@@ -4,7 +4,7 @@ from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, \
-    GeogebraAnswer, Item
+    GeogebraAnswer, Item, MultipleChoiceOption
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
@@ -187,17 +187,26 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
         item.save()
         if task.answertype == 2:
             options = self.request.POST['options']
-            optiontable = options.split('|||||')
-            correct = optiontable[0]
-            x = 1
-            for option in optiontable[1:]:
-                if int(correct) == x:
-                    multiplechoice = MultipleChoiceTask(option=option, task=task, correct=True)
-                else:
-                    multiplechoice = MultipleChoiceTask(option=option, task=task, correct=False)
-                multiplechoice.save()
-                x += 1
-
+            correct = self.request.POST['correct']
+            questions = self.request.POST['questions']
+            option_split = options.split('<--->')
+            correct_split = correct.split('<--->')
+            question_split = questions.split('|||||')
+            for question in question_split:
+                multiple_choice_task = MultipleChoiceTask(question=question, task=task)
+                multiple_choice_task.save()
+                multiple_choice_options = option_split[0].split('|||||')
+                multiple_choice_options_correct = correct_split[0].split('|||||')
+                for i in range(0, len(multiple_choice_options)):
+                    multiple_choice_option = MultipleChoiceOption(MutipleChoiceTask=multiple_choice_task,
+                                                                  option=multiple_choice_options[i])
+                    if multiple_choice_options_correct[i] == 'true':
+                        multiple_choice_option.correct = True
+                    else:
+                        multiple_choice_option.correct = False
+                    multiple_choice_option.save()
+                option_split.pop(0)
+                correct_split.pop(0)
         if task.extra:
             base64 = self.request.POST['base64']
             preview = self.request.POST['preview']
@@ -317,11 +326,19 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
             geogebra = GeogebraTask.objects.get(task_id=task_id)
             data['geogebra_preview'] = geogebra.preview
         if task.answertype == 2:
-            multiplechoice_list = MultipleChoiceTask.objects.filter(task_id=task_id)
-            for option in multiplechoice_list:
+            multiplechoice_task = MultipleChoiceTask.objects.filter(task_id=task_id)
+            for choices in multiplechoice_task:
+                options = []
+                multiple_choice_options = MultipleChoiceOption.objects.filter(MutipleChoiceTask=choices)
+                correct = 0
+                for option in multiple_choice_options:
+                    options.append(option.option)
+                    if option.correct:
+                        correct += 1
                 multiplechoice.append({
-                    "option": option.option,
-                    "correct": option.correct,
+                    'question': choices.question,
+                    'correct': correct,
+                    'options': options
                 })
         return JsonResponse(data)
 
@@ -455,33 +472,30 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
             else:
                 geogebratask = GeogebraTask(task=task, base64=base64, preview=preview)
                 geogebratask.save()
-
         if task.answertype == 2:
-            options = self.request.POST['options']
-            optiontable = options.split('|||||')
-            correct = optiontable[0]
             taskoptions = MultipleChoiceTask.objects.filter(task=task)
-            newoptions = (len(optiontable) - 1) - len(taskoptions)
-
-            x = 1
-            for taskoption in taskoptions:
-                if int(correct) == x:
-                    taskoption.correct = True
-                    taskoption.option = optiontable[x]
-                else:
-                    taskoption.correct = False
-                    taskoption.option = optiontable[x]
-                taskoption.save()
-                x += 1
-
-            if newoptions > 0:
-                for option in optiontable[len(optiontable) - newoptions:]:
-                    if int(correct) == x:
-                        multiplechoice = MultipleChoiceTask(task=task, option=option, correct=True)
+            taskoptions.delete()
+            options = self.request.POST['options']
+            correct = self.request.POST['correct']
+            questions = self.request.POST['questions']
+            option_split = options.split('<--->')
+            correct_split = correct.split('<--->')
+            question_split = questions.split('|||||')
+            for question in question_split:
+                multiple_choice_task = MultipleChoiceTask(question=question, task=task)
+                multiple_choice_task.save()
+                multiple_choice_options = option_split[0].split('|||||')
+                multiple_choice_options_correct = correct_split[0].split('|||||')
+                for i in range(0, len(multiple_choice_options)):
+                    multiple_choice_option = MultipleChoiceOption(MutipleChoiceTask=multiple_choice_task,
+                                                                  option=multiple_choice_options[i])
+                    if multiple_choice_options_correct[i] == 'true':
+                        multiple_choice_option.correct = True
                     else:
-                        multiplechoice = MultipleChoiceTask(task=task, option=option, correct=False)
-                    multiplechoice.save()
-                    x += 1
+                        multiple_choice_option.correct = False
+                    multiple_choice_option.save()
+                option_split.pop(0)
+                correct_split.pop(0)
         return super(TaskUpdateView, self).form_valid(form)
 
 
@@ -850,9 +864,12 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             reasoning = request.POST["task" + str(y) + "-reasoning"]
             itemid = request.POST["task" + str(y) + "-item"]
             timespent = request.POST["task" + str(y) + "-timespent"]
+            correct = request.POST["task"+str(y)+"-correct"]
             item = Item.objects.get(id=itemid)
             answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, item=item,
                             timespent=timespent)
+            if correct:
+                answer.correct = correct
             answer.date_answered = datetime.datetime.now()
             answer.save()
             base64 = request.POST["task" + str(y) + "-base64answer"]

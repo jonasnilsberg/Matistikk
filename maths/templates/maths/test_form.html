@@ -46,35 +46,6 @@
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
         tinymce.init({
-            selector: '#previewtasktext',
-            plugins: 'placeholder',
-            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-            toolbar: false,
-            menubar: false,
-            statusbar: false,
-            readonly: 1,
-            body_id: 'tasktextID'
-        });
-
-        tinymce.init({
-            selector: '#previewanswer',
-            plugins: 'placeholder',
-            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-            toolbar: false,
-            menubar: false,
-            statusbar: false,
-            readonly: 1
-        });
-        tinymce.init({
-            selector: '#previewreasoning',
-            plugins: 'placeholder',
-            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-            toolbar: false,
-            menubar: false,
-            statusbar: false,
-            readonly: 1
-        });
-        tinymce.init({
             selector: '#descriptionText',
             plugins: 'placeholder',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
@@ -344,11 +315,11 @@
                                         <button value="{{ item.task.id }}" data-item="{{ item.id }}" type="button"
                                                 onclick="itemDescription(this)"
                                                 {% if not item.task.variableTask %}disabled{% endif %}
-                                                class="btn btn-info btn-sm"><i class="fa fa-sitemap"
-                                                                               aria-hidden="true"></i>
+                                                class="btn btn-info "><i class="fa fa-sitemap"
+                                                                         aria-hidden="true"></i>
                                             Item
                                         </button>
-                                        <button value="{{ item.task.id }}" type="button" onclick="preview(this)"
+                                        <button value="{{ item.task.id }}" type="button" onclick="previewTask(this)"
                                                 class="btn btn-info"><span
                                                 class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
                                         </button>
@@ -607,6 +578,17 @@
             $("#datepickerTimeLimit").datepicker("option", "showButtonPanel", true);
             $("#datepickerTimeLimit").datepicker("option", "dateFormat", "DD, d MM, yy");
             $("#datepickerTimeLimit").datepicker("option", "minDate", "0");
+        });
+
+        $(document).ajaxSend(function (event, request, settings) {
+            $('#loading-indicator').show();
+        });
+        /**
+         * Function that runs when an ajax-call is completed.
+         */
+        $(document).ajaxComplete(function (event, request, settings) {
+            $('#loading-indicator').hide();
+            $('#previewBody').removeClass('hidden');
         });
 
         /**
@@ -1241,67 +1223,6 @@
             }
         }
 
-        /**
-         * This function sets up the taskinformation gotten from the ajax GET request inside a modal.
-         */
-        function preview(e) {
-            $('#loadingPreview').show();
-            $('#taskpreview').addClass('hidden');
-            $('#previewTaskModal').modal('show');
-            var id = e.value;
-            $('#geogebradiv').hide();
-            $('#textanswerdiv').hide();
-            $('#reasoningdiv').hide();
-            $('#multiplechoicediv').hide();
-            $.ajax({
-                type: 'GET',
-                url: '{% url 'maths:taskList' %}',
-                data: {
-                    'task_id': id
-                },
-                dataType: 'json',
-                success: function (json) {
-                    var notGeo = $('#notgeogebradiv');
-                    var task = (json);
-                    if (task.geogebra_preview != undefined) {
-                        $("#previewbilde").attr("src", 'data:image/png;base64,' + (task.geogebra_preview));
-                        $('#geogebradiv').show();
-                        if (!notGeo.hasClass('hidden')) {
-                            notGeo.addClass('hidden');
-                        }
-                    } else {
-                        if (notGeo.hasClass('hidden')) {
-                            notGeo.removeClass('hidden');
-                        }
-                    }
-                    tinyMCE.get('previewtasktext').setContent(task.task_text);
-
-                    var answertype = (task.task_answertype);
-                    if (answertype == 1) {
-                        $('#textanswerdiv').show();
-                    }
-
-                    if (task.task_reasoning) {
-                        $('#reasoningdiv').show();
-                    }
-                    if (answertype == 2) {
-                        var options = (task.options);
-                        var div = document.getElementById('optionsdiv');
-                        $('#multiplechoicediv').show();
-                        div.innerHTML = "";
-                        $.each(options, function (index, value) {
-                            div.innerHTML += "<input type='radio' name='optionsradio'> " + (value.option) + "<br>";
-                        });
-                    }
-                    $('#loadingPreview').hide();
-                    $('#taskpreview').removeClass('hidden');
-                },
-                error: function (xhr) {
-                    alert('error');
-                    alert(xhr.responseText);
-                }
-            });
-        }
 
         function itemDescription(btn) {
             var taskID = btn.value;
@@ -1325,7 +1246,7 @@
                     $('#variableTable thead tr th').remove();
                     $('#variableTable tbody').append('<tr></tr>');
                     for (var i = 0; i < variableTable.length; i++) {
-                        $('#variableTable thead tr').append('<th>Variabel ' + parseInt(i + 1) + '</th>');
+                        $('#variableTable thead tr').append('<th>Parameter ' + parseInt(i + 1) + '</th>');
                         $('#variableTable tbody tr').append('<td>' + variableTable[i] + '</td>');
                     }
                     $('#descriptionModal').modal('show');
@@ -1343,6 +1264,7 @@
 {% endblock %}
 
 {% block modal %}
+    {% include 'matistikk/previewTask.html' %}
     <div class="modal fade" id="personModal" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1458,67 +1380,6 @@
                 <div class="modal-footer">
                     {% buttons %}
                         <a id="goToGroupBtn" href="#" type="button" class="btn btn-primary">Gå til gruppe</a>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
-                    {% endbuttons %}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="previewTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" style="width: 95%">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Forhåndsvis oppgave</h4>
-                </div>
-                <div class="modal-body" style="min-height: 30vh;">
-                    <img src="{% static 'administration/images/loading.gif' %}" id="loadingPreview"
-                         class="loading-indicator"
-                         style="display:none"/>
-                    <div id="taskpreview" class="row">
-                        <div id="notgeogebradiv" class="col-md-3 hidden"></div>
-                        <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
-                            <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
-                        </div>
-                        <div class="col-md-6" style="padding-left: 10px">
-                            <div class="panel panel-default">
-                                <div class="panel-heading" id="previewtasktextdiv">
-                                    <h4><textarea id="previewtasktext"></textarea></h4>
-                                </div>
-                                <div class="panel-body">
-                                    <div id="previewtextanswerdiv">
-                                        <label for="previewtextanswer">Tekstsvar</label>
-                                        <textarea class="form-control" id="previewtextanswer" rows="6"
-                                                  style="resize:vertical"
-                                                  placeholder="Skriv svaret ditt her..."></textarea>
-                                    </div>
-
-                                    <div id="multiplechoicediv">
-                                        <label for="reasoning">Svaralternativer</label>
-                                        <div id="optionsdiv">
-
-                                        </div>
-                                    </div>
-
-                                    <div id="previewreasoningdiv">
-                                        <label for="previewreasoning">Begrunnelse</label>
-                                        <textarea class="form-control" id="previewreasoning" rows="6"
-                                                  style="resize:vertical"
-                                                  placeholder="Begrunn svaret ditt..."></textarea>
-                                    </div>
-
-                                </div>
-                                <div class="panel-footer">
-                                    <button type="button" class="btn btn-success">Svar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    {% buttons %}
                         <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                     {% endbuttons %}
                 </div>

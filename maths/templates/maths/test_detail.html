@@ -28,36 +28,6 @@
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
         tinymce.init({
-            selector: '#previewtasktext',
-            plugins: 'placeholder',
-            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-            toolbar: false,
-            menubar: false,
-            statusbar: false,
-            readonly: 1,
-            body_id: 'tasktextID'
-        });
-        tinymce.init({
-            selector: '#previewtextanswer',
-            plugins: 'placeholder',
-            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-            toolbar: false,
-            menubar: false,
-            statusbar: false,
-            readonly: 1
-
-        });
-
-        tinymce.init({
-            selector: '#previewreasoning',
-            plugins: 'placeholder',
-            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-            toolbar: false,
-            menubar: false,
-            statusbar: false,
-            readonly: 1
-        });
-        tinymce.init({
             selector: '#descriptionText',
             plugins: 'placeholder',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
@@ -652,63 +622,6 @@
             }
         }
 
-        /**
-         * This function previews a task in t a the previewTaskModal.
-         */
-        function previewTask(e) {
-            var id = e.value;
-            $('#previewBody').addClass('hidden');
-            $('#previewTaskModal').modal('show');
-            $('#geogebradiv').hide();
-            $('#textanswerdiv').hide();
-            $('#reasoningdiv').hide();
-            $('#multiplechoicediv').hide();
-            $.ajax({
-                type: 'GET',
-                url: '{% url 'maths:taskList' %}',
-                data: {
-                    'task_id': id
-                },
-                dataType: 'json',
-                success: function (json) {
-                    var task = (json);
-                    var notGeo = $('#notGeogebraDiv');
-                    if (task.geogebra_preview != undefined) {
-                        $("#previewbilde").attr("src", 'data:image/png;base64,' + (task.geogebra_preview));
-                        $('#geogebradiv').show();
-                        if (!notGeo.hasClass('hidden')) {
-                            notGeo.addClass('hidden');
-                        }
-                    } else {
-                        if (notGeo.hasClass('hidden')) {
-                            notGeo.removeClass('hidden');
-                        }
-                    }
-                    tinyMCE.get('previewtasktext').setContent(task.task_text);
-
-                    var answertype = (task.task_answertype);
-                    if (answertype == 1) {
-                        $('#previewtextanswerdiv').show();
-                    }
-                    if (task.task_reasoning) {
-                        $('#reasoningdiv').show();
-                    }
-                    if (answertype == 2) {
-                        var options = (task.options);
-                        var div = document.getElementById('optionsdiv');
-                        $('#multiplechoicediv').show();
-                        div.innerHTML = "";
-                        $.each(options, function (index, value) {
-                            div.innerHTML += "<input type='radio' name='optionsradio'> " + (value.option) + "<br>";
-                        });
-                    }
-                },
-                error: function (xhr) {
-                    alert('error');
-                    alert(xhr.responseText);
-                }
-            });
-        }
         function itemDescription(btn) {
             var taskID = btn.value;
             var itemID = $(btn).data('item');
@@ -747,63 +660,7 @@
 {% endblock %}
 
 {% block modal %}
-    <div class="modal fade" id="previewTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" style="width: 95%">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Forhåndsvis oppgave</h4>
-                </div>
-                <div class="modal-body" style="min-height: 30vh;">
-                    <img src="{% static 'administration/images/loading.gif' %}" class="loading-indicator"
-                         style="display:none"/>
-                    <div class="row hidden" id="previewBody">
-                        <div class="col-md-3 hidden" id="notGeogebraDiv"></div>
-                        <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
-                            <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
-                        </div>
-                        <div class="col-md-6" style="padding-left: 10px">
-                            <div class="panel panel-default">
-                                <div class="panel-heading" id="previewtasktextdiv">
-                                    <textarea id="previewtasktext"></textarea>
-                                </div>
-                                <div class="panel-body">
-                                    <div id="textanswerdiv">
-                                        <label for="previewtextanswer">Tekstsvar</label>
-                                        <textarea class="form-control" id="previewtextanswer" rows="6"
-                                                  style="resize:vertical"
-                                                  placeholder="Skriv svaret ditt her..."></textarea>
-                                    </div>
-
-                                    <div id="multiplechoicediv">
-                                        <label for="reasoning">Svaralternativer</label>
-                                        <div id="optionsdiv">
-
-                                        </div>
-                                    </div>
-
-                                    <div id="reasoningdiv">
-                                        <label for="previewreasoningreasoning">Begrunnelse</label>
-                                        <textarea class="form-control" id="previewreasoning" rows="6"
-                                                  style="resize:vertical"
-                                                  placeholder="Begrunn svaret ditt..."></textarea>
-                                    </div>
-
-                                </div>
-                                <div class="panel-footer">
-                                    <button type="button" class="btn btn-success">Svar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include 'matistikk/previewTask.html' %}
     <div class="modal fade" id="updateDueDateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">

@@ -48,7 +48,7 @@
                             <tr>
                                 <th class="col-md-1"></th>
                                 {% for x in variable_count %}
-                                    <th>Variabel {{ forloop.counter }}</th>
+                                    <th>Parameter {{ forloop.counter }}</th>
                                 {% endfor %}
                             </tr>
                             </thead>
@@ -117,8 +117,8 @@
 
         parameters.appletOnLoad = function () {
             for (var i = 1; i <= variableCount; i++) {
-                var variable = $("tr").eq(1).find("td").eq(i).html();
-                ggbApplet.setValue('variabel' + i, variable);
+                var param = $("tr").eq(1).find("td").eq(i).html();
+                ggbApplet.setValue('matistikkParameter' + i, param);
             }
         };
 
@@ -131,11 +131,12 @@
         // Metoden benyttes til å legge GeoGebra med forhåndsvalgt konfigurasjon inn i en applet
         window.onload = function () {
             applet.inject('applet_container', 'preferhtml5');
-             editable(false);
+            setContenteditable(false);
             $('.mce-toolbar-grp').addClass('hidden');
         };
         $(document).ready(function () {
             $("tr").eq(1).addClass('success').find(':radio').prop('checked', true);
+
             $('#variabelForm').submit(function (e) {
                 e.preventDefault();
                 var task_id = "{{ task.id }}";
@@ -183,8 +184,8 @@
             $(this).addClass('success');
 
             for (var i = 1; i <= variableCount; i++) {
-                var variable = $(this).find("td").eq(i).html();
-                ggbApplet.setValue('variabel' + i, variable);
+                var param = $(this).find("td").eq(i).html();
+                ggbApplet.setValue('matistikkParameter' + i, param);
             }
         });
 
@@ -192,7 +193,7 @@
         $('.addItem').click(function () {
             $('.variabelFormGroup').remove();
             for (var i = 1; i <= variableCount; i++) {
-                $('#variabelForm').append("<div class='form-group variabelFormGroup'><label for='variabel" + i + "'>Variabel " + i + ":</label> <input type='variabel" + i + "' placeholder='Skriv inn verdien for variabel " + i + "' class='form-control' id='variabel" + i + "'required></div>");
+                $('#variabelForm').append("<div class='form-group variabelFormGroup'><label for='variabel" + i + "'>Parameter " + i + ":</label> <input type='text' placeholder='Skriv inn verdien for parameter " + i + "' class='form-control' id='variabel" + i + "'required></div>");
             }
             $('#variabelForm').append('<button type="submit" class="btn btn-success variabelFormGroup"><i class="fa fa-floppy-o"aria-hidden="true"></i>Sett inn parameter</button>');
             $('#addVariablesModal').modal('show');
@@ -255,8 +256,8 @@
                     <div class="text-center">
                         <nav aria-label="Page navigation">
                             <ul class="pagination" style="margin: 0;">
-                                <li class="active"><a href="#setVariable" data-toggle="tab">Velg variable</a></li>
-                                <li><a href="#setRandom" data-toggle="tab">Tilfeldig variable</a></li>
+                                <li class="active"><a href="#setVariable" data-toggle="tab">Velg parameter</a></li>
+                                <li><a href="#setRandom" data-toggle="tab">Tilfeldig parameter</a></li>
                             </ul>
                         </nav>
                     </div>

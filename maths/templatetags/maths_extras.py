@@ -1,5 +1,5 @@
 from django import template
-from maths.models import Answer, GeogebraAnswer, MultipleChoiceTask, GeogebraTask
+from maths.models import Answer, GeogebraAnswer, MultipleChoiceTask, GeogebraTask, MultipleChoiceOption
 from administration.models import Gruppe, Person, Grade
 
 register = template.Library()
@@ -54,6 +54,15 @@ def get_mutiplechoice(task):
 
 
 @register.simple_tag
+def get_multiplechoice_options(multiplechoice_task):
+    return MultipleChoiceOption.objects.filter(MutipleChoiceTask=multiplechoice_task)
+
+
+@register.simple_tag
+def get_multiplechoice_options_correct_count(multiplechoice_task):
+    return MultipleChoiceOption.objects.filter(MutipleChoiceTask=multiplechoice_task, correct=True).count()
+
+@register.simple_tag
 def split_geo(geo):
     """
     Splits the geodata string.
@@ -96,3 +105,23 @@ def get_variable_count(item):
     """
     variable_table = item.variables.split('|||||')
     return variable_table
+
+
+@register.simple_tag
+def multiplechoice_answered(option, answer, index):
+    answer_table = answer.split('<--|-->')
+    print(answer_table)
+    answers = answer_table[index-1].split('|||||')
+    if option.option in answers:
+        return True
+    return False
+
+
+@register.simple_tag
+def task_answered(task):
+    answer = False
+    for item in task.item_set.all():
+        if item.answer_set.all():
+            answer = True
+    return answer
+

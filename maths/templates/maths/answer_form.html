@@ -162,17 +162,35 @@
                                                           placeholder="Skriv svaret ditt her..."></textarea>
                                             </div>
                                         {% elif item.task.answertype == 2 %}
-                                            <div id="multiplechoicediv">
-                                                <label>Svaralternativer</label>
-                                                <div id="optionsdiv{{ item.id }}">
-                                                    {% get_mutiplechoice item.task as options %}
-                                                    {% for option in options %}
-                                                        <input type="radio"
-                                                               name="multiplechoice{{ item.id }}"
-                                                               value="{{ option.option }}">
-                                                        {{ option.option }}<br>
-                                                    {% endfor %}
-                                                </div>
+                                            <div id="optionsdiv{{ item.id }}">
+                                                {% get_mutiplechoice item.task as multiplechoicetasks %}
+                                                {% for multiplechoicetask in multiplechoicetasks %}
+                                                    <div id="{{ item.id }}multipleChoiceAlt{{ forloop.counter }}"
+                                                         class="multipleChoiceAlt{{ item.id }}">
+                                                        {% if multiplechoicetask.question %}
+                                                            <label for=multipleChoice>{{ multiplechoicetask.question }}</label>
+                                                        {% else %}
+                                                            <label for=multipleChoice>Svaralternativer:</label>
+                                                        {% endif %}
+                                                        <br>
+                                                        {% get_multiplechoice_options multiplechoicetask as options %}
+                                                        {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
+                                                        {% for option in options %}
+                                                            {% if correct_count > 1 %}
+                                                                <label class="checkbox-inline"><input type="checkbox"
+                                                                                                      class="checkbox{{ item.id }}"
+                                                                                                      value="{{ option.option }}">{{ option.option }}
+                                                                </label>
+                                                            {% else %}
+                                                                <label class="radio-inline"><input type="radio" value="{{ option.option }}"
+                                                                                                   class="checkbox{{ item.id }}"
+                                                                                                   name="{{ forloop.parentloop.counter }}choices{{ item.id }}">{{ option.option }}
+                                                                </label>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                    <hr>
+                                                {% endfor %}
                                             </div>
                                         {% endif %}
 
@@ -207,17 +225,35 @@
                                                           placeholder="Skriv svaret ditt her..."></textarea>
                                             </div>
                                         {% elif item.task.answertype == 2 %}
-                                            <div id="multiplechoicediv">
-                                                <label>Svaralternativer</label>
-                                                <div id="optionsdiv{{ item.id }}">
-                                                    {% get_mutiplechoice item.task as options %}
-                                                    {% for option in options %}
-                                                        <input type="radio"
-                                                               name="multiplechoice{{ item.id }}"
-                                                               value="{{ option.option }}">
-                                                        {{ option.option }}<br>
-                                                    {% endfor %}
-                                                </div>
+                                            <div id="optionsdiv{{ item.id }}">
+                                                {% get_mutiplechoice item.task as multiplechoicetasks %}
+                                                {% for multiplechoicetask in multiplechoicetasks %}
+                                                    <div id="{{ item.id }}multipleChoiceAlt{{ forloop.counter }}"
+                                                         class="multipleChoiceAlt{{ item.id }}">
+                                                        {% if multiplechoicetask.question %}
+                                                            <label for=multipleChoice>{{ multiplechoicetask.question }}</label>
+                                                        {% else %}
+                                                            <label for=multipleChoice>Svaralternativer:</label>
+                                                        {% endif %}
+                                                        <br>
+                                                        {% get_multiplechoice_options multiplechoicetask as options %}
+                                                        {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
+                                                        {% for option in options %}
+                                                            {% if correct_count > 1 %}
+                                                                <label class="checkbox-inline"><input type="checkbox"
+                                                                                                      class="checkbox{{ item.id }}"
+                                                                                                      value="{{ option.option }}">{{ option.option }}
+                                                                </label>
+                                                            {% else %}
+                                                                <label class="radio-inline"><input type="radio" value="{{ option.option }}"
+                                                                                                   class="checkbox{{ item.id }}"
+                                                                                                   name="{{ forloop.parentloop.counter }}choices{{ item.id }}">{{ option.option }}
+                                                                </label>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                    <hr>
+                                                {% endfor %}
                                             </div>
                                         {% endif %}
 
@@ -312,17 +348,35 @@
                                                           placeholder="Skriv svaret ditt her..."></textarea>
                                             </div>
                                         {% elif taskorder.item.task.answertype == 2 %}
-                                            <div id="multiplechoicediv">
-                                                <label>Svaralternativer</label>
-                                                <div id="optionsdiv{{ taskorder.item.id }}">
-                                                    {% get_mutiplechoice taskorder.item.task as options %}
-                                                    {% for option in options %}
-                                                        <input type="radio"
-                                                               name="multiplechoice{{ taskorder.item.id }}"
-                                                               value="{{ option.option }}">
-                                                        {{ option.option }}<br>
-                                                    {% endfor %}
-                                                </div>
+                                            <div id="optionsdiv{{ taskorder.item.id }}">
+                                                {% get_mutiplechoice taskorder.item.task as multiplechoicetasks %}
+                                                {% for multiplechoicetask in multiplechoicetasks %}
+                                                    <div id="{{ taskorder.item.id }}multipleChoiceAlt{{ forloop.counter }}"
+                                                         class="multipleChoiceAlt{{ taskorder.item.id }}">
+                                                        {% if multiplechoicetask.question %}
+                                                            <label for=multipleChoice>{{ multiplechoicetask.question }}</label>
+                                                        {% else %}
+                                                            <label for=multipleChoice>Svaralternativer:</label>
+                                                        {% endif %}
+                                                        <br>
+                                                        {% get_multiplechoice_options multiplechoicetask as options %}
+                                                        {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
+                                                        {% for option in options %}
+                                                            {% if correct_count > 1 %}
+                                                                <label class="checkbox-inline"><input type="checkbox"
+                                                                                                      class="checkbox{{ taskorder.item.id }}"
+                                                                                                      value="{{ option.option }}">{{ option.option }}
+                                                                </label>
+                                                            {% else %}
+                                                                <label class="radio-inline"><input type="radio" value="{{ option.option }}"
+                                                                                                   class="checkbox{{ taskorder.item.id }}"
+                                                                                                   name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
+                                                                </label>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                    <hr>
+                                                {% endfor %}
                                             </div>
                                         {% endif %}
 
@@ -359,17 +413,35 @@
                                                           placeholder="Skriv svaret ditt her..."></textarea>
                                             </div>
                                         {% elif taskorder.item.task.answertype == 2 %}
-                                            <div id="multiplechoicediv">
-                                                <label>Svaralternativer</label>
-                                                <div id="optionsdiv{{ taskorder.item.id }}">
-                                                    {% get_mutiplechoice taskorder.item.task as options %}
-                                                    {% for option in options %}
-                                                        <input type="radio"
-                                                               name="multiplechoice{{ taskorder.item.id }}"
-                                                               value="{{ option.option }}">
-                                                        {{ option.option }}<br>
-                                                    {% endfor %}
-                                                </div>
+                                            <div id="optionsdiv{{ taskorder.item.id }}">
+                                                {% get_mutiplechoice taskorder.item.task as multiplechoicetasks %}
+                                                {% for multiplechoicetask in multiplechoicetasks %}
+                                                    <div id="{{ taskorder.item.id }}multipleChoiceAlt{{ forloop.counter }}"
+                                                         class="multipleChoiceAlt{{ taskorder.item.id }}">
+                                                        {% if multiplechoicetask.question %}
+                                                            <label for=multipleChoice>{{ multiplechoicetask.question }}</label>
+                                                        {% else %}
+                                                            <label for=multipleChoice>Svaralternativer:</label>
+                                                        {% endif %}
+                                                        <br>
+                                                        {% get_multiplechoice_options multiplechoicetask as options %}
+                                                        {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
+                                                        {% for option in options %}
+                                                            {% if correct_count > 1 %}
+                                                                <label class="checkbox-inline"><input type="checkbox"
+                                                                                                      class="checkbox{{ taskorder.item.id }}"
+                                                                                                      value="{{ option.option }}">{{ option.option }}
+                                                                </label>
+                                                            {% else %}
+                                                                <label class="radio-inline"><input type="radio" value="{{ option.option }}"
+                                                                                                   class="checkbox{{ taskorder.item.id }}"
+                                                                                                   name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
+                                                                </label>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                    <hr>
+                                                {% endfor %}
                                             </div>
                                         {% endif %}
 
@@ -795,7 +867,7 @@
             if (variables) {
                 var variableTable = variables.split('|||||');
                 for (var x = 0; x < variableTable.length; x++) {
-                    window["ggbApplet" + i].setValue('variabel' + parseInt(x + 1), variableTable[x]);
+                    window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), variableTable[x]);
                 }
             }
             if (document.getElementById('base64' + i) != null) {
@@ -819,6 +891,7 @@
             var taskflag = true;
             var textanswerbool = false;
             var reasoningbool = false;
+            var multiplechoicebool = false;
             var div = $('#task' + (i + 1));
             var itemid = div.data('itemid');
             if ($(('#textanswer' + itemid)).exists()) {
@@ -829,8 +902,9 @@
                 reasoningbool = true;
                 var reasoning = tinyMCE.get('reasoning' + itemid).getContent();
             }
-            var multiplechoice = document.getElementById('optionsdiv' + itemid);
-            var multiplechoiceanswer = $("input[name=multiplechoice" + itemid + "]:checked").val();
+            if ($('#optionsdiv' + itemid).exists()) {
+                multiplechoicebool = true;
+            }
             var status = document.getElementById('status' + itemid);
             status.innerHTML = "";
             if (textanswerbool) {
@@ -851,8 +925,16 @@
                 }
             }
 
-            if (multiplechoice) {
-                if (typeof multiplechoiceanswer == "undefined") {
+            if (multiplechoicebool) {
+                var length = $('.multipleChoiceAlt' + itemid).length;
+                var complete = true;
+                for (var x = 1; x <= length; x++) {
+                    var checkedCount = $('#' + itemid + 'multipleChoiceAlt' + x + ' :input:checked').length;
+                    if (checkedCount < 1) {
+                        complete = false;
+                    }
+                }
+                if (!complete) {
                     status.innerHTML += "Mangler svar på flervalg | ";
                     status.parentNode.className = "danger";
                     flag = false;
@@ -877,6 +959,7 @@
         var itemid = div.data('itemid');
         var textanswerbool = false;
         var reasoningbool = false;
+        var multiplechoicebool = false;
         if ($(('#textanswer' + itemid)).exists()) {
             textanswerbool = true;
             var textanswer = tinyMCE.get('textanswer' + itemid).getContent();
@@ -885,8 +968,9 @@
             reasoningbool = true;
             var reasoning = tinyMCE.get('reasoning' + itemid).getContent();
         }
-        var multiplechoice = document.getElementById('optionsdiv' + itemid);
-        var multiplechoiceanswer = $("input[name=multiplechoice" + itemid + "]:checked").val();
+        if ($('#optionsdiv' + itemid).exists()) {
+            multiplechoicebool = true;
+        }
 
         if (textanswerbool) {
             if (textanswer == '' || textanswer == null || textanswer == '<div>&nbsp;</div>') {
@@ -898,10 +982,19 @@
                 return false;
             }
         }
-        if (multiplechoice) {
-            if (typeof multiplechoiceanswer == "undefined") {
+        if (multiplechoicebool) {
+            var length = $('.multipleChoiceAlt' + itemid).length;
+            var complete = true;
+            for (var x = 1; x <= length; x++) {
+                var checkedCount = $('#' + itemid + 'multipleChoiceAlt' + x + ' :input:checked').length;
+                if (checkedCount < 1) {
+                    complete = false;
+                }
+            }
+            if (!complete) {
                 return false;
             }
+
         }
         return true;
     }
@@ -936,13 +1029,32 @@
                 reasoning = tinyMCE.get('reasoning' + itemid).getContent();
 
             }
+            if ($('#optiondiv' + itemid)) {
+                var length = $('.multipleChoiceAlt' + itemid).length;
+                for (var x = 1; x <= length; x++) {
+                    var checked = $('#' + itemid + 'multipleChoiceAlt' + x + ' :input:checked');
+                    $.each(checked, function () {
+                       textanswer2.value += $(this).val() + '|||||';
+                    });
+                    textanswer2.value = textanswer2.value.slice(0,-5);
+                    textanswer2.value += '<--|-->'
+                }
+                textanswer2.value = textanswer2.value.slice(0,-7);
+
+            }
             var reasoning2 = document.getElementById('id_task' + i + '-reasoning');
             var base64;
             if (window["ggbApplet" + (i + 1)]) {
                 base64 = window["ggbApplet" + (i + 1)].getBase64();
+                var autoCorrect = window["ggbApplet" + (i+1)].getValue('matistikkAutoretting');
+                if(autoCorrect == 1){
+                    var score = window["ggbApplet" + (i+1)].getValue('matistikkScore');
+                    var correct = document.getElementById('id_task' + i + '-correct');
+                    correct.value = score;
+                }
             }
             var base642 = document.getElementById('id_task' + i + '-base64answer');
-            var multiplechoiceanswer = $("input[name=multiplechoice" + itemid + "]:checked").val();
+            var multiplechoiceanswer = $("input[name=multiplechoice" + itemid + "]:checked").text();
             var geolistener = document.getElementById('geolistener' + (i + 1));
             var geogebradata = document.getElementById('id_task' + i + '-geogebradata');
             var timespent = document.getElementById('tasktimer' + (i + 1)).value;
