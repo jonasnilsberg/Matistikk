@@ -2,6 +2,7 @@
 {% load bootstrap3 %}
 <!-- Loads staticfiles-->
 {% load staticfiles %}
+{% load maths_extras %}
 <!-- Loads CSS and javascript-->
 {% bootstrap_css %}
 {% bootstrap_javascript %}
@@ -44,11 +45,13 @@
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
     </script>
+    <script src="{% static 'maths/js/jquery.scrollTo.min.js' %}"></script>
+
 </head>
 
 <body>
 <div class="row">
-    <form action="" method="post" hidden>
+    <form action="" method="post" class="hidden">
         {% csrf_token %}
         {% for form in formlist %}
             {{ form }}
@@ -56,37 +59,42 @@
         <button id="submitbutton" type="submit">Send inn</button>
     </form>
     <nav id="tasknav" class="navbar navbar-default navbar-fixed-bottom hidden">
-        <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="taskbar" style="text-align: center;">
-                <button id="prevTaskBtn" class="btn btn-primary btn-lg" disabled="disabled" type="button"
+        <div class="row">
+            <div class="col-centered">
+                <button id="prevTaskBtn" class="btn btn-primary btn-lg border-radius" disabled="disabled" type="button"
                         onclick="previousTask()"><i class="fa fa-arrow-left"
                                                     aria-hidden="true"></i>
                     Forrige oppgave
                 </button>
-                <ul id="taskBtnList" class="nav navbar-nav" style="display: inline-block; float: none;">
-
-                    {% for task in test.task_collection.tasks.all %}
-                        <li data-menuanchor="oppgave{{ forloop.counter }}">
+                <ul id="taskBtnList" class="nav navbar-nav scrollbar"
+                    style="white-space: nowrap; overflow-x: auto; max-width: 60vw">
+                    {% for item in test.task_collection.items.all %}
+                        <li id="liOppgave{{ forloop.counter }}" data-menuanchor="oppgave{{ forloop.counter }}"
+                            style="display: inline-block; float: none;">
                             <a type="button" onclick="goToTask({{ forloop.counter }})"
                                style="cursor: pointer">Oppgave {{ forloop.counter }} </a>
                         </li>
                     {% endfor %}
-                    <li data-menuanchor="summary2">
+                    <li data-menuanchor="summary2" style="display: inline-block; float: none;" id="liTest">
                         <a type="button" onclick="checkTest(); goToTask(0)" style="cursor:pointer;">Oppsummering</a>
                     </li>
-                    <button id="nextTaskBtn" class="btn btn-primary btn-lg" type="button" onclick="nextTask()"><span
-                            id="nextTaskBtnText">Neste Oppgave</span> <i
-                            class="fa fa-arrow-right"
-                            aria-hidden="true"></i></button>
                 </ul>
+                <button id="nextTaskBtn" class="btn btn-primary btn-lg border-radius" type="button"
+                        onclick="nextTask()"><span
+                        id="nextTaskBtnText">Neste Oppgave</span> <i
+                        class="fa fa-arrow-right"
+                        aria-hidden="true"></i></button>
                 <ul id="endTestNav" class="nav navbar-nav navbar-right">
-                    <button id="sendBtn" class="btn btn-success btn-lg" type="button" onclick="submitTask()"
+                    <button id="sendBtn" class="btn btn-success btn-lg border-radius" type="button"
+                            onclick="submitTask()"
                             {% if test.strictOrder or request.user.role != 1 %}disabled="disabled"{% endif %}>Send Inn
                     </button>
-                    <a class="btn btn-danger btn-lg pull-right" data-toggle='modal' data-target='#exitTestModal'>Avbryt
+                    <a class="btn btn-danger btn-lg pull-right border-radius" data-toggle='modal'
+                       data-target='#exitTestModal' style="margin-right: 20px;">Avbryt
                         Test</a>
                 </ul>
             </div>
+
         </div>
     </nav>
 </div>
@@ -106,66 +114,90 @@
             <div class="sk-cube sk-cube8"></div>
             <div class="sk-cube sk-cube9"></div>
         </div>
+        <div class="col-md-6 col-centered" style="position: absolute; top: 75%; left: 25%;">
+
+            <div class="progress progressbar">
+                <div id="progressbar" class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+                     aria-valuenow="0%" aria-valuemin="0" aria-valuemax="{{ object_list.count }}" style="width:0%">
+                </div>
+            </div>
+        </div>
     </div>
     {% if test.randomOrder %}
-        {% for task in randomtest %}
+        {% for item in randomtest %}
             <div class="section" data-anchor="oppgave{{ forloop.counter }}">
                 <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid"
-                     data-taskid="{{ task.id }}">
+                     data-itemid="{{ item.id }}">
                     <div class="panel panel-info">
                         <div class="panel-heading" style="padding-top: 1px">
                             <h3 class="text-center">Oppgave {{ forloop.counter }}</h3>
                         </div>
                         {% if forloop.first %}
-                            <span id="geocount" hidden>{{ geogebratask.count }}</span>
-                            <span id="taskcount" hidden>{{ test.task_collection.tasks.all.count }}</span>
+                            <span id="geocount" hidden>{% get_geogebra_count test %}</span>
+                            <span id="taskcount" hidden>{{ test.task_collection.items.all.count }}</span>
                         {% endif %}
-                        {% if task.extra %}
+                        {% if item.task.extra %}
                             <div class="col-sm-6" id="geogebradiv">
-                                {% for geogebra in geogebratask %}
-                                    {% if task.id == geogebra.task_id %}
-                                        <input id="base64{{ forloop.parentloop.counter }}" type="text"
-                                               value="{{ geogebra.base64 }}" hidden>
-                                    {% endif %}
-                                {% endfor %}
+                                {% get_geogebra_task item.task as geogebratask %}
+                                <input id="base64{{ forloop.counter }}" type="text"
+                                       data-variables="{{ item.variables }}"
+                                       value="{{ geogebratask.base64 }}" hidden>
                                 <div id="applet_container{{ forloop.counter }}"></div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" id="tasktextdiv">
-                                        <textarea id="tasktext{{ task.id }}">
-                                            <h4>{{ task.text | safe }}</h4>
+                                        <textarea id="tasktext{{ item.id }}">
+                                            <h4>{{ item.task.text | safe }}</h4>
                                         </textarea>
                                     </div>
                                     <div class="panel-body">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6" hidden></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
-                                        {% if task.answertype == 1 %}
-                                            <div id="textanswerdiv{{ task.id }}">
+                                        {% if item.task.answertype == 1 %}
+                                            <div id="textanswerdiv{{ item.id }}">
                                                 <label for="textanswer">Tekstsvar</label>
-                                                <textarea class="form-control" id="textanswer{{ task.id }}" rows="6"
+                                                <textarea class="form-control" id="textanswer{{ item.id }}" rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Skriv svaret ditt her..."></textarea>
                                             </div>
-                                        {% elif task.answertype == 2 %}
-                                            <div id="multiplechoicediv">
-                                                <label>Svaralternativer</label>
-                                                <div id="optionsdiv{{ task.id }}">
-                                                    {% for option in options %}
-                                                        {% if option.task_id == task.id %}
-                                                            <input type="radio" name="multiplechoice{{ task.id }}"
-                                                                   value="{{ option.option }}">
-                                                            {{ option.option }}<br>
+                                        {% elif item.task.answertype == 2 %}
+                                            <div id="optionsdiv{{ item.id }}">
+                                                {% get_mutiplechoice item.task as multiplechoicetasks %}
+                                                {% for multiplechoicetask in multiplechoicetasks %}
+                                                    <div id="{{ item.id }}multipleChoiceAlt{{ forloop.counter }}"
+                                                         class="multipleChoiceAlt{{ item.id }}">
+                                                        {% if multiplechoicetask.question %}
+                                                            <label for=multipleChoice>{{ multiplechoicetask.question }}</label>
+                                                        {% else %}
+                                                            <label for=multipleChoice>Svaralternativer:</label>
                                                         {% endif %}
-                                                    {% endfor %}
-                                                </div>
+                                                        <br>
+                                                        {% get_multiplechoice_options multiplechoicetask as options %}
+                                                        {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
+                                                        {% for option in options %}
+                                                            {% if correct_count > 1 %}
+                                                                <label class="checkbox-inline"><input type="checkbox"
+                                                                                                      class="checkbox{{ item.id }}"
+                                                                                                      value="{{ option.option }}">{{ option.option }}
+                                                                </label>
+                                                            {% else %}
+                                                                <label class="radio-inline"><input type="radio" value="{{ option.option }}"
+                                                                                                   class="checkbox{{ item.id }}"
+                                                                                                   name="{{ forloop.parentloop.counter }}choices{{ item.id }}">{{ option.option }}
+                                                                </label>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                    <hr>
+                                                {% endfor %}
                                             </div>
                                         {% endif %}
 
-                                        {% if task.reasoning %}
-                                            <div id="reasoningdiv{{ task.id }}">
-                                                <label for="reasoning{{ task.id }}">Begrunnelse</label>
-                                                <textarea class="form-control" id="reasoning{{ task.id }}" rows="6"
+                                        {% if item.task.reasoning %}
+                                            <div id="reasoningdiv{{ item.id }}">
+                                                <label for="reasoning{{ item.id }}">Begrunnelse</label>
+                                                <textarea class="form-control" id="reasoning{{ item.id }}" rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Begrunn svaret ditt..."></textarea>
                                             </div>
@@ -178,39 +210,57 @@
                             <div class="col-sm-8">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" id="tasktextdiv">
-                                        <textarea id="tasktext{{ task.id }}">
-                                            <h4>{{ task.text | safe }}</h4>
+                                        <textarea id="tasktext{{ item.id }}">
+                                            <h4>{{ item.task.text | safe }}</h4>
                                         </textarea>
                                     </div>
                                     <div class="panel-body">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6" hidden></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
-                                        {% if task.answertype == 1 %}
-                                            <div id="textanswerdiv{{ task.id }}">
-                                                <label for="textanswer{{ task.id }}">Tekstsvar</label>
-                                                <textarea class="form-control" id="textanswer{{ task.id }}" rows="6"
+                                        {% if item.task.answertype == 1 %}
+                                            <div id="textanswerdiv{{ item.id }}">
+                                                <label for="textanswer{{ item.id }}">Tekstsvar</label>
+                                                <textarea class="form-control" id="textanswer{{ item.id }}" rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Skriv svaret ditt her..."></textarea>
                                             </div>
-                                        {% elif task.answertype == 2 %}
-                                            <div id="multiplechoicediv">
-                                                <label>Svaralternativer</label>
-                                                <div id="optionsdiv{{ task.id }}">
-                                                    {% for option in options %}
-                                                        {% if option.task_id == task.id %}
-                                                            <input type="radio" name="multiplechoice{{ task.id }}"
-                                                                   value="{{ option.option }}">
-                                                            {{ option.option }}<br>
+                                        {% elif item.task.answertype == 2 %}
+                                            <div id="optionsdiv{{ item.id }}">
+                                                {% get_mutiplechoice item.task as multiplechoicetasks %}
+                                                {% for multiplechoicetask in multiplechoicetasks %}
+                                                    <div id="{{ item.id }}multipleChoiceAlt{{ forloop.counter }}"
+                                                         class="multipleChoiceAlt{{ item.id }}">
+                                                        {% if multiplechoicetask.question %}
+                                                            <label for=multipleChoice>{{ multiplechoicetask.question }}</label>
+                                                        {% else %}
+                                                            <label for=multipleChoice>Svaralternativer:</label>
                                                         {% endif %}
-                                                    {% endfor %}
-                                                </div>
+                                                        <br>
+                                                        {% get_multiplechoice_options multiplechoicetask as options %}
+                                                        {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
+                                                        {% for option in options %}
+                                                            {% if correct_count > 1 %}
+                                                                <label class="checkbox-inline"><input type="checkbox"
+                                                                                                      class="checkbox{{ item.id }}"
+                                                                                                      value="{{ option.option }}">{{ option.option }}
+                                                                </label>
+                                                            {% else %}
+                                                                <label class="radio-inline"><input type="radio" value="{{ option.option }}"
+                                                                                                   class="checkbox{{ item.id }}"
+                                                                                                   name="{{ forloop.parentloop.counter }}choices{{ item.id }}">{{ option.option }}
+                                                                </label>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                    <hr>
+                                                {% endfor %}
                                             </div>
                                         {% endif %}
 
-                                        {% if task.reasoning %}
-                                            <div id="reasoningdiv{{ task.id }}">
-                                                <label for="reasoning{{ task.id }}">Begrunnelse</label>
-                                                <textarea class="form-control" id="reasoning{{ task.id }}" rows="6"
+                                        {% if item.task.reasoning %}
+                                            <div id="reasoningdiv{{ item.id }}">
+                                                <label for="reasoning{{ item.id }}">Begrunnelse</label>
+                                                <textarea class="form-control" id="reasoning{{ item.id }}" rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Begrunn svaret ditt..."></textarea>
                                             </div>
@@ -229,7 +279,7 @@
                             <div class="panel-heading" style="padding-top: 1px">
                                 <h3 class="text-center">Oppsummering</h3>
                             </div>
-                            <div class="panel-body">
+                            <div class="panel-body" style="max-height: 80vh; overflow: auto">
                                 <table class="table table-hover table-striped table-responsive" id="summarytable">
                                     <thead>
                                     <tr>
@@ -239,10 +289,10 @@
                                     </tr>
                                     </thead>
                                     <tbody class="tableBody">
-                                    {% for task in randomtest %}
-                                        <tr id="summarytask{{ task.id }}">
+                                    {% for item in randomtest %}
+                                        <tr id="summarytask{{ item.id }}">
                                             <td>Oppgave {{ forloop.counter }}</td>
-                                            <td id="status{{ task.id }}">Status</td>
+                                            <td id="status{{ item.id }}">Status</td>
                                             <td><a type="button" class="btn btn-default"
                                                    onclick="goToTask({{ forloop.counter }})"><i
                                                     class="fa fa-arrow-right" aria-hidden="true"></i> Gå til oppgave</a>
@@ -261,64 +311,79 @@
         {% for taskorder in test.taskorder_set.all %}
             <div class="section" data-anchor="oppgave{{ forloop.counter }}">
                 <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid"
-                     data-taskid="{{ taskorder.task.id }}">
+                     data-itemid="{{ taskorder.item.id }}">
                     <div class="panel panel-info">
                         <div class="panel-heading" style="padding-top: 1px">
                             <h3 class="text-center">Oppgave {{ forloop.counter }}</h3>
                         </div>
                         {% if forloop.first %}
-                            <span id="geocount" hidden>{{ geogebratask.count }}</span>
-                            <span id="taskcount" hidden>{{ test.task_collection.tasks.all.count }}</span>
+                            <span id="geocount" hidden>{% get_geogebra_count test %}</span>
+                            <span id="taskcount" hidden>{{ test.task_collection.items.all.count }}</span>
                         {% endif %}
-                        {% if taskorder.task.extra %}
+                        {% if taskorder.item.task.extra %}
                             <div class="col-sm-6" id="geogebradiv">
-                                {% for geogebra in geogebratask %}
-                                    {% if taskorder.task.id == geogebra.task_id %}
-                                        <input id="base64{{ forloop.parentloop.counter }}" type="text"
-                                               value="{{ geogebra.base64 }}" hidden>
-                                    {% endif %}
-                                {% endfor %}
+                                {% get_geogebra_task taskorder.item.task as geogebratask %}
+                                <input id="base64{{ forloop.counter }}" type="text"
+                                       data-variables="{{ taskorder.item.variables }}"
+                                       value="{{ geogebratask.base64 }}" hidden>
                                 <div id="applet_container{{ forloop.counter }}"></div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" style="max-height: 30vh; overflow: auto"
                                          id="tasktextdiv">
-                                        <textarea id="tasktext{{ taskorder.task.id }}" style="cursor:pointer;">
-                                            <h4>{{ taskorder.task.text | safe }}</h4>
+                                        <textarea id="tasktext{{ taskorder.item.id }}" style="cursor:pointer;">
+                                            <h4>{{ taskorder.item.task.text | safe }}</h4>
                                         </textarea>
                                     </div>
                                     <div class="panel-body">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6" hidden></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
-                                        {% if taskorder.task.answertype == 1 %}
-                                            <div id="textanswerdiv{{ taskorder.task.id }}">
-                                                <label for="textanswer{{ taskorder.task.id }}">Tekstsvar</label>
-                                                <textarea class="form-control" id="textanswer{{ taskorder.task.id }}"
+                                        {% if taskorder.item.task.answertype == 1 %}
+                                            <div id="textanswerdiv{{ taskorder.item.id }}">
+                                                <label for="textanswer{{ taskorder.item.id }}">Tekstsvar</label>
+                                                <textarea class="form-control" id="textanswer{{ taskorder.item.id }}"
                                                           rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Skriv svaret ditt her..."></textarea>
                                             </div>
-                                        {% elif taskorder.task.answertype == 2 %}
-                                            <div id="multiplechoicediv">
-                                                <label>Svaralternativer</label>
-                                                <div id="optionsdiv{{ taskorder.task.id }}">
-                                                    {% for option in options %}
-                                                        {% if option.task_id == taskorder.task.id %}
-                                                            <input type="radio"
-                                                                   name="multiplechoice{{ taskorder.task.id }}"
-                                                                   value="{{ option.option }}">
-                                                            {{ option.option }}<br>
+                                        {% elif taskorder.item.task.answertype == 2 %}
+                                            <div id="optionsdiv{{ taskorder.item.id }}">
+                                                {% get_mutiplechoice taskorder.item.task as multiplechoicetasks %}
+                                                {% for multiplechoicetask in multiplechoicetasks %}
+                                                    <div id="{{ taskorder.item.id }}multipleChoiceAlt{{ forloop.counter }}"
+                                                         class="multipleChoiceAlt{{ taskorder.item.id }}">
+                                                        {% if multiplechoicetask.question %}
+                                                            <label for=multipleChoice>{{ multiplechoicetask.question }}</label>
+                                                        {% else %}
+                                                            <label for=multipleChoice>Svaralternativer:</label>
                                                         {% endif %}
-                                                    {% endfor %}
-                                                </div>
+                                                        <br>
+                                                        {% get_multiplechoice_options multiplechoicetask as options %}
+                                                        {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
+                                                        {% for option in options %}
+                                                            {% if correct_count > 1 %}
+                                                                <label class="checkbox-inline"><input type="checkbox"
+                                                                                                      class="checkbox{{ taskorder.item.id }}"
+                                                                                                      value="{{ option.option }}">{{ option.option }}
+                                                                </label>
+                                                            {% else %}
+                                                                <label class="radio-inline"><input type="radio" value="{{ option.option }}"
+                                                                                                   class="checkbox{{ taskorder.item.id }}"
+                                                                                                   name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
+                                                                </label>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                    <hr>
+                                                {% endfor %}
                                             </div>
                                         {% endif %}
 
-                                        {% if taskorder.task.reasoning %}
-                                            <div id="reasoningdiv{{ taskorder.task.id }}">
-                                                <label for="reasoning{{ taskorder.task.id }}">Begrunnelse</label>
-                                                <textarea class="form-control" id="reasoning{{ taskorder.task.id }}"
+                                        {% if taskorder.item.task.reasoning %}
+                                            <div id="reasoningdiv{{ taskorder.item.id }}">
+                                                <label for="reasoning{{ taskorder.item.id }}">Begrunnelse</label>
+                                                <textarea class="form-control" id="reasoning{{ taskorder.item.id }}"
                                                           rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Begrunn svaret ditt..."></textarea>
@@ -332,41 +397,58 @@
                             <div class="col-sm-8">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" id="tasktextdiv">
-                                        <textarea id="tasktext{{ taskorder.task.id }}">
-                                            <h4>{{ taskorder.task.text | safe }}</h4>
+                                        <textarea id="tasktext{{ taskorder.item.id }}">
+                                            <h4>{{ taskorder.item.task.text | safe }}</h4>
                                         </textarea>
                                     </div>
                                     <div class="panel-body">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6" hidden></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
-                                        {% if taskorder.task.answertype == 1 %}
-                                            <div id="textanswerdiv{{ taskorder.task.id }}">
+                                        {% if taskorder.item.task.answertype == 1 %}
+                                            <div id="textanswerdiv{{ taskorder.item.id }}">
                                                 <label for="textanswer">Tekstsvar</label>
-                                                <textarea class="form-control" id="textanswer{{ taskorder.task.id }}"
+                                                <textarea class="form-control" id="textanswer{{ taskorder.item.id }}"
                                                           rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Skriv svaret ditt her..."></textarea>
                                             </div>
-                                        {% elif taskorder.task.answertype == 2 %}
-                                            <div id="multiplechoicediv">
-                                                <label>Svaralternativer</label>
-                                                <div id="optionsdiv{{ taskorder.task.id }}">
-                                                    {% for option in options %}
-                                                        {% if option.task_id == taskorder.task.id %}
-                                                            <input type="radio"
-                                                                   name="multiplechoice{{ taskorder.task.id }}"
-                                                                   value="{{ option.option }}">
-                                                            {{ option.option }}<br>
+                                        {% elif taskorder.item.task.answertype == 2 %}
+                                            <div id="optionsdiv{{ taskorder.item.id }}">
+                                                {% get_mutiplechoice taskorder.item.task as multiplechoicetasks %}
+                                                {% for multiplechoicetask in multiplechoicetasks %}
+                                                    <div id="{{ taskorder.item.id }}multipleChoiceAlt{{ forloop.counter }}"
+                                                         class="multipleChoiceAlt{{ taskorder.item.id }}">
+                                                        {% if multiplechoicetask.question %}
+                                                            <label for=multipleChoice>{{ multiplechoicetask.question }}</label>
+                                                        {% else %}
+                                                            <label for=multipleChoice>Svaralternativer:</label>
                                                         {% endif %}
-                                                    {% endfor %}
-                                                </div>
+                                                        <br>
+                                                        {% get_multiplechoice_options multiplechoicetask as options %}
+                                                        {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
+                                                        {% for option in options %}
+                                                            {% if correct_count > 1 %}
+                                                                <label class="checkbox-inline"><input type="checkbox"
+                                                                                                      class="checkbox{{ taskorder.item.id }}"
+                                                                                                      value="{{ option.option }}">{{ option.option }}
+                                                                </label>
+                                                            {% else %}
+                                                                <label class="radio-inline"><input type="radio" value="{{ option.option }}"
+                                                                                                   class="checkbox{{ taskorder.item.id }}"
+                                                                                                   name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
+                                                                </label>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+                                                    <hr>
+                                                {% endfor %}
                                             </div>
                                         {% endif %}
 
-                                        {% if taskorder.task.reasoning %}
-                                            <div id="reasoningdiv{{ taskorder.task.id }}">
+                                        {% if taskorder.item.task.reasoning %}
+                                            <div id="reasoningdiv{{ taskorder.item.id }}">
                                                 <label for="reasoning">Begrunnelse</label>
-                                                <textarea class="form-control" id="reasoning{{ taskorder.task.id }}"
+                                                <textarea class="form-control" id="reasoning{{ taskorder.item.id }}"
                                                           rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Begrunn svaret ditt..."></textarea>
@@ -386,7 +468,7 @@
                             <div class="panel-heading" style="padding-top: 1px">
                                 <h3 class="text-center">Oppsummering</h3>
                             </div>
-                            <div class="panel-body">
+                            <div class="panel-body" style="max-height: 80vh; overflow: auto">
                                 <table class="table table-hover table-striped table-responsive" id="summarytable">
                                     <thead>
                                     <tr>
@@ -396,10 +478,10 @@
                                     </tr>
                                     </thead>
                                     <tbody class="tableBody">
-                                    {% for task in test.taskorder_set.all %}
-                                        <tr id="summarytask{{ task.task.id }}">
+                                    {% for taskorder in test.taskorder_set.all %}
+                                        <tr id="summarytask{{ taskorder.item.id }}">
                                             <td>Oppgave {{ forloop.counter }}</td>
-                                            <td id="status{{ task.task.id }}">Status</td>
+                                            <td id="status{{ taskorder.item.id }}">Status</td>
                                             <td><a class="btn btn-default" onclick="goToTask({{ forloop.counter }})"><i
                                                     class="fa fa-arrow-right" aria-hidden="true"></i> Gå til
                                                 oppgave</a>
@@ -449,7 +531,7 @@
 
     jQuery.fn.exists = function () {
         return jQuery(this).length > 0;
-    }
+    };
     var geocount = document.getElementById('geocount').innerHTML;
     var geoFinished = false;
     var onLeave = false;
@@ -461,9 +543,9 @@
     var divheight = document.getElementById('tasktextdiv').clientHeight;
     for (var i = 0; i < taskcount; i++) {
         var div = $('#task' + (i + 1));
-        var taskid = div.data('taskid');
+        var itemid = div.data('itemid');
         tinymce.init({
-            selector: '#tasktext' + taskid,
+            selector: '#tasktext' + itemid,
             plugins: 'placeholder',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
             toolbar: false,
@@ -473,9 +555,9 @@
             readonly: 1,
             body_id: 'tasktextID'
         });
-        if ($(('#textanswer' + taskid)).exists()) {
+        if ($(('#textanswer' + itemid)).exists()) {
             tinymce.init({
-                selector: '#textanswer' + taskid,
+                selector: '#textanswer' + itemid,
                 plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table placeholder',
                 content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
                 toolbar: [
@@ -486,9 +568,9 @@
                 menubar: false
             });
         }
-        if ($(('#reasoning' + taskid)).exists()) {
+        if ($(('#reasoning' + itemid)).exists()) {
             tinymce.init({
-                selector: '#reasoning' + taskid,
+                selector: '#reasoning' + itemid,
                 plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table placeholder ',
                 content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
                 toolbar: [
@@ -505,6 +587,9 @@
      */
     $(document).ready(function () {
         start = Date.now();
+        var notGeo = parseInt(taskcount - geocount);
+        var percent = ((geoloaded + notGeo) / taskcount) * 100;
+        $('#progressbar').css('width', percent + '%');
 
         $('#fullpage').fullpage({
             menu: '#taskBtnList',
@@ -533,10 +618,10 @@
                         tasktime.value = (Date.now() - taskTimerStart) / 1000;
                     }
                 }
-
                 onLeave = true;
                 var summary = parseInt(taskcount) + 2;
                 var tasksnr = parseInt(taskcount) + 1;
+                $('#taskBtnList').scrollTo(document.getElementById("liOppgave" + parseInt(nextIndex - 1)));
                 if (strictOrder == 'False') {
                     if (nextIndex == tasksnr) {
                         if (tasksnr == 2) {
@@ -646,7 +731,7 @@
                 applet[k].inject('applet_container' + (k + 1), 'preferhtml5');
             }
         }
-        $("body").css({"overflow": "hidden"});
+        $("body").css({"overflow-y": "hidden"});
         $.fn.fullpage.setMouseWheelScrolling(false);
         $.fn.fullpage.setAllowScrolling(false);
 
@@ -715,25 +800,6 @@
         viewPortHeight = window.innerHeight * 0.7;
     }
 
-    /**
-     * This function is called from every GeoGebra-applet when the applet is finished loading.
-     * @param applet - The id of the applet that called the function
-     */
-    function ggbOnInit(applet) {
-        geoloaded += 1;
-        if (geoloaded == geocount) {
-            setTimeout(function () {
-                geoFinished = true;
-                goToTask(1);
-                $(".sk-cube-grid").remove();
-                $('#tasknav').removeClass('hidden');
-            }, 1000);
-        }
-        window["ggbApplet" + applet.charAt(9)].registerAddListener("addListener" + applet.charAt(9));
-        window["ggbApplet" + applet.charAt(9)].registerRemoveListener("removeListener" + applet.charAt(9));
-        window["ggbApplet" + applet.charAt(9)].registerUpdateListener("updateListener" + applet.charAt(9));
-    }
-
     var applet = [];
     for (var i = 0; i < taskcount; i++) {
         if (document.getElementById('base64' + (i + 1)) != null) {
@@ -755,14 +821,63 @@
                 "showTutorialLink": false,
                 "showLogging": false,
                 "preventFocus": true,
-                "useBrowserForJS": true,
+                "useBrowserForJS": false,
                 "ggbBase64": base64
+            };
+            parameters.appletOnLoad = function () {
+                geoloaded += 1;
+                var notGeo = parseInt(taskcount - geocount);
+                var percent = ((geoloaded + notGeo) / taskcount) * 100;
+                /*Kan hente variable fra andre systemer via Ajax
+                 $.ajax({
+                 type: 'GET',
+                 url: 'http://127.0.0.1:8005/',
+                 data: {
+                 'variables': 4,
+                 },
+                 dataType: 'json',
+                 success: function (json) {
+                 },
+                 error: function (xhr) {
+                 alert('error');
+                 alert(xhr.responseText);
+                 }
+                 });
+                 */
+                $('#progressbar').css('width', percent + '%');
+                if (geoloaded == geocount) {
+                    addListenersAndVariables();
+                    setTimeout(function () {
+                        geoFinished = true;
+                        goToTask(1);
+                        $(".sk-cube-grid").remove();
+                        $('#tasknav').removeClass('hidden');
+                    }, 500);
+                }
             };
         }
         var app = new GGBApplet(parameters, '5.0', 'applet_container' + (i + 1));
         app.setPreviewImage('http://bildr.no/image/cEtUd3R6.jpeg', 'https://www.geogebra.org/images/GeoGebra_loading.png?v=1490705653', 'https://www.geogebra.org/images/applet_play.png?v=1490705653');
         applet.push(app);
     }
+
+    function addListenersAndVariables() {
+        for (var i = 1; i <= taskcount; i++) {
+            var variables = $('#base64' + i).data('variables');
+            if (variables) {
+                var variableTable = variables.split('|||||');
+                for (var x = 0; x < variableTable.length; x++) {
+                    window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), variableTable[x]);
+                }
+            }
+            if (document.getElementById('base64' + i) != null) {
+                window["ggbApplet" + i].registerAddListener("addListener" + i);
+                window["ggbApplet" + i].registerRemoveListener("removeListener" + i);
+                window["ggbApplet" + i].registerUpdateListener("updateListener" + i);
+            }
+        }
+    }
+
 
     /**
      * This function checks the HTML-elements in every task in the test.
@@ -776,19 +891,21 @@
             var taskflag = true;
             var textanswerbool = false;
             var reasoningbool = false;
+            var multiplechoicebool = false;
             var div = $('#task' + (i + 1));
-            var taskid = div.data('taskid');
-            if ($(('#textanswer' + taskid)).exists()) {
+            var itemid = div.data('itemid');
+            if ($(('#textanswer' + itemid)).exists()) {
                 textanswerbool = true;
-                var textanswer = tinyMCE.get('textanswer' + taskid).getContent();
+                var textanswer = tinyMCE.get('textanswer' + itemid).getContent();
             }
-            if ($(('#reasoning' + taskid)).exists()) {
+            if ($(('#reasoning' + itemid)).exists()) {
                 reasoningbool = true;
-                var reasoning = tinyMCE.get('reasoning' + taskid).getContent();
+                var reasoning = tinyMCE.get('reasoning' + itemid).getContent();
             }
-            var multiplechoice = document.getElementById('optionsdiv' + taskid);
-            var multiplechoiceanswer = $("input[name=multiplechoice" + taskid + "]:checked").val();
-            var status = document.getElementById('status' + taskid);
+            if ($('#optionsdiv' + itemid).exists()) {
+                multiplechoicebool = true;
+            }
+            var status = document.getElementById('status' + itemid);
             status.innerHTML = "";
             if (textanswerbool) {
                 if (textanswer.trim() == '' || textanswer == null || textanswer == '<div>&nbsp;</div>') {
@@ -808,8 +925,16 @@
                 }
             }
 
-            if (multiplechoice) {
-                if (typeof multiplechoiceanswer == "undefined") {
+            if (multiplechoicebool) {
+                var length = $('.multipleChoiceAlt' + itemid).length;
+                var complete = true;
+                for (var x = 1; x <= length; x++) {
+                    var checkedCount = $('#' + itemid + 'multipleChoiceAlt' + x + ' :input:checked').length;
+                    if (checkedCount < 1) {
+                        complete = false;
+                    }
+                }
+                if (!complete) {
                     status.innerHTML += "Mangler svar på flervalg | ";
                     status.parentNode.className = "danger";
                     flag = false;
@@ -831,19 +956,21 @@
      */
     function checkTask(task) {
         var div = $('#task' + task);
-        var taskid = div.data('taskid');
+        var itemid = div.data('itemid');
         var textanswerbool = false;
         var reasoningbool = false;
-        if ($(('#textanswer' + taskid)).exists()) {
+        var multiplechoicebool = false;
+        if ($(('#textanswer' + itemid)).exists()) {
             textanswerbool = true;
-            var textanswer = tinyMCE.get('textanswer' + taskid).getContent();
+            var textanswer = tinyMCE.get('textanswer' + itemid).getContent();
         }
-        if ($(('#reasoning' + taskid)).exists()) {
+        if ($(('#reasoning' + itemid)).exists()) {
             reasoningbool = true;
-            var reasoning = tinyMCE.get('reasoning' + taskid).getContent();
+            var reasoning = tinyMCE.get('reasoning' + itemid).getContent();
         }
-        var multiplechoice = document.getElementById('optionsdiv' + taskid);
-        var multiplechoiceanswer = $("input[name=multiplechoice" + taskid + "]:checked").val();
+        if ($('#optionsdiv' + itemid).exists()) {
+            multiplechoicebool = true;
+        }
 
         if (textanswerbool) {
             if (textanswer == '' || textanswer == null || textanswer == '<div>&nbsp;</div>') {
@@ -855,10 +982,19 @@
                 return false;
             }
         }
-        if (multiplechoice) {
-            if (typeof multiplechoiceanswer == "undefined") {
+        if (multiplechoicebool) {
+            var length = $('.multipleChoiceAlt' + itemid).length;
+            var complete = true;
+            for (var x = 1; x <= length; x++) {
+                var checkedCount = $('#' + itemid + 'multipleChoiceAlt' + x + ' :input:checked').length;
+                if (checkedCount < 1) {
+                    complete = false;
+                }
+            }
+            if (!complete) {
                 return false;
             }
+
         }
         return true;
     }
@@ -883,23 +1019,42 @@
             var textanswer = undefined;
             var reasoning = undefined;
             var div = $('#task' + (i + 1));
-            var taskid = div.data('taskid');
-            var taskid2 = document.getElementById('id_task' + i + '-task');
-            if ($(('#textanswer' + taskid)).exists()) {
-                textanswer = tinyMCE.get('textanswer' + taskid).getContent();
+            var itemid = div.data('itemid');
+            $('#id_task' + i + '-item option[value=' + itemid + ']').attr('selected', true);
+            if ($(('#textanswer' + itemid)).exists()) {
+                textanswer = tinyMCE.get('textanswer' + itemid).getContent();
             }
             var textanswer2 = document.getElementById('id_task' + i + '-text');
-            if ($(('#reasoning' + taskid)).exists()) {
-                reasoning = tinyMCE.get('reasoning' + taskid).getContent();
+            if ($(('#reasoning' + itemid)).exists()) {
+                reasoning = tinyMCE.get('reasoning' + itemid).getContent();
+
+            }
+            if ($('#optiondiv' + itemid)) {
+                var length = $('.multipleChoiceAlt' + itemid).length;
+                for (var x = 1; x <= length; x++) {
+                    var checked = $('#' + itemid + 'multipleChoiceAlt' + x + ' :input:checked');
+                    $.each(checked, function () {
+                       textanswer2.value += $(this).val() + '|||||';
+                    });
+                    textanswer2.value = textanswer2.value.slice(0,-5);
+                    textanswer2.value += '<--|-->'
+                }
+                textanswer2.value = textanswer2.value.slice(0,-7);
 
             }
             var reasoning2 = document.getElementById('id_task' + i + '-reasoning');
             var base64;
             if (window["ggbApplet" + (i + 1)]) {
                 base64 = window["ggbApplet" + (i + 1)].getBase64();
+                var autoCorrect = window["ggbApplet" + (i+1)].getValue('matistikkAutoretting');
+                if(autoCorrect == 1){
+                    var score = window["ggbApplet" + (i+1)].getValue('matistikkScore');
+                    var correct = document.getElementById('id_task' + i + '-correct');
+                    correct.value = score;
+                }
             }
             var base642 = document.getElementById('id_task' + i + '-base64answer');
-            var multiplechoiceanswer = $("input[name=multiplechoice" + taskid + "]:checked").val();
+            var multiplechoiceanswer = $("input[name=multiplechoice" + itemid + "]:checked").text();
             var geolistener = document.getElementById('geolistener' + (i + 1));
             var geogebradata = document.getElementById('id_task' + i + '-geogebradata');
             var timespent = document.getElementById('tasktimer' + (i + 1)).value;
@@ -932,9 +1087,7 @@
                     geolistener.value += '|||';
                 }
             }
-
             geogebradata.value = geolistener.value;
-            taskid2.value = taskid;
             timespent2.value = parseFloat(timespent);
             if (typeof textanswer !== 'undefined') {
                 textanswer2.value = textanswer;

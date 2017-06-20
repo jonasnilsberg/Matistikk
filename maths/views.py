@@ -4,7 +4,7 @@ from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, \
-    GeogebraAnswer
+    GeogebraAnswer, Item, MultipleChoiceOption
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
@@ -13,9 +13,9 @@ from django.db.models import Q
 import django_excel as excel
 from administration.views import AdministratorCheck, RoleCheck
 import datetime
-
 import random
 from django.http import HttpResponseRedirect
+import requests
 
 
 class AnswerCheck(views.UserPassesTestMixin):
@@ -95,7 +95,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             for a in ans:
                 if task_count == 0:
                     tabTwo.append(a)
-                    task_count = a.test.task_collection.tasks.count()
+                    task_count = a.test.task_collection.items.count()
                 task_count -= 1
             context['lastanswers'] = tabTwo[:15]
 
@@ -110,13 +110,10 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         if self.request.user.role == 1:
             answeredTests = []
             answers = Answer.objects.filter(user=self.request.user)
-            print(answers)
             tests = Test.objects.filter(
                 Q(person=self.request.user) | Q(grade__in=self.request.user.grades.all()) | Q(
                     gruppe__in=self.request.user.gruppe_set.all())).distinct()
             answered = tests.filter(answer__in=answers).distinct().order_by('-answer__date_answered')
-            print(tests)
-            print(answered.values('id').distinct())
             for test in answered:
                 if test not in answeredTests:
                     answeredTests.append(test)
@@ -182,21 +179,34 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
         task = form.save(commit=False)
         task.author = self.request.user
         messages.success(self.request, 'Oppgave med navnet: ' + task.title + " ble opprettet.")
+        variable_task = self.request.POST['variables']
+        if variable_task:
+            task.variableTask = True
         task.save()
-
+        item = Item(task=task, variables=variable_task)
+        item.save()
         if task.answertype == 2:
             options = self.request.POST['options']
-            optiontable = options.split('|||||')
-            correct = optiontable[0]
-            x = 1
-            for option in optiontable[1:]:
-                if int(correct) == x:
-                    multiplechoice = MultipleChoiceTask(option=option, task=task, correct=True)
-                else:
-                    multiplechoice = MultipleChoiceTask(option=option, task=task, correct=False)
-                multiplechoice.save()
-                x += 1
-
+            correct = self.request.POST['correct']
+            questions = self.request.POST['questions']
+            option_split = options.split('<--->')
+            correct_split = correct.split('<--->')
+            question_split = questions.split('|||||')
+            for question in question_split:
+                multiple_choice_task = MultipleChoiceTask(question=question, task=task)
+                multiple_choice_task.save()
+                multiple_choice_options = option_split[0].split('|||||')
+                multiple_choice_options_correct = correct_split[0].split('|||||')
+                for i in range(0, len(multiple_choice_options)):
+                    multiple_choice_option = MultipleChoiceOption(MutipleChoiceTask=multiple_choice_task,
+                                                                  option=multiple_choice_options[i])
+                    if multiple_choice_options_correct[i] == 'true':
+                        multiple_choice_option.correct = True
+                    else:
+                        multiple_choice_option.correct = False
+                    multiple_choice_option.save()
+                option_split.pop(0)
+                correct_split.pop(0)
         if task.extra:
             base64 = self.request.POST['base64']
             preview = self.request.POST['preview']
@@ -316,11 +326,19 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
             geogebra = GeogebraTask.objects.get(task_id=task_id)
             data['geogebra_preview'] = geogebra.preview
         if task.answertype == 2:
-            multiplechoice_list = MultipleChoiceTask.objects.filter(task_id=task_id)
-            for option in multiplechoice_list:
+            multiplechoice_task = MultipleChoiceTask.objects.filter(task_id=task_id)
+            for choices in multiplechoice_task:
+                options = []
+                multiple_choice_options = MultipleChoiceOption.objects.filter(MutipleChoiceTask=choices)
+                correct = 0
+                for option in multiple_choice_options:
+                    options.append(option.option)
+                    if option.correct:
+                        correct += 1
                 multiplechoice.append({
-                    "option": option.option,
-                    "correct": option.correct,
+                    'question': choices.question,
+                    'correct': correct,
+                    'options': options
                 })
         return JsonResponse(data)
 
@@ -334,6 +352,65 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
         context = super(TaskListView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         context['geogebratask'] = GeogebraTask.objects.all()
+        return context
+
+
+class TaskDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.DetailView):
+    """
+        Class that displays information about a single task object based on the task_id.
+
+        :func:`AdministratorCheck`:
+            inherited permission check, checks if the logged in user is an administrator.
+        **AjaxResponseMixin:**
+            This mixin from :ref:`Django braces` provides hooks for altenate processing of AJAX requests based on HTTP verb.
+        **DetailView:**
+            Inherits generic.DetailView that makes a page representing a specific object.
+    """
+    template_name = 'maths/task_detail.html'
+    model = Task
+    pk_url_kwarg = 'task_pk'
+
+    def get_ajax(self, request, *args, **kwargs):
+        item_id = request.GET['item_id']
+        item = Item.objects.get(id=item_id)
+        data = {
+            'description': item.task.variableDescription,
+            'variables': item.variables
+        }
+        return JsonResponse(data)
+
+    def post_ajax(self, request, *args, **kwargs):
+        update_description = request.POST['updateDescription']
+        if update_description in 'true':
+            description = request.POST['description']
+            task = Task.objects.get(id=self.kwargs.get('task_pk'))
+            task.variableDescription = description
+            task.save()
+            data = {
+                'id': task.id
+            }
+        else:
+            variables = request.POST['variables']
+            if not Item.objects.filter(task_id=self.kwargs.get('task_pk'), variables=variables).exists():
+                item = Item(task_id=self.kwargs.get('task_pk'), variables=variables)
+                item.save()
+                data = {
+                    'id': item.id
+                }
+            else:
+                item = Item.objects.get(task_id=self.kwargs.get('task_pk'), variables=variables)
+                data = {
+                    'id': item.id
+                }
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super(TaskDetailView, self).get_context_data(**kwargs)
+        task_id = self.kwargs.get('task_pk')
+        items = Item.objects.filter(task_id=task_id)
+        geogebra = GeogebraTask.objects.get(task_id=task_id)
+        context['items'] = items
+        context['geogebra'] = geogebra
         return context
 
 
@@ -395,37 +472,34 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
             else:
                 geogebratask = GeogebraTask(task=task, base64=base64, preview=preview)
                 geogebratask.save()
-
         if task.answertype == 2:
-            options = self.request.POST['options']
-            optiontable = options.split('|||||')
-            correct = optiontable[0]
             taskoptions = MultipleChoiceTask.objects.filter(task=task)
-            newoptions = (len(optiontable) - 1) - len(taskoptions)
-
-            x = 1
-            for taskoption in taskoptions:
-                if int(correct) == x:
-                    taskoption.correct = True
-                    taskoption.option = optiontable[x]
-                else:
-                    taskoption.correct = False
-                    taskoption.option = optiontable[x]
-                taskoption.save()
-                x += 1
-
-            if newoptions > 0:
-                for option in optiontable[len(optiontable) - newoptions:]:
-                    if int(correct) == x:
-                        multiplechoice = MultipleChoiceTask(task=task, option=option, correct=True)
+            taskoptions.delete()
+            options = self.request.POST['options']
+            correct = self.request.POST['correct']
+            questions = self.request.POST['questions']
+            option_split = options.split('<--->')
+            correct_split = correct.split('<--->')
+            question_split = questions.split('|||||')
+            for question in question_split:
+                multiple_choice_task = MultipleChoiceTask(question=question, task=task)
+                multiple_choice_task.save()
+                multiple_choice_options = option_split[0].split('|||||')
+                multiple_choice_options_correct = correct_split[0].split('|||||')
+                for i in range(0, len(multiple_choice_options)):
+                    multiple_choice_option = MultipleChoiceOption(MutipleChoiceTask=multiple_choice_task,
+                                                                  option=multiple_choice_options[i])
+                    if multiple_choice_options_correct[i] == 'true':
+                        multiple_choice_option.correct = True
                     else:
-                        multiplechoice = MultipleChoiceTask(task=task, option=option, correct=False)
-                    multiplechoice.save()
-                    x += 1
+                        multiple_choice_option.correct = False
+                    multiple_choice_option.save()
+                option_split.pop(0)
+                correct_split.pop(0)
         return super(TaskUpdateView, self).form_valid(form)
 
 
-class TaskCollectionCreateView(AdministratorCheck, generic.CreateView):
+class TaskCollectionCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.CreateView):
     """
     Class that creates a taskCollection.
 
@@ -437,7 +511,23 @@ class TaskCollectionCreateView(AdministratorCheck, generic.CreateView):
     """
     template_name = 'maths/taskCollection_form.html'
     model = TaskCollection
-    fields = ['test_name', 'tasks']
+    fields = ['test_name', 'items']
+
+    def get_ajax(self, request, *args, **kwargs):
+        ids = []
+        variables = []
+        id = request.GET['id']
+        items = Item.objects.filter(task_id=id)
+        for item in items:
+            ids.append(item.id)
+            variables.append(item.variables)
+        data = {
+            'ids': ids,
+            'variables': variables,
+            'description': item.task.variableDescription,
+            'variableTask': item.task.variableTask
+        }
+        return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         """
@@ -655,7 +745,7 @@ class TestCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Create
             order_table = order_list.split('|||||')
             x = 1
             for order in order_table:
-                taskorder = TaskOrder(test=test, task_id=order)
+                taskorder = TaskOrder(test=test, item_id=order)
                 taskorder.save()
                 x += 1
         return super(TestCreateView, self).form_valid(form)
@@ -741,18 +831,21 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
         """
         context = super(AnswerCreateView, self).get_context_data(**kwargs)
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
-        geogebratasks = GeogebraTask.objects.filter(task__in=test.task_collection.tasks.all())
-        options = MultipleChoiceTask.objects.filter(task__in=test.task_collection.tasks.all())
-        randomtest = sorted(test.task_collection.tasks.all(), key=lambda x: random.random())
         context['test'] = test
-        context['randomtest'] = randomtest
-        context['geogebratask'] = geogebratasks
-        context['options'] = options
-        z = 0
+        """
+        Henter ut tilfedlige variable fra en annen server.
+        data = {
+            'variables': 3,
+        }
+        r = requests.get('http://127.0.0.1:8005/', params=data)
+        json_data = json.loads(r.text)
+        """
+        if test.randomOrder:
+            randomtest = sorted(test.task_collection.items.all(), key=lambda x: random.random())
+            context['randomtest'] = randomtest
         forms = []
-        for task in test.task_collection.tasks.all():
+        for z in range(0, len(test.task_collection.items.all())):
             forms.append(CreateAnswerForm(prefix="task" + str(z)))
-            z += 1
         context['formlist'] = forms
         return context
 
@@ -766,23 +859,24 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             :return: HttpResponseRedirect to the index page.
         """
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
-        y = 0
-        for task in test.task_collection.tasks.all():
+        for y in range(0, len(test.task_collection.items.all())):
             text = request.POST["task" + str(y) + "-text"]
             reasoning = request.POST["task" + str(y) + "-reasoning"]
-            taskid = request.POST["task" + str(y) + "-task"]
+            itemid = request.POST["task" + str(y) + "-item"]
             timespent = request.POST["task" + str(y) + "-timespent"]
-            task = Task.objects.get(id=taskid)
-            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, task=task,
+            correct = request.POST["task"+str(y)+"-correct"]
+            item = Item.objects.get(id=itemid)
+            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, item=item,
                             timespent=timespent)
+            if correct:
+                answer.correct = correct
             answer.date_answered = datetime.datetime.now()
             answer.save()
             base64 = request.POST["task" + str(y) + "-base64answer"]
             geogebradata = request.POST["task" + str(y) + "-geogebradata"]
-            if task.extra:
+            if item.task.extra:
                 geogebraanswer = GeogebraAnswer(answer=answer, base64=base64, data=geogebradata)
                 geogebraanswer.save()
-            y += 1
         url = reverse('maths:index')
         return HttpResponseRedirect(url)
 
@@ -920,8 +1014,6 @@ class AnswerListView(AnswerCheck, generic.ListView):
         return context
 
 
-
-
 def export_data(request, test_pk):
     """
         Function that exports all answers for all tasks and users in a specific test.
@@ -933,7 +1025,7 @@ def export_data(request, test_pk):
     if request.user.role is not 1:
         test = Test.objects.get(id=test_pk)
         answers = Answer.objects.filter(test=test)
-        column_names = ['task_id', 'user_id', 'text', 'reasoning', 'timespent', 'date_answered']
+        column_names = ['item_id', 'user_id', 'text', 'reasoning', 'timespent', 'date_answered']
         return excel.make_response_from_query_sets(answers, column_names, 'xlsx',
                                                    file_name=test.task_collection.test_name)
     else:

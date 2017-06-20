@@ -8,7 +8,7 @@
     width: 300px;
 }
 
-* {
+.border-radius {
     border-radius: 0 !important;
 }
 
@@ -21,9 +21,7 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .btn {
-    border: 2px solid black;
     color: black;
-    border: 1px solid white;
 }
 
 .btn-primary {
@@ -369,13 +367,14 @@ html, body {
         transform: scale3D(0, 0, 1);
     }
 }
+
 /* End */
 .box:hover {
     background-color: darkgray; /* make this whatever you want */
     cursor: pointer;
 }
 
-#tasktextdiv{
+#tasktextdiv {
     height: 20%;
 }
 
@@ -384,4 +383,34 @@ html, body {
     height: 42px;
     width: 42px;
     margin-left: 3px;
+}
+
+.itemrow {
+    cursor: pointer;
+}
+
+.col-centered {
+    float: none;
+    margin: 0 auto;
+}
+
+ul.scrollbar::-webkit-scrollbar {
+    height: 0px;
+    width: 0px; /* remove scrollbar space */
+    background: transparent; /* optional: just make scrollbar invisible */
+}
+
+.checkbox-inline,
+.checkbox-inline + .checkbox-inline,
+.checkbox-inline + .radio-inline,
+.radio-inline,
+.radio-inline + .radio-inline,
+.radio-inline + .checkbox-inline {
+    margin-left: 0;
+    margin-right: 10px;
+}
+
+.checkbox-inline:last-child,
+.radio-inline:last-child {
+    margin-right: 0;
 }

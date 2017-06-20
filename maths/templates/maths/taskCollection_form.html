@@ -23,33 +23,15 @@
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
-        kantrykke = false;
         tinymce.init({
-            selector: '#tasktext',
+            selector: '#taskVariableDescription',
             plugins: 'placeholder',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
             toolbar: false,
             menubar: false,
             statusbar: false,
-            readonly: 1
-        });
-        tinymce.init({
-            selector: '#answer',
-            plugins: 'placeholder',
-            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-            toolbar: false,
-            menubar: false,
-            statusbar: false,
-            readonly: 1
-        });
-        tinymce.init({
-            selector: '#reasoning',
-            plugins: 'placeholder',
-            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-            toolbar: false,
-            menubar: false,
-            statusbar: false,
-            readonly: 1
+            readonly: 1,
+            height: '150px'
         });
     </script>
 {% endblock %}
@@ -62,7 +44,7 @@
             <form class="form-margin" action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {% bootstrap_field form.test_name addon_before='<i class="fa fa-book" aria-hidden="true"></i>' %}
-                {% bootstrap_field form.tasks field_class='hidden' %}
+                {% bootstrap_field form.items field_class='hidden' show_label=false %}
                 <div id="selectTaskWarning" class="alert alert-warning hidden">
                     <strong>Ikke lagret!</strong> Vennligst velg noen oppgaver.
                 </div>
@@ -99,7 +81,7 @@
                         </thead>
                         <tbody>
                         {% for task in tasks %}
-                            <tr style="cursor: pointer">
+                            <tr id="task{{ task.id }}" style="cursor: pointer" data-variable="{{ task.variableTask }}">
                                 <td class="test"><input type="checkbox" value="{{ task.id }}"
                                 ></td>
                                 <td>{{ task.id }}</td>
@@ -113,7 +95,8 @@
                                 {% endfor %}
                                 </td>
                                 <td>
-                                    <button value="{{ task.id }}" type="button" class="btn btn-info btn-sm"><span
+                                    <button id="taskBtn{{ task.id }}" value="{{ task.id }}" type="button"
+                                            class="btn btn-info btn-sm"><span
                                             class="glyphicon glyphicon-eye-open"
                                             aria-hidden="true"></span> Forhåndsvis
                                     </button>
@@ -123,7 +106,8 @@
                         </tbody>
                     </table>
                 </div>
-                <button id='submitPasswordBtn' type="submit" class="hidden"></button>
+                <h4>Antall valgte oppgaver: <span id="itemsSelected">0</span></h4>
+                <button id='submitTaskCollectionBtn' type="submit" class="hidden"></button>
             </form>
         </div>
         <div class="panel-footer">
@@ -133,49 +117,155 @@
         </div>
     </div>
     <script>
+        $(document).ajaxSend(function (event, request, settings) {
+            $('#loading-indicator').removeClass('hidden');
+        });
+        /**
+         * This function runs when the ajax-call is completed.
+         */
+        $(document).ajaxComplete(function (event, request, settings) {
+            $('#loading-indicator').addClass('hidden');
+            $('.previewBody').removeClass('hidden');
+            $('#previewBody').removeClass('hidden');
+
+        });
         /**
          * Function that selects the clicked on tablerow and adds success to it.
          */
         $("#table tbody tr").click(function (e) {
             var $checkbox = $(this).find(':checkbox');
             var $button = $(this).find(':button');
+            var variableTask = $(this).data('variable');
             if ($(e.target).is(":button") || $(e.target).is('span')) {
-                preview($button);
+                var button = document.getElementById('taskBtn' + $button.val());
+                previewTask(button);
             }
             else if (e.target.type == "checkbox") {
                 e.stopPropagation();
+                $('#tasktitlespan').text($(this).find('td').eq(2).text());
                 if ($checkbox.is(':checked')) {
-                    $('#id_tasks option[value=' + $checkbox.val() + ']').attr('selected', true);
-                    $(this).addClass('success');
+                    if (variableTask == 'True') {
+                        $(this).addClass('info');
+                        getVariables($checkbox.val());
+                    } else {
+                        getVariables($checkbox.val());
+                        $(this).addClass('success');
+
+                    }
                 } else {
-                    $('#id_tasks option[value=' + $checkbox.val() + ']').attr('selected', false);
-                    $(this).removeClass('success');
+                    if (variableTask == "True") {
+                        if ($(this).hasClass('success')) {
+                            $checkbox.prop('checked', true);
+                        }
+                        getVariables($checkbox.val());
+                    } else {
+                        var itemID = $(this).attr('data-id');
+                        $('#id_items option[value=' + itemID + ']').attr('selected', false);
+                        $(this).removeClass('info success');
+                        $checkbox.prop('checked', false);
+                        itemCount();
+                    }
                 }
             } else {
                 $checkbox.click();
             }
         });
+
+        function getVariables(id) {
+            $('.previewBody').addClass('hidden');
+            $('#itemTaskID').text(id);
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'maths:taskCollectionCreate' %}',
+                data: {
+                    'id': id
+                },
+                dataType: 'json',
+                success: function (data) {
+                    var ids = data.ids;
+                    if (data.variableTask) {
+                        $('.itemHead > tr > th').not(':first').remove();
+                        $('.itemBody > tr').remove();
+                        tinyMCE.get('taskVariableDescription').getBody().style.backgroundColor = "#f5f5f5";
+                        if (data.description) {
+                            tinyMCE.get('taskVariableDescription').setContent(data.description);
+                        } else {
+                            tinyMCE.get('taskVariableDescription').setContent('<h5>Ingen beskrivelse er gitt<h5>');
+                        }
+                        var variables = data.variables;
+                        var parameterCount = variables[0].split('|||||').length;
+                        for (var i = 1; i <= parameterCount; i++) {
+                            $('.itemHead > tr').append('<th>Variabel ' + i + '</th>')
+                        }
+                        for (var i = 0; i < ids.length; i++) {
+                            $('.itemBody').append('<tr id="item' + ids[i] + '" class="itemrow"><td><input type="checkbox" value="' + ids[i] + '"></td></tr>');
+                            var variableTable = variables[i].split('|||||');
+                            for (var x = 0; x < variableTable.length; x++) {
+                                $('#item' + ids[i]).append("<td>" + variableTable[x] + "</td>");
+                            }
+                            if ($('#id_items option[value=' + ids[i] + ']').is(':selected')) {
+                                $('#item' + ids[i]).addClass('success').find(':checkbox').prop('checked', true);
+                            }
+                        }
+                        $('#itemModal').modal('show');
+                    } else {
+                        $('#id_items option[value=' + ids + ']').attr('selected', true);
+                        $('#task' + id).attr('data-id', ids);
+                        itemCount();
+                    }
+                },
+                error: function () {
+                    alert('error');
+                }
+            });
+        }
+        /**
+         * Function that selects the clicked on itemrow and adds success to it.
+         */
+        $(document).on('click', '.itemrow', function (e) {
+            var $checkbox = $(this).find(':checkbox');
+            if (e.target.type == "checkbox") {
+                if ($checkbox.is(':checked')) {
+                    $(this).addClass('success');
+                    $('#id_items option[value=' + $checkbox.val() + ']').attr('selected', true);
+                    itemCount();
+                } else {
+                    $('#id_items option[value=' + $checkbox.val() + ']').attr('selected', false);
+                    $(this).removeClass('success');
+                    itemCount();
+
+                }
+            } else {
+                $checkbox.click();
+            }
+        });
+
+        function itemCount() {
+            var selectedItems = $("#id_items :selected").length;
+            $('#itemsSelected').text(selectedItems);
+        }
+
         /**
          * Function that tries to submit the form and gives feedback in form of a success or error message depending
          * ot how it goes.
          */
         function submitForm() {
-            $('#submitPasswordBtn').click();
+            $('#submitTaskCollectionBtn').click();
             var taskCheck = false;
-            $('#id_tasks option').each(function () {
+            $('#id_items option').each(function () {
                 if (this.selected)
                     taskCheck = true;
             });
             if (taskCheck == true) {
-                $('#submitPasswordBtn').click();
+                $('#submitTaskCollectionBtn').click();
             } else {
                 $("#selectTaskWarning").removeClass("hidden");
                 $("#selectTaskWarning").fadeTo(5000, 500).slideUp(500, function () {
                     $("#selectTaskWarning").slideUp(500);
                 });
-
             }
         }
+
         $(document).ready(function () {
             /**
              * Sets up the multiselect widget for the category filtering.
@@ -252,106 +342,85 @@
                 }
             }
         }
-
-        /**
-         * This function sets up the taskinformation gotten inside a modal from the ajax GET request.
-         */
-        function preview(e) {
-            var id = e.val();
-            $('#geogebradiv').hide();
-            $('#textanswerdiv').hide();
-            $('#reasoningdiv').hide();
-            $('#multiplechoicediv').hide();
-            $.ajax({
-                type: 'GET',
-                url: '{% url 'maths:taskList' %}',
-                data: {
-                    'task_id': id
-                },
-                dataType: 'json',
-                success: function (json) {
-
-                    var task = (json);
-                    if (task.geogebra_preview != undefined) {
-                        $("#previewbilde").attr("src", 'data:image/png;base64,' + (task.geogebra_preview));
-                        $('#geogebradiv').show();
-                    }
-                    tinyMCE.get('tasktext').getBody().style.backgroundColor = "#f5f5f5";
-                    tinyMCE.get('tasktext').setContent(task.task_text);
-                    var answertype = (task.task_answertype);
-                    if (answertype == 1) {
-                        $('#textanswerdiv').show();
-                    }
-
-                    if (task.task_reasoning) {
-                        $('#reasoningdiv').show();
-                    }
-                    if (answertype == 2) {
-                        var options = (task.options);
-                        var div = document.getElementById('optionsdiv');
-                        $('#multiplechoicediv').show();
-                        div.innerHTML = "";
-                        $.each(options, function (index, value) {
-                            div.innerHTML += "<input type='radio' name='optionsradio'> " + (value.option) + "<br>";
-                        });
-                    }
-                    $('#previewTaskModal').modal('show');
-                },
-                error: function (xhr) {
-                    alert('error');
-                    alert(xhr.responseText);
+        function randomRow(val) {
+            var numRows = $('.itemrow').length;
+            if (val == 0) {
+                val = $('#randomInputVal').val();
+            }
+            if (val > numRows) {
+                val = numRows;
+            }
+            $('#itemTable tr.success').click();
+            while ($('#itemTable tr.success').length < val) {
+                var randomNum = Math.floor(Math.random() * numRows) + 1;
+                var randomtr = $('#itemTable tr').eq(randomNum);
+                if (!randomtr.hasClass('success')) {
+                    randomtr.click();
                 }
-            });
+            }
+
+
         }
     </script>
 {% endblock %}
 
 {% block modal %}
-    <div class="modal fade" id="previewTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" style="width: 95%">
+    {% include 'matistikk/previewTask.html' %}
+    <div class="modal fade" id="itemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document" style="width: 90%">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="background-color: whitesmoke">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Forhåndsvis oppgave</h4>
+                    <h3 class="modal-title text-center" id="myModalLabel"><span id="tasktitlespan"></span> - Velg items
+                    </h3>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body previewBody hidden">
+                    <span class="hidden" id="itemTaskID"></span>
+                    <img src="{% static 'administration/images/loading.gif' %}" class="loading-indicator hidden">
                     <div class="row">
-                        <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
-                            <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
-                        </div>
-                        <div class="col-md-6" style="padding-left: 10px">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4><span id="tasktext"></span></h4>
-                                </div>
-                                <div class="panel-body">
-                                    <div id="textanswerdiv">
-                                        <label for="answer">Tekstsvar</label>
-                                        <textarea class="form-control" id="answer" rows="6" style="resize:vertical"
-                                                  placeholder="Skriv svaret ditt her..."></textarea>
-                                    </div>
-
-                                    <div id="multiplechoicediv">
-                                        <label for="reasoning">Svaralternativer</label>
-                                        <div id="optionsdiv">
-
-                                        </div>
-                                    </div>
-
-                                    <div id="reasoningdiv">
-                                        <label for="reasoning">Begrunnelse</label>
-                                        <textarea class="form-control" id="reasoning" rows="6" style="resize:vertical"
-                                                  placeholder="Begrunn svaret ditt..."></textarea>
-                                    </div>
+                        <div class="col-md-6" style="padding-right: 10px">
+                            <label for="taskVariableDescription" style="padding-bottom: 5px; padding-top: 5px;">Beskrivelse
+                                av variablene.</label>
+                            <textarea id="taskVariableDescription"></textarea>
+                            <label for="btnGroup" style="padding-top: 10px">Velg antall tilfeldige items.</label>
+                            <div id="btnGroup" class="btn-group" role="group" aria-label="...">
+                                <button type="button" class="btn btn-primary" onclick="randomRow(1)">1</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(2)">2</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(3)">3</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(4)">4</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(5)">5</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(6)">6</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(7)">7</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(8)">8</button>
+                                <button type="button" class="btn btn-primary" onclick="randomRow(9)">9</button>
+                                <div class="input-group">
+                                    <input type="text" id="randomInputVal" class="form-control"
+                                           placeholder="Antall tilfeldig items"
+                                           aria-describedby="btnGroupAddon">
+                                    <span class="input-group-btn">
+        <button class="btn btn-primary" type="button" onclick="randomRow(0)">Velg</button>
+      </span>
 
                                 </div>
-                                <div class="panel-footer">
-                                    <button type="button" class="btn btn-success">Svar</button>
-                                </div>
+
+
                             </div>
                         </div>
+                        <div class="col-md-6 modalOverflow">
+                            <table id="itemTable" class="table table-striped">
+                                <thead class="itemHead">
+                                <tr>
+                                    <th class="col-md-1"></th>
+                                </tr>
+                                </thead>
+                                <tbody class="itemBody">
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
@@ -359,4 +428,17 @@
             </div>
         </div>
     </div>
+    <script>
+        $('#itemModal').on('hidden.bs.modal', function () {
+            var testID = $('#itemTaskID').text();
+            var taskRow = $('#task' + testID);
+            if ($('.itemBody .success').length > 0) {
+                taskRow.removeClass('info').addClass('success');
+                taskRow.find(':checkbox').prop('checked', true);
+            } else {
+                taskRow.find(':checkbox').prop('checked', false);
+                taskRow.removeClass('info success');
+            }
+        });
+    </script>
 {% endblock %}

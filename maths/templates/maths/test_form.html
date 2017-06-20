@@ -46,32 +46,14 @@
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
 
         tinymce.init({
-            selector: '#previewtasktext',
+            selector: '#descriptionText',
             plugins: 'placeholder',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
             toolbar: false,
             menubar: false,
             statusbar: false,
-            readonly: 1,
-            body_id: 'tasktextID'
-        });
-
-        tinymce.init({
-            selector: '#previewanswer',
-            plugins: 'placeholder',
-            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-            toolbar: false,
-            menubar: false,
-            statusbar: false,
-            readonly: 1
-        });
-        tinymce.init({
-            selector: '#previewreasoning',
-            plugins: 'placeholder',
-            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
-            toolbar: false,
-            menubar: false,
-            statusbar: false,
+            width: '100%',
+            height: '300px',
             readonly: 1
         });
     </script>
@@ -138,7 +120,7 @@
                                     <th>Brukerinfo</th>
                                 </tr>
                                 </thead>
-                                <img src="http://dkclasses.com/images/loading.gif"
+                                <img src="{% static 'administration/images/loading.gif' %}"
                                      class="loading-indicator loading-filter"
                                      style="display:none"/>
                                 <tbody class="tableBody">
@@ -173,7 +155,7 @@
                                     <th>Brukerinfo</th>
                                 </tr>
                                 </thead>
-                                <img src="http://dkclasses.com/images/loading.gif"
+                                <img src="{% static 'administration/images/loading.gif' %}"
                                      class="loading-indicator loading-filter"
                                      style="display:none"/>
                                 <tbody class="tableBody">
@@ -205,7 +187,7 @@
                                     <th>Medlemmer</th>
                                 </tr>
                                 </thead>
-                                <img src="http://dkclasses.com/images/loading.gif"
+                                <img src="{% static 'administration/images/loading.gif' %}"
                                      class="loading-indicator loading-filter"
                                      style="display:none"/>
                                 <tbody class="tableBody">
@@ -237,7 +219,7 @@
                                     <th>Medlemmer</th>
                                 </tr>
                                 </thead>
-                                <img src="http://dkclasses.com/images/loading.gif"
+                                <img src="{% static 'administration/images/loading.gif' %}"
                                      class="loading-indicator loading-filter"
                                      style="display:none"/>
                                 <tbody class="tableBody">
@@ -307,18 +289,18 @@
                             </tr>
                             </thead>
                             <tbody id="sortable">
-                            {% for task in taskcollection.tasks.all %}
-                                <tr id="{{ task.id }}" class="clickable-row"
+                            {% for item in taskcollection.items.all %}
+                                <tr id="{{ item.id }}" class="clickable-row"
                                     data-href="#"
                                     style="cursor: pointer">
                                     <td>
-                                        {{ task.id }}
+                                        {{ item.id }}
                                     </td>
                                     <td>
-                                        {{ task.title }}
+                                        {{ item.task.title }}
                                     </td>
                                     <td>
-                                        {% for category in task.category.all %}
+                                        {% for category in item.task.category.all %}
                                             {% if forloop.last %}
                                                 {{ category }}
                                             {% else %}
@@ -327,10 +309,17 @@
                                         {% endfor %}
                                     </td>
                                     <td>
-                                        {{ task.author.get_full_name }}
+                                        {{ item.task.author.get_full_name }}
                                     </td>
                                     <td>
-                                        <button value="{{ task.id }}" type="button" onclick="preview(this)"
+                                        <button value="{{ item.task.id }}" data-item="{{ item.id }}" type="button"
+                                                onclick="itemDescription(this)"
+                                                {% if not item.task.variableTask %}disabled{% endif %}
+                                                class="btn btn-info "><i class="fa fa-sitemap"
+                                                                         aria-hidden="true"></i>
+                                            Item
+                                        </button>
+                                        <button value="{{ item.task.id }}" type="button" onclick="previewTask(this)"
                                                 class="btn btn-info"><span
                                                 class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
                                         </button>
@@ -414,18 +403,16 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for task in taskcollection.tasks.all %}
-                                        <tr id="overview{{ task.id }}" class="clickable-row"
-                                            data-href="#"
-                                            style="cursor: pointer">
+                                    {% for item in taskcollection.items.all %}
+                                        <tr id="overview{{ item.task.id }}">
                                             <td>
-                                                {{ task.id }}
+                                                {{ item.id }}
                                             </td>
                                             <td>
-                                                {{ task.title }}
+                                                {{ item.task.title }}
                                             </td>
                                             <td>
-                                                {% for category in task.category.all %}
+                                                {% for category in item.task.category.all %}
                                                     {% if forloop.last %}
                                                         {{ category }}
                                                     {% else %}
@@ -591,6 +578,17 @@
             $("#datepickerTimeLimit").datepicker("option", "showButtonPanel", true);
             $("#datepickerTimeLimit").datepicker("option", "dateFormat", "DD, d MM, yy");
             $("#datepickerTimeLimit").datepicker("option", "minDate", "0");
+        });
+
+        $(document).ajaxSend(function (event, request, settings) {
+            $('#loading-indicator').show();
+        });
+        /**
+         * Function that runs when an ajax-call is completed.
+         */
+        $(document).ajaxComplete(function (event, request, settings) {
+            $('#loading-indicator').hide();
+            $('#previewBody').removeClass('hidden');
         });
 
         /**
@@ -1225,60 +1223,34 @@
             }
         }
 
-        /**
-         * This function sets up the taskinformation gotten from the ajax GET request inside a modal.
-         */
-        function preview(e) {
-            $('#loadingPreview').show();
-            $('#taskpreview').addClass('hidden');
-            $('#previewTaskModal').modal('show');
-            var id = e.value;
-            $('#geogebradiv').hide();
-            $('#textanswerdiv').hide();
-            $('#reasoningdiv').hide();
-            $('#multiplechoicediv').hide();
+
+        function itemDescription(btn) {
+            var taskID = btn.value;
+            var itemID = $(btn).data('item');
             $.ajax({
                 type: 'GET',
-                url: '{% url 'maths:taskList' %}',
+                url: '{% url 'maths:taskDetail' 1234 %}'.replace(/1234/, taskID),
                 data: {
-                    'task_id': id
+                    'item_id': itemID
                 },
                 dataType: 'json',
-                success: function (json) {
-                    var notGeo = $('#notgeogebradiv');
-                    var task = (json);
-                    if (task.geogebra_preview != undefined) {
-                        $("#previewbilde").attr("src", 'data:image/png;base64,' + (task.geogebra_preview));
-                        $('#geogebradiv').show();
-                        if (!notGeo.hasClass('hidden')) {
-                            notGeo.addClass('hidden');
-                        }
+                success: function (data) {
+                    if (data.description) {
+                        tinyMCE.get('descriptionText').setContent(data.description);
                     } else {
-                        if(notGeo.hasClass('hidden')){
-                            notGeo.removeClass('hidden');
-                        }
+                        tinyMCE.get('descriptionText').setContent('<h5>Ingen beskrivelse er gitt<h5>');
                     }
-                    tinyMCE.get('previewtasktext').setContent(task.task_text);
+                    var variables = data.variables;
+                    var variableTable = variables.split('|||||');
+                    $('#variableTable tbody tr').remove();
+                    $('#variableTable thead tr th').remove();
+                    $('#variableTable tbody').append('<tr></tr>');
+                    for (var i = 0; i < variableTable.length; i++) {
+                        $('#variableTable thead tr').append('<th>Parameter ' + parseInt(i + 1) + '</th>');
+                        $('#variableTable tbody tr').append('<td>' + variableTable[i] + '</td>');
+                    }
+                    $('#descriptionModal').modal('show');
 
-                    var answertype = (task.task_answertype);
-                    if (answertype == 1) {
-                        $('#textanswerdiv').show();
-                    }
-
-                    if (task.task_reasoning) {
-                        $('#reasoningdiv').show();
-                    }
-                    if (answertype == 2) {
-                        var options = (task.options);
-                        var div = document.getElementById('optionsdiv');
-                        $('#multiplechoicediv').show();
-                        div.innerHTML = "";
-                        $.each(options, function (index, value) {
-                            div.innerHTML += "<input type='radio' name='optionsradio'> " + (value.option) + "<br>";
-                        });
-                    }
-                    $('#loadingPreview').hide();
-                    $('#taskpreview').removeClass('hidden');
                 },
                 error: function (xhr) {
                     alert('error');
@@ -1292,6 +1264,7 @@
 {% endblock %}
 
 {% block modal %}
+    {% include 'matistikk/previewTask.html' %}
     <div class="modal fade" id="personModal" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1300,7 +1273,8 @@
                     <h3 id="personMemberHeader">Brukerinformasjon</h3>
                 </div>
                 <div class="modal-body" style="min-height: 20vh">
-                    <img src="http://dkclasses.com/images/loading.gif" id="loadingPerson" class="loading-indicator"
+                    <img src="{% static 'administration/images/loading.gif' %}" id="loadingPerson"
+                         class="loading-indicator"
                          style="display:none"/>
                     <table class="table table-striped hidden" id="personInfoTable">
                         <tbody>
@@ -1353,7 +1327,8 @@
                     <h3 id="gradeMemberHeader">Klasse</h3>
                 </div>
                 <div class="modal-body modalOverflow" style="min-height: 20vh ">
-                    <img src="http://dkclasses.com/images/loading.gif" id="loadingGrade" class="loading-indicator"
+                    <img src="{% static 'administration/images/loading.gif' %}" id="loadingGrade"
+                         class="loading-indicator"
                          style="display:none"/>
                     <table class="table table-hover table-striped table-responsive table-condensed"
                            id="gradeInfoTable">
@@ -1387,7 +1362,8 @@
                     <h3 id="groupMemberHeader">Gruppe</h3>
                 </div>
                 <div class="modal-body modalOverflow" style="min-height: 20vh;">
-                    <img src="http://dkclasses.com/images/loading.gif" id="loadingGroup" class="loading-indicator"
+                    <img src="{% static 'administration/images/loading.gif' %}" id="loadingGroup"
+                         class="loading-indicator"
                          style="display:none"/>
                     <table class="table table-hover table-striped table-responsive table-condensed" id="groupInfoTable">
                         <thead>
@@ -1410,62 +1386,32 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="previewTaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" style="width: 95%">
+    <div class="modal fade" id="descriptionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" style="background-color: whitesmoke">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Forhåndsvis oppgave</h4>
+                    <h3 class="modal-title text-center" id="myModalLabel">Beskrivelse av variablene</h3>
                 </div>
-                <div class="modal-body" style="min-height: 30vh;">
-                    <img src="http://dkclasses.com/images/loading.gif" id="loadingPreview" class="loading-indicator"
-                         style="display:none"/>
-                    <div id="taskpreview" class="row">
-                        <div id="notgeogebradiv" class="col-md-3 hidden"></div>
-                        <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
-                            <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
-                        </div>
-                        <div class="col-md-6" style="padding-left: 10px">
-                            <div class="panel panel-default">
-                                <div class="panel-heading" id="previewtasktextdiv">
-                                    <h4><textarea id="previewtasktext"></textarea></h4>
-                                </div>
-                                <div class="panel-body">
-                                    <div id="previewtextanswerdiv">
-                                        <label for="previewtextanswer">Tekstsvar</label>
-                                        <textarea class="form-control" id="previewtextanswer" rows="6"
-                                                  style="resize:vertical"
-                                                  placeholder="Skriv svaret ditt her..."></textarea>
-                                    </div>
+                <div class="modal-body">
+                    <div class="col-md-10 col-centered">
+                        <ul id="variabelList">
+                        </ul>
+                        <table id="variableTable" class="table table-bordered table-responsive">
+                            <thead>
+                            <tr></tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <textarea id="descriptionText">
+                    </textarea>
 
-                                    <div id="multiplechoicediv">
-                                        <label for="reasoning">Svaralternativer</label>
-                                        <div id="optionsdiv">
-
-                                        </div>
-                                    </div>
-
-                                    <div id="previewreasoningdiv">
-                                        <label for="previewreasoning">Begrunnelse</label>
-                                        <textarea class="form-control" id="previewreasoning" rows="6"
-                                                  style="resize:vertical"
-                                                  placeholder="Begrunn svaret ditt..."></textarea>
-                                    </div>
-
-                                </div>
-                                <div class="panel-footer">
-                                    <button type="button" class="btn btn-success">Svar</button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    {% buttons %}
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
-                    {% endbuttons %}
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                 </div>
             </div>
         </div>

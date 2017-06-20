@@ -18,17 +18,20 @@ class CreateTaskForm(forms.ModelForm):
     :base64: Geogebra string.
 
     """
-    options = forms.CharField(max_length=10000, required=False)
+    options = forms.CharField(max_length=100000, required=False)
     base64 = forms.CharField(max_length=32700, required=False)
     preview = forms.CharField(max_length=500000, required=False)
     create_new = forms.BooleanField(required=False)
+    questions = forms.CharField(max_length=100000, required=False)
+    correct = forms.CharField(max_length=100000, required=False)
+    variables = forms.CharField(max_length=500, required=False)
 
     class Meta:
         """
             Bases the form on the Task model
         """
         model = Task
-        fields = ['title', 'text', 'answertype', 'extra', 'reasoning', 'category']
+        fields = ['title', 'text', 'answertype', 'extra', 'reasoning', 'category', 'variableDescription']
 
 
 class CreateCategoryForm(forms.ModelForm):
@@ -64,7 +67,7 @@ class CreateTestForm(forms.ModelForm):
     grades = forms.ModelMultipleChoiceField(queryset=Grade.objects.all(), required=False)
     schools = forms.ModelMultipleChoiceField(queryset=School.objects.all(), required=False)
     groups = forms.ModelMultipleChoiceField(queryset=Gruppe.objects.all(), required=False)
-    order = forms.CharField(max_length=100)
+    order = forms.CharField(max_length=10000)
 
     class Meta:
         model = Test
@@ -85,7 +88,8 @@ class CreateAnswerForm(forms.ModelForm):
     text = forms.CharField(max_length=32700, required=False)
     timespent = forms.FloatField(required=False)
     geogebradata = forms.CharField(max_length=500000, required=False)
+    correct = forms.CharField(max_length=100, required=False)
 
     class Meta:
         model = Answer
-        fields = ['task', 'reasoning', 'text', 'timespent']
+        fields = ['reasoning', 'text', 'timespent', 'item']

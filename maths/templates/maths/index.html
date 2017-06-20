@@ -59,9 +59,9 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="col-sm-2">
-                    <div class="circle-tile ">
+                    <div class="circle-tile">
                         <a href="{% url 'administration:personList' %}">
-                            <div class="circle-tile-heading dark-blue"><i class="fa fa-user fa-fw fa-3x"></i></div>
+                            <div class="circle-tile-heading dark-blue border-radius"><i class="fa fa-user fa-fw fa-3x"></i></div>
                         </a>
                         <div class="circle-tile-content dark-blue">
                             <div class="circle-tile-description text-faded"> Antall Brukere</div>
@@ -72,7 +72,7 @@
                 <div class="col-sm-2">
                     <div class="circle-tile ">
                         <a href="{% url 'administration:schoolList' %}">
-                            <div class="circle-tile-heading dark-blue"><i class="fa fa-home fa-fw fa-3x"></i></div>
+                            <div class="circle-tile-heading dark-blue border-radius"><i class="fa fa-home fa-fw fa-3x"></i></div>
                         </a>
                         <div class="circle-tile-content dark-blue">
                             <div class="circle-tile-description text-faded"> Antall Skoler</div>
@@ -83,10 +83,10 @@
                 <div class="col-sm-2">
                     <div class="circle-tile ">
                         <a href="{% url 'administration:schoolList' %}">
-                            <div class="circle-tile-heading dark-blue"><i class="fa fa-graduation-cap fa-fw fa-3x"></i>
+                            <div class="circle-tile-heading dark-blue border-radius"><i class="fa fa-graduation-cap fa-fw fa-3x"></i>
                             </div>
                         </a>
-                        <div class="circle-tile-content dark-blue">
+                        <div class="circle-tile-content dark-blue border-radius">
                             <div class="circle-tile-description text-faded"> Antall Klasser</div>
                             <div class="circle-tile-number text-faded ">{{ grades }}</div>
                         </div>
@@ -95,7 +95,7 @@
                 <div class="col-sm-2">
                     <div class="circle-tile ">
                         <a href="{% url 'administration:groupList' %}">
-                            <div class="circle-tile-heading dark-blue"><i class="fa fa-users fa-fw fa-3x"></i></div>
+                            <div class="circle-tile-heading dark-blue border-radius"><i class="fa fa-users fa-fw fa-3x"></i></div>
                         </a>
                         <div class="circle-tile-content dark-blue">
                             <div class="circle-tile-description text-faded"> Antall Grupper</div>
@@ -106,7 +106,7 @@
                 <div class="col-sm-2">
                     <div class="circle-tile ">
                         <a href="{% url 'maths:taskList' %}">
-                            <div class="circle-tile-heading dark-blue"><i class="fa fa-pencil fa-fw fa-3x"></i></div>
+                            <div class="circle-tile-heading dark-blue border-radius"><i class="fa fa-pencil fa-fw fa-3x"></i></div>
                         </a>
                         <div class="circle-tile-content dark-blue">
                             <div class="circle-tile-description text-faded"> Antall Svar</div>
@@ -117,7 +117,7 @@
                 <div class="col-sm-2">
                     <div class="circle-tile ">
                         <a href="{% url 'maths:taskCollectionList' %}">
-                            <div class="circle-tile-heading dark-blue"><i class="fa fa-tasks fa-fw fa-3x"></i></div>
+                            <div class="circle-tile-heading dark-blue border-radius"><i class="fa fa-tasks fa-fw fa-3x"></i></div>
                         </a>
                         <div class="circle-tile-content dark-blue">
                             <div class="circle-tile-description text-faded"> Antall Tester</div>
@@ -261,7 +261,7 @@
                 </div>
                 <div class="col-sm-5">
                     <div class="panel panel-info" style="border-right: 1px solid">
-                        <div class="panel-heading" style="pad">
+                        <div class="panel-heading">
                             <h4>Siste Publiserte Tester</h4>
                         </div>
                         <div class="panel-body" style="padding: 5px">
@@ -536,7 +536,7 @@
                                                     <p><strong>Frist: </strong>{% if test.dueDate %}
                                                         {{ test.dueDate }}{% else %}Ingen Frist.{% endif %}</p>
                                                     <p><strong>Antall
-                                                        Oppgaver: </strong>{{ test.task_collection.tasks.count }}</p>
+                                                        Oppgaver: </strong>{{ test.task_collection.items.count }}</p>
                                                     <p><strong>Laget
                                                         av: </strong>{{ test.task_collection.author.first_name }} {{ test.task_collection.author.last_name }}
                                                     </p>
@@ -593,7 +593,7 @@
                                                         <strong>Besvart: </strong> {{ answer.date_answered }}
                                                     </p>
                                                     <p><strong>Antall
-                                                        Oppgaver: </strong>{{ test.task_collection.tasks.count }}</p>
+                                                        Oppgaver: </strong>{{ test.task_collection.items.count }}</p>
                                                     <p><strong>Laget
                                                         av: </strong>{{ test.task_collection.author.first_name }} {{ test.task_collection.author.last_name }}
                                                     </p>

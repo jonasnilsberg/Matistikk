@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'nyoppgave/$', views.TaskCreateView.as_view(), name='createTask'),
     url(r'equationEditor/$', views.EquationEditorView.as_view(), name='equationEditor'),
     url(r'oppgaver/$', views.TaskListView.as_view(), name='taskList'),
+    url(r'oppgaver/(?P<task_pk>[0-9]+)/$', views.TaskDetailView.as_view(), name='taskDetail'),
     url(r'oppgaver/oppdater/(?P<task_pk>[0-9]+)/$', views.TaskUpdateView.as_view(), name='taskUpdate'),
     url(r'kategorier/$', views.CategoryListView.as_view(), name='categoryList'),
     url(r'kategorier/ny/$', views.CategoryCreateView.as_view(), name='categoryCreate'),

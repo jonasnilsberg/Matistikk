@@ -49,6 +49,20 @@
             readonly: 1,
             body_id: 'tasktextID'
         });
+        tinymce.init({
+            selector: '#variableDescription',
+            plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table placeholder',
+            content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+            toolbar: [
+                'bold italic underline fontsizeselect | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen '
+            ],
+            statusbar: false,
+            fontsize_formats: '8pt 10pt 12pt 14pt 18pt',
+            menubar: false,
+            height: '250px',
+            width: '100%'
+        });
+
     </script>
 
 {% endblock %}
@@ -90,9 +104,11 @@
                     <div class="panel panel-default" id="tekstRadio">
                         <div class=" panel-heading" role="tab">
                             <h4 class="panel-title">
-                                <label><input type="radio" name="answer_type" value="1" data-toggle="collapse"
-                                              data-parent="#accordion" data-target="#collapse5"
-                                              onclick="radioClick(this)" required id="textAnswerRadio">
+                                <label style="cursor: pointer"><input type="radio" name="answer_type" value="1"
+                                                                      data-toggle="collapse"
+                                                                      data-parent="#accordion" data-target="#collapse5"
+                                                                      onclick="radioClick(this)" required
+                                                                      id="textAnswerRadio">
                                     Tekstsvar</label>
                             </h4>
                         </div>
@@ -102,43 +118,30 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="panel panel-default" id="flervalgRadio">
-                        <div class="panel-heading" role="tab">
-                            <p class="panel-title">
-                                <label><input type="radio" name="answer_type" value="2" data-toggle="collapse"
-                                              data-parent="#accordion" data-target="#collapse6"
-                                              onclick="radioClick(this)"> Flervalgstest</label>
-                            </p>
+                    <div class="panel panel-default" id="flervalgExtraRadio">
+                        <div class=" panel-heading" role="tab">
+                            <h4 class="panel-title">
+                                <label style="cursor: pointer"><input type="radio" name="answer_type" value="2"
+                                                                      data-toggle="collapse" data-target="#collapse8"
+                                                                      data-parent="#accordion"
+                                                                      onclick="radioClick(this)" required
+                                                                      id="textMutipleRadio">
+                                    Flervalgstest</label>
+                            </h4>
                         </div>
-                        <div id="collapse6" class="panel-collapse collapse">
+                        <div id="collapse8" class="panel-collapse collapse">
                             <div class="panel-body">
-                                <div class="form-group" id="fields">
-                                    <label for="alternativ1">Alternativ 1</label>
-                                    <input type="text" class="form-control" id="alternativ1" placeholder="Alternativ 1"
-                                           autofocus>
-                                    <label for="alternativ2">Alternativ 2</label>
-                                    <input type="text" class="form-control" id="alternativ2" placeholder="Alternativ 2">
-                                </div>
-
-                                <input type="button" id="lessFields" onclick="lessFields()" value="-">
-                                <input type="button" id="moreFields" onclick="moreFields()" value="+">
-                                <br>
-                                <hr>
-                                <label for="dropdown">Velg riktig alternativ</label><br>
-                                <select id="dropdown" class="form-control">
-                                    <option id="dropdown1" value="1">Alternativ 1</option>
-                                    <option id="dropdown2" value="2">Alternativ 2</option>
-                                </select>
+                                Legg til dine flervalgsspørsmål i modalen som åpner seg.
                             </div>
                         </div>
                     </div>
                     <div class="panel panel-default" id="geoRadio">
                         <div class=" panel-heading" role="tab">
                             <p class="panel-title">
-                                <label><input type="radio" name="answer_type" value="3" data-toggle="collapse"
-                                              data-parent="#accordion" data-target="#collapse7"
-                                              onclick="radioClick(this)"> Kun tillegg</label>
+                                <label style="cursor: pointer"><input type="radio" name="answer_type" value="3"
+                                                                      data-toggle="collapse"
+                                                                      data-parent="#accordion" data-target="#collapse7"
+                                                                      onclick="radioClick(this)"> Kun tillegg</label>
                             </p>
                         </div>
                         <div id="collapse7" class="panel-collapse collapse">
@@ -180,26 +183,21 @@
                 <form class="form-horizontal form-margin hidden" action="" method="POST"
                       enctype="multipart/form-data">
                     {% csrf_token %}
-                    {% bootstrap_field form.title %}
-                    {% bootstrap_field form.text %}
-                    {% bootstrap_field form.answertype %}
-                    {% bootstrap_field form.reasoning %}
-                    {% bootstrap_field form.extra %}
-                    {% bootstrap_field form.options %}
-                    {% bootstrap_field form.category %}
-                    {% bootstrap_field form.base64 %}
-                    {% bootstrap_field form.preview %}
+                    {% bootstrap_form form %}
                     <button type="submit" id="submitbutton" class="btn btn-success">
                         {% bootstrap_icon "check" %} Lagre
                     </button>
                 </form>
             </div>
             <div class="col-md-3">
-                <button class="btn btn-primary btn-lg pull-right variable" style="margin-top: 20px; margin-right: 15px"><span
-                        class="glyphicon glyphicon-blackboard"
-                        aria-hidden="true">
+                <div class="row">
+                    <button class="btn btn-primary btn-lg pull-right variable"
+                            style="margin-top: 20px; margin-right: 15px"><span
+                            class="glyphicon glyphicon-blackboard"
+                            aria-hidden="true">
                 </span> Legg til variabler
-                </button>
+                    </button>
+                </div>
             </div>
 
         </div>
@@ -266,25 +264,74 @@
         $('#extra').change(function () {
             if (document.getElementById('extra').checked) {
                 $('#extradiv').show();
+                $('.variable').removeClass('hidden');
             }
             else {
                 $('#extradiv').hide();
+                $('.variable').addClass('hidden');
             }
         });
 
         $('.variable').click(function () {
             $('.variabelFormGroup').remove();
-            variableCount = ggbApplet.getValue('A'); // Kall for noe annet
+            variableCount = ggbApplet.getValue('matistikkAntall');
             if (variableCount == "0") {
                 $('#variabelForm').append('<h3 class="variabelFormGroup">Ingen variable ble funnet.</h3>');
             }
             for (var i = 1; i <= parseInt(variableCount); i++) {
-                $('#variabelForm').append("<div class='form-group variabelFormGroup'><label for='variabel" + i + "'>Variabel " + i + ":</label> <input type='variabel" + i + "' placeholder='Skriv inn verdien for variabel " + i + "' class='form-control' id='variabel" + i + "'required></div>");
+                $('#variabelForm').append("<div class='form-group variabelFormGroup'><label for='matistikkParameter" + i + "'>Parameter " + i + ":</label> <input type='text' placeholder='Skriv inn verdien for parameter " + i + "' class='form-control' id='matistikkParameter" + i + "'required></div>");
+                $('#matistikkParameter' + i).val(ggbApplet.getValue('matistikkParameter' + i));
             }
-            $('#variabelForm').append('<button type="submit" class="btn btn-success variabelFormGroup"><i class="fa fa-floppy-o"aria-hidden="true"></i>Sett inn parameter</button>')
+            $('#variabelForm').append('<button type="submit" class="btn btn-success variabelFormGroup"><i class="fa fa-floppy-o"aria-hidden="true"></i>Sett inn parameter</button>');
             $('#addVariablesModal').modal('show');
         });
 
+        function AddQuestion() {
+            $('#removeQuestionBtn').prop('disabled', false);
+            var questionDiv = $('#addMultipleChocice .modal-body .multiplechoice');
+            var numQuestions = questionDiv.length;
+            var ModalBody = $('#addMultipleChocice .modal-body');
+            var nextQuestion = parseInt(numQuestions + 1);
+            ModalBody.append('<div id="MutipleChoice' + nextQuestion + '" class="multiplechoice"><div><div class="form-group">' +
+                '<label for="question' + nextQuestion + '">Spørsmål:</label> <input type="text" class="form-control" id="question' + nextQuestion + '"' +
+                'placeholder="Skriv inn spørsmålet"></div><div class="row"><div id="choicesDiv' + nextQuestion + '" class="col-md-10">' +
+                '<label class="checkbox-inline"><input type="checkbox"><input type="text" placeholder="Alternativ 1"></label> ' +
+                '<label class="checkbox-inline"><input type="checkbox"><input type="text" placeholder="Alternativ 2"></label>' +
+                '<label class="checkbox-inline"><input type="checkbox"><input type="text" placeholder="Alternativ 3"></label> ' +
+                '</div><div class="col-md-2" id="choicesBtn' + nextQuestion + '"> <button style = "margin-right:4px;" class="btn btn-primary btn-sm border-radius" onclick="AddChoice(' + nextQuestion + ')">Legg til alternativ</button>' +
+                '<button class="btn btn-danger btn-sm border-radius" onclick="RemoveChoice(' + nextQuestion + ')">Fjern alternativ</button></div></div></div><hr></div>');
+        }
+
+        function RemoveQuestion() {
+            var questionDiv = $('#addMultipleChocice .modal-body .multiplechoice');
+            var numQuestions = questionDiv.length;
+            var lastQuestion = parseInt(numQuestions);
+            $('#MutipleChoice' + lastQuestion).remove();
+            if (numQuestions <= 2) {
+                $('#removeQuestionBtn').prop('disabled', true);
+            }
+        }
+
+        function AddChoice(num, btn) {
+            var numChoices = $('#choicesDiv' + num + ' :input[type=checkbox]').length + 1;
+            $('#choicesDiv' + num).append('<label class="checkbox-inline"><input type="checkbox"><input type="text" placeholder="Alternativ ' + numChoices + '"></label>');
+            if (numChoices >= 6) {
+                $('#choicesBtn' + num + ' .btn').first().prop('disabled', true);
+            } else if (numChoices > 2) {
+                $('#choicesBtn' + num + ' .btn').last().prop('disabled', false);
+            }
+        }
+
+        function RemoveChoice(num, btn) {
+            $('#choicesDiv' + num + ' .checkbox-inline').last().remove();
+            var numChoices = $('#choicesDiv' + num + ' :input[type=checkbox]').length - 1;
+            if (numChoices < 2) {
+                $('#choicesBtn' + num + ' .btn').last().prop('disabled', true);
+            } else if (numChoices < 6) {
+                $('#choicesBtn' + num + ' .btn').first().prop('disabled', false);
+
+            }
+        }
 
         /**
          * This function changes the color of the "choose answertype"-panel
@@ -294,16 +341,18 @@
             var valg = myRadio.value;
             if (valg == 1) {
                 document.getElementById('tekstRadio').className = "panel panel-success";
-                document.getElementById('flervalgRadio').className = "panel panel-default";
                 document.getElementById('geoRadio').className = "panel panel-default";
+                document.getElementById('flervalgExtraRadio').className = "panel panel-default";
             } else if (valg == 2) {
                 document.getElementById('tekstRadio').className = "panel panel-default";
-                document.getElementById('flervalgRadio').className = "panel panel-success";
                 document.getElementById('geoRadio').className = "panel panel-default";
+                document.getElementById('flervalgExtraRadio').className = "panel panel-success";
+                $('#addMultipleChocice').modal('show');
             } else {
                 document.getElementById('tekstRadio').className = "panel panel-default";
-                document.getElementById('flervalgRadio').className = "panel panel-default";
                 document.getElementById('geoRadio').className = "panel panel-success";
+                document.getElementById('flervalgExtraRadio').className = "panel panel-default";
+
             }
         }
 
@@ -318,8 +367,10 @@
             }
             var taskname1 = document.getElementById('taskname');
             var taskname2 = document.getElementById('id_title');
-            var tasktext1 = tinyMCE.activeEditor.getContent();
+            var tasktext1 = tinyMCE.get('tasktext').getContent();
             var tasktext2 = document.getElementById('id_text');
+            var variableDescription = tinyMCE.get('variableDescription').getContent();
+            $('#id_variableDescription').val(variableDescription);
             var reasoning1 = document.getElementById('reasoning');
             var reasoning2 = document.getElementById('id_reasoning');
             var extra1 = document.getElementById('extra');
@@ -327,7 +378,6 @@
             var answertype1 = $("input[type='radio'][name='answer_type']:checked").val();
             var answertype2 = document.getElementById('id_answertype');
             var options = document.getElementById('id_options');
-            var select = document.getElementById('dropdown');
             var categoryselect1 = document.getElementById('choosetype');
             var categoryselect2 = document.getElementById('id_category');
             var base64 = document.getElementById('id_base64');
@@ -363,20 +413,44 @@
             }
 
             if (answertype1 == 2) {
-                var inputCount = document.getElementById('fields').getElementsByTagName('input').length;
-                options.value = "";
+                var correct = document.getElementById('id_correct');
+                var questionsField = document.getElementById('id_questions');
+                var questionDiv = $('#addMultipleChocice .modal-body .multiplechoice');
+                var numQuestions = questionDiv.length;
 
-                for (var i = 1; i <= inputCount; i++) {
-                    if (i == 1) {
-                        options.value += select.options[select.selectedIndex].value + "|||||"
+                for (var i = 1; i <= numQuestions; i++) {
+                    var fields = $("#MutipleChoice" + i + " :input[type=text]");
+                    var question = fields.first().val();
+                    questionsField.value += question + '|||||';
+                    var choices = fields.slice(1);
+                    var breakFunction = false;
+                    choices.each(function () {
+                        if ($(this).val()) {
+                            options.value += $(this).val() + '|||||';
+                        } else {
+                            breakFunction = true;
+                        }
+                    });
+                    if (breakFunction) {
+                        $('#multipleChoiceWarning').removeClass('hidden');
+                        $("#multipleChoiceWarning").fadeTo(5000, 500).slideUp(500, function () {
+                            $('#multipleChoiceWarning').slideUp(500);
+                        });
+                        $('#addMultipleChocice').modal('show');
+                        return 0;
                     }
-                    options.value += document.getElementById('alternativ' + i).value;
-                    if (!(i + 1 > inputCount)) {
-                        options.value += "|||||";
-                    }
+                    $("#MutipleChoice" + i + " :input[type=checkbox]").each(function () {
+                        correct.value += $(this).is(':checked') + '|||||'
+                    });
+                    options.value = options.value.slice(0, -5);
+                    correct.value = correct.value.slice(0, -5);
+                    options.value += '<--->';
+                    correct.value += '<--->';
                 }
+                options.value = options.value.slice(0, -5);
+                correct.value = correct.value.slice(0, -5);
+                questionsField.value = questionsField.value.slice(0, -5);
             }
-
             var z = categoryselect1.length;
             var categoryflag = false;
             for (var y = 0; y < z; y++) {
@@ -400,53 +474,19 @@
     </script>
 
     <script>
-        /**
-         * This function adds one option to the multiple choice
-         * when the user clicks the "+"-button.
-         */
-        var counter = 3;
-        function moreFields() {
-            $('#warning').remove();
-            if (counter < 10) {
-                $('#fields').append('<label for="alternativ' + counter + '">Alternativ ' + counter + '</label>');
-                $('#fields').append("<input type='text' class='form-control' id='alternativ" + counter + "' placeholder='Alternativ " + counter + "'>");
-                $('#dropdown').append('<option id="dropdown' + counter + '" value="' + counter + '">Alternativ ' + counter + '</option>');
-                counter++;
-            }
-            else {
-                $('#fields').append('<div class="alert alert-warning alert-dismissible" role="alert" id="warning">' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-                    'Du kan maks ha ni svaralternativer.</div>');
-            }
-        }
-
-        /**
-         * This function removes one option from the multiple choice
-         * when the user clicks the "-"-button.
-         */
-        function lessFields() {
-            $('#warning').remove();
-            if (counter > 3) {
-                counter--;
-                $('#alternativ' + counter).remove();
-                $('label[for=alternativ' + counter + ']').remove();
-                $('#dropdown' + counter).remove();
-            }
-            else {
-                $('#fields').append('<div class="alert alert-warning alert-dismissible" role="alert" id="warning">' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-                    'Du kan ikke ha mindre enn to svaralternativer.</div>');
-            }
-        }
-    </script>
-    <script>
         $(document).ready(function () {
             $('#variabelForm').submit(function (e) {
                 e.preventDefault();
+                var variabelInputField = $('#id_variables');
+                variabelInputField.val("");
                 for (var i = 1; i <= parseInt(variableCount); i++) {
-                    var input = $('#variabel' + i).val();
-                    ggbApplet.setValue("variabel" + i, input);
+                    var input = $('#matistikkParameter' + i).val();
+                    ggbApplet.setValue("matistikkParameter" + i, input);
+                    var prevValue = variabelInputField.val();
+                    variabelInputField.val(prevValue + input + "|||||")
                 }
+                var input = variabelInputField.val();
+                variabelInputField.val(input.slice(0, -5));
                 $('#addVariablesModal').modal('hide');
             });
             /**
@@ -529,7 +569,7 @@
                         <nav aria-label="Page navigation">
                             <ul class="pagination" style="margin: 0;">
                                 <li class="active"><a href="#setVariable" data-toggle="tab">Velg variable</a></li>
-                                <li><a href="#setRandom" data-toggle="tab">Tilfeldig variable</a></li>
+                                <li><a href="#description" data-toggle="tab">Beskrivelse</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -538,8 +578,13 @@
                             <form id="variabelForm">
                             </form>
                         </div>
-                        <div class="tab-pane" id="setRandom">
-                            <p>Test</p>
+                        <div class="tab-pane" id="description">
+                            <div class="col-md-10 col-centered">
+                                <form id="descriptionForm" style="margin-top: 15px;">
+                                    <textarea id="variableDescription"
+                                              placeholder="Legg til en beskrivelse av variablene i denne oppgaven."></textarea>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -578,10 +623,6 @@
                                     </div>
 
                                     <div id="multiplechoicediv">
-                                        <label for="reasoning">Svaralternativer</label>
-                                        <div id="optionsdiv">
-
-                                        </div>
                                     </div>
 
                                     <div id="reasoningdiv">
@@ -601,6 +642,59 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addMultipleChocice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document" style="width: 80vw;">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: whitesmoke">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title text-center" id="myModalLabel">Flervalgsspørsmål</h3> <h5
+                        class="text-center">Velg alternativet som er korrekt</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="multipleChoiceWarning" class="alert alert-danger hidden">
+                        <strong>Tomt alternativ!</strong> Oppgaven kan ikke ha tomme svaralternativ. Vennligst fyll ut
+                        alle felter som vises.
+                    </div>
+                    <div id="MutipleChoice1" class="multiplechoice">
+                        <div>
+                            <div class="form-group">
+                                <label for="question1">Spørsmål:</label>
+                                <input type="text" class="form-control" id="question1"
+                                       placeholder="Skriv inn spørsmålet">
+                            </div>
+                            <div class="row">
+                                <div id="choicesDiv1" class="col-md-10">
+                                    <label class="checkbox-inline"><input type="checkbox"><input type="text"
+                                                                                                 placeholder="Alternativ 1"></label>
+                                    <label class="checkbox-inline"><input type="checkbox"><input type="text"
+                                                                                                 placeholder="Alternativ 2"></label>
+                                    <label class="checkbox-inline"><input type="checkbox"><input type="text"
+                                                                                                 placeholder="Alternativ 3"></label>
+                                </div>
+                                <div class="col-md-2" id="choicesBtn1">
+                                    <button class="btn btn-primary btn-sm border-radius" onclick="AddChoice(1)">
+                                        Legg til alternativ
+                                    </button>
+                                    <button class="btn btn-danger btn-sm border-radius"
+                                            onclick="RemoveChoice(1)">Fjern alternativ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="AddQuestion()">Legg til flere spørsmål</button>
+                    <button class="btn btn-danger" onclick="RemoveQuestion()" id="removeQuestionBtn"
+                            disabled="disabled">Fjern spørsmål
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                 </div>
             </div>
         </div>
@@ -638,22 +732,37 @@
                 $('#textanswerdiv').show();
             }
             else if (answertype == 2) {
-                $('#multiplechoicediv').show();
+                var div = $('#multiplechoicediv');
+                div.empty();
+                div.show();
+                var questionDiv = $('#addMultipleChocice .modal-body .multiplechoice');
+                var numQuestions = questionDiv.length;
 
-                var inputCount = document.getElementById('fields').getElementsByTagName('input').length;
-                var optionsdiv = document.getElementById('optionsdiv');
-                optionsdiv.innerHTML = "";
-
-                for (var i = 0; i < inputCount; i++) {
-                    optionsdiv.innerHTML += '<input type="radio" name="previewoptions"> ' + document.getElementById('alternativ' + (i + 1)).value + '<br>';
+                for (var i = 1; i <= numQuestions; i++) {
+                    var fields = $("#MutipleChoice" + i + " :input[type=text]");
+                    var question = fields.first().val();
+                    div.append('<label for=multipleChoice' + i + '>' + question + '</label>');
+                    var choices = fields.slice(1);
+                    div.append('<br>');
+                    var correct = 0;
+                    $("#MutipleChoice" + i + " :input[type=checkbox]").each(function () {
+                        if ($(this).is(':checked')) {
+                            correct += 1;
+                        }
+                    });
+                    choices.each(function () {
+                        if (correct > 1) {
+                            div.append('<label class="checkbox-inline"><input type="checkbox" value="">' + $(this).val() + '</label>');
+                        } else {
+                            div.append('<label class="radio-inline"><input type="radio" value="" name="choice' + i + '">' + $(this).val() + '</label>');
+                        }
+                    });
+                    div.append('<br><hr>');
                 }
             }
-
             if (document.getElementById('reasoning').checked) {
                 $('#reasoningdiv').show();
             }
-
-
         });
     </script>
 {% endblock %}

@@ -38,6 +38,8 @@ class Task(models.Model):
     answertype = models.IntegerField()
     reasoning = models.BooleanField()
     extra = models.BooleanField()
+    variableTask = models.BooleanField(default=False)
+    variableDescription = models.CharField(max_length=10000, null=True, blank=True)
     author = models.ForeignKey(Person)
     category = models.ManyToManyField(Category)
 
@@ -48,21 +50,36 @@ class Task(models.Model):
         return str(self.id) + " - " + self.title
 
 
+class Item(models.Model):
+    task = models.ForeignKey(Task)
+    variables = models.CharField(max_length=500, null=True, blank=True)
+
+    def __str__(self):
+        return self.task.title + " - " + self.variables
+
+
 class MultipleChoiceTask(models.Model):
-    """
-    Multiple choice options for a task
+    """Multiple choice options for a task
 
     :task: The task that the multiple choice options are for.
     :option: The multiple choice options
     :correct: The correct answer
     """
     task = models.ForeignKey(Task)
+    question = models.CharField(max_length=500, blank=True)
+
+    def __str__(self):
+        return str(self.id) + ' - Svaralternativer: ' + str(self.task)
+
+
+class MultipleChoiceOption(models.Model):
+    MutipleChoiceTask = models.ForeignKey(MultipleChoiceTask)
     option = models.CharField(max_length=500)
     correct = models.BooleanField()
 
     def __str__(self):
-       # return self.task.title + " - Flervalg: " + self.option
-        return self.option
+        return 'Svaralternativ ' + self.option + ' for oppgave: ' + str(self.MutipleChoiceTask.task)
+
 
 class GeogebraTask(models.Model):
     """
@@ -88,7 +105,7 @@ class TaskCollection(models.Model):
     :test_name: The name of the test.
     :author: The person that created the Task Collection.
     """
-    tasks = models.ManyToManyField(Task, verbose_name='oppgaver')
+    items = models.ManyToManyField(Item)
     test_name = models.CharField(max_length=100, verbose_name='test navn')
     author = models.ForeignKey(Person)
 
@@ -134,10 +151,11 @@ class TaskOrder(models.Model):
     :task: The task
     """
     test = models.ForeignKey(Test)
-    task = models.ForeignKey(Task)
+    item = models.ForeignKey(Item, null=True)
 
     def __str__(self):
-        return str(self.test.id) + " - " + self.test.task_collection.test_name + " - " + self.task.title
+        return str(self.test.id) + " - " + self.test.task_collection.test_name + " - " + self.item.task.title + str(
+            self.id)
 
 
 class Answer(models.Model):
@@ -150,16 +168,18 @@ class Answer(models.Model):
     :reasoning: Users reasoning behind the answer.
     :text: The answer.
     """
-    task = models.ForeignKey(Task)
+    task = models.ForeignKey(Task, null=True)
+    item = models.ForeignKey(Item, null=True)
     test = models.ForeignKey(Test)
     user = models.ForeignKey(Person)
     reasoning = models.CharField(max_length=32700, null=True)
     text = models.CharField(max_length=32700, null=True)
     date_answered = models.DateTimeField(null=True)
     timespent = models.FloatField(null=True)
+    correct = models.CharField(max_length=100, null=True, default=None)
 
     def __str__(self):
-        return "Svar: " + self.test.task_collection.test_name + " - " + self.task.title + " - " + self.user.get_full_name()
+        return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - " + self.user.get_full_name()
 
 
 class GeogebraAnswer(models.Model):
@@ -175,4 +195,30 @@ class GeogebraAnswer(models.Model):
     data = models.CharField(max_length=2000, null=True)
 
     def __str__(self):
-        return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.task.title + " - " + self.answer.user.get_full_name()
+        return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - " + self.answer.user.get_full_name()
+
+
+class LogitTestItem(models.Model):
+    """
+    Logit for an item in a test.
+
+    :test: The test.
+    :item: The item.
+    :logit: logit score.
+    """
+    test = models.ForeignKey(Test)
+    item = models.ForeignKey(Item)
+    logit = models.FloatField()
+
+
+class LogitTestPerson(models.Model):
+    """
+    Logit for a person on a test.
+
+    :test: The test.
+    :item: The person.
+    :logit: logit score.
+    """
+    test = models.ForeignKey(Test)
+    person = models.ForeignKey('administration.Person')
+    logit = models.FloatField()

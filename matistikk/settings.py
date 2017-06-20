@@ -12,10 +12,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -43,7 +41,6 @@ INSTALLED_APPS = [
     'maths',
     'administration',
 
-
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -57,6 +54,7 @@ MIDDLEWARE_CLASSES = [
 ]
 
 ROOT_URLCONF = 'matistikk.urls'
+
 
 TEMPLATES = [
     {
@@ -77,10 +75,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'matistikk.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-"""     THIS DATABASE WAS USED IN DEVELOPMENT """
+"""     THIS DATABASE WAS USED IN DEVELOPMENT
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -94,9 +91,9 @@ DATABASES = {
 
         },
     }
-}
+}"""
 
-ALLOWED_HOSTS = ["192.168.1.113", "127.0.0.1", "localhost", "192.168.1.22", "158.38.120.33"]
+ALLOWED_HOSTS = ["192.168.1.113", "127.0.0.1", "localhost", "192.168.1.22", "158.38.120.33", "10.0.0.7"]
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
@@ -115,7 +112,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
@@ -130,7 +126,6 @@ DATE_FORMAT = 'd.m.Y'
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%Y-%m-%d', '%d.%m.%Y')
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
@@ -144,6 +139,12 @@ DATABASES = {
         'NAME': os.path.join(PROJECT_DIR, 'lokaldb.db'),
     }
 }"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
+    }
+}
 
 AUTH_USER_MODEL = 'administration.Person'
 
@@ -151,10 +152,8 @@ AUTH_USER_MODEL = 'administration.Person'
 FILE_UPLOAD_HANDLERS = ("django_excel.ExcelMemoryFileUploadHandler",
                         "django_excel.TemporaryExcelFileUploadHandler")
 
-
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
     },
 }
-

@@ -103,7 +103,7 @@
                                 <th>Gruppenavn</th>
                                 <th>Ansvarlig</th>
                                 <th>Klassetilhørighet</th>
-                                <th>Gruppeinformasjon</th>
+                                {% if request.user.role == 4 or request.user.role == 3 %}<th>Gruppeinformasjon</th>{% endif %}
                                 <th>Se medlemmer</th>
                             </tr>
                             </thead>
@@ -115,7 +115,7 @@
                                     <td>{% if group.grade %}{{ group.grade }}{% else %}-{% endif %}</td>
                                     {% if request.user.role == 4 or request.user.role == 3 %}
                                         <td>
-                                            <button class="btn btn-info" value="{{ group.id }}" disabled="disabled"
+                                            <button class="btn btn-info goToGroup" value="{{ group.id }}" disabled="disabled"
                                                     data-available="{% group_check group request.user %}"><i
                                                     class="fa fa-users"
                                                     aria-hidden="true"></i>
@@ -289,6 +289,11 @@
             var testID = $(this).data('test');
             var url = "{% url 'maths:answerDetail' test_pk=1234 slug=5678 %}".replace(/1234/, testID).replace(/5678/, username);
             document.location.href = url;
+        });
+
+        $('.goToGroup').click(function () {
+           var url = "{% url 'administration:groupDetail' group_pk=1234 %}".replace(/1234/, $(this).val());
+           window.location.replace(url);
         });
         /**
          * Functions that redirects to the grades detailView.
