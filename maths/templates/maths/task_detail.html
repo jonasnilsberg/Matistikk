@@ -117,7 +117,20 @@
 
         parameters.appletOnLoad = function () {
             for (var i = 1; i <= variableCount; i++) {
-                var param = $("tr").eq(1).find("td").eq(i).html();
+                var param = $("tr").eq(1).find("td").eq(i).text();
+                var random = param.split('--->');
+                if (random.length > 1) {
+                    var min = parseFloat(random[0]);
+                    var max = parseFloat(random[1]);
+                    param = Math.floor(Math.random() * (max - min + 1) + min);
+                    if (random.length === 3) {
+                        var increment = parseFloat(random[2]);
+                        var newMax = max / increment;
+                        var newMin = min / increment;
+                        var x = parseFloat(Math.floor(Math.random() * (newMax - newMin + 1) + newMin));
+                        param = (x * increment);
+                    }
+                }
                 ggbApplet.setValue('matistikkParameter' + i, param);
             }
         };
@@ -140,6 +153,7 @@
             $('#variabelForm').submit(function (e) {
                 e.preventDefault();
                 var task_id = "{{ task.id }}";
+                var randomVariables = false;
                 var variableTable = [];
                 var variabelInputField = "";
                 for (var i = 1; i <= variableCount; i++) {
@@ -149,11 +163,16 @@
                     variabelInputField = prevValue + input + "|||||";
                 }
                 var variables = variabelInputField.slice(0, -5);
+                var checkRandom = variables.split('--->');
+                if (checkRandom.length > 1) {
+                    randomVariables = true;
+                }
                 $.ajax({
                     type: 'POST',
                     url: '{% url 'maths:taskDetail' task_pk=1234 %}'.replace(/1234/, task_id),
                     data: {
                         'updateDescription': false,
+                        'randomVariables': randomVariables,
                         'variables': variables,
                         'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
                     },
@@ -184,7 +203,20 @@
             $(this).addClass('success');
 
             for (var i = 1; i <= variableCount; i++) {
-                var param = $(this).find("td").eq(i).html();
+                var param = $(this).find("td").eq(i).text();
+                var random = param.split('--->');
+                if (random.length > 1) {
+                    var min = parseFloat(random[0]);
+                    var max = parseFloat(random[1]);
+                    param = Math.floor(Math.random() * (max - min + 1) + min);
+                    if (random.length === 3) {
+                        var increment = parseFloat(random[2]);
+                        var newMax = max / increment;
+                        var newMin = min / increment;
+                        var x = parseFloat(Math.floor(Math.random() * (newMax - newMin + 1) + newMin));
+                        param = (x * increment);
+                    }
+                }
                 ggbApplet.setValue('matistikkParameter' + i, param);
             }
         });

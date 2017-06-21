@@ -273,16 +273,19 @@
         });
 
         $('.variable').click(function () {
-            $('.variabelFormGroup').remove();
-            variableCount = ggbApplet.getValue('matistikkAntall');
-            if (variableCount == "0") {
-                $('#variabelForm').append('<h3 class="variabelFormGroup">Ingen variable ble funnet.</h3>');
+            var variabelInputField = $('#id_variables');
+            if (!variabelInputField.val()) {
+                $('.variabelFormGroup').remove();
+                variableCount = ggbApplet.getValue('matistikkAntall');
+                if (variableCount == "0") {
+                    $('#variabelForm').append('<h3 class="variabelFormGroup">Ingen variable ble funnet.</h3>');
+                }
+                for (var i = 1; i <= parseInt(variableCount); i++) {
+                    $('#variabelForm').append("<div class='form-group variabelFormGroup'><label for='matistikkParameter" + i + "'>Parameter " + i + ":</label> <input type='text' placeholder='Skriv inn verdien for parameter " + i + "' class='form-control' id='matistikkParameter" + i + "'required></div>");
+                    $('#matistikkParameter' + i).val(ggbApplet.getValue('matistikkParameter' + i));
+                }
+                $('#variabelForm').append('<button type="submit" class="btn btn-success variabelFormGroup"><i class="fa fa-floppy-o"aria-hidden="true"></i>Sett inn parameter</button>');
             }
-            for (var i = 1; i <= parseInt(variableCount); i++) {
-                $('#variabelForm').append("<div class='form-group variabelFormGroup'><label for='matistikkParameter" + i + "'>Parameter " + i + ":</label> <input type='text' placeholder='Skriv inn verdien for parameter " + i + "' class='form-control' id='matistikkParameter" + i + "'required></div>");
-                $('#matistikkParameter' + i).val(ggbApplet.getValue('matistikkParameter' + i));
-            }
-            $('#variabelForm').append('<button type="submit" class="btn btn-success variabelFormGroup"><i class="fa fa-floppy-o"aria-hidden="true"></i>Sett inn parameter</button>');
             $('#addVariablesModal').modal('show');
         });
 
@@ -481,12 +484,25 @@
                 variabelInputField.val("");
                 for (var i = 1; i <= parseInt(variableCount); i++) {
                     var input = $('#matistikkParameter' + i).val();
-                    ggbApplet.setValue("matistikkParameter" + i, input);
                     var prevValue = variabelInputField.val();
-                    variabelInputField.val(prevValue + input + "|||||")
+                    variabelInputField.val(prevValue + input + "|||||");
+                    var random = input.split('--->');
+                    if (random.length > 1) {
+                        var min = parseFloat(random[0]);
+                        var max = parseFloat(random[1]);
+                        input = Math.floor(Math.random() * (max - min + 1) + min);
+                        if (random.length === 3) {
+                            var increment = parseFloat(random[2]);
+                            var newMax = max / increment;
+                            var newMin = min / increment;
+                            var x = parseFloat(Math.floor(Math.random() * (newMax - newMin + 1) + newMin));
+                            input = (x * increment);
+                        }
+                    }
+                    ggbApplet.setValue("matistikkParameter" + i, input);
                 }
-                var input = variabelInputField.val();
-                variabelInputField.val(input.slice(0, -5));
+                var finalInput = variabelInputField.val();
+                variabelInputField.val(finalInput.slice(0, -5));
                 $('#addVariablesModal').modal('hide');
             });
             /**
