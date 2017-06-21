@@ -182,7 +182,8 @@
                                                                                                       value="{{ option.option }}">{{ option.option }}
                                                                 </label>
                                                             {% else %}
-                                                                <label class="radio-inline"><input type="radio" value="{{ option.option }}"
+                                                                <label class="radio-inline"><input type="radio"
+                                                                                                   value="{{ option.option }}"
                                                                                                    class="checkbox{{ item.id }}"
                                                                                                    name="{{ forloop.parentloop.counter }}choices{{ item.id }}">{{ option.option }}
                                                                 </label>
@@ -245,7 +246,8 @@
                                                                                                       value="{{ option.option }}">{{ option.option }}
                                                                 </label>
                                                             {% else %}
-                                                                <label class="radio-inline"><input type="radio" value="{{ option.option }}"
+                                                                <label class="radio-inline"><input type="radio"
+                                                                                                   value="{{ option.option }}"
                                                                                                    class="checkbox{{ item.id }}"
                                                                                                    name="{{ forloop.parentloop.counter }}choices{{ item.id }}">{{ option.option }}
                                                                 </label>
@@ -368,7 +370,8 @@
                                                                                                       value="{{ option.option }}">{{ option.option }}
                                                                 </label>
                                                             {% else %}
-                                                                <label class="radio-inline"><input type="radio" value="{{ option.option }}"
+                                                                <label class="radio-inline"><input type="radio"
+                                                                                                   value="{{ option.option }}"
                                                                                                    class="checkbox{{ taskorder.item.id }}"
                                                                                                    name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
                                                                 </label>
@@ -433,7 +436,8 @@
                                                                                                       value="{{ option.option }}">{{ option.option }}
                                                                 </label>
                                                             {% else %}
-                                                                <label class="radio-inline"><input type="radio" value="{{ option.option }}"
+                                                                <label class="radio-inline"><input type="radio"
+                                                                                                   value="{{ option.option }}"
                                                                                                    class="checkbox{{ taskorder.item.id }}"
                                                                                                    name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
                                                                 </label>
@@ -866,17 +870,36 @@
             var variables = $('#base64' + i).data('variables');
             if (variables) {
                 var variableTable = variables.split('|||||');
+                var params = "";
                 for (var x = 0; x < variableTable.length; x++) {
-                    window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), variableTable[x]);
+                    var param = variableTable[x];
+                    var random = param.split('--->');
+                    if (random.length > 1) {
+                        var min = parseFloat(random[0]);
+                        var max = parseFloat(random[1]);
+                        param = Math.floor(Math.random() * (max - min + 1) + min);
+                        if (random.length === 3) {
+                            var increment = parseFloat(random[2]);
+                            var newMax = max / increment;
+                            var newMin = min / increment;
+                            var rand = parseFloat(Math.floor(Math.random() * (newMax - newMin + 1) + newMin));
+                            param = (rand*10 * increment*10)/100;
+                        }
+                    }
+                    window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), param);
+                    params += param + '|||||';
                 }
+                var itemVariables = document.getElementById('id_task' + parseInt(i - 1) + '-variables');
+                itemVariables.value = params.slice(0, -5);
             }
-            if (document.getElementById('base64' + i) != null) {
+            if (document.getElementById('base64' + i)) {
                 window["ggbApplet" + i].registerAddListener("addListener" + i);
                 window["ggbApplet" + i].registerRemoveListener("removeListener" + i);
                 window["ggbApplet" + i].registerUpdateListener("updateListener" + i);
             }
         }
     }
+
 
 
     /**
@@ -1034,21 +1057,21 @@
                 for (var x = 1; x <= length; x++) {
                     var checked = $('#' + itemid + 'multipleChoiceAlt' + x + ' :input:checked');
                     $.each(checked, function () {
-                       textanswer2.value += $(this).val() + '|||||';
+                        textanswer2.value += $(this).val() + '|||||';
                     });
-                    textanswer2.value = textanswer2.value.slice(0,-5);
+                    textanswer2.value = textanswer2.value.slice(0, -5);
                     textanswer2.value += '<--|-->'
                 }
-                textanswer2.value = textanswer2.value.slice(0,-7);
+                textanswer2.value = textanswer2.value.slice(0, -7);
 
             }
             var reasoning2 = document.getElementById('id_task' + i + '-reasoning');
             var base64;
             if (window["ggbApplet" + (i + 1)]) {
                 base64 = window["ggbApplet" + (i + 1)].getBase64();
-                var autoCorrect = window["ggbApplet" + (i+1)].getValue('matistikkAutoretting');
-                if(autoCorrect == 1){
-                    var score = window["ggbApplet" + (i+1)].getValue('matistikkScore');
+                var autoCorrect = window["ggbApplet" + (i + 1)].getValue('matistikkAutoretting');
+                if (autoCorrect == 1) {
+                    var score = window["ggbApplet" + (i + 1)].getValue('matistikkScore');
                     var correct = document.getElementById('id_task' + i + '-correct');
                     correct.value = score;
                 }

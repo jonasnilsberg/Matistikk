@@ -52,6 +52,7 @@ class Task(models.Model):
 
 class Item(models.Model):
     task = models.ForeignKey(Task)
+    random_variables = models.BooleanField(default=False)
     variables = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):

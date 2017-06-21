@@ -2,26 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a3dadf1e-2e4f-489f-9312-8d2daafdb0f5" name="IdeaFiles" comment="Items - Ferdig / testing&#10;Flervalg">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/matistikk/previewTask.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/static/administration/style.css" afterPath="$PROJECT_DIR$/administration/static/administration/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/person_detail.html" afterPath="$PROJECT_DIR$/administration/templates/administration/person_detail.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/admin.py" afterPath="$PROJECT_DIR$/maths/admin.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/forms.py" afterPath="$PROJECT_DIR$/maths/forms.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/models.py" afterPath="$PROJECT_DIR$/maths/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/static/maths/js/deployggb.js" afterPath="$PROJECT_DIR$/maths/static/maths/js/deployggb.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_list.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/taskCollection_detail.html" afterPath="$PROJECT_DIR$/maths/templates/maths/taskCollection_detail.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_detail.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_detail.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_list.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_update.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_update.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/test_detail.html" afterPath="$PROJECT_DIR$/maths/templates/maths/test_detail.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/test_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/test_form.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templatetags/maths_extras.py" afterPath="$PROJECT_DIR$/maths/templatetags/maths_extras.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/views.py" afterPath="$PROJECT_DIR$/maths/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/matistikk/settings.py" afterPath="$PROJECT_DIR$/matistikk/settings.py" />
     </list>
     <list id="de22f9bb-0d8d-43b9-a0ab-d5e54da7af91" name="Failed commit: IdeaFiles" comment="Endringer på personCreateView" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -51,8 +39,8 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="460">
-              <caret line="871" column="40" lean-forward="false" selection-start-line="871" selection-start-column="40" selection-end-line="871" selection-end-column="40" />
+            <state relative-caret-position="372">
+              <caret line="877" column="17" lean-forward="true" selection-start-line="877" selection-start-column="17" selection-end-line="877" selection-end-column="17" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -63,8 +51,8 @@
       <file leaf-file-name="task_form.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="236" column="36" lean-forward="false" selection-start-line="236" selection-start-column="36" selection-end-line="236" selection-end-column="36" />
+            <state relative-caret-position="272">
+              <caret line="276" column="44" lean-forward="false" selection-start-line="276" selection-start-column="44" selection-end-line="276" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -73,11 +61,9 @@
       <file leaf-file-name="task_detail.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_detail.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="68" column="45" lean-forward="true" selection-start-line="68" selection-start-column="45" selection-end-line="68" selection-end-column="45" />
-              <folding>
-                <element signature="e#3235#3261#0#HTML" expanded="true" />
-              </folding>
+            <state relative-caret-position="416">
+              <caret line="125" column="20" lean-forward="false" selection-start-line="125" selection-start-column="20" selection-end-line="131" selection-end-column="21" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -85,8 +71,8 @@
       <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="737">
-              <caret line="218" column="22" lean-forward="false" selection-start-line="218" selection-start-column="22" selection-end-line="218" selection-end-column="22" />
+            <state relative-caret-position="392">
+              <caret line="54" column="57" lean-forward="false" selection-start-line="54" selection-start-column="57" selection-end-line="54" selection-end-column="57" />
               <folding />
             </state>
           </provider>
@@ -95,7 +81,7 @@
       <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/administration/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
+            <state relative-caret-position="784">
               <caret line="52" column="47" lean-forward="false" selection-start-line="52" selection-start-column="35" selection-end-line="52" selection-end-column="47" />
               <folding />
             </state>
@@ -105,27 +91,27 @@
       <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/forms.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="545">
-              <caret line="94" column="59" lean-forward="true" selection-start-line="94" selection-start-column="59" selection-end-line="94" selection-end-column="59" />
+            <state relative-caret-position="504">
+              <caret line="91" column="13" lean-forward="false" selection-start-line="91" selection-start-column="4" selection-end-line="91" selection-end-column="13" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="answer_form.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="answer_form.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="262">
-              <caret line="786" column="32" lean-forward="true" selection-start-line="786" selection-start-column="32" selection-end-line="786" selection-end-column="32" />
+            <state relative-caret-position="308">
+              <caret line="885" column="65" lean-forward="false" selection-start-line="885" selection-start-column="65" selection-end-line="885" selection-end-column="65" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="settings.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/matistikk/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="810">
+            <state relative-caret-position="670">
               <caret line="95" column="102" lean-forward="false" selection-start-line="95" selection-start-column="102" selection-end-line="95" selection-end-column="102" />
               <folding />
             </state>
@@ -135,7 +121,7 @@
       <file leaf-file-name="task_update.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_update.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="301">
+            <state relative-caret-position="2528">
               <caret line="158" column="37" lean-forward="false" selection-start-line="158" selection-start-column="37" selection-end-line="158" selection-end-column="37" />
               <folding>
                 <element signature="e#4054#4079#0#HTML" expanded="true" />
@@ -147,8 +133,8 @@
       <file leaf-file-name="answer_list.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="420" column="111" lean-forward="true" selection-start-line="420" selection-start-column="111" selection-end-line="420" selection-end-column="111" />
+            <state relative-caret-position="6720">
+              <caret line="420" column="111" lean-forward="false" selection-start-line="420" selection-start-column="111" selection-end-line="420" selection-end-column="111" />
               <folding />
             </state>
           </provider>
@@ -166,12 +152,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ajaxComplete</find>
-      <find>pre</find>
-      <find>previ</find>
-      <find>previewT</find>
-      <find>previewTa</find>
-      <find>previewTask</find>
       <find>preview</find>
       <find>loading-indicator</find>
       <find>taskBtn</find>
@@ -193,9 +173,15 @@
       <find>variables</find>
       <find>alert</find>
       <find>matistikk_</find>
-      <find>answerForm</find>
       <find>applet_container</find>
       <find>scroll</find>
+      <find>taskDetai</find>
+      <find>SCROLL</find>
+      <find>onLeave</find>
+      <find>data-rando</find>
+      <find>keyup</find>
+      <find>add</find>
+      <find>answerForm</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -252,14 +238,14 @@
         <option value="$PROJECT_DIR$/maths/templates/maths/test_form.html" />
         <option value="$PROJECT_DIR$/maths/templatetags/maths_extras.py" />
         <option value="$PROJECT_DIR$/maths/templates/maths/task_update.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
+        <option value="$PROJECT_DIR$/matistikk/settings.py" />
+        <option value="$PROJECT_DIR$/maths/models.py" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/task_detail.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
         <option value="$PROJECT_DIR$/maths/forms.py" />
         <option value="$PROJECT_DIR$/maths/views.py" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/task_detail.html" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
-        <option value="$PROJECT_DIR$/maths/models.py" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
         <option value="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
-        <option value="$PROJECT_DIR$/matistikk/settings.py" />
       </list>
     </option>
   </component>
@@ -270,7 +256,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1920" />
+    <option name="x" value="-1" />
+    <option name="width" value="1922" />
     <option name="height" value="1053" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -893,13 +880,6 @@
       <option name="presentableId" value="Default" />
       <updated>1485778837143</updated>
     </task>
-    <task id="LOCAL-00032" summary="Lagt til nye models i databasen">
-      <created>1490100840406</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1490100840406</updated>
-    </task>
     <task id="LOCAL-00033" summary="Endringer på createTaskView">
       <created>1490173927985</created>
       <option name="number" value="00033" />
@@ -1236,7 +1216,14 @@
       <option name="project" value="LOCAL" />
       <updated>1497535534118</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="Items - Ferdig / testing&#10;Flervalg">
+      <created>1497971615221</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1497971615222</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1249,18 +1236,17 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1920" height="1053" extended-state="0" />
+    <frame x="-1" y="0" width="1922" height="1053" extended-state="6" />
     <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18249734" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32867885" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3444206" sideWeight="0.5149413" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39914164" sideWeight="0.47812167" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32760474" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23283261" sideWeight="0.4850587" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25751072" sideWeight="0.48720682" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18055555" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32832617" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24958768" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25751072" sideWeight="0.48720682" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39914164" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977587" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1271,6 +1257,7 @@
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="99" y="75" width="1722" height="879" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32832617" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -1625,7 +1612,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="632">
           <caret line="415" column="1" lean-forward="false" selection-start-line="415" selection-start-column="1" selection-end-line="415" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1655,7 +1641,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_update.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
+        <state relative-caret-position="2528">
           <caret line="158" column="37" lean-forward="false" selection-start-line="158" selection-start-column="37" selection-end-line="158" selection-end-column="37" />
           <folding>
             <element signature="e#4054#4079#0#HTML" expanded="true" />
@@ -1663,55 +1649,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="545">
-          <caret line="94" column="59" lean-forward="true" selection-start-line="94" selection-start-column="59" selection-end-line="94" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="420" column="111" lean-forward="true" selection-start-line="420" selection-start-column="111" selection-end-line="420" selection-end-column="111" />
+        <state relative-caret-position="6720">
+          <caret line="420" column="111" lean-forward="false" selection-start-line="420" selection-start-column="111" selection-end-line="420" selection-end-column="111" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="871" column="40" lean-forward="false" selection-start-line="871" selection-start-column="40" selection-end-line="871" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/administration/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
+        <state relative-caret-position="784">
           <caret line="52" column="47" lean-forward="false" selection-start-line="52" selection-start-column="35" selection-end-line="52" selection-end-column="47" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="737">
-          <caret line="218" column="22" lean-forward="false" selection-start-line="218" selection-start-column="22" selection-end-line="218" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_detail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="68" column="45" lean-forward="true" selection-start-line="68" selection-start-column="45" selection-end-line="68" selection-end-column="45" />
-          <folding>
-            <element signature="e#3235#3261#0#HTML" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1719,30 +1669,63 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/matistikk/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="670">
+          <caret line="95" column="102" lean-forward="false" selection-start-line="95" selection-start-column="102" selection-end-line="95" selection-end-column="102" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="392">
+          <caret line="54" column="57" lean-forward="false" selection-start-line="54" selection-start-column="57" selection-end-line="54" selection-end-column="57" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="236" column="36" lean-forward="false" selection-start-line="236" selection-start-column="36" selection-end-line="236" selection-end-column="36" />
+        <state relative-caret-position="272">
+          <caret line="276" column="44" lean-forward="false" selection-start-line="276" selection-start-column="44" selection-end-line="276" selection-end-column="44" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="125" column="20" lean-forward="false" selection-start-line="125" selection-start-column="20" selection-end-line="131" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/forms.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="91" column="13" lean-forward="false" selection-start-line="91" selection-start-column="4" selection-end-line="91" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="372">
+          <caret line="877" column="17" lean-forward="true" selection-start-line="877" selection-start-column="17" selection-end-line="877" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
-          <caret line="786" column="32" lean-forward="true" selection-start-line="786" selection-start-column="32" selection-end-line="786" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/matistikk/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="95" column="102" lean-forward="false" selection-start-line="95" selection-start-column="102" selection-end-line="95" selection-end-column="102" />
+        <state relative-caret-position="308">
+          <caret line="885" column="65" lean-forward="false" selection-start-line="885" selection-start-column="65" selection-end-line="885" selection-end-column="65" />
           <folding />
         </state>
       </provider>

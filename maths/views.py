@@ -391,8 +391,11 @@ class TaskDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.Detail
             }
         else:
             variables = request.POST['variables']
-            if not Item.objects.filter(task_id=self.kwargs.get('task_pk'), variables=variables).exists():
+            randomVariables = request.POST['randomVariables']
+            if not Item.objects.filter(task_id=self.kwargs.get('task_pk'), variables=variables, random_variables=False).exists():
                 item = Item(task_id=self.kwargs.get('task_pk'), variables=variables)
+                if randomVariables == 'true':
+                    item.random_variables = True
                 item.save()
                 data = {
                     'id': item.id
@@ -865,9 +868,15 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             itemid = request.POST["task" + str(y) + "-item"]
             timespent = request.POST["task" + str(y) + "-timespent"]
             correct = request.POST["task"+str(y)+"-correct"]
-            item = Item.objects.get(id=itemid)
-            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test, item=item,
+            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test,
                             timespent=timespent)
+            item = Item.objects.get(id=itemid)
+            if item.random_variables:
+                variables = request.POST['task'+str(y)+"-variables"]
+                obj, created = Item.objects.get_or_create(task=item.task, variables=variables, random_variables=False)
+                answer.item = obj
+            else:
+                answer.item = item
             if correct:
                 answer.correct = correct
             answer.date_answered = datetime.datetime.now()
