@@ -13,6 +13,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Matistikk - {{ test }}</title>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css' %}">
+    `
     <!--Imports Jquery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <!--Imports bootstrap-->
@@ -43,7 +46,6 @@
     <script>
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
-
     </script>
     <script src="{% static 'maths/js/jquery.scrollTo.min.js' %}"></script>
 
@@ -140,7 +142,12 @@
                             <div class="col-sm-6" id="geogebradiv">
                                 {% get_geogebra_task item.task as geogebratask %}
                                 <input id="base64{{ forloop.counter }}" type="text"
-                                       data-variables="{{ item.variables }}"
+                                       data-variables="{{ item.variables }}" data-height="{{ geogebratask.height }}"
+                                       data-width="{{ geogebratask.width }}"
+                                       data-showMenuBar="{{ geogebratask.showMenuBar }}"
+                                       data-enableLabelDrags="{{ geogebratask.enableLabelDrags }}"
+                                       data-enableShiftDragZoom="{{ geogebratask.enableShiftDragZoom }}"
+                                       data-enableRightClick="{{ geogebratask.enableRightClick }}"
                                        value="{{ geogebratask.base64 }}" hidden>
                                 <div id="applet_container{{ forloop.counter }}"></div>
                             </div>
@@ -174,9 +181,8 @@
                                                         {% endif %}
                                                         <br>
                                                         {% get_multiplechoice_options multiplechoicetask as options %}
-                                                        {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
                                                         {% for option in options %}
-                                                            {% if correct_count > 1 %}
+                                                            {% if multiplechoicetask.checkbox %}
                                                                 <label class="checkbox-inline"><input type="checkbox"
                                                                                                       class="checkbox{{ item.id }}"
                                                                                                       value="{{ option.option }}">{{ option.option }}
@@ -197,7 +203,9 @@
 
                                         {% if item.task.reasoning %}
                                             <div id="reasoningdiv{{ item.id }}">
-                                                <label for="reasoning{{ item.id }}">Begrunnelse</label>
+                                                <label for="reasoning{{ item.id }}">{% if item.task.reasoningText %}
+                                                    {{ item.task.reasoningText }}{% else %}
+                                                    Begrunnelse{% endif %}</label>
                                                 <textarea class="form-control" id="reasoning{{ item.id }}" rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Begrunn svaret ditt..."></textarea>
@@ -238,9 +246,8 @@
                                                         {% endif %}
                                                         <br>
                                                         {% get_multiplechoice_options multiplechoicetask as options %}
-                                                        {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
                                                         {% for option in options %}
-                                                            {% if correct_count > 1 %}
+                                                            {% if multiplechoicetask.checkbox %}
                                                                 <label class="checkbox-inline"><input type="checkbox"
                                                                                                       class="checkbox{{ item.id }}"
                                                                                                       value="{{ option.option }}">{{ option.option }}
@@ -261,7 +268,9 @@
 
                                         {% if item.task.reasoning %}
                                             <div id="reasoningdiv{{ item.id }}">
-                                                <label for="reasoning{{ item.id }}">Begrunnelse</label>
+                                                <label for="reasoning{{ item.id }}">{% if item.task.reasoningText %}
+                                                    {{ item.task.reasoningText }}{% else %}
+                                                    Begrunnelse{% endif %}</label>
                                                 <textarea class="form-control" id="reasoning{{ item.id }}" rows="6"
                                                           style="resize:vertical"
                                                           placeholder="Begrunn svaret ditt..."></textarea>
@@ -327,15 +336,26 @@
                                 {% get_geogebra_task taskorder.item.task as geogebratask %}
                                 <input id="base64{{ forloop.counter }}" type="text"
                                        data-variables="{{ taskorder.item.variables }}"
+                                       data-height="{{ geogebratask.height }}" data-width="{{ geogebratask.width }}"
+                                       data-showMenuBar="{{ geogebratask.showMenuBar }}"
+                                       data-enableLabelDrags="{{ geogebratask.enableLabelDrags }}"
+                                       data-enableShiftDragZoom="{{ geogebratask.enableShiftDragZoom }}"
+                                       data-enableRightClick="{{ geogebratask.enableRightClick }}"
                                        value="{{ geogebratask.base64 }}" hidden>
-                                <div id="applet_container{{ forloop.counter }}"></div>
+                                <div id="applet_container{{ forloop.counter }}" class="geo">
+                                </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" style="max-height: 30vh; overflow: auto"
                                          id="tasktextdiv">
+                                        {% insert_params taskorder.item.task.text taskorder.item.variables as text %}
                                         <textarea id="tasktext{{ taskorder.item.id }}" style="cursor:pointer;">
-                                            <h4>{{ taskorder.item.task.text | safe }}</h4>
+                                            {% if taskorder.item.task.variableTask %}
+                                                {{ text | safe }}
+                                            {% else %}
+                                                <h4>{{ taskorder.item.task.text | safe }}</h4>
+                                            {% endif %}
                                         </textarea>
                                     </div>
                                     <div class="panel-body">
@@ -362,9 +382,8 @@
                                                         {% endif %}
                                                         <br>
                                                         {% get_multiplechoice_options multiplechoicetask as options %}
-                                                        {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
                                                         {% for option in options %}
-                                                            {% if correct_count > 1 %}
+                                                            {% if multiplechoicetask.checkbox %}
                                                                 <label class="checkbox-inline"><input type="checkbox"
                                                                                                       class="checkbox{{ taskorder.item.id }}"
                                                                                                       value="{{ option.option }}">{{ option.option }}
@@ -385,7 +404,10 @@
 
                                         {% if taskorder.item.task.reasoning %}
                                             <div id="reasoningdiv{{ taskorder.item.id }}">
-                                                <label for="reasoning{{ taskorder.item.id }}">Begrunnelse</label>
+                                                <label for="reasoning{{ taskorder.item.id }}">
+                                                    {% if taskorder.item.task.reasoningText %}
+                                                        {{ taskorder.item.task.reasoningText }}{% else %}
+                                                        Begrunnelse{% endif %}</label>
                                                 <textarea class="form-control" id="reasoning{{ taskorder.item.id }}"
                                                           rows="6"
                                                           style="resize:vertical"
@@ -428,9 +450,8 @@
                                                         {% endif %}
                                                         <br>
                                                         {% get_multiplechoice_options multiplechoicetask as options %}
-                                                        {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
                                                         {% for option in options %}
-                                                            {% if correct_count > 1 %}
+                                                            {% if multiplechoicetask.checkbox %}
                                                                 <label class="checkbox-inline"><input type="checkbox"
                                                                                                       class="checkbox{{ taskorder.item.id }}"
                                                                                                       value="{{ option.option }}">{{ option.option }}
@@ -451,7 +472,9 @@
 
                                         {% if taskorder.item.task.reasoning %}
                                             <div id="reasoningdiv{{ taskorder.item.id }}">
-                                                <label for="reasoning">Begrunnelse</label>
+                                                <label for="reasoning">{% if taskorder.item.task.reasoningText %}
+                                                    {{ taskorder.item.task.reasoningText }}{% else %}
+                                                    Begrunnelse{% endif %}</label>
                                                 <textarea class="form-control" id="reasoning{{ taskorder.item.id }}"
                                                           rows="6"
                                                           style="resize:vertical"
@@ -807,18 +830,43 @@
     var applet = [];
     for (var i = 0; i < taskcount; i++) {
         if (document.getElementById('base64' + (i + 1)) != null) {
-            base64 = document.getElementById('base64' + (i + 1)).value;
+            var geoInfo = $('#base64' + (i + 1));
+            base64 = geoInfo.val();
+            var height = geoInfo.data('height');
+            var width = geoInfo.data('width');
+            var showMenuBar = false;
+            var enableLabelDrags = false;
+            var enableShiftDragZoom = false;
+            var enableRightClick = false;
+            if (geoInfo.data('showmenubar') == 'True') {
+                showMenuBar = true;
+            }
+            if (geoInfo.data('enablelabeldrags') == 'True') {
+                enableLabelDrags = true;
+            }
+            if (geoInfo.data('enableshiftdragzoom') == 'True') {
+                enableShiftDragZoom = true;
+            }
+            if (geoInfo.data('enablerightclick') == 'True') {
+                enableRightClick = true;
+            }
+            if (height && width) {
+                viewPortHeight = height;
+                viewPortWidth = width;
+            }
             parameters = {
                 "id": "ggbApplet" + (i + 1),
                 "width": viewPortWidth,
-                "language": "nb",
                 "height": viewPortHeight,
+                "language": "nb",
                 "showToolBar": true,
                 "borderColor": null,
-                "showMenuBar": true,
+                "showMenuBar": showMenuBar,
+                "showAlgebraInput": false,
                 "allowStyleBar": true,
-                "enableLabelDrags": false,
-                "enableShiftDragZoom": true,
+                "enableLabelDrags": enableLabelDrags,
+                "enableShiftDragZoom": enableLabelDrags,
+                "enableRightClick": enableRightClick,
                 "capturingThreshold": null,
                 "showToolBarHelp": false,
                 "errorDialogsActive": true,
@@ -826,6 +874,7 @@
                 "showLogging": false,
                 "preventFocus": true,
                 "useBrowserForJS": false,
+                //"scaleContainerClass": 'geo',
                 "ggbBase64": base64
             };
             parameters.appletOnLoad = function () {
@@ -867,6 +916,8 @@
 
     function addListenersAndVariables() {
         for (var i = 1; i <= taskcount; i++) {
+            var div = $('#task' + i);
+            var itemid = div.data('itemid');
             var variables = $('#base64' + i).data('variables');
             if (variables) {
                 var variableTable = variables.split('|||||');
@@ -883,7 +934,7 @@
                             var newMax = max / increment;
                             var newMin = min / increment;
                             var rand = parseFloat(Math.floor(Math.random() * (newMax - newMin + 1) + newMin));
-                            param = (rand*10 * increment*10)/100;
+                            param = (rand * 10 * increment * 10) / 100;
                         }
                     }
                     window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), param);
@@ -899,7 +950,6 @@
             }
         }
     }
-
 
 
     /**

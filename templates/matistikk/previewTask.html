@@ -35,7 +35,7 @@
                                 </div>
 
                                 <div id="reasoningdiv">
-                                    <label for="reasoning">Begrunnelse</label>
+                                    <label id="reasoningText" for="reasoning">Begrunnelse</label>
                                     <textarea class="form-control" id="reasoning" rows="6" style="resize:vertical"
                                               placeholder="Begrunn svaret ditt..."></textarea>
                                 </div>
@@ -127,6 +127,11 @@
 
                 if (task.task_reasoning) {
                     $('#reasoningdiv').show();
+                    if (task.task_reasoningText) {
+                        $('#reasoningText').text(task.task_reasoningText);
+                    } else {
+                        $('#reasoningText').text("Begrunnelse");
+                    }
                 }
                 if (answertype == 2) {
                     var div = $('#multiplechoicediv');
@@ -136,9 +141,9 @@
                     $.each(options, function (i, val) {
                         div.append('<label for=multipleChoice' + i + '>' + val.question + '</label>');
                         div.append('<br>');
-                        var correct = val.correct;
+                        var checkbox = val.checkbox;
                         $.each(val.options, function (x, val) {
-                            if (correct > 1) {
+                            if (checkbox) {
                                 div.append('<label class="checkbox-inline"><input type="checkbox" value="">' + val + '</label>');
                             } else {
                                 div.append('<label class="radio-inline"><input type="radio" value="" name="choice' + i + '">' + val + '</label>');

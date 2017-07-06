@@ -14,9 +14,21 @@ class CreateTaskForm(forms.ModelForm):
     :extra: Show extra extensions (geogebra).
     :reasoning: Show a field for an explanation of the answer.
     :category: Which categories the task fall under.
+    :variableDescription: Description of the variables for GeoGebra.
+    :reasoningText: Title for the reasoning answer-field.
     :options: Multiple choice options for the task.
     :base64: Geogebra string.
-
+    :preview: PNG base64 string for GeoGebra.
+    :create_new: Create new task or update the existing one.
+    :questions: Questions for multiple-choice.
+    :correct: Says which options are correct.
+    :variables: Variables for Geogebra.
+    :height: Dimension of the GeoGebra applet.
+    :width: Dimension of the GeoGebra applet.
+    :showMenuBar: Settings for GeoGebra - showMenuBar.
+    :enableLabelDrags: Settings for GeoGebra - enableLabelDrags.
+    :enableShiftDragZoom: Settings for GeoGebra - enableShiftDragZoom.
+    :enableRightClick: Settings for GeoGebra - enableRightClick.
     """
     options = forms.CharField(max_length=100000, required=False)
     base64 = forms.CharField(max_length=32700, required=False)
@@ -25,13 +37,21 @@ class CreateTaskForm(forms.ModelForm):
     questions = forms.CharField(max_length=100000, required=False)
     correct = forms.CharField(max_length=100000, required=False)
     variables = forms.CharField(max_length=500, required=False)
+    height = forms.CharField(max_length=100, required=False)
+    width = forms.CharField(max_length=100, required=False)
+    showMenuBar = forms.BooleanField(initial=False, required=False)
+    enableLabelDrags = forms.BooleanField(initial=True, required=False)
+    enableShiftDragZoom = forms.BooleanField(initial=True, required=False)
+    enableRightClick = forms.BooleanField(initial=True, required=False)
+    radioOrCheck = forms.CharField(max_length=500, required=False)
 
     class Meta:
         """
             Bases the form on the Task model
         """
         model = Task
-        fields = ['title', 'text', 'answertype', 'extra', 'reasoning', 'category', 'variableDescription']
+        fields = ['title', 'text', 'answertype', 'extra', 'reasoning', 'category', 'variableDescription',
+                  'reasoningText']
 
 
 class CreateCategoryForm(forms.ModelForm):

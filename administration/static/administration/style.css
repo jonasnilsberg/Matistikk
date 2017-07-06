@@ -414,3 +414,17 @@ ul.scrollbar::-webkit-scrollbar {
 .radio-inline:last-child {
     margin-right: 0;
 }
+
+.geo {
+    width: 110vh;
+    height: 75vh;
+}
+
+.disabledLink {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

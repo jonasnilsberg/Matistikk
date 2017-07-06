@@ -189,11 +189,18 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
             options = self.request.POST['options']
             correct = self.request.POST['correct']
             questions = self.request.POST['questions']
+            radio_or_check = self.request.POST['radioOrCheck']
             option_split = options.split('<--->')
             correct_split = correct.split('<--->')
             question_split = questions.split('|||||')
+            radio_or_check_split = radio_or_check.split('|||||')
+            x = 0
             for question in question_split:
                 multiple_choice_task = MultipleChoiceTask(question=question, task=task)
+                if radio_or_check_split[x] == 'true':
+                    multiple_choice_task.checkbox = True
+                else:
+                    multiple_choice_task.checkbox = False
                 multiple_choice_task.save()
                 multiple_choice_options = option_split[0].split('|||||')
                 multiple_choice_options_correct = correct_split[0].split('|||||')
@@ -207,10 +214,19 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
                     multiple_choice_option.save()
                 option_split.pop(0)
                 correct_split.pop(0)
+                x += 1
         if task.extra:
             base64 = self.request.POST['base64']
             preview = self.request.POST['preview']
-            geogebratask = GeogebraTask(base64=base64, preview=preview, task=task)
+            height = self.request.POST['height']
+            width = self.request.POST['width']
+            show_menu_bar = form.cleaned_data['showMenuBar']
+            enable_label_drags = form.cleaned_data['enableLabelDrags']
+            enable_shift_drag_zoom = form.cleaned_data['enableShiftDragZoom']
+            enable_right_click = form.cleaned_data['enableRightClick']
+            geogebratask = GeogebraTask(base64=base64, preview=preview, task=task, height=height, width=width,
+                                        showMenuBar=show_menu_bar, enableLabelDrags=enable_label_drags,
+                                        enableShiftDragZoom=enable_shift_drag_zoom, enableRightClick=enable_right_click)
             geogebratask.save()
         return super(TaskCreateView, self).form_valid(form)
 
@@ -318,6 +334,7 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
             'task_title': task.title,
             'task_text': task.text,
             'task_reasoning': task.reasoning,
+            'task_reasoningText': task.reasoningText,
             'task_extra': task.extra,
             'task_answertype': task.answertype,
             'options': multiplechoice
@@ -330,14 +347,11 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
             for choices in multiplechoice_task:
                 options = []
                 multiple_choice_options = MultipleChoiceOption.objects.filter(MutipleChoiceTask=choices)
-                correct = 0
                 for option in multiple_choice_options:
                     options.append(option.option)
-                    if option.correct:
-                        correct += 1
                 multiplechoice.append({
                     'question': choices.question,
-                    'correct': correct,
+                    'checkbox': choices.checkbox,
                     'options': options
                 })
         return JsonResponse(data)
@@ -481,11 +495,18 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
             options = self.request.POST['options']
             correct = self.request.POST['correct']
             questions = self.request.POST['questions']
+            radio_or_check = self.request.POST['radioOrCheck']
             option_split = options.split('<--->')
             correct_split = correct.split('<--->')
             question_split = questions.split('|||||')
+            radio_or_check_split = radio_or_check.split('|||||')
+            x = 0
             for question in question_split:
                 multiple_choice_task = MultipleChoiceTask(question=question, task=task)
+                if radio_or_check_split[x] == 'true':
+                    multiple_choice_task.checkbox = True
+                else:
+                    multiple_choice_task.checkbox = False
                 multiple_choice_task.save()
                 multiple_choice_options = option_split[0].split('|||||')
                 multiple_choice_options_correct = correct_split[0].split('|||||')
@@ -499,6 +520,7 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
                     multiple_choice_option.save()
                 option_split.pop(0)
                 correct_split.pop(0)
+                x += 1
         return super(TaskUpdateView, self).form_valid(form)
 
 
@@ -768,6 +790,19 @@ class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
     model = Test
     template_name = 'maths/test_detail.html'
     pk_url_kwarg = 'test_pk'
+
+    def post_ajax(self, request, *args, **kwargs):
+        test = Test.objects.get(id=self.kwargs.get('test_pk'))
+        public = request.POST['public']
+        if public == 'true':
+            test.public = True
+        else:
+            test.public = False
+        test.save()
+        data = {
+            'success': True
+        }
+        return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         """

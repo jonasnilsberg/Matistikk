@@ -75,7 +75,8 @@
         <div class="panel-body">
             <ul class="nav nav-tabs">
                 {% if not students and not teachers and not grades and not groups %}
-                    <li id="studentTab" class="nav active"><a href="#notPublished" data-toggle="tab">Besvarelser</a></li>
+                    <li id="studentTab" class="nav active"><a href="#notPublished" data-toggle="tab">Besvarelser</a>
+                    </li>
                 {% endif %}
                 {% if students %}
                     <li id="studentTab" class="nav active"><a href="#A" data-toggle="tab">Elever</a></li>{% endif %}
@@ -86,11 +87,22 @@
                 {% if groups %}
                     <li id="groupTab" class="nav"><a href="#D" data-toggle="tab">Grupper</a></li>{% endif %}
                 <li class="nav"><a href="#E" data-toggle="tab">Oppgaver</a></li>
+                <div class="col-sm-4" style="float: right">
+
+                    <div  {% if test.public %}style="background-color: lightgreen" class="well well-sm"{% else %}style="background-color: #FF7A7A" class="well well-sm disabledLink"{% endif %}>
+                        http://127.0.0.1:8000/matistikk/tester/publisert/15/
+                        <label class="checkbox-inline pull-right"><input type="checkbox" class="public"
+                                                                         value="{{ test.id }}" {% if test.public %}checked{% endif %}>Aktiv</label>
+
+                    </div>
+
+                </div>
             </ul>
+
             <div class="tab-content">
                 {% if not students and not teachers and not grades and not groups %}
                     <div class="tab-pane fade in active" id="notPublished">
-                    <h3>Denne testen er ikke publisert til noen.</h3>
+                        <h3>Denne testen er ikke publisert til noen.</h3>
                     </div>
                 {% endif %}
                 {% if students %}
@@ -434,7 +446,33 @@
             var testID = "{{ test.id }}";
             var url = "{% url 'maths:answerDetail' test_pk=1234 slug=5678 %}".replace(/1234/, testID).replace(/5678/, username);
             document.location.href = url;
+        });
 
+        $('.public').change(function () {
+            var active = false;
+            var id = "{{ test.id }}";
+            if ($(this).is(':checked')) {
+                $('.well-sm').css('background-color', 'lightgreen').removeClass('disabledLink');
+                active = true;
+            } else {
+                $('.well-sm').css('background-color', '#FF7A7A').addClass('disabledLink');
+            }
+            $.ajax({
+                    type: 'POST',
+                    url: '{% url 'maths:testDetail' test_pk=1234 %}'.replace(/1234/, id),
+                    data: {
+                        'public': active,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    dataType: 'json',
+                    success: function () {
+                        $(".well-sm").effect("shake", {"times": 1, "distance":5}, 250);
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                        alert('error')
+                    }
+                });
 
         });
 

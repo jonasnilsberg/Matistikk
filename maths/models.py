@@ -37,6 +37,7 @@ class Task(models.Model):
     text = models.TextField(max_length=32700, blank=True)
     answertype = models.IntegerField()
     reasoning = models.BooleanField()
+    reasoningText = models.CharField(max_length=1000, blank=True)
     extra = models.BooleanField()
     variableTask = models.BooleanField(default=False)
     variableDescription = models.CharField(max_length=10000, null=True, blank=True)
@@ -68,6 +69,7 @@ class MultipleChoiceTask(models.Model):
     """
     task = models.ForeignKey(Task)
     question = models.CharField(max_length=500, blank=True)
+    checkbox = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id) + ' - Svaralternativer: ' + str(self.task)
@@ -91,6 +93,12 @@ class GeogebraTask(models.Model):
     :preview: Preview of the geogebra, in form of an image. 
     """
     task = models.ForeignKey(Task)
+    height = models.CharField(max_length=100, null=True)
+    width = models.CharField(max_length=100, null=True)
+    showMenuBar = models.BooleanField(default=False)
+    enableLabelDrags = models.BooleanField(default=True)
+    enableShiftDragZoom = models.BooleanField(default=True)
+    enableRightClick = models.BooleanField(default=True)
     base64 = models.CharField(max_length=32700)
     preview = models.TextField(null=True)
 
@@ -130,12 +138,14 @@ class Test(models.Model):
     :randomOrder: Says if the order of the tasks should be in a random order or not.
     :strictOrder: Says if the order of the tasks should be locked in a chronological order. 
     """
+
     task_collection = models.ForeignKey(TaskCollection)
     published = models.DateTimeField(verbose_name='Publisert')
     dueDate = models.DateTimeField(verbose_name='Siste frist for besvarelse', null=True, blank=True)
     randomOrder = models.BooleanField(default=False, verbose_name='Tilfeldig rekkefølge',
                                       help_text='Dersom avkrysset vil testen bli gitt i tilfeldig rekkefølge.')
     strictOrder = models.BooleanField(default=False, verbose_name='Lås rekkefølge')
+    public = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-published']

@@ -125,3 +125,10 @@ def task_answered(task):
             answer = True
     return answer
 
+
+@register.simple_tag
+def insert_params(text, variables):
+    variablesTable = variables.split('|||||')
+    for i in range(len(variablesTable)):
+        text = text.replace('matistikkParameter'+str(i+1), variablesTable[i])
+    return text

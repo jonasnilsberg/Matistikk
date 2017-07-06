@@ -116,7 +116,6 @@
                                                                 {% endif %}
                                                                 <br>
                                                                 {% get_multiplechoice_options multiplechoicetask as options %}
-                                                                {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
                                                                 {% for option in options %}
                                                                     {% multiplechoice_answered option answer.text forloop.parentloop.counter as answered %}
                                                                     {% if option.correct %}
@@ -126,7 +125,7 @@
                                                                         <span class="glyphicon glyphicon-remove"
                                                                               style="color: red;"></span>
                                                                     {% endif %}
-                                                                    {% if correct_count > 1 %}
+                                                                    {% if multiplechoicetask.checkbox %}
                                                                         <label class="checkbox-inline"><input
                                                                                 type="checkbox"
                                                                                 class="checkbox{{ answer.item.id }}"
@@ -229,7 +228,6 @@
                                                     {% endif %}
                                                     <br>
                                                     {% get_multiplechoice_options multiplechoicetask as options %}
-                                                    {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
                                                     {% for option in options %}
                                                         {% multiplechoice_answered option answer.text forloop.parentloop.counter as answered %}
                                                         {% if option.correct %}
@@ -239,7 +237,7 @@
                                                             <span class="glyphicon glyphicon-remove"
                                                                   style="color: red;"></span>
                                                         {% endif %}
-                                                        {% if correct_count > 1 %}
+                                                        {% if multiplechoicetask.checkbox %}
                                                             <label class="checkbox-inline"><input
                                                                     type="checkbox"
                                                                     class="checkbox{{ answer.item.id }}"
@@ -302,7 +300,8 @@
                     class="fa fa-arrow-right"
                     aria-hidden="true"></i></button>
             <ul id="endTestNav" class="nav navbar-nav navbar-right">
-                <a class="btn btn-danger btn-lg pull-right border-radius" style="margin-right: 20px;" onclick="goBack()">Avslutt fremvisning</a>
+                <a class="btn btn-danger btn-lg pull-right border-radius" style="margin-right: 20px;"
+                   onclick="goBack()">Avslutt fremvisning</a>
             </ul>
         </div>
 
@@ -372,7 +371,8 @@
     var applet = [];
     for (var i = 0; i < taskcount; i++) {
         if (document.getElementById('base64' + (i + 1)) != null) {
-            base64 = document.getElementById('base64' + (i + 1)).value;
+             var geoInfo = $('#base64' + (i + 1));
+            base64 = geoInfo.val();
             parameters = {
                 "id": "ggbApplet" + (i + 1),
                 "width": viewPortWidth,
@@ -383,8 +383,6 @@
                 "showToolBarHelp": false,
                 "borderColor": null,
                 "showMenuBar": true,
-                "enableLabelDrags": false,
-                "enableShiftDragZoom": true,
                 "capturingThreshold": null,
                 "errorDialogsActive": true,
                 "preventFocus": true,
@@ -412,7 +410,7 @@
         applet.push(app);
     }
 
-     function addVariables() {
+    function addVariables() {
         for (var i = 1; i <= taskcount; i++) {
             var variables = $('#base64' + i).data('variables');
             if (variables) {
