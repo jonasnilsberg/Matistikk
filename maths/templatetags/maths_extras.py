@@ -110,7 +110,6 @@ def get_variable_count(item):
 @register.simple_tag
 def multiplechoice_answered(option, answer, index):
     answer_table = answer.split('<--|-->')
-    print(answer_table)
     answers = answer_table[index-1].split('|||||')
     if option.option in answers:
         return True

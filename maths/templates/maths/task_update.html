@@ -57,12 +57,12 @@
                     {% bootstrap_icon "check" %} Lagre
                 </button>
             </form>
-            <div class="col-sm-7" id="extradiv">
+            <div class="col-sm-6" id="extradiv">
                 <input type="hidden" id="hiddenbase64"
                        value="{% for geo in geogebra %}{{ geo.base64 }}{% endfor %}">
                 <div id="applet_container"></div>
             </div>
-            <div class="col-sm-5">
+            <div class="col-sm-6">
                 <div class="panel panel-default">
                     <div class="panel-heading" id="tasktextdiv">
                         <label for="tasktext" style="margin-top: 10px">Oppgavetekst</label>

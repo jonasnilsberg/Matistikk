@@ -31,6 +31,7 @@ class AnswerCheck(views.UserPassesTestMixin):
             :param user: Person that has to pass the test.
             :return: True if the user logged in as an administrator.
         """
+        test_id = self.kwargs.get('test_pk')
         if user.is_authenticated():
             role = [2, 3, 4]
             if user.role in role:
@@ -41,7 +42,6 @@ class AnswerCheck(views.UserPassesTestMixin):
                     if answer_user == user.username:
                         return True
                 else:
-                    test_id = self.kwargs.get('test_pk')
                     if Answer.objects.filter(test_id=test_id, user=user).exists():
                         return False
                     if Person.objects.filter(id=user.id, tests__id=test_id).exists():
@@ -50,6 +50,10 @@ class AnswerCheck(views.UserPassesTestMixin):
                         return True
                     elif Gruppe.objects.filter(persons=user, tests__id=test_id).exists():
                         return True
+        else:
+            test = Test.objects.get(id=test_id)
+            if test.public:
+                return True
         return False
 
 
@@ -71,14 +75,13 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             user = Person.objects.get(username=self.request.user.username)
             tests = Test.objects.filter(person=user)
             context['tests'] = tests
-            tabOne = []
             tabTwo = []
-            ans = Answer.objects.filter(test__in=tests).order_by('-id')
+            ans = Answer.objects.filter(test__in=tests, user__isnull=False).order_by('-id')
             task_count = 0
             for a in ans:
                 if task_count == 0:
                     tabTwo.append(a)
-                    task_count = a.test.task_collection.tasks.count()
+                    task_count = a.test.task_collection.items.count()
                 task_count -= 1
             context['lastanswers'] = tabTwo[:15]
         if self.request.user.role == 4:
@@ -90,7 +93,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             context['groups'] = Gruppe.objects.count()
             context['lasttests'] = Test.objects.all().order_by('-id')[:15]
             tabTwo = []
-            ans = Answer.objects.all().order_by('-id')
+            ans = Answer.objects.filter(user__isnull=False).order_by('-id')
             task_count = 0
             for a in ans:
                 if task_count == 0:
@@ -837,6 +840,15 @@ class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
             context['allgrades'] = Grade.objects.all().exclude(tests__exact=test)
             context['allgroups'] = Gruppe.objects.all().exclude(tests__exact=test)
             context['allschools'] = School.objects.all()
+            tabTwo = []
+            ans = Answer.objects.filter(test=test, user__isnull=True).order_by('-id')
+            task_count = 0
+            for a in ans:
+                if task_count == 0:
+                    tabTwo.append(a)
+                    task_count = a.test.task_collection.items.count()
+                task_count -= 1
+            context['anonymous_answers'] = tabTwo
         return context
 
 
@@ -857,7 +869,10 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             Function that returns the success url.
             :return: success url.
         """
-        return reverse_lazy('maths:index')
+        if Person.objects.filter(id=self.request.user.id).exists():
+            return reverse_lazy('maths:index')
+        else:
+            return reverse_lazy('maths:answerFinished')
 
     def get_context_data(self, **kwargs):
         """
@@ -897,14 +912,25 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             :return: HttpResponseRedirect to the index page.
         """
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
+        answerList = Answer.objects.filter(user__isnull=True).last()
         for y in range(0, len(test.task_collection.items.all())):
             text = request.POST["task" + str(y) + "-text"]
             reasoning = request.POST["task" + str(y) + "-reasoning"]
             itemid = request.POST["task" + str(y) + "-item"]
             timespent = request.POST["task" + str(y) + "-timespent"]
             correct = request.POST["task"+str(y)+"-correct"]
-            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test,
+            answer = Answer(text=text, reasoning=reasoning, test=test,
                             timespent=timespent)
+            if Person.objects.filter(id=self.request.user.id).exists():
+                answer.user = self.request.user
+                url = reverse('maths:index')
+            else:
+                url = reverse('maths:answerFinished')
+                answer.user = None
+                if answerList:
+                    answer.anonymous_user = int(answerList.anonymous_user + 1)
+                else:
+                    answer.anonymous_user = 0
             item = Item.objects.get(id=itemid)
             if item.random_variables:
                 variables = request.POST['task'+str(y)+"-variables"]
@@ -921,7 +947,7 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             if item.task.extra:
                 geogebraanswer = GeogebraAnswer(answer=answer, base64=base64, data=geogebradata)
                 geogebraanswer.save()
-        url = reverse('maths:index')
+
         return HttpResponseRedirect(url)
 
 
@@ -1048,8 +1074,12 @@ class AnswerListView(AnswerCheck, generic.ListView):
             :return: List of answer objects.
         """
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
-        person = Person.objects.get(username=self.kwargs.get('slug'))
-        return Answer.objects.filter(test=test, user=person)
+        if self.kwargs.get('slug'):
+            person = Person.objects.get(username=self.kwargs.get('slug'))
+            return Answer.objects.filter(test=test, user=person)
+        else:
+            anonymous_user = self.kwargs.get('user_id')
+            return Answer.objects.filter(test=test, anonymous_user=anonymous_user)
 
     def get_context_data(self, **kwargs):
         context = super(AnswerListView, self).get_context_data(**kwargs)
@@ -1075,3 +1105,8 @@ def export_data(request, test_pk):
     else:
         array = ['#hackerman']
         return excel.make_response_from_array(array, 'xlsx', file_name='fasit')
+
+
+class LinkSuccess(generic.TemplateView):
+    template_name = 'maths/link_success.html'
+

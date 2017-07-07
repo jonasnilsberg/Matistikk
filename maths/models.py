@@ -127,6 +127,9 @@ class TaskCollection(models.Model):
         """
         return reverse('maths:taskCollectionDetail', kwargs={'taskCollection_pk': self.id})
 
+    class Meta:
+        ordering = ["-id"]
+
 
 class Test(models.Model):
     """
@@ -179,10 +182,10 @@ class Answer(models.Model):
     :reasoning: Users reasoning behind the answer.
     :text: The answer.
     """
-    task = models.ForeignKey(Task, null=True)
-    item = models.ForeignKey(Item, null=True)
+    item = models.ForeignKey(Item)
     test = models.ForeignKey(Test)
-    user = models.ForeignKey(Person)
+    user = models.ForeignKey(Person, null=True)
+    anonymous_user = models.IntegerField(null=True)
     reasoning = models.CharField(max_length=32700, null=True)
     text = models.CharField(max_length=32700, null=True)
     date_answered = models.DateTimeField(null=True)
@@ -190,7 +193,10 @@ class Answer(models.Model):
     correct = models.CharField(max_length=100, null=True, default=None)
 
     def __str__(self):
-        return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - " + self.user.get_full_name()
+        if self.user:
+            return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - " + self.user.get_full_name()
+        else:
+            return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - Anonym bruker: " + str(self.anonymous_user)
 
 
 class GeogebraAnswer(models.Model):
@@ -206,7 +212,10 @@ class GeogebraAnswer(models.Model):
     data = models.CharField(max_length=2000, null=True)
 
     def __str__(self):
-        return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - " + self.answer.user.get_full_name()
+        if self.answer.user:
+            return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - " + self.answer.user.get_full_name()
+        else:
+            return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - Anonym bruker: " + str(self.anonymous_user)
 
 
 class LogitTestItem(models.Model):
