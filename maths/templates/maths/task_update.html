@@ -819,7 +819,6 @@
 
         $(document).ready(function () {
             $('.multiplechoice').each(function () {
-                alert($(this).data('id'));
                 var options = $("#MutipleChoice" + $(this).data('id') + " :checkbox:checked");
                 if (options.length == 1) {
                     $('#radioOrCheck' + $(this).data('id')).removeClass('hidden');

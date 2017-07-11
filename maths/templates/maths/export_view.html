@@ -1,0 +1,183 @@
+{% extends 'matistikk/base.html' %}
+{% load staticfiles %}
+{% block head %}
+    <script src="{% static 'maths/js/handsontable/dist/handsontable.full.js' %}"></script>
+    <link rel="stylesheet" media="screen" href="{% static 'maths/js/handsontable/dist/handsontable.full.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.3/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.3/css/bootstrap-select.min.css">
+{% endblock %}
+{% block body %}
+    <div class="col-md-2 exportSidebar colheight">
+        <h4 class="text-center">Eksportering av: </h4>
+        <div class="btn-group btn-group-justified">
+            <a id="answers" class="btn btn-primary answerInfo" data-value="svar">Svar</a>
+            <a class="btn btn-default answerInfo" data-value="info">Informasjon</a>
+        </div>
+        <div class="form-group" style="margin-left: 2%;">
+            <h5>Brukere</h5>
+            <select id="users" class="selectpicker" data-live-search="true" data-actions-box="true" data-width="96%"
+                    multiple>
+                {% for student in students %}
+                    <option value="{{ student.username }}"
+                            data-tokens="{{ student.get_full_name }}">{{ student.get_full_name }}
+                        - {{ student.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group" style="margin-left: 2%;">
+            <h5>Klasser</h5>
+            <select id="grades" class="selectpicker" data-live-search="true" data-actions-box="true" data-width="96%"
+                    multiple>
+                {% for grade in grades %}
+                    <option value="{{ grade.id }}"
+                            data-tokens="{{ grade.school.school_name }} - {{ grade.grade_name }}">{{ grade.school.school_name }}
+                        - {{ grade.grade_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group" style="margin-left: 2%;">
+            <h5>Grupper</h5>
+            <select id="groups" class="selectpicker" data-live-search="true" data-actions-box="true" data-width="96%"
+                    multiple>
+                {% for group in groups %}
+                    <option value="{{ group.id }}"
+                            data-tokens="{{ group }}">{{ group }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group" style="margin-left: 2%;">
+            <h5>Tester</h5>
+            <select id="tests" class="selectpicker" data-live-search="true" data-actions-box="true" data-width="96%"
+                    multiple>
+                {% for test in tests %}
+                    <option value="{{ test.id }}"
+                            data-tokens="{{ test.id }} - {{ test.task_collection.test_name }}">{{ test.id }}
+                        - {{ test.task_collection.test_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group" style="margin-left: 2%;">
+            <h5>Oppgaver</h5>
+            <select id="tasks" class="selectpicker" data-live-search="true" data-actions-box="true" data-width="96%"
+                    multiple>
+                {% for task in tasks %}
+                    <option value="{{ task.id }}" data-tokens="{{ task }}">{{ task }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group" style="margin-left: 2%;">
+            <h5>Items</h5>
+            <select id="items" class="selectpicker" data-live-search="true" data-actions-box="true" data-width="96%"
+                    multiple>
+                {% for item in items %}
+                    <option value="{{ item.id }}" data-tokens="{{ item }}">{{ item }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div style="margin-left: 2%; margin-right: 2%">
+            <button class="btn btn-primary sortExcel" style="width: 48%;">Filtrer</button>
+            <button class="btn btn-success" style="width: 47%" onclick="download()">Last ned fil</button>
+        </div>
+
+
+    </div>
+    <div class="col-md-10 colheight" style="overflow: auto;">
+        <div id="excel" style="width: 100%"></div>
+    </div>
+
+    <script>
+        var selectedUsers, selectedGrades, selectedTests, selectedTasks, selectedItems, selectedGroups;
+        $('.selectpicker').selectpicker({
+            'noneSelectedText': '-----',
+            'deselectAllText': 'Avmarker alle',
+            'selectAllText': 'Marker alle',
+            'liveSearchPlaceholder': 'Søk'
+        });
+
+
+        var container = document.getElementById('excel');
+        var hot = new Handsontable(container, {
+            startCols: 20,
+            startRows: 20,
+            rowHeaders: true,
+            colHeaders: true
+        });
+
+        $('.answerInfo').click(function () {
+            $('.answerInfo').removeClass('btn-default btn-primary');
+            $('.answerInfo').not(this).addClass('btn-default')
+            $(this).addClass('btn-primary');
+        });
+
+
+        function download() {
+            var exportPlugin = hot.getPlugin('exportFile');
+            exportPlugin.downloadFile('csv', {filename: 'MyFile'});
+        }
+
+        $('.sortExcel').click(function () {
+            var info = true;
+            if ($('#answers').hasClass('btn-primary')) {
+                info = false;
+            }
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'maths:exportData' %}',
+                data: {
+                    'info': info,
+                    'students': selectedUsers,
+                    'grades': selectedGrades,
+                    'groups': selectedGroups,
+                    'tests': selectedTests,
+                    'tasks': selectedTasks,
+                    'items': selectedItems
+                },
+                dataType: 'json',
+                success: function (data) {
+                    var container = document.getElementById('excel');
+                    container.innerHTML = "";
+                    hot.destroy();
+                    var columns  = [{type: 'text'}, {type: 'text'},{type: 'text'},{type: 'text',width: 300},{type: 'text',width: 300},{type: 'numeric'},{type: 'text'}];
+                    var colHeaders = ['Brukernavn','Test','Item','Svar','Begrunnelse','Tid brukt i sekunder','Korrekt'];
+                    if(info){
+                        columns = [{type: 'text'},{type: 'text'},{type: 'text'},{type: 'text'},{type: 'text'}];
+                        colHeaders = ['Brukernavn','Navn','Fødselsdag', 'Epost', 'Sist innlogget'];
+                    }
+                    hot = new Handsontable(container, {
+                        data: data,
+                        rowHeaders: true,
+                        autoRowSize: true,
+                        wordWrap: false,
+                        columns: columns,
+                        colHeaders: colHeaders,
+                        filters: true,
+                        dropdownMenu: true
+                    });
+                },
+                error: function (xhr) {
+                    alert('error');
+                    alert(xhr.responseText);
+                }
+            });
+        });
+        $('#users').on('changed.bs.select', function (e) {
+            selectedUsers = String($(this).val());
+        });
+        $('#grades').on('changed.bs.select', function (e) {
+            selectedGrades = String($(this).val());
+        });
+        $('#groups').on('changed.bs.select', function (e) {
+            selectedGroups = String($(this).val());
+        });
+        $('#tests').on('changed.bs.select', function (e) {
+            selectedTests = String($(this).val());
+        });
+        $('#tasks').on('changed.bs.select', function (e) {
+            selectedTasks = String($(this).val());
+        });
+        $('#items').on('changed.bs.select', function (e) {
+            selectedItems = String($(this).val());
+        });
+    </script>
+{% endblock %}

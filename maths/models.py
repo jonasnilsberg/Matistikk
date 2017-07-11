@@ -57,7 +57,10 @@ class Item(models.Model):
     variables = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
-        return self.task.title + " - " + self.variables
+        if self.variables:
+            return str(self.id) + " - " + self.task.title + " - (" + self.variables + ')'
+        else:
+            return str(self.id) + " - " + self.task.title
 
 
 class MultipleChoiceTask(models.Model):
@@ -215,7 +218,7 @@ class GeogebraAnswer(models.Model):
         if self.answer.user:
             return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - " + self.answer.user.get_full_name()
         else:
-            return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - Anonym bruker: " + str(self.anonymous_user)
+            return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - Anonym bruker: " + str(self.answer.anonymous_user)
 
 
 class LogitTestItem(models.Model):

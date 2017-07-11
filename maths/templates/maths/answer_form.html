@@ -47,6 +47,8 @@
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
     </script>
     <script src="{% static 'maths/js/jquery.scrollTo.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/equation_editor.js' %}"></script>
 
 </head>
 
@@ -68,7 +70,7 @@
                     Forrige oppgave
                 </button>
                 <ul id="taskBtnList" class="nav navbar-nav scrollbar"
-                    style="white-space: nowrap; overflow-x: auto; max-width: 60vw">
+                    style="white-space: nowrap; overflow-x: auto; max-width: 30vw">
                     {% for item in test.task_collection.items.all %}
                         <li id="liOppgave{{ forloop.counter }}" data-menuanchor="oppgave{{ forloop.counter }}"
                             style="display: inline-block; float: none;">
@@ -102,7 +104,7 @@
 </div>
 <div id="fullpage">
     <div id="loadingScreen" class="section active" data-anchor="loading" style="height: 100vh;">
-        <div class="middle">
+        <div class="middle text-center">
             <h2>Vennligst vent mens testen lastes inn.</h2>
         </div>
         <div class="sk-cube-grid">
@@ -139,7 +141,7 @@
                             <span id="taskcount" hidden>{{ test.task_collection.items.all.count }}</span>
                         {% endif %}
                         {% if item.task.extra %}
-                            <div class="col-md-6" id="geogebradiv">
+                            <div class="col-md-6 col-sm-6 col-xs-6" id="geogebradiv">
                                 {% get_geogebra_task item.task as geogebratask %}
                                 <input id="base64{{ forloop.counter }}" type="text"
                                        data-variables="{{ item.variables }}" data-height="{{ geogebratask.height }}"
@@ -151,7 +153,7 @@
                                        value="{{ geogebratask.base64 }}" hidden>
                                 <div id="applet_container{{ forloop.counter }}"></div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ item.id }}">
@@ -216,7 +218,7 @@
                             </div>
                         {% else %}
                             <div class="col-md-2"></div>
-                            <div class="col-md-8">
+                            <div class="col-md-8 col-sm-12 col-xs-12">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ item.id }}">
@@ -341,17 +343,17 @@
                                    data-enableShiftDragZoom="{{ geogebratask.enableShiftDragZoom }}"
                                    data-enableRightClick="{{ geogebratask.enableRightClick }}"
                                    value="{{ geogebratask.base64 }}" hidden>
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
                                 <div id="applet_container{{ forloop.counter }}"></div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" style="max-height: 30vh; overflow: auto"
                                          id="tasktextdiv">
                                         {% insert_params taskorder.item.task.text taskorder.item.variables as text %}
                                         <textarea id="tasktext{{ taskorder.item.id }}" style="cursor:pointer;">
                                             {% if taskorder.item.task.variableTask %}
-                                                {{ text | safe }}
+                                                <h4>{{ text | safe }}</h4>
                                             {% else %}
                                                 <h4>{{ taskorder.item.task.text | safe }}</h4>
                                             {% endif %}
@@ -418,7 +420,7 @@
                             </div>
                         {% else %}
                             <div class="col-md-2"></div>
-                            <div class="col-md-8">
+                            <div class="col-md-8 col-sm-12 col-xs-12">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ taskorder.item.id }}">
@@ -572,14 +574,14 @@
         var itemid = div.data('itemid');
         tinymce.init({
             selector: '#tasktext' + itemid,
-            plugins: 'placeholder',
+            plugins: 'placeholder equationeditor',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
             toolbar: false,
             menubar: false,
             statusbar: false,
-            height: '' + (divheight - 25),
+            height: '' + (divheight - 50),
             readonly: 1,
-            body_id: 'tasktextID'
+            body_id: 'tasktextID' + itemid
         });
         if ($(('#textanswer' + itemid)).exists()) {
             tinymce.init({
@@ -647,7 +649,13 @@
                 onLeave = true;
                 var summary = parseInt(taskcount) + 2;
                 var tasksnr = parseInt(taskcount) + 1;
-                $('#taskBtnList').scrollTo(document.getElementById("liOppgave" + parseInt(nextIndex - 1)));
+                if (nextIndex > 3) {
+                    $('#taskBtnList').scrollTo(document.getElementById("liOppgave" + parseInt(nextIndex - 3)));
+                } else if (nextIndex == 3) {
+                    $('#taskBtnList').scrollTo(document.getElementById("liOppgave" + parseInt(nextIndex - 2)));
+                } else {
+                    $('#taskBtnList').scrollTo(document.getElementById("liOppgave" + parseInt(nextIndex - 1)));
+                }
                 if (strictOrder == 'False') {
                     if (nextIndex == tasksnr) {
                         if (tasksnr == 2) {
@@ -691,7 +699,7 @@
                             bootbox.alert({
                                 title: "Låst rekkefølge!",
                                 message: "Denne testen har låst rekkefølge, det er derfor ikke mulig å gå tilbake.",
-                                backdrop: true,
+                                backdrop: true
                             });
                         }
                         return false;
@@ -804,6 +812,10 @@
             $('#nextTaskBtn').click()
         }
     });
+    $(document).bind('touchmove', function (e) {
+        e.preventDefault();
+        return false;
+    });
     /**
      * Keeps the page from scrolling to focus the geogebra applet. Only in google chrome browser.
      */
@@ -857,7 +869,6 @@
                 "id": "ggbApplet" + (i + 1),
                 "width": viewPortWidth,
                 "height": viewPortHeight,
-                //"scaleContainerClass": 'col-md-6',
                 "language": "nb",
                 "showToolBar": true,
                 "borderColor": null,
@@ -874,8 +885,7 @@
                 "showLogging": false,
                 "preventFocus": true,
                 "useBrowserForJS": false,
-                "ggbBase64": base64,
-                "preventFocus": true
+                "ggbBase64": base64
             };
             parameters.appletOnLoad = function () {
                 geoloaded += 1;
@@ -914,16 +924,20 @@
         applet.push(app);
     }
 
+
     function addListenersAndVariables() {
+        $('.applet_scaler').css('transform-origin', '0% 0% 0px');
+
         for (var i = 1; i <= taskcount; i++) {
             var div = $('#task' + i);
             var itemid = div.data('itemid');
             var geo = $('#base64' + i);
             var variables = geo.data('variables');
-            $('.applet_scaler').css('transform-origin', '0% 0% 0px');
             if (variables) {
                 var variableTable = variables.split('|||||');
                 var params = "";
+                //document.getElementsByName('rendered-latex').mathquill('write','\\frac{d}{dx}');
+                //tinyMCE.get('tasktext'+itemid).setContent(('<span>\\frac{d}{dx}</span>').mathquill().mathquill('redraw'));
                 for (var x = 0; x < variableTable.length; x++) {
                     var param = variableTable[x];
                     var random = param.split('--->');
@@ -951,9 +965,16 @@
                 window["ggbApplet" + i].registerUpdateListener("updateListener" + i);
                 width = geo.data('width');
                 height = geo.data('height');
-                var scaledWidth = (window.innerWidth * 0.49) / width;
-                var scaledHeight = (window.innerHeight * 0.70) / height;
+                if (window.innerWidth > window.innerHeight) {
+                    var scaledWidth = (window.innerWidth * 0.49) / width;
+                    var scaledHeight = (window.innerHeight * 0.70) / height;
+                } else {
+                    var scaledWidth = (window.innerWidth * 0.49) / width;
+                    var scaledHeight = (window.innerHeight * 0.50) / height;
+                }
                 $('#applet_container' + i + ' .applet_scaler').css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                $('#applet_container' + i + ' .applet_scaler').css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                $('#applet_container' + i + ' .applet_scaler').css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
             }
         }
         var panelHeight = $('.panel-heading').height();
@@ -961,6 +982,26 @@
         var colHeight = window.innerHeight - panelHeight - navbarHeight;
         $('.col-md-6').css('height', colHeight + 'px');
     }
+
+    window.onresize = function (event) {
+        $('.applet_scaler').css('transform-origin', '0% 0% 0px');
+        for (var i = 1; i <= taskcount; i++) {
+            if (document.getElementById('base64' + i)) {
+                var geo = $('#base64' + i);
+                width = geo.data('width');
+                height = geo.data('height');
+                var scaledWidth = (window.innerWidth * 0.49) / width;
+                var scaledHeight = (window.innerHeight * 0.70) / height;
+                $('#applet_container' + i + ' .applet_scaler').css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                $('#applet_container' + i + ' .applet_scaler').css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                $('#applet_container' + i + ' .applet_scaler').css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+            }
+        }
+        var panelHeight = $('.panel-heading').height();
+        var navbarHeight = 50;
+        var colHeight = window.innerHeight - panelHeight - navbarHeight;
+        $('.col-md-6').css('height', colHeight + 'px');
+    };
 
 
     /**

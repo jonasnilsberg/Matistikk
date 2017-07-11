@@ -409,7 +409,8 @@ class TaskDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.Detail
         else:
             variables = request.POST['variables']
             randomVariables = request.POST['randomVariables']
-            if not Item.objects.filter(task_id=self.kwargs.get('task_pk'), variables=variables, random_variables=False).exists():
+            if not Item.objects.filter(task_id=self.kwargs.get('task_pk'), variables=variables,
+                                       random_variables=False).exists():
                 item = Item(task_id=self.kwargs.get('task_pk'), variables=variables)
                 if randomVariables == 'true':
                     item.random_variables = True
@@ -918,7 +919,7 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             reasoning = request.POST["task" + str(y) + "-reasoning"]
             itemid = request.POST["task" + str(y) + "-item"]
             timespent = request.POST["task" + str(y) + "-timespent"]
-            correct = request.POST["task"+str(y)+"-correct"]
+            correct = request.POST["task" + str(y) + "-correct"]
             answer = Answer(text=text, reasoning=reasoning, test=test,
                             timespent=timespent)
             if Person.objects.filter(id=self.request.user.id).exists():
@@ -933,7 +934,7 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
                     answer.anonymous_user = 0
             item = Item.objects.get(id=itemid)
             if item.random_variables:
-                variables = request.POST['task'+str(y)+"-variables"]
+                variables = request.POST['task' + str(y) + "-variables"]
                 obj, created = Item.objects.get_or_create(task=item.task, variables=variables, random_variables=False)
                 answer.item = obj
             else:
@@ -1110,3 +1111,104 @@ def export_data(request, test_pk):
 class LinkSuccess(generic.TemplateView):
     template_name = 'maths/link_success.html'
 
+
+class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateView):
+    template_name = 'maths/export_view.html'
+
+    def get_ajax(self, request, *args, **kwargs):
+        data = []
+        info_js = request.GET.get('info')
+        rq_students = request.GET.get('students')
+        rq_grades = request.GET.get('grades')
+        rq_groups = request.GET.get('groups')
+        rq_tests = request.GET.get('tests')
+        rq_tasks = request.GET.get('tasks')
+        rq_items = request.GET.get('items')
+        if info_js == 'false':
+            if rq_students:
+                student_table = rq_students.split(',')
+                for student in student_table:
+                    user = Person.objects.get(username=student)
+                    answers = Answer.objects.filter(user=user)
+                    for answer in answers:
+                        answer_tab = [user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
+                                      answer.reasoning, answer.timespent, answer.correct]
+                        data.append(answer_tab)
+            if rq_grades:
+                grade_table = rq_grades.split(',')
+                for grade_id in grade_table:
+                    grade = Grade.objects.get(id=grade_id)
+                    tests = Test.objects.filter(grade=grade)
+                    answers = Answer.objects.filter(test__in=tests, user__in=grade.person_set.all())
+                    for answer in answers:
+                        answer_tab = [answer.user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
+                                      answer.reasoning, answer.timespent, answer.correct]
+                        data.append(answer_tab)
+            if rq_groups:
+                group_table = rq_groups.split(',')
+                for group_id in group_table:
+                    group = Gruppe.objects.get(id=group_id)
+                    tests = Test.objects.filter(gruppe=group)
+                    answers = Answer.objects.filter(test__in=tests, user__in=group.persons.all())
+                    for answer in answers:
+                        answer_tab = [answer.user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
+                                      answer.reasoning, answer.timespent, answer.correct]
+                        data.append(answer_tab)
+            if rq_tests:
+                test_table = rq_tests.split(',')
+                for test_id in test_table:
+                    test = Test.objects.get(id=test_id)
+                    answers = Answer.objects.filter(test=test)
+                    for answer in answers:
+                        if answer.user:
+                            username = answer.user.username
+                        else:
+                            username = "Anonym bruker"
+                        answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
+                                      answer.reasoning, answer.timespent, answer.correct]
+                        data.append(answer_tab)
+            if rq_tasks:
+                task_table = rq_tasks.split(',')
+                for task_id in task_table:
+                    task = Task.objects.get(id=task_id)
+                    answers = Answer.objects.filter(item__task=task)
+                    for answer in answers:
+                        if answer.user:
+                            username = answer.user.username
+                        else:
+                            username = "Anonym bruker"
+                        answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
+                                      answer.reasoning, answer.timespent, answer.correct]
+                        data.append(answer_tab)
+            if rq_items:
+                item_table = rq_items.split(',')
+                for item_id in item_table:
+                    item = Item.objects.get(id=item_id)
+                    answers = Answer.objects.filter(item=item)
+                    for answer in answers:
+                        if answer.user:
+                            username = answer.user.username
+                        else:
+                            username = "Anonym bruker"
+                        answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
+                                      answer.reasoning, answer.timespent, answer.correct]
+                        data.append(answer_tab)
+        else:
+            if rq_students:
+                student_table = rq_students.split(',')
+                for student in student_table:
+                    user = Person.objects.get(username=student)
+                    answer_tab = [user.username, user.get_full_name(), user.date_of_birth, user.email, user.last_login]
+                    print(answer_tab)
+                    data.append(answer_tab)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super(ExportData, self).get_context_data(**kwargs)
+        context['students'] = Person.objects.filter(role=1)
+        context['grades'] = Grade.objects.all()
+        context['groups'] = Gruppe.objects.all()
+        context['tests'] = Test.objects.all()
+        context['tasks'] = Task.objects.all()
+        context['items'] = Item.objects.all().order_by('-id')
+        return context

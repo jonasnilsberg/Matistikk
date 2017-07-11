@@ -428,3 +428,14 @@ ul.scrollbar::-webkit-scrollbar {
     -ms-user-select: none;
     user-select: none;
 }
+
+.exportSidebar {
+    border-right: 1px solid black;
+}
+
+.colheight {
+    height: calc(100% - 55px);
+    height: -o-calc(100% - 55px); /* opera */
+    height: -webkit-calc(100% - 55px); /* google, safari */
+    height: -moz-calc(100% - 55px); /* firefox */
+}
