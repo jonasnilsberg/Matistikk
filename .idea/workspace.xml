@@ -3,13 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a3dadf1e-2e4f-489f-9312-8d2daafdb0f5" name="IdeaFiles" comment="Eksportering">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_list.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/export_view.html" afterPath="$PROJECT_DIR$/maths/templates/maths/export_view.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_detail.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_detail.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_update.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_update.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/views.py" afterPath="$PROJECT_DIR$/maths/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/matistikk/settings.py" afterPath="$PROJECT_DIR$/matistikk/settings.py" />
     </list>
     <list id="de22f9bb-0d8d-43b9-a0ab-d5e54da7af91" name="Failed commit: IdeaFiles" comment="Endringer på personCreateView" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -60,7 +53,7 @@
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="197">
-              <caret line="124" column="18" lean-forward="true" selection-start-line="124" selection-start-column="18" selection-end-line="124" selection-end-column="18" />
+              <caret line="124" column="18" lean-forward="false" selection-start-line="124" selection-start-column="18" selection-end-line="124" selection-end-column="18" />
               <folding>
                 <element signature="n#style#0;n#div#2;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -92,7 +85,7 @@
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="3728">
-              <caret line="233" column="29" lean-forward="true" selection-start-line="233" selection-start-column="29" selection-end-line="233" selection-end-column="29" />
+              <caret line="233" column="29" lean-forward="false" selection-start-line="233" selection-start-column="29" selection-end-line="233" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -860,13 +853,6 @@
       <option name="presentableId" value="Default" />
       <updated>1485778837143</updated>
     </task>
-    <task id="LOCAL-00037" summary="Endringer på personCreateView">
-      <created>1490356291423</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1490356291423</updated>
-    </task>
     <task id="LOCAL-00038" summary="Readthedocs testing">
       <created>1490358010837</created>
       <option name="number" value="00038" />
@@ -1203,7 +1189,14 @@
       <option name="project" value="LOCAL" />
       <updated>1499787654526</updated>
     </task>
-    <option name="localTasksCounter" value="86" />
+    <task id="LOCAL-00086" summary="Eksportering">
+      <created>1500022330075</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1500022330076</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1690,7 +1683,7 @@
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3728">
-          <caret line="233" column="29" lean-forward="true" selection-start-line="233" selection-start-column="29" selection-end-line="233" selection-end-column="29" />
+          <caret line="233" column="29" lean-forward="false" selection-start-line="233" selection-start-column="29" selection-end-line="233" selection-end-column="29" />
           <folding />
         </state>
       </provider>
@@ -1698,7 +1691,7 @@
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="197">
-          <caret line="124" column="18" lean-forward="true" selection-start-line="124" selection-start-column="18" selection-end-line="124" selection-end-column="18" />
+          <caret line="124" column="18" lean-forward="false" selection-start-line="124" selection-start-column="18" selection-end-line="124" selection-end-column="18" />
           <folding>
             <element signature="n#style#0;n#div#2;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
