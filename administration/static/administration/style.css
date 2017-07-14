@@ -437,3 +437,7 @@ ul.scrollbar::-webkit-scrollbar {
     height: -webkit-calc(100% - 55px); /* google, safari */
     height: -moz-calc(100% - 55px); /* firefox */
 }
+.answerbody {
+    max-height: 75%;
+    overflow: auto;
+}

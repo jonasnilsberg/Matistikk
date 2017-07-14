@@ -141,7 +141,7 @@
                             <span id="taskcount" hidden>{{ test.task_collection.items.all.count }}</span>
                         {% endif %}
                         {% if item.task.extra %}
-                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6" id="geogebradiv">
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 splitdiv" id="geogebradiv">
                                 {% get_geogebra_task item.task as geogebratask %}
                                 <input id="base64{{ forloop.counter }}" type="text"
                                        data-variables="{{ item.variables }}" data-height="{{ geogebratask.height }}"
@@ -153,7 +153,7 @@
                                        value="{{ geogebratask.base64 }}" hidden>
                                 <div id="applet_container{{ forloop.counter }}"></div>
                             </div>
-                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 splitdiv">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ item.id }}">
@@ -165,7 +165,7 @@
                                             {% endif %}
                                         </textarea>
                                     </div>
-                                    <div class="panel-body">
+                                    <div class="panel-body answerbody">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6" hidden></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if item.task.answertype == 1 %}
@@ -223,14 +223,14 @@
                             </div>
                         {% else %}
                             <div class="col-md-2"></div>
-                            <div class="col-md-8 col-sm-12 col-xs-12">
+                            <div class="col-md-8 col-sm-12 col-xs-12 fulldiv">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ item.id }}">
                                             <h4>{{ item.task.text | safe }}</h4>
                                         </textarea>
                                     </div>
-                                    <div class="panel-body">
+                                    <div class="panel-body answerbody">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6" hidden></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if item.task.answertype == 1 %}
@@ -348,13 +348,12 @@
                                    data-enableShiftDragZoom="{{ geogebratask.enableShiftDragZoom }}"
                                    data-enableRightClick="{{ geogebratask.enableRightClick }}"
                                    value="{{ geogebratask.base64 }}" hidden>
-                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 splitdiv">
                                 <div id="applet_container{{ forloop.counter }}"></div>
                             </div>
-                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 splitdiv">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading" style="max-height: 30vh; overflow: auto"
-                                         id="tasktextdiv">
+                                    <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ taskorder.item.id }}" style="cursor:pointer;">
                                             {% if taskorder.item.task.variableTask %}
                                                 {% insert_params taskorder.item.task.text taskorder.item.variables as text %}
@@ -364,7 +363,7 @@
                                             {% endif %}
                                         </textarea>
                                     </div>
-                                    <div class="panel-body">
+                                    <div class="panel-body answerbody">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6" hidden></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if taskorder.item.task.answertype == 1 %}
@@ -424,15 +423,15 @@
                                 </div>
                             </div>
                         {% else %}
-                            <div class="col-md-2"></div>
-                            <div class="col-md-8 col-sm-12 col-xs-12">
+                            <div class="col-md-2 fulldiv"></div>
+                            <div class="col-md-8 col-sm-12 col-xs-12 fulldiv">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ taskorder.item.id }}">
                                             <h4>{{ taskorder.item.task.text | safe }}</h4>
                                         </textarea>
                                     </div>
-                                    <div class="panel-body">
+                                    <div class="panel-body answerbody">
                                         <textarea id="geolistener{{ forloop.counter }}" rows="6" hidden></textarea>
                                         <input type="text" id="tasktimer{{ forloop.counter }}" hidden>
                                         {% if taskorder.item.task.answertype == 1 %}
@@ -985,7 +984,8 @@
         var panelHeight = $('.panel-heading').height();
         var navbarHeight = 50;
         var colHeight = window.innerHeight - panelHeight - navbarHeight;
-        $('.col-md-6').css('height', colHeight + 'px');
+        $('.fulldiv').css('height', colHeight + 'px');
+        $('.splitdiv').css('height', colHeight + 'px');
     }
 
     window.onresize = function (event) {
