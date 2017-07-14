@@ -2,390 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a3dadf1e-2e4f-489f-9312-8d2daafdb0f5" name="IdeaFiles" comment="Eksportering">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/zeroclipboard/ZeroClipboard.swf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/Gruntfile.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/bower.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/handsontable.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/handsontable.css.map" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/handsontable.full.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/handsontable.full.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/handsontable.full.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/handsontable.full.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/handsontable.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/handsontable.js.map" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/handsontable.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/handsontable.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/hot-formula-parser/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/hot-formula-parser/formula-parser.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/af.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ar-dz.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ar-kw.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ar-ly.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ar-ma.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ar-sa.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ar-tn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ar.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/az.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/be.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/bg.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/bn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/bo.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/br.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/bs.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ca.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/cs.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/cv.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/cy.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/da.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/de-at.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/de-ch.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/de.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/dv.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/el.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/en-au.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/en-ca.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/en-gb.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/en-ie.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/en-nz.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/eo.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/es-do.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/es.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/et.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/eu.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/fa.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/fi.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/fo.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/fr-ca.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/fr-ch.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/fr.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/fy.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/gd.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/gl.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/gom-latn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/he.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/hi.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/hr.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/hu.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/hy-am.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/id.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/is.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/it.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ja.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/jv.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ka.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/kk.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/km.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/kn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ko.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ky.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/lb.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/lo.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/lt.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/lv.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/me.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/mi.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/mk.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ml.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/mr.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ms-my.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ms.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/my.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/nb.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ne.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/nl-be.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/nl.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/nn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/pa-in.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/pl.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/pt-br.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/pt.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ro.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ru.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/sd.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/se.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/si.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/sk.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/sl.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/sq.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/sr-cyrl.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/sr.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ss.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/sv.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/sw.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ta.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/te.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/tet.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/th.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/tl-ph.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/tlh.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/tr.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/tzl.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/tzm-latn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/tzm.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/uk.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/ur.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/uz-latn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/uz.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/vi.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/x-pseudo.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/yo.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/zh-cn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/zh-hk.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/locale/zh-tw.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/moment/moment.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/LICENSE-Numeraljs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/bg.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/cs-CZ.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/da-DK.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/de-AT.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/de-CH.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/de-DE.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/de-LI.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/el.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/en-AU.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/en-GB.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/en-IE.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/en-NZ.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/en-ZA.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/es-AR.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/es-CL.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/es-CO.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/es-CR.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/es-ES.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/es-NI.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/es-PE.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/es-PR.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/es-SV.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/et-EE.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/fa-IR.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/fi-FI.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/fil-PH.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/fr-CA.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/fr-CH.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/fr-FR.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/he-IL.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/hu-HU.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/id.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/index.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/it-CH.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/it-IT.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/ja-JP.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/ko-KR.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/lv-LV.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/nb-NO.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/nb.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/nl-BE.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/nl-NL.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/nn.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/pl-PL.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/pt-BR.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/pt-PT.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/ro-RO.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/ro.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/ru-RU.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/ru-UA.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/sk-SK.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/sl.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/sr-Cyrl-RS.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/sv-SE.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/th-TH.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/tr-TR.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/uk-UA.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/zh-CN.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/zh-HANS.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/zh-HANT.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/zh-MO.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/zh-SG.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/languages/zh-TW.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/numbro/numbro.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/pikaday/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/pikaday/pikaday.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/pikaday/pikaday.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/zeroclipboard/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/dist/zeroclipboard/ZeroClipboard.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/3rdparty/walkontable/src/overlay/bottom.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/3rdparty/walkontable/src/overlay/bottomLeftCorner.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/bindRowsWithHeaders/bindRowsWithHeaders.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/bindRowsWithHeaders/bindStrategies/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/bindRowsWithHeaders/bindStrategies/loose.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/bindRowsWithHeaders/bindStrategies/strict.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/bindRowsWithHeaders/bindStrategy.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/bindRowsWithHeaders/test/bindRowsWithHeaders.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/bindRowsWithHeaders/test/bindStrategy.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/collapsibleColumns/collapsibleColumns.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/collapsibleColumns/test/collapsibleColumns.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/columnSummary/columnSummary.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/columnSummary/endpoints.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/columnSummary/test/columnSummary.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/columnSummary/test/helpers/fixtures.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/dropdownMenu/dropdownMenu.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/dropdownMenu/dropdownMenu.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/dropdownMenu/test/dropdownMenu.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/exportFile/dataProvider.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/exportFile/exportFile.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/exportFile/test/exportFile.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/exportFile/test/types/csv.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/exportFile/typeFactory.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/exportFile/types/_base.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/exportFile/types/csv.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/component/_base.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/component/actionBar.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/component/condition.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/component/value.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/constants.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/dataFilter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/filters.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/filters.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/beginsWith.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/between.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/byValue.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/contains.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/date/after.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/date/before.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/date/today.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/date/tomorrow.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/date/yesterday.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/empty.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/endsWith.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/equal.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/greaterThan.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/greaterThanOrEqual.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/lessThan.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/lessThanOrEqual.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/none.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/notBetween.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/notContains.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/notEmpty.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formula/notEqual.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formulaCollection.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formulaRegisterer.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/formulaUpdateObserver.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/dataFilter.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/filters.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/filtersUI.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/beginsWith.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/between.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/byValue.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/contains.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/date/after.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/date/before.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/date/today.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/date/tomorrow.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/date/yesterday.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/empty.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/endsWith.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/equal.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/greaterThan.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/greaterThanOrEqual.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/lessThan.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/lessThanOrEqual.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/none.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/notBetween.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/notContains.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/notEmpty.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formula/notEqual.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formulaCollection.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formulaRegisterer.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/formulaUpdateObserver.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/helpers/fixtures.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/test/helpers/utils.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/ui/_base.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/ui/input.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/ui/multipleSelect.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/ui/select.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/filters/utils.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/alterManager.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/alterOperation/columnSorting.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/alterOperation/insertColumn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/alterOperation/insertRow.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/alterOperation/removeColumn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/alterOperation/removeRow.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/cell/_base.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/cell/reference.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/cell/value.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/dataProvider.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/expressionModifier.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/formulas.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/matrix.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/sheet.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/expressionModifier.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/formula/date-time.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/formula/engineering.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/formula/financial.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/formula/information.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/formula/logical.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/formula/lookup-reference.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/formula/math-trig.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/formula/miscellaneous.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/formula/statistical.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/formula/text.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/formulas.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/helpers/fixtures.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/test/utils.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/undoRedoSnapshot.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/formulas/utils.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/ganttChart/dateCalculator.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/ganttChart/ganttChart.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/ganttChart/ganttChart.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/ganttChart/ganttChartDataFeed.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/ganttChart/test/ganttChart.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/headerTooltips/headerTooltips.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/headerTooltips/test/headerTooltips.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/hiddenColumns/contextMenuItem/hideColumn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/hiddenColumns/contextMenuItem/showColumn.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/hiddenColumns/hiddenColumns.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/hiddenColumns/hiddenColumns.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/hiddenColumns/test/hiddenColumns.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/hiddenRows/contextMenuItem/hideRow.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/hiddenRows/contextMenuItem/showRow.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/hiddenRows/hiddenRows.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/hiddenRows/hiddenRows.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/hiddenRows/test/hiddenRows.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedHeaders/nestedHeaders.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedHeaders/nestedHeaders.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedHeaders/test/ghostTable.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedHeaders/test/nestedHeaders.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedHeaders/utils/ghostTable.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedRows/data/dataManager.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedRows/nestedRows.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedRows/nestedRows.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedRows/test/data/dataManager.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedRows/test/helpers/fixtures.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedRows/test/nestedRows.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedRows/test/ui/collapsing.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedRows/ui/_base.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedRows/ui/collapsing.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedRows/ui/contextMenu.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/nestedRows/ui/headers.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/trimRows/rowsMapper.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/trimRows/test/rowsMapper.unit.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/trimRows/test/trimRows.e2e.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/src/plugins/trimRows/trimRows.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/__mocks__/styleMock.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/e2e/MemoryLeakTest.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/e2e/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/e2e/settings/fixedRowsBottom.spec.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/helpers/common.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/helpers/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/helpers/jasmine.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/lib/backbone.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/lib/jquery.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/lib/jquery.simulate.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/lib/lodash.underscore.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/lib/normalize.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/lib/phantom-reporter.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/test/unit/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/webpack.config.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/static/maths/js/handsontable/yarn.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/static/administration/style.css" afterPath="$PROJECT_DIR$/administration/static/administration/style.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_list.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/export_view.html" afterPath="$PROJECT_DIR$/maths/templates/maths/export_view.html" />
     </list>
     <list id="de22f9bb-0d8d-43b9-a0ab-d5e54da7af91" name="Failed commit: IdeaFiles" comment="Endringer på personCreateView" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -432,13 +53,15 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="answer_form.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="answer_form.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="197">
-              <caret line="124" column="18" lean-forward="false" selection-start-line="124" selection-start-column="18" selection-end-line="124" selection-end-column="18" />
+            <state relative-caret-position="271">
+              <caret line="586" column="17" lean-forward="false" selection-start-line="586" selection-start-column="0" selection-end-line="587" selection-end-column="0" />
               <folding>
                 <element signature="n#style#0;n#div#2;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#textarea#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -454,11 +77,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="answer_list.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="answer_list.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="373">
-              <caret line="433" column="0" lean-forward="false" selection-start-line="433" selection-start-column="0" selection-end-line="433" selection-end-column="0" />
+            <state relative-caret-position="869">
+              <caret line="329" column="5" lean-forward="false" selection-start-line="329" selection-start-column="5" selection-end-line="329" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -494,11 +117,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="taskCollection_form.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html">
+      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/administration/static/administration/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4480">
-              <caret line="280" column="42" lean-forward="false" selection-start-line="280" selection-start-column="28" selection-end-line="280" selection-end-column="42" />
+            <state relative-caret-position="-17">
+              <caret line="377" column="14" lean-forward="false" selection-start-line="377" selection-start-column="14" selection-end-line="377" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -507,9 +130,11 @@
       <file leaf-file-name="export_view.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/export_view.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3680">
-              <caret line="230" column="169" lean-forward="false" selection-start-line="230" selection-start-column="169" selection-end-line="230" selection-end-column="169" />
-              <folding />
+            <state relative-caret-position="-1968">
+              <caret line="114" column="8" lean-forward="false" selection-start-line="114" selection-start-column="8" selection-end-line="116" selection-end-column="14" />
+              <folding>
+                <element signature="e#6099#6123#0#HTML" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -526,10 +151,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>alert</find>
-      <find>_Set</find>
-      <find>se</find>
-      <find>set_</find>
       <find>set</find>
       <find>s</find>
       <find>_</find>
@@ -555,7 +176,11 @@
       <find>bootbox</find>
       <find>recalculateEnvironments</find>
       <find>split</find>
+      <find>sl</find>
+      <find>slide</find>
+      <find>tasktextdiv</find>
       <find>taskcount</find>
+      <find>tasktext</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -610,16 +235,16 @@
         <option value="$PROJECT_DIR$/maths/urls.py" />
         <option value="$PROJECT_DIR$/templates/matistikk/base.html" />
         <option value="$PROJECT_DIR$/maths/models.py" />
-        <option value="$PROJECT_DIR$/administration/static/administration/style.css" />
         <option value="$PROJECT_DIR$/administration/models.py" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/export_view.html" />
         <option value="$PROJECT_DIR$/matistikk/settings.py" />
         <option value="$PROJECT_DIR$/maths/templates/maths/task_update.html" />
         <option value="$PROJECT_DIR$/maths/templates/maths/task_detail.html" />
         <option value="$PROJECT_DIR$/maths/views.py" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
         <option value="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/export_view.html" />
         <option value="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
+        <option value="$PROJECT_DIR$/administration/static/administration/style.css" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
       </list>
     </option>
   </component>
@@ -1236,13 +861,6 @@
       <option name="presentableId" value="Default" />
       <updated>1485778837143</updated>
     </task>
-    <task id="LOCAL-00039" summary="Endringer på personCreateView">
-      <created>1490359222544</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1490359222545</updated>
-    </task>
     <task id="LOCAL-00040" summary="Endringer på personCreateView">
       <created>1490882502087</created>
       <option name="number" value="00040" />
@@ -1579,7 +1197,14 @@
       <option name="project" value="LOCAL" />
       <updated>1500022427926</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="Eksportering">
+      <created>1500024425938</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1500024425938</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1594,15 +1219,16 @@
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1922" height="1053" extended-state="6" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21024546" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32867885" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3444206" sideWeight="0.5149413" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39806867" sideWeight="0.47812167" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37124464" sideWeight="0.47812167" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32760474" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22961374" sideWeight="0.4850587" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24785408" sideWeight="0.48720682" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21024546" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32832617" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24958768" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24866024" sideWeight="0.48720682" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39914164" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977587" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1613,7 +1239,6 @@
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="99" y="75" width="1722" height="879" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32832617" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -1973,6 +1598,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4384">
           <caret line="274" column="4" lean-forward="false" selection-start-line="274" selection-start-column="4" selection-end-line="274" selection-end-column="4" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1980,14 +1606,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8384">
           <caret line="524" column="21" lean-forward="false" selection-start-line="510" selection-start-column="16" selection-end-line="524" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/administration/static/administration/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7040">
-          <caret line="440" column="0" lean-forward="false" selection-start-line="440" selection-start-column="0" selection-end-line="440" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -2004,14 +1622,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2448">
           <caret line="156" column="34" lean-forward="false" selection-start-line="156" selection-start-column="34" selection-end-line="156" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/export_view.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3680">
-          <caret line="230" column="169" lean-forward="false" selection-start-line="230" selection-start-column="169" selection-end-line="230" selection-end-column="169" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2055,14 +1665,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="373">
-          <caret line="433" column="0" lean-forward="false" selection-start-line="433" selection-start-column="0" selection-end-line="433" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3728">
@@ -2071,13 +1673,41 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/export_view.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1968">
+          <caret line="114" column="8" lean-forward="false" selection-start-line="114" selection-start-column="8" selection-end-line="116" selection-end-column="14" />
+          <folding>
+            <element signature="e#6099#6123#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="124" column="18" lean-forward="false" selection-start-line="124" selection-start-column="18" selection-end-line="124" selection-end-column="18" />
+        <state relative-caret-position="271">
+          <caret line="586" column="17" lean-forward="false" selection-start-line="586" selection-start-column="0" selection-end-line="587" selection-end-column="0" />
           <folding>
             <element signature="n#style#0;n#div#2;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#textarea#0;n#div#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#3;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/static/administration/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-17">
+          <caret line="377" column="14" lean-forward="false" selection-start-line="377" selection-start-column="14" selection-end-line="377" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="869">
+          <caret line="329" column="5" lean-forward="false" selection-start-line="329" selection-start-column="5" selection-end-line="329" selection-end-column="5" />
+          <folding />
         </state>
       </provider>
     </entry>

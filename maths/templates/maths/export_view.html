@@ -112,6 +112,10 @@
             </button>
         </div>
 
+        <div id="filterAlert" class="alert alert-warning hidden" style="margin-top: 10px">
+            Vennligst velg noe å filtrere etter.
+        </div>
+
 
     </div>
     <div class="col-md-10 colheight" style="overflow: auto;">
@@ -181,72 +185,89 @@
             if ($('#answers').hasClass('btn-primary')) {
                 info = false;
             }
-            $.ajax({
-                type: 'GET',
-                url: '{% url 'maths:exportData' %}',
-                data: {
-                    'info': info,
-                    'students': selectedUsers,
-                    'grades': selectedGrades,
-                    'groups': selectedGroups,
-                    'tests': selectedTests,
-                    'tasks': selectedTasks,
-                    'items': selectedItems
-                },
-                dataType: 'json',
-                success: function (data) {
-                    var container = document.getElementById('excel');
-                    container.removeNode = "";
-                    hot.destroy();
-                    var columns = [{type: 'text'}, {type: 'text'}, {type: 'text', width: 300}, {
-                        type: 'text',
-                        width: 300
-                    }, {type: 'text', width: 300}, {type: 'numeric'}, {type: 'text'}, {type: 'text'}, {
-                        type: 'text',
-                        width: 300
-                    }];
-                    var colHeaders = ['Brukernavn', 'Test', 'Item', 'Svar', 'Begrunnelse', 'Tid(s)', 'Korrekt', 'Besvart', 'Fremgangsmåte'];
-                    if (info && (selectedUsers || selectedGrades || selectedGroups)) {
-                        columns = [{type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {
+            if (selectedUsers || selectedGrades || selectedGroups || selectedTests || selectedTasks || selectedItems) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url 'maths:exportData' %}',
+                    data: {
+                        'info': info,
+                        'students': selectedUsers,
+                        'grades': selectedGrades,
+                        'groups': selectedGroups,
+                        'tests': selectedTests,
+                        'tasks': selectedTasks,
+                        'items': selectedItems
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        var container = document.getElementById('excel');
+                        container.removeNode = "";
+                        hot.destroy();
+                        var columns = [{type: 'text'}, {type: 'text'}, {type: 'text', width: 300}, {
                             type: 'text',
-                            width: 250
-                        }, {
+                            width: 300
+                        }, {type: 'text', width: 300}, {type: 'numeric'}, {type: 'text'}, {type: 'text'}, {
                             type: 'text',
-                            width: 250
-                        }, {
-                            type: 'text'
-                        }, {type: 'text'}, {type: 'text'}];
-                        colHeaders = ['Brukernavn', 'Navn', 'Fødselsdag', 'Epost', 'Skole / Klasse', 'Grupper', 'Kjønn',
-                            'Rolle', 'Sist innlogget'];
-                    } else if (info && selectedTests) {
-                        columns = [{type: 'numeric'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {
-                            type: 'text',
-                            width: 600
+                            width: 300
                         }];
-                        colHeaders = ['ID', 'Testnavn', 'Publisert', 'Svarfrist', 'Rekkefølge', 'Antall Oppgaver', 'Items / Oppgaver']
-                    } else if (info && selectedTasks) {
-                        columns = [{type: 'numeric'}, {type: 'text'}, {type: 'text', width:400}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text', width:300}, {type: 'text'}];
-                        colHeaders = ['ID', 'Oppgavenavn', 'Oppgavetekst', 'Svartype', 'Kategori', 'Variabeloppgave', 'Variabler', 'Laget av']
-                    } else if (info && selectedItems){
-                        columns = [{type: 'numeric'}, {type: 'text'}, {type: 'text', width:500}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text', width:400}];
-                        colHeaders = ['ID', 'Oppgavenavn', 'Oppgavetekst', 'Svartype', 'Kategori', 'Variabler', 'Tester'];
+                        var colHeaders = ['Brukernavn', 'Test', 'Item', 'Svar', 'Begrunnelse', 'Tid(s)', 'Korrekt', 'Besvart', 'Fremgangsmåte'];
+                        if (info && (selectedUsers || selectedGrades || selectedGroups)) {
+                            columns = [{type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {
+                                type: 'text',
+                                width: 250
+                            }, {
+                                type: 'text',
+                                width: 250
+                            }, {
+                                type: 'text'
+                            }, {type: 'text'}, {type: 'text'}];
+                            colHeaders = ['Brukernavn', 'Navn', 'Fødselsdag', 'Epost', 'Skole / Klasse', 'Grupper', 'Kjønn',
+                                'Rolle', 'Sist innlogget'];
+                        } else if (info && selectedTests) {
+                            columns = [{type: 'numeric'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {
+                                type: 'text',
+                                width: 600
+                            }];
+                            colHeaders = ['ID', 'Testnavn', 'Publisert', 'Svarfrist', 'Rekkefølge', 'Antall Oppgaver', 'Items / Oppgaver']
+                        } else if (info && selectedTasks) {
+                            columns = [{type: 'numeric'}, {type: 'text'}, {
+                                type: 'text',
+                                width: 400
+                            }, {type: 'text'}, {type: 'text'}, {type: 'text'}, {
+                                type: 'text',
+                                width: 300
+                            }, {type: 'text'}];
+                            colHeaders = ['ID', 'Oppgavenavn', 'Oppgavetekst', 'Svartype', 'Kategori', 'Variabeloppgave', 'Variabler', 'Laget av']
+                        } else if (info && selectedItems) {
+                            columns = [{type: 'numeric'}, {type: 'text'}, {
+                                type: 'text',
+                                width: 500
+                            }, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text', width: 400}];
+                            colHeaders = ['ID', 'Oppgavenavn', 'Oppgavetekst', 'Svartype', 'Kategori', 'Variabler', 'Tester'];
+                        }
+                        hot = new Handsontable(container, {
+                            data: data,
+                            rowHeaders: true,
+                            autoRowSize: true,
+                            wordWrap: false,
+                            columns: columns,
+                            colHeaders: colHeaders,
+                            filters: true,
+                            dropdownMenu: true
+                        });
+                    },
+                    error: function (xhr) {
+                        alert('error');
+                        alert(xhr.responseText);
                     }
-                    hot = new Handsontable(container, {
-                        data: data,
-                        rowHeaders: true,
-                        autoRowSize: true,
-                        wordWrap: false,
-                        columns: columns,
-                        colHeaders: colHeaders,
-                        filters: true,
-                        dropdownMenu: true
-                    });
-                },
-                error: function (xhr) {
-                    alert('error');
-                    alert(xhr.responseText);
-                }
-            });
+                });
+            } else {
+                $('#filterAlert').removeClass('hidden');
+                $("#filterAlert").fadeTo(5000, 500).slideUp(500, function () {
+                    $("#filterAlert").slideUp(500);
+                });
+            }
+
         });
         $('#users').on('changed.bs.select', function (e) {
             selectedUsers = String($(this).val());
