@@ -83,7 +83,12 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ answer.item.id }}">
-                                            <h4>{{ answer.item.task.text | safe }}</h4>
+                                             {% if answer.item.task.variableTask %}
+                                                {% insert_params answer.item.task.text answer.item.variables as text %}
+                                                <h4>{{ text | safe }}</h4>
+                                            {% else %}
+                                                <h4>{{ answer.item.task.text | safe }}</h4>
+                                            {% endif %}
                                         </textarea>
                                     </div>
                                     <div class="panel-body">
@@ -316,7 +321,7 @@
     /**
      * Adds tinymce to the textareas.
      */
-    var taskcount = $('.section').length;
+    var taskcount = document.getElementById('taskcount').innerHTML;
     var divheight = document.getElementById('tasktextdiv').clientHeight;
     for (var i = 0; i < taskcount; i++) {
         var div = $('#task' + (i + 1));
@@ -422,6 +427,12 @@
         $('.applet_scaler').css('transform-origin', '0% 0% 0px');
         for (var i = 1; i <= taskcount; i++) {
             var geo = $('#base64' + i);
+            var variables = geo.data('variables');
+            var variableTable = variables.split('|||||');
+            for (var x = 0; x < variableTable.length; x++) {
+                var param = variableTable[x];
+                window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), param);
+            }
             if (document.getElementById('base64' + i)) {
                 width = geo.data('width');
                 height = geo.data('height');
@@ -432,9 +443,12 @@
                     var scaledWidth = (window.innerWidth * 0.49) / width;
                     var scaledHeight = (window.innerHeight * 0.50) / height;
                 }
-                $('#applet_container' + i + ' .applet_scaler').css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                $('#applet_container' + i + ' .applet_scaler').css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                $('#applet_container' + i + ' .applet_scaler').css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                var appletContainerScaler = $('#applet_container' + i + ' .applet_scaler');
+                appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
+                document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
             }
         }
         var panelHeight = $('.panel-heading').height();
@@ -450,11 +464,14 @@
                 var geo = $('#base64' + i);
                 width = geo.data('width');
                 height = geo.data('height');
+                var appletContainerScaler = $('#applet_container' + i + ' .applet_scaler');
                 var scaledWidth = (window.innerWidth * 0.49) / width;
                 var scaledHeight = (window.innerHeight * 0.70) / height;
-                $('#applet_container' + i + ' .applet_scaler').css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                $('#applet_container' + i + ' .applet_scaler').css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                $('#applet_container' + i + ' .applet_scaler').css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
+                document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
             }
         }
         var panelHeight = $('.panel-heading').height();

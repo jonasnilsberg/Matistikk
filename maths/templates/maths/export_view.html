@@ -2,8 +2,10 @@
 {% load staticfiles %}
 {% block head %}
     <script src="{% static 'maths/js/handsontable/dist/handsontable.full.js' %}"></script>
+    <script src="{% static 'maths/js/handsontable/dist/moment/moment.js' %}"></script>
     <link rel="stylesheet" media="screen" href="{% static 'maths/js/handsontable/dist/handsontable.full.css' %}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.3/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.3/css/bootstrap-select.min.css">
 {% endblock %}
@@ -18,11 +20,35 @@
             <h5>Brukere</h5>
             <select id="users" class="selectpicker" data-live-search="true" data-actions-box="true" data-width="96%"
                     multiple>
-                {% for student in students %}
-                    <option value="{{ student.username }}"
-                            data-tokens="{{ student.get_full_name }}">{{ student.get_full_name }}
-                        - {{ student.username }}</option>
-                {% endfor %}
+                <optgroup label="Elever">
+                    {% for student in students %}
+                        <option value="{{ student.username }}"
+                                data-tokens="{{ student.get_full_name }}">{{ student.get_full_name }}
+                            - {{ student.username }}</option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Lærere">
+                    {% for teacher in teachers %}
+                        <option value="{{ teacher.username }}"
+                                data-tokens="{{ teacher.get_full_name }}">{{ teacher.get_full_name }}
+                            - {{ teacher.username }}</option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Skoleadministratorer">
+                    {% for schooladmin in schooladmins %}
+                        <option value="{{ schooladmin.username }}"
+                                data-tokens="{{ schooladmin.get_full_name }}">{{ schooladmin.get_full_name }}
+                            - {{ schooladmin.username }}</option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Administrator" data-tokens="Administratorer">
+                    {% for admin in admins %}
+                        <option value="{{ admin.username }}"
+                                data-tokens="{{ admin.get_full_name }}">{{ admin.get_full_name }}
+                            - {{ admin.username }}</option>
+                    {% endfor %}
+                </optgroup>
+
             </select>
         </div>
         <div class="form-group" style="margin-left: 2%;">
@@ -76,8 +102,14 @@
             </select>
         </div>
         <div style="margin-left: 2%; margin-right: 2%">
-            <button class="btn btn-primary sortExcel" style="width: 48%;">Filtrer</button>
-            <button class="btn btn-success" style="width: 47%" onclick="download()">Last ned fil</button>
+            <button class="btn btn-primary sortExcel" style="width: 48%;"><i class="fa fa-filter"
+                                                                             aria-hidden="true"></i>
+                Filtrer
+            </button>
+            <button class="btn btn-success" style="width: 47%" onclick="download()"><i class="fa fa-download"
+                                                                                       aria-hidden="true"></i> Last ned
+                fil
+            </button>
         </div>
 
 
@@ -90,7 +122,7 @@
         var selectedUsers, selectedGrades, selectedTests, selectedTasks, selectedItems, selectedGroups;
         $('.selectpicker').selectpicker({
             'noneSelectedText': '-----',
-            'deselectAllText': 'Avmarker alle',
+            'deselectAllText': 'Fjern markering',
             'selectAllText': 'Marker alle',
             'liveSearchPlaceholder': 'Søk'
         });
@@ -106,14 +138,42 @@
 
         $('.answerInfo').click(function () {
             $('.answerInfo').removeClass('btn-default btn-primary');
-            $('.answerInfo').not(this).addClass('btn-default')
+            $('.answerInfo').not(this).addClass('btn-default');
             $(this).addClass('btn-primary');
+            $('.selectpicker').selectpicker('val', '');
+            $('.selectpicker').prop('disabled', false);
+            $('.selectpicker').selectpicker('refresh');
+            selectedUsers = "";
+            selectedGrades = "";
+            selectedGroups = "";
+            selectedTests = "";
+            selectedTasks = "";
+            selectedItems = "";
         });
 
 
         function download() {
             var exportPlugin = hot.getPlugin('exportFile');
-            exportPlugin.downloadFile('csv', {filename: 'MyFile'});
+            bootbox.prompt({
+                title: "Last ned fil!",
+                placeholder: 'Skriv inn navnet filen skal lagres som.',
+                value: $('#taskTitle').text(),
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Avbryt'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-download" aria-hidden="true"></i> Last ned'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        exportPlugin.downloadFile('csv', {filename: result});
+                    }
+                }
+            });
+
+
         }
 
         $('.sortExcel').click(function () {
@@ -136,13 +196,40 @@
                 dataType: 'json',
                 success: function (data) {
                     var container = document.getElementById('excel');
-                    container.innerHTML = "";
+                    container.removeNode = "";
                     hot.destroy();
-                    var columns  = [{type: 'text'}, {type: 'text'},{type: 'text'},{type: 'text',width: 300},{type: 'text',width: 300},{type: 'numeric'},{type: 'text'}];
-                    var colHeaders = ['Brukernavn','Test','Item','Svar','Begrunnelse','Tid brukt i sekunder','Korrekt'];
-                    if(info){
-                        columns = [{type: 'text'},{type: 'text'},{type: 'text'},{type: 'text'},{type: 'text'}];
-                        colHeaders = ['Brukernavn','Navn','Fødselsdag', 'Epost', 'Sist innlogget'];
+                    var columns = [{type: 'text'}, {type: 'text'}, {type: 'text', width: 300}, {
+                        type: 'text',
+                        width: 300
+                    }, {type: 'text', width: 300}, {type: 'numeric'}, {type: 'text'}, {type: 'text'}, {
+                        type: 'text',
+                        width: 300
+                    }];
+                    var colHeaders = ['Brukernavn', 'Test', 'Item', 'Svar', 'Begrunnelse', 'Tid(s)', 'Korrekt', 'Besvart', 'Fremgangsmåte'];
+                    if (info && (selectedUsers || selectedGrades || selectedGroups)) {
+                        columns = [{type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {
+                            type: 'text',
+                            width: 250
+                        }, {
+                            type: 'text',
+                            width: 250
+                        }, {
+                            type: 'text'
+                        }, {type: 'text'}, {type: 'text'}];
+                        colHeaders = ['Brukernavn', 'Navn', 'Fødselsdag', 'Epost', 'Skole / Klasse', 'Grupper', 'Kjønn',
+                            'Rolle', 'Sist innlogget'];
+                    } else if (info && selectedTests) {
+                        columns = [{type: 'numeric'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {
+                            type: 'text',
+                            width: 600
+                        }];
+                        colHeaders = ['ID', 'Testnavn', 'Publisert', 'Svarfrist', 'Rekkefølge', 'Antall Oppgaver', 'Items / Oppgaver']
+                    } else if (info && selectedTasks) {
+                        columns = [{type: 'numeric'}, {type: 'text'}, {type: 'text', width:400}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text', width:300}, {type: 'text'}];
+                        colHeaders = ['ID', 'Oppgavenavn', 'Oppgavetekst', 'Svartype', 'Kategori', 'Variabeloppgave', 'Variabler', 'Laget av']
+                    } else if (info && selectedItems){
+                        columns = [{type: 'numeric'}, {type: 'text'}, {type: 'text', width:500}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text', width:400}];
+                        colHeaders = ['ID', 'Oppgavenavn', 'Oppgavetekst', 'Svartype', 'Kategori', 'Variabler', 'Tester'];
                     }
                     hot = new Handsontable(container, {
                         data: data,
@@ -163,21 +250,87 @@
         });
         $('#users').on('changed.bs.select', function (e) {
             selectedUsers = String($(this).val());
+            var info = true;
+            if ($('#answers').hasClass('btn-primary')) {
+                info = false;
+            }
+            if (selectedUsers && info) {
+                disable();
+            } else {
+                if (!selectedGroups && !selectedGrades) {
+                    enable();
+                }
+            }
         });
         $('#grades').on('changed.bs.select', function (e) {
             selectedGrades = String($(this).val());
+            var info = true;
+            if ($('#answers').hasClass('btn-primary')) {
+                info = false;
+            }
+            if (selectedGrades && info) {
+                disable();
+            } else {
+                if (!selectedUsers && !selectedGroups) {
+                    enable();
+                }
+            }
         });
         $('#groups').on('changed.bs.select', function (e) {
             selectedGroups = String($(this).val());
+            var info = true;
+            if ($('#answers').hasClass('btn-primary')) {
+                info = false;
+            }
+            if (selectedGroups && info) {
+                disable();
+            } else {
+                if (!selectedUsers && !selectedGrades) {
+                    enable();
+                }
+            }
         });
         $('#tests').on('changed.bs.select', function (e) {
             selectedTests = String($(this).val());
+            disableMath(this, selectedTests);
         });
         $('#tasks').on('changed.bs.select', function (e) {
             selectedTasks = String($(this).val());
+            disableMath(this, selectedTasks);
         });
         $('#items').on('changed.bs.select', function (e) {
             selectedItems = String($(this).val());
+            disableMath(this, selectedItems);
         });
+
+        function disable() {
+            $('#tests').prop('disabled', true);
+            $('#tests').selectpicker('refresh');
+            $('#tasks').prop('disabled', true);
+            $('#tasks').selectpicker('refresh');
+            $('#items').prop('disabled', true);
+            $('#items').selectpicker('refresh');
+        }
+        function disableMath(field, type) {
+            var info = true;
+            if ($('#answers').hasClass('btn-primary')) {
+                info = false;
+            }
+            if (type && info) {
+                $('.selectpicker').not(field).prop('disabled', true);
+                $('.selectpicker').not(field).selectpicker('refresh');
+            } else {
+                $('.selectpicker').prop('disabled', false);
+                $('.selectpicker').selectpicker('refresh');
+            }
+        }
+        function enable() {
+            $('#tests').prop('disabled', false);
+            $('#tests').selectpicker('refresh');
+            $('#tasks').prop('disabled', false);
+            $('#tasks').selectpicker('refresh');
+            $('#items').prop('disabled', false);
+            $('#items').selectpicker('refresh');
+        }
     </script>
 {% endblock %}
