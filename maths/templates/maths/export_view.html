@@ -1,0 +1,336 @@
+{% extends 'matistikk/base.html' %}
+{% load staticfiles %}
+{% block head %}
+    <script src="{% static 'maths/js/handsontable/dist/handsontable.full.js' %}"></script>
+    <script src="{% static 'maths/js/handsontable/dist/moment/moment.js' %}"></script>
+    <link rel="stylesheet" media="screen" href="{% static 'maths/js/handsontable/dist/handsontable.full.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.3/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.3/css/bootstrap-select.min.css">
+{% endblock %}
+{% block body %}
+    <div class="col-md-2 exportSidebar colheight">
+        <h4 class="text-center">Eksportering av: </h4>
+        <div class="btn-group btn-group-justified">
+            <a id="answers" class="btn btn-primary answerInfo" data-value="svar">Svar</a>
+            <a class="btn btn-default answerInfo" data-value="info">Informasjon</a>
+        </div>
+        <div class="form-group" style="margin-left: 2%;">
+            <h5>Brukere</h5>
+            <select id="users" class="selectpicker" data-live-search="true" data-actions-box="true" data-width="96%"
+                    multiple>
+                <optgroup label="Elever">
+                    {% for student in students %}
+                        <option value="{{ student.username }}"
+                                data-tokens="{{ student.get_full_name }}">{{ student.get_full_name }}
+                            - {{ student.username }}</option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Lærere">
+                    {% for teacher in teachers %}
+                        <option value="{{ teacher.username }}"
+                                data-tokens="{{ teacher.get_full_name }}">{{ teacher.get_full_name }}
+                            - {{ teacher.username }}</option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Skoleadministratorer">
+                    {% for schooladmin in schooladmins %}
+                        <option value="{{ schooladmin.username }}"
+                                data-tokens="{{ schooladmin.get_full_name }}">{{ schooladmin.get_full_name }}
+                            - {{ schooladmin.username }}</option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Administrator" data-tokens="Administratorer">
+                    {% for admin in admins %}
+                        <option value="{{ admin.username }}"
+                                data-tokens="{{ admin.get_full_name }}">{{ admin.get_full_name }}
+                            - {{ admin.username }}</option>
+                    {% endfor %}
+                </optgroup>
+
+            </select>
+        </div>
+        <div class="form-group" style="margin-left: 2%;">
+            <h5>Klasser</h5>
+            <select id="grades" class="selectpicker" data-live-search="true" data-actions-box="true" data-width="96%"
+                    multiple>
+                {% for grade in grades %}
+                    <option value="{{ grade.id }}"
+                            data-tokens="{{ grade.school.school_name }} - {{ grade.grade_name }}">{{ grade.school.school_name }}
+                        - {{ grade.grade_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group" style="margin-left: 2%;">
+            <h5>Grupper</h5>
+            <select id="groups" class="selectpicker" data-live-search="true" data-actions-box="true" data-width="96%"
+                    multiple>
+                {% for group in groups %}
+                    <option value="{{ group.id }}"
+                            data-tokens="{{ group }}">{{ group }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group" style="margin-left: 2%;">
+            <h5>Tester</h5>
+            <select id="tests" class="selectpicker" data-live-search="true" data-actions-box="true" data-width="96%"
+                    multiple>
+                {% for test in tests %}
+                    <option value="{{ test.id }}"
+                            data-tokens="{{ test.id }} - {{ test.task_collection.test_name }}">{{ test.id }}
+                        - {{ test.task_collection.test_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group" style="margin-left: 2%;">
+            <h5>Oppgaver</h5>
+            <select id="tasks" class="selectpicker" data-live-search="true" data-actions-box="true" data-width="96%"
+                    multiple>
+                {% for task in tasks %}
+                    <option value="{{ task.id }}" data-tokens="{{ task }}">{{ task }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group" style="margin-left: 2%;">
+            <h5>Items</h5>
+            <select id="items" class="selectpicker" data-live-search="true" data-actions-box="true" data-width="96%"
+                    multiple>
+                {% for item in items %}
+                    <option value="{{ item.id }}" data-tokens="{{ item }}">{{ item }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div style="margin-left: 2%; margin-right: 2%">
+            <button class="btn btn-primary sortExcel" style="width: 48%;"><i class="fa fa-filter"
+                                                                             aria-hidden="true"></i>
+                Filtrer
+            </button>
+            <button class="btn btn-success" style="width: 47%" onclick="download()"><i class="fa fa-download"
+                                                                                       aria-hidden="true"></i> Last ned
+                fil
+            </button>
+        </div>
+
+
+    </div>
+    <div class="col-md-10 colheight" style="overflow: auto;">
+        <div id="excel" style="width: 100%"></div>
+    </div>
+
+    <script>
+        var selectedUsers, selectedGrades, selectedTests, selectedTasks, selectedItems, selectedGroups;
+        $('.selectpicker').selectpicker({
+            'noneSelectedText': '-----',
+            'deselectAllText': 'Fjern markering',
+            'selectAllText': 'Marker alle',
+            'liveSearchPlaceholder': 'Søk'
+        });
+
+
+        var container = document.getElementById('excel');
+        var hot = new Handsontable(container, {
+            startCols: 20,
+            startRows: 20,
+            rowHeaders: true,
+            colHeaders: true
+        });
+
+        $('.answerInfo').click(function () {
+            $('.answerInfo').removeClass('btn-default btn-primary');
+            $('.answerInfo').not(this).addClass('btn-default');
+            $(this).addClass('btn-primary');
+            $('.selectpicker').selectpicker('val', '');
+            $('.selectpicker').prop('disabled', false);
+            $('.selectpicker').selectpicker('refresh');
+            selectedUsers = "";
+            selectedGrades = "";
+            selectedGroups = "";
+            selectedTests = "";
+            selectedTasks = "";
+            selectedItems = "";
+        });
+
+
+        function download() {
+            var exportPlugin = hot.getPlugin('exportFile');
+            bootbox.prompt({
+                title: "Last ned fil!",
+                placeholder: 'Skriv inn navnet filen skal lagres som.',
+                value: $('#taskTitle').text(),
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Avbryt'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-download" aria-hidden="true"></i> Last ned'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        exportPlugin.downloadFile('csv', {filename: result});
+                    }
+                }
+            });
+
+
+        }
+
+        $('.sortExcel').click(function () {
+            var info = true;
+            if ($('#answers').hasClass('btn-primary')) {
+                info = false;
+            }
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'maths:exportData' %}',
+                data: {
+                    'info': info,
+                    'students': selectedUsers,
+                    'grades': selectedGrades,
+                    'groups': selectedGroups,
+                    'tests': selectedTests,
+                    'tasks': selectedTasks,
+                    'items': selectedItems
+                },
+                dataType: 'json',
+                success: function (data) {
+                    var container = document.getElementById('excel');
+                    container.removeNode = "";
+                    hot.destroy();
+                    var columns = [{type: 'text'}, {type: 'text'}, {type: 'text', width: 300}, {
+                        type: 'text',
+                        width: 300
+                    }, {type: 'text', width: 300}, {type: 'numeric'}, {type: 'text'}, {type: 'text'}, {
+                        type: 'text',
+                        width: 300
+                    }];
+                    var colHeaders = ['Brukernavn', 'Test', 'Item', 'Svar', 'Begrunnelse', 'Tid(s)', 'Korrekt', 'Besvart', 'Fremgangsmåte'];
+                    if (info && (selectedUsers || selectedGrades || selectedGroups)) {
+                        columns = [{type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {
+                            type: 'text',
+                            width: 250
+                        }, {
+                            type: 'text',
+                            width: 250
+                        }, {
+                            type: 'text'
+                        }, {type: 'text'}, {type: 'text'}];
+                        colHeaders = ['Brukernavn', 'Navn', 'Fødselsdag', 'Epost', 'Skole / Klasse', 'Grupper', 'Kjønn',
+                            'Rolle', 'Sist innlogget'];
+                    } else if (info && selectedTests) {
+                        columns = [{type: 'numeric'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {
+                            type: 'text',
+                            width: 600
+                        }];
+                        colHeaders = ['ID', 'Testnavn', 'Publisert', 'Svarfrist', 'Rekkefølge', 'Antall Oppgaver', 'Items / Oppgaver']
+                    } else if (info && selectedTasks) {
+                        columns = [{type: 'numeric'}, {type: 'text'}, {type: 'text', width:400}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text', width:300}, {type: 'text'}];
+                        colHeaders = ['ID', 'Oppgavenavn', 'Oppgavetekst', 'Svartype', 'Kategori', 'Variabeloppgave', 'Variabler', 'Laget av']
+                    } else if (info && selectedItems){
+                        columns = [{type: 'numeric'}, {type: 'text'}, {type: 'text', width:500}, {type: 'text'}, {type: 'text'}, {type: 'text'}, {type: 'text', width:400}];
+                        colHeaders = ['ID', 'Oppgavenavn', 'Oppgavetekst', 'Svartype', 'Kategori', 'Variabler', 'Tester'];
+                    }
+                    hot = new Handsontable(container, {
+                        data: data,
+                        rowHeaders: true,
+                        autoRowSize: true,
+                        wordWrap: false,
+                        columns: columns,
+                        colHeaders: colHeaders,
+                        filters: true,
+                        dropdownMenu: true
+                    });
+                },
+                error: function (xhr) {
+                    alert('error');
+                    alert(xhr.responseText);
+                }
+            });
+        });
+        $('#users').on('changed.bs.select', function (e) {
+            selectedUsers = String($(this).val());
+            var info = true;
+            if ($('#answers').hasClass('btn-primary')) {
+                info = false;
+            }
+            if (selectedUsers && info) {
+                disable();
+            } else {
+                if (!selectedGroups && !selectedGrades) {
+                    enable();
+                }
+            }
+        });
+        $('#grades').on('changed.bs.select', function (e) {
+            selectedGrades = String($(this).val());
+            var info = true;
+            if ($('#answers').hasClass('btn-primary')) {
+                info = false;
+            }
+            if (selectedGrades && info) {
+                disable();
+            } else {
+                if (!selectedUsers && !selectedGroups) {
+                    enable();
+                }
+            }
+        });
+        $('#groups').on('changed.bs.select', function (e) {
+            selectedGroups = String($(this).val());
+            var info = true;
+            if ($('#answers').hasClass('btn-primary')) {
+                info = false;
+            }
+            if (selectedGroups && info) {
+                disable();
+            } else {
+                if (!selectedUsers && !selectedGrades) {
+                    enable();
+                }
+            }
+        });
+        $('#tests').on('changed.bs.select', function (e) {
+            selectedTests = String($(this).val());
+            disableMath(this, selectedTests);
+        });
+        $('#tasks').on('changed.bs.select', function (e) {
+            selectedTasks = String($(this).val());
+            disableMath(this, selectedTasks);
+        });
+        $('#items').on('changed.bs.select', function (e) {
+            selectedItems = String($(this).val());
+            disableMath(this, selectedItems);
+        });
+
+        function disable() {
+            $('#tests').prop('disabled', true);
+            $('#tests').selectpicker('refresh');
+            $('#tasks').prop('disabled', true);
+            $('#tasks').selectpicker('refresh');
+            $('#items').prop('disabled', true);
+            $('#items').selectpicker('refresh');
+        }
+        function disableMath(field, type) {
+            var info = true;
+            if ($('#answers').hasClass('btn-primary')) {
+                info = false;
+            }
+            if (type && info) {
+                $('.selectpicker').not(field).prop('disabled', true);
+                $('.selectpicker').not(field).selectpicker('refresh');
+            } else {
+                $('.selectpicker').prop('disabled', false);
+                $('.selectpicker').selectpicker('refresh');
+            }
+        }
+        function enable() {
+            $('#tests').prop('disabled', false);
+            $('#tests').selectpicker('refresh');
+            $('#tasks').prop('disabled', false);
+            $('#tasks').selectpicker('refresh');
+            $('#items').prop('disabled', false);
+            $('#items').selectpicker('refresh');
+        }
+    </script>
+{% endblock %}

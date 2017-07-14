@@ -40,15 +40,15 @@
         <div class="panel-heading"><h4 class="text-center">{{ task.title }} - items</h4></div>
         <div class="panel-body">
             <div class="row">
-                <div class="col-md-5 variableList" style="overflow: auto">
+                <div class="col-md-6 variableList" style="overflow: auto">
                     <div class="list-group">
                         {% get_variable_count items.first as variable_count %}
                         <table class="table table-striped table-responsive table-hover">
                             <thead>
                             <tr>
-                                <th class="col-md-1"></th>
+                                <th>Parameter</th>
                                 {% for x in variable_count %}
-                                    <th>Parameter {{ forloop.counter }}</th>
+                                    <th>{{ forloop.counter }}</th>
                                 {% endfor %}
                             </tr>
                             </thead>
@@ -66,7 +66,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-md-7" style="padding-left: 15px">
+                <div class="col-md-6">
                     <div id="applet_container"></div>
                 </div>
             </div>
@@ -87,11 +87,19 @@
         var viewPortWidth = 1200;
         var viewPortHeight = 750;
         var base64 = "{{ geogebra.base64 }}";
-
+        var height = "{{ geogebra.height }}";
+        var width = "{{ geogebra.width }}";
+        var listScaleHeight = (window.innerHeight * 0.70) / height;
         if (typeof window.innerWidth != 'undefined') {
             viewPortWidth = window.innerWidth * 0.55;
             viewPortHeight = window.innerHeight * 0.75;
-            $('.variableList').css('max-height', viewPortHeight);
+            var listHeight = height * listScaleHeight;
+            $('.variableList').css('height', listHeight);
+            $('.variableList').css('max-height', listHeight);
+        }
+        if (height && width) {
+            viewPortHeight = height;
+            viewPortWidth = width;
         }
         var parameters = {
             "id": "ggbApplet",
@@ -132,6 +140,20 @@
                     }
                 }
                 ggbApplet.setValue('matistikkParameter' + i, param);
+                if (window.innerWidth > window.innerHeight) {
+                    var scaledWidth = (window.innerWidth * 0.49) / width;
+                    var scaledHeight = (window.innerHeight * 0.70) / height;
+                } else {
+                    var scaledWidth = (window.innerWidth * 0.49) / width;
+                    var scaledHeight = (window.innerHeight * 0.50) / height;
+                }
+                $('.applet_scaler').css('transform-origin', '0% 0% 0px');
+                var appletContainerScaler = $('#applet_container .applet_scaler');
+                appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                document.getElementById('ggbApplet').setAttribute('data-scalex', scaledWidth);
+                document.getElementById('ggbApplet').setAttribute('data-scaley', scaledHeight);
             }
         };
 
@@ -146,6 +168,17 @@
             applet.inject('applet_container', 'preferhtml5');
             setContenteditable(false);
             $('.mce-toolbar-grp').addClass('hidden');
+        };
+        window.onresize = function (event) {
+            $('.applet_scaler').css('transform-origin', '0% 0% 0px');
+            var appletContainerScaler = $('#applet_container .applet_scaler');
+            var scaledWidth = (window.innerWidth * 0.49) / width;
+            var scaledHeight = (window.innerHeight * 0.70) / height;
+            appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+            appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+            appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+            document.getElementById('ggbApplet').setAttribute('data-scalex', scaledWidth);
+            document.getElementById('ggbApplet').setAttribute('data-scaley', scaledHeight);
         };
         $(document).ready(function () {
             $("tr").eq(1).addClass('success').find(':radio').prop('checked', true);

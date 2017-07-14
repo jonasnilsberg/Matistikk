@@ -151,7 +151,10 @@ class Gruppe(models.Model):
         ordering = ['group_name']
 
     def __str__(self):
-        return self.group_name
+        if self.grade:
+            return self.group_name + " - " + self.grade.__str__()
+        else:
+            return self.group_name
 
 
 # This is in order to have different names shown by the django-forms than variable-names

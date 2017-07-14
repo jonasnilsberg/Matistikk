@@ -15,7 +15,9 @@ from administration.views import AdministratorCheck, RoleCheck
 import datetime
 import random
 from django.http import HttpResponseRedirect
-import requests
+
+from django.utils import formats
+from django.utils import timezone
 
 
 class AnswerCheck(views.UserPassesTestMixin):
@@ -31,6 +33,7 @@ class AnswerCheck(views.UserPassesTestMixin):
             :param user: Person that has to pass the test.
             :return: True if the user logged in as an administrator.
         """
+        test_id = self.kwargs.get('test_pk')
         if user.is_authenticated():
             role = [2, 3, 4]
             if user.role in role:
@@ -41,7 +44,6 @@ class AnswerCheck(views.UserPassesTestMixin):
                     if answer_user == user.username:
                         return True
                 else:
-                    test_id = self.kwargs.get('test_pk')
                     if Answer.objects.filter(test_id=test_id, user=user).exists():
                         return False
                     if Person.objects.filter(id=user.id, tests__id=test_id).exists():
@@ -50,6 +52,10 @@ class AnswerCheck(views.UserPassesTestMixin):
                         return True
                     elif Gruppe.objects.filter(persons=user, tests__id=test_id).exists():
                         return True
+        else:
+            test = Test.objects.get(id=test_id)
+            if test.public:
+                return True
         return False
 
 
@@ -71,14 +77,13 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             user = Person.objects.get(username=self.request.user.username)
             tests = Test.objects.filter(person=user)
             context['tests'] = tests
-            tabOne = []
             tabTwo = []
-            ans = Answer.objects.filter(test__in=tests).order_by('-id')
+            ans = Answer.objects.filter(test__in=tests, user__isnull=False).order_by('-id')
             task_count = 0
             for a in ans:
                 if task_count == 0:
                     tabTwo.append(a)
-                    task_count = a.test.task_collection.tasks.count()
+                    task_count = a.test.task_collection.items.count()
                 task_count -= 1
             context['lastanswers'] = tabTwo[:15]
         if self.request.user.role == 4:
@@ -90,7 +95,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             context['groups'] = Gruppe.objects.count()
             context['lasttests'] = Test.objects.all().order_by('-id')[:15]
             tabTwo = []
-            ans = Answer.objects.all().order_by('-id')
+            ans = Answer.objects.filter(user__isnull=False).order_by('-id')
             task_count = 0
             for a in ans:
                 if task_count == 0:
@@ -189,11 +194,18 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
             options = self.request.POST['options']
             correct = self.request.POST['correct']
             questions = self.request.POST['questions']
+            radio_or_check = self.request.POST['radioOrCheck']
             option_split = options.split('<--->')
             correct_split = correct.split('<--->')
             question_split = questions.split('|||||')
+            radio_or_check_split = radio_or_check.split('|||||')
+            x = 0
             for question in question_split:
                 multiple_choice_task = MultipleChoiceTask(question=question, task=task)
+                if radio_or_check_split[x] == 'true':
+                    multiple_choice_task.checkbox = True
+                else:
+                    multiple_choice_task.checkbox = False
                 multiple_choice_task.save()
                 multiple_choice_options = option_split[0].split('|||||')
                 multiple_choice_options_correct = correct_split[0].split('|||||')
@@ -207,10 +219,19 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
                     multiple_choice_option.save()
                 option_split.pop(0)
                 correct_split.pop(0)
+                x += 1
         if task.extra:
             base64 = self.request.POST['base64']
             preview = self.request.POST['preview']
-            geogebratask = GeogebraTask(base64=base64, preview=preview, task=task)
+            height = self.request.POST['height']
+            width = self.request.POST['width']
+            show_menu_bar = form.cleaned_data['showMenuBar']
+            enable_label_drags = form.cleaned_data['enableLabelDrags']
+            enable_shift_drag_zoom = form.cleaned_data['enableShiftDragZoom']
+            enable_right_click = form.cleaned_data['enableRightClick']
+            geogebratask = GeogebraTask(base64=base64, preview=preview, task=task, height=height, width=width,
+                                        showMenuBar=show_menu_bar, enableLabelDrags=enable_label_drags,
+                                        enableShiftDragZoom=enable_shift_drag_zoom, enableRightClick=enable_right_click)
             geogebratask.save()
         return super(TaskCreateView, self).form_valid(form)
 
@@ -318,6 +339,7 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
             'task_title': task.title,
             'task_text': task.text,
             'task_reasoning': task.reasoning,
+            'task_reasoningText': task.reasoningText,
             'task_extra': task.extra,
             'task_answertype': task.answertype,
             'options': multiplechoice
@@ -330,14 +352,11 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
             for choices in multiplechoice_task:
                 options = []
                 multiple_choice_options = MultipleChoiceOption.objects.filter(MutipleChoiceTask=choices)
-                correct = 0
                 for option in multiple_choice_options:
                     options.append(option.option)
-                    if option.correct:
-                        correct += 1
                 multiplechoice.append({
                     'question': choices.question,
-                    'correct': correct,
+                    'checkbox': choices.checkbox,
                     'options': options
                 })
         return JsonResponse(data)
@@ -392,7 +411,8 @@ class TaskDetailView(AdministratorCheck, views.AjaxResponseMixin, generic.Detail
         else:
             variables = request.POST['variables']
             randomVariables = request.POST['randomVariables']
-            if not Item.objects.filter(task_id=self.kwargs.get('task_pk'), variables=variables, random_variables=False).exists():
+            if not Item.objects.filter(task_id=self.kwargs.get('task_pk'), variables=variables,
+                                       random_variables=False).exists():
                 item = Item(task_id=self.kwargs.get('task_pk'), variables=variables)
                 if randomVariables == 'true':
                     item.random_variables = True
@@ -481,11 +501,18 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
             options = self.request.POST['options']
             correct = self.request.POST['correct']
             questions = self.request.POST['questions']
+            radio_or_check = self.request.POST['radioOrCheck']
             option_split = options.split('<--->')
             correct_split = correct.split('<--->')
             question_split = questions.split('|||||')
+            radio_or_check_split = radio_or_check.split('|||||')
+            x = 0
             for question in question_split:
                 multiple_choice_task = MultipleChoiceTask(question=question, task=task)
+                if radio_or_check_split[x] == 'true':
+                    multiple_choice_task.checkbox = True
+                else:
+                    multiple_choice_task.checkbox = False
                 multiple_choice_task.save()
                 multiple_choice_options = option_split[0].split('|||||')
                 multiple_choice_options_correct = correct_split[0].split('|||||')
@@ -499,6 +526,7 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
                     multiple_choice_option.save()
                 option_split.pop(0)
                 correct_split.pop(0)
+                x += 1
         return super(TaskUpdateView, self).form_valid(form)
 
 
@@ -769,6 +797,19 @@ class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
     template_name = 'maths/test_detail.html'
     pk_url_kwarg = 'test_pk'
 
+    def post_ajax(self, request, *args, **kwargs):
+        test = Test.objects.get(id=self.kwargs.get('test_pk'))
+        public = request.POST['public']
+        if public == 'true':
+            test.public = True
+        else:
+            test.public = False
+        test.save()
+        data = {
+            'success': True
+        }
+        return JsonResponse(data)
+
     def get_context_data(self, **kwargs):
         """
             Function that adds more to the context depending on the logged in user or the previous destination without 
@@ -802,6 +843,15 @@ class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
             context['allgrades'] = Grade.objects.all().exclude(tests__exact=test)
             context['allgroups'] = Gruppe.objects.all().exclude(tests__exact=test)
             context['allschools'] = School.objects.all()
+            tabTwo = []
+            ans = Answer.objects.filter(test=test, user__isnull=True).order_by('-id')
+            task_count = 0
+            for a in ans:
+                if task_count == 0:
+                    tabTwo.append(a)
+                    task_count = a.test.task_collection.items.count()
+                task_count -= 1
+            context['anonymous_answers'] = tabTwo
         return context
 
 
@@ -822,7 +872,10 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             Function that returns the success url.
             :return: success url.
         """
-        return reverse_lazy('maths:index')
+        if Person.objects.filter(id=self.request.user.id).exists():
+            return reverse_lazy('maths:index')
+        else:
+            return reverse_lazy('maths:answerFinished')
 
     def get_context_data(self, **kwargs):
         """
@@ -862,17 +915,28 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             :return: HttpResponseRedirect to the index page.
         """
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
+        answerList = Answer.objects.filter(user__isnull=True).last()
         for y in range(0, len(test.task_collection.items.all())):
             text = request.POST["task" + str(y) + "-text"]
             reasoning = request.POST["task" + str(y) + "-reasoning"]
             itemid = request.POST["task" + str(y) + "-item"]
             timespent = request.POST["task" + str(y) + "-timespent"]
-            correct = request.POST["task"+str(y)+"-correct"]
-            answer = Answer(text=text, reasoning=reasoning, user=self.request.user, test=test,
+            correct = request.POST["task" + str(y) + "-correct"]
+            answer = Answer(text=text, reasoning=reasoning, test=test,
                             timespent=timespent)
+            if Person.objects.filter(id=self.request.user.id).exists():
+                answer.user = self.request.user
+                url = reverse('maths:index')
+            else:
+                url = reverse('maths:answerFinished')
+                answer.user = None
+                if answerList:
+                    answer.anonymous_user = int(answerList.anonymous_user + 1)
+                else:
+                    answer.anonymous_user = 0
             item = Item.objects.get(id=itemid)
             if item.random_variables:
-                variables = request.POST['task'+str(y)+"-variables"]
+                variables = request.POST['task' + str(y) + "-variables"]
                 obj, created = Item.objects.get_or_create(task=item.task, variables=variables, random_variables=False)
                 answer.item = obj
             else:
@@ -886,7 +950,7 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             if item.task.extra:
                 geogebraanswer = GeogebraAnswer(answer=answer, base64=base64, data=geogebradata)
                 geogebraanswer.save()
-        url = reverse('maths:index')
+
         return HttpResponseRedirect(url)
 
 
@@ -1013,8 +1077,12 @@ class AnswerListView(AnswerCheck, generic.ListView):
             :return: List of answer objects.
         """
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
-        person = Person.objects.get(username=self.kwargs.get('slug'))
-        return Answer.objects.filter(test=test, user=person)
+        if self.kwargs.get('slug'):
+            person = Person.objects.get(username=self.kwargs.get('slug'))
+            return Answer.objects.filter(test=test, user=person)
+        else:
+            anonymous_user = self.kwargs.get('user_id')
+            return Answer.objects.filter(test=test, anonymous_user=anonymous_user)
 
     def get_context_data(self, **kwargs):
         context = super(AnswerListView, self).get_context_data(**kwargs)
@@ -1040,3 +1108,276 @@ def export_data(request, test_pk):
     else:
         array = ['#hackerman']
         return excel.make_response_from_array(array, 'xlsx', file_name='fasit')
+
+
+class LinkSuccess(generic.TemplateView):
+    template_name = 'maths/link_success.html'
+
+
+class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateView):
+    template_name = 'maths/export_view.html'
+
+    def get_ajax(self, request, *args, **kwargs):
+        data = []
+        info_js = request.GET.get('info')
+        rq_students = request.GET.get('students')
+        rq_grades = request.GET.get('grades')
+        rq_groups = request.GET.get('groups')
+        rq_tests = request.GET.get('tests')
+        rq_tasks = request.GET.get('tasks')
+        rq_items = request.GET.get('items')
+        if info_js == 'false':
+            if rq_students:
+                student_table = rq_students.split(',')
+                for student in student_table:
+                    user = Person.objects.get(username=student)
+                    answers = Answer.objects.filter(user=user)
+                    for answer in answers:
+                        geo = answer.geogebraanswer_set.first()
+                        date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
+                        answer_tab = [user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
+                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geo.data]
+                        data.append(answer_tab)
+            if rq_grades:
+                grade_table = rq_grades.split(',')
+                for grade_id in grade_table:
+                    grade = Grade.objects.get(id=grade_id)
+                    tests = Test.objects.filter(grade=grade)
+                    answers = Answer.objects.filter(test__in=tests, user__in=grade.person_set.all())
+                    for answer in answers:
+                        geo = answer.geogebraanswer_set.first()
+                        date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
+                        answer_tab = [answer.user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
+                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geo.data]
+                        data.append(answer_tab)
+            if rq_groups:
+                group_table = rq_groups.split(',')
+                for group_id in group_table:
+                    group = Gruppe.objects.get(id=group_id)
+                    tests = Test.objects.filter(gruppe=group)
+                    answers = Answer.objects.filter(test__in=tests, user__in=group.persons.all())
+                    for answer in answers:
+                        geo = answer.geogebraanswer_set.first()
+                        date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
+                        answer_tab = [answer.user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
+                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geo.data]
+                        data.append(answer_tab)
+            if rq_tests:
+                test_table = rq_tests.split(',')
+                for test_id in test_table:
+                    test = Test.objects.get(id=test_id)
+                    answers = Answer.objects.filter(test=test)
+                    for answer in answers:
+                        date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
+                        geo = answer.geogebraanswer_set.first()
+                        if answer.user:
+                            username = answer.user.username
+                        else:
+                            username = "Anonym  - " + str(answer.anonymous_user)
+                        answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
+                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geo.data]
+                        data.append(answer_tab)
+            if rq_tasks:
+                task_table = rq_tasks.split(',')
+                for task_id in task_table:
+                    task = Task.objects.get(id=task_id)
+                    answers = Answer.objects.filter(item__task=task)
+                    for answer in answers:
+                        date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
+                        geo = answer.geogebraanswer_set.first()
+                        if answer.user:
+                            username = answer.user.username
+                        else:
+                            username = "Anonym  - " + str(answer.anonymous_user)
+                        answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
+                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geo.data]
+                        data.append(answer_tab)
+            if rq_items:
+                item_table = rq_items.split(',')
+                for item_id in item_table:
+                    item = Item.objects.get(id=item_id)
+                    answers = Answer.objects.filter(item=item)
+                    for answer in answers:
+                        date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
+                        geo = answer.geogebraanswer_set.first()
+                        if answer.user:
+                            username = answer.user.username
+                        else:
+                            username = "Anonym  - " + str(answer.anonymous_user)
+                        answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
+                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geo.data]
+                        data.append(answer_tab)
+        elif info_js == 'true' and rq_students or rq_grades or rq_groups:
+            if rq_students:
+                student_table = rq_students.split(',')
+                for student in student_table:
+                    user = Person.objects.get(username=student)
+                    grades = ""
+                    groupsString = ""
+                    for grade in user.grades.all():
+                        grades += grade.__str__() + ", "
+                    if user.role == 1:
+                        role = 'Elev'
+                        groups = Gruppe.objects.filter(persons=user)
+                        for group in groups:
+                            groupsString += group.__str__() + ", "
+                    elif user.role == 2:
+                        role = 'Lærer'
+                    elif user.role == 3:
+                        role = 'Skoleadministrator'
+                        schools = School.objects.filter(school_administrator=user)
+                        for school in schools:
+                            grades += school.__str__() + ", "
+                    else:
+                        role = 'Administrator'
+                    grades = grades[:-2]
+                    groupsString = groupsString[:-2]
+                    if user.last_login:
+                        last_login = formats.date_format(timezone.localtime(user.last_login),
+                                                         "SHORT_DATETIME_FORMAT")
+                    else:
+                        last_login = ""
+                    answer_tab = [user.username, user.get_full_name(), user.date_of_birth, user.email, grades,
+                                  groupsString, user.sex, role, last_login]
+                    data.append(answer_tab)
+            if rq_grades:
+                grade_table = rq_grades.split(',')
+                for grade_id in grade_table:
+                    grade = Grade.objects.get(id=grade_id)
+                    for user in grade.person_set.all():
+                        grades = ""
+                        groupsString = ""
+                        for grade in user.grades.all():
+                            grades += grade.__str__() + ", "
+                        if user.role == 1:
+                            role = 'Elev'
+                            groups = Gruppe.objects.filter(persons=user)
+                            for group in groups:
+                                groupsString += group.__str__() + ", "
+                        else:
+                            role = 'Lærer'
+                        grades = grades[:-2]
+                        groupsString = groupsString[:-2]
+                        if user.last_login:
+                            last_login = formats.date_format(timezone.localtime(user.last_login),
+                                                             "SHORT_DATETIME_FORMAT")
+                        else:
+                            last_login = ""
+                        answer_tab = [user.username, user.get_full_name(), user.date_of_birth, user.email,
+                                      grades, groupsString, user.sex, role, last_login]
+                        data.append(answer_tab)
+            if rq_groups:
+                group_table = rq_groups.split(',')
+                for group_id in group_table:
+                    group = Gruppe.objects.get(id=group_id)
+                    for user in group.persons.all():
+                        grades = ""
+                        groupsString = ""
+                        for grade in user.grades.all():
+                            grades += grade.__str__() + ", "
+                        role = 'Elev'
+                        for group in user.gruppe_set.all():
+                            groupsString += group.__str__() + ", "
+                        grades = grades[:-2]
+                        groupsString = groupsString[:-2]
+                        if user.last_login:
+                            last_login = formats.date_format(timezone.localtime(user.last_login),
+                                                             "SHORT_DATETIME_FORMAT")
+                        else:
+                            last_login = ""
+                        answer_tab = [user.username, user.get_full_name(), user.date_of_birth, user.email,
+                                      grades, groupsString, user.sex, role, last_login]
+                        data.append(answer_tab)
+        elif info_js == "true" and rq_tests:
+            test_table = rq_tests.split(',')
+            for test_id in test_table:
+                test = Test.objects.get(id=test_id)
+                order = ""
+                items = ""
+                for item in test.task_collection.items.all():
+                    if item.variables:
+                        items += item.task.title + " - (" + item.variables + "), "
+                    else:
+                        items += item.task.title + ", "
+                items = items[:-2]
+                if test.randomOrder:
+                    order += "Fast og "
+                else:
+                    order += "Tilfeldig og "
+                if test.strictOrder:
+                    order += "Låst"
+                else:
+                    order += "Åpen"
+                published = formats.date_format(timezone.localtime(test.published), "SHORT_DATETIME_FORMAT")
+                if test.dueDate:
+                    dueDate = formats.date_format(timezone.localtime(test.dueDate), "SHORT_DATETIME_FORMAT")
+                else:
+                    dueDate = ""
+                answer_tab = [test.id, test.task_collection.test_name, published, dueDate, order,
+                              test.task_collection.items.count(), items]
+                data.append(answer_tab)
+        elif info_js == 'true' and rq_tasks:
+            task_table = rq_tasks.split(',')
+            for task_id in task_table:
+                task = Task.objects.get(id=task_id)
+                answerfield = ""
+                categories = ""
+                variableTask = "Nei"
+                variables = ""
+                if task.answertype == 1:
+                    answerfield += "Tekstsvar"
+                elif task.answertype == 2:
+                    answerfield += "Flervalg"
+                else:
+                    answerfield += "Kun tillegg"
+                if task.reasoning:
+                    answerfield += " og Begrunnelse"
+                for category in task.category.all():
+                    categories += category.__str__() + ", "
+                if task.variableTask:
+                    variableTask = "Ja"
+                    for item in task.item_set.all():
+                        variables += "(" + item.variables + "), "
+                categories = categories[:-2]
+                variables = variables[:-2]
+                answer_tab = [task.id, task.title, task.text, answerfield, categories, variableTask, variables,
+                              task.author.get_full_name()]
+                data.append(answer_tab)
+        else:
+            item_table = rq_items.split(',')
+            for item_id in item_table:
+                item = Item.objects.get(id=item_id)
+                answerfield = ""
+                categories = ""
+                tests_str = ""
+                if item.task.answertype == 1:
+                    answerfield += "Tekstsvar"
+                elif item.task.answertype == 2:
+                    answerfield += "Flervalg"
+                else:
+                    answerfield += "Kun tillegg"
+                for category in item.task.category.all():
+                    categories += category.__str__() + ", "
+                categories = categories[:-2]
+                for task_collection in item.taskcollection_set.all():
+                    tests = Test.objects.filter(task_collection=task_collection)
+                    for test in tests:
+                        tests_str += test.__str__() + ", "
+                tests_str = tests_str[:-2]
+                answer_tab = [item.id, item.task.title, item.task.text, answerfield, categories, item.variables,
+                              tests_str]
+                data.append(answer_tab)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super(ExportData, self).get_context_data(**kwargs)
+        context['students'] = Person.objects.filter(role=1)
+        context['teachers'] = Person.objects.filter(role=2)
+        context['schooladmins'] = Person.objects.filter(role=3)
+        context['admins'] = Person.objects.filter(role=4)
+        context['grades'] = Grade.objects.all()
+        context['groups'] = Gruppe.objects.all()
+        context['tests'] = Test.objects.all()
+        context['tasks'] = Task.objects.all()
+        context['items'] = Item.objects.all().order_by('-id')
+        return context

@@ -452,7 +452,7 @@
           },
           {
             "klass": "EquationEditor.Buttons.WriteButtonView",
-            "latex": "\\frac{d}{dx}",
+              "latex": "\\frac{d}{dx}",
             "className": "tall"
           },
           {

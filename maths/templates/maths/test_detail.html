@@ -75,7 +75,8 @@
         <div class="panel-body">
             <ul class="nav nav-tabs">
                 {% if not students and not teachers and not grades and not groups %}
-                    <li id="studentTab" class="nav active"><a href="#notPublished" data-toggle="tab">Besvarelser</a></li>
+                    <li id="studentTab" class="nav active"><a href="#notPublished" data-toggle="tab">Besvarelser</a>
+                    </li>
                 {% endif %}
                 {% if students %}
                     <li id="studentTab" class="nav active"><a href="#A" data-toggle="tab">Elever</a></li>{% endif %}
@@ -85,12 +86,27 @@
                     <li id="gradeTab" class="nav"><a href="#C" data-toggle="tab">Klasser</a></li>{% endif %}
                 {% if groups %}
                     <li id="groupTab" class="nav"><a href="#D" data-toggle="tab">Grupper</a></li>{% endif %}
+                {% if anonymous_answers or test.public %}
+                    <li id="anonymousTab" class="nav"><a href="#F" data-toggle="tab">Anonyme besvarelser</a></li>
+                {% endif %}
                 <li class="nav"><a href="#E" data-toggle="tab">Oppgaver</a></li>
+                <div class="col-sm-4" style="float: right">
+
+                    <div {% if test.public %}style="background-color: lightgreen" class="well well-sm"
+                         {% else %}style="background-color: #FF7A7A" class="well well-sm disabledLink"{% endif %}>
+                        http://127.0.0.1:8000/matistikk/test/{{ test.id }}/svar/
+                        <label class="checkbox-inline pull-right"><input type="checkbox" class="public"
+                                                                         value="{{ test.id }}"
+                                                                         {% if test.public %}checked{% endif %}>Aktiv</label>
+
+                    </div>
+
+                </div>
             </ul>
             <div class="tab-content">
                 {% if not students and not teachers and not grades and not groups %}
                     <div class="tab-pane fade in active" id="notPublished">
-                    <h3>Denne testen er ikke publisert til noen.</h3>
+                        <h3>Denne testen er ikke publisert til noen.</h3>
                     </div>
                 {% endif %}
                 {% if students %}
@@ -230,6 +246,38 @@
                                 {% endfor %}
                             </div>
                         </div>
+                    </div>
+                {% endif %}
+                {% if anonymous_answers or test.public %}
+                    <div class="tab-pane fade" id="F">
+                        {% for answer in anonymous_answers %}
+                            {% if forloop.first %}
+                                <table class="table table-hover table-striped" id="anonymousTable">
+                                <thead>
+                                <tr>
+                                    <th>Besvart</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                            {% endif %}
+                            <tr>
+                                <td>
+                                    {{ answer.date_answered }}
+                                </td>
+                                <td>
+                                    <button type="button" value="{{ answer.anonymous_user }}"
+                                            class='btn btn-success anonymous'>
+                                        <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                        Besvarelse
+                                    </button>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <h3>Ingen Besvarelser.</h3>
+                        {% endfor %}
+                        </tbody>
+                        </table>
                     </div>
                 {% endif %}
                 <div class="tab-pane fade" id="E">
@@ -426,6 +474,13 @@
             return false;
         });
 
+        $('.anonymous').click(function () {
+            var userID = $(this).val();
+            var testID = "{{ test.id }}";
+            var url = "{% url 'maths:answerDetailAnonymous' test_pk=1234 user_id=5678 %}".replace(/1234/, testID).replace(/5678/, userID);
+            document.location.href = url;
+        });
+
         /**
          * Redirects the user to the answer of the clicked test.
          */
@@ -434,7 +489,33 @@
             var testID = "{{ test.id }}";
             var url = "{% url 'maths:answerDetail' test_pk=1234 slug=5678 %}".replace(/1234/, testID).replace(/5678/, username);
             document.location.href = url;
+        });
 
+        $('.public').change(function () {
+            var active = false;
+            var id = "{{ test.id }}";
+            if ($(this).is(':checked')) {
+                $('.well-sm').css('background-color', 'lightgreen').removeClass('disabledLink');
+                active = true;
+            } else {
+                $('.well-sm').css('background-color', '#FF7A7A').addClass('disabledLink');
+            }
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'maths:testDetail' test_pk=1234 %}'.replace(/1234/, id),
+                data: {
+                    'public': active,
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: 'json',
+                success: function () {
+                    $(".well-sm").effect("shake", {"times": 1, "distance": 5}, 250);
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                    alert('error')
+                }
+            });
 
         });
 

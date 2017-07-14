@@ -37,6 +37,7 @@ class Task(models.Model):
     text = models.TextField(max_length=32700, blank=True)
     answertype = models.IntegerField()
     reasoning = models.BooleanField()
+    reasoningText = models.CharField(max_length=1000, blank=True)
     extra = models.BooleanField()
     variableTask = models.BooleanField(default=False)
     variableDescription = models.CharField(max_length=10000, null=True, blank=True)
@@ -56,7 +57,10 @@ class Item(models.Model):
     variables = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
-        return self.task.title + " - " + self.variables
+        if self.variables:
+            return str(self.id) + " - " + self.task.title + " - (" + self.variables + ')'
+        else:
+            return str(self.id) + " - " + self.task.title
 
 
 class MultipleChoiceTask(models.Model):
@@ -68,6 +72,7 @@ class MultipleChoiceTask(models.Model):
     """
     task = models.ForeignKey(Task)
     question = models.CharField(max_length=500, blank=True)
+    checkbox = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id) + ' - Svaralternativer: ' + str(self.task)
@@ -91,6 +96,12 @@ class GeogebraTask(models.Model):
     :preview: Preview of the geogebra, in form of an image. 
     """
     task = models.ForeignKey(Task)
+    height = models.CharField(max_length=100, null=True)
+    width = models.CharField(max_length=100, null=True)
+    showMenuBar = models.BooleanField(default=False)
+    enableLabelDrags = models.BooleanField(default=True)
+    enableShiftDragZoom = models.BooleanField(default=True)
+    enableRightClick = models.BooleanField(default=True)
     base64 = models.CharField(max_length=32700)
     preview = models.TextField(null=True)
 
@@ -119,6 +130,9 @@ class TaskCollection(models.Model):
         """
         return reverse('maths:taskCollectionDetail', kwargs={'taskCollection_pk': self.id})
 
+    class Meta:
+        ordering = ["-id"]
+
 
 class Test(models.Model):
     """
@@ -130,12 +144,14 @@ class Test(models.Model):
     :randomOrder: Says if the order of the tasks should be in a random order or not.
     :strictOrder: Says if the order of the tasks should be locked in a chronological order. 
     """
+
     task_collection = models.ForeignKey(TaskCollection)
     published = models.DateTimeField(verbose_name='Publisert')
     dueDate = models.DateTimeField(verbose_name='Siste frist for besvarelse', null=True, blank=True)
     randomOrder = models.BooleanField(default=False, verbose_name='Tilfeldig rekkefølge',
                                       help_text='Dersom avkrysset vil testen bli gitt i tilfeldig rekkefølge.')
     strictOrder = models.BooleanField(default=False, verbose_name='Lås rekkefølge')
+    public = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-published']
@@ -169,10 +185,10 @@ class Answer(models.Model):
     :reasoning: Users reasoning behind the answer.
     :text: The answer.
     """
-    task = models.ForeignKey(Task, null=True)
-    item = models.ForeignKey(Item, null=True)
+    item = models.ForeignKey(Item)
     test = models.ForeignKey(Test)
-    user = models.ForeignKey(Person)
+    user = models.ForeignKey(Person, null=True)
+    anonymous_user = models.IntegerField(null=True)
     reasoning = models.CharField(max_length=32700, null=True)
     text = models.CharField(max_length=32700, null=True)
     date_answered = models.DateTimeField(null=True)
@@ -180,7 +196,10 @@ class Answer(models.Model):
     correct = models.CharField(max_length=100, null=True, default=None)
 
     def __str__(self):
-        return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - " + self.user.get_full_name()
+        if self.user:
+            return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - " + self.user.get_full_name()
+        else:
+            return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - Anonym bruker: " + str(self.anonymous_user)
 
 
 class GeogebraAnswer(models.Model):
@@ -196,7 +215,10 @@ class GeogebraAnswer(models.Model):
     data = models.CharField(max_length=2000, null=True)
 
     def __str__(self):
-        return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - " + self.answer.user.get_full_name()
+        if self.answer.user:
+            return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - " + self.answer.user.get_full_name()
+        else:
+            return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - Anonym bruker: " + str(self.answer.anonymous_user)
 
 
 class LogitTestItem(models.Model):

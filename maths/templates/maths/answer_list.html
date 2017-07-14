@@ -72,16 +72,23 @@
                     {% get_geogebra answer as geogebra %}
                     {% if geogebra %}
                         {% for geo in geogebra %}
+                            {% get_geogebra_task geo.answer.item.task as geoTask %}
                             <div class="col-sm-6 geogebra">
                                 <input id="base64{{ forloop.parentloop.counter }}" type="text"
-                                       value="{{ geo.base64 }}" hidden data-variables="{{ answer.item.variables }}">
+                                       value="{{ geo.base64 }}" hidden data-variables="{{ answer.item.variables }}"
+                                       data-height="{{ geoTask.height }}" data-width="{{ geoTask.width }}">
                                 <div id="applet_container{{ forloop.parentloop.counter }}"></div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ answer.item.id }}">
-                                            <h4>{{ answer.item.task.text | safe }}</h4>
+                                             {% if answer.item.task.variableTask %}
+                                                {% insert_params answer.item.task.text answer.item.variables as text %}
+                                                <h4>{{ text | safe }}</h4>
+                                            {% else %}
+                                                <h4>{{ answer.item.task.text | safe }}</h4>
+                                            {% endif %}
                                         </textarea>
                                     </div>
                                     <div class="panel-body">
@@ -116,7 +123,6 @@
                                                                 {% endif %}
                                                                 <br>
                                                                 {% get_multiplechoice_options multiplechoicetask as options %}
-                                                                {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
                                                                 {% for option in options %}
                                                                     {% multiplechoice_answered option answer.text forloop.parentloop.counter as answered %}
                                                                     {% if option.correct %}
@@ -126,7 +132,7 @@
                                                                         <span class="glyphicon glyphicon-remove"
                                                                               style="color: red;"></span>
                                                                     {% endif %}
-                                                                    {% if correct_count > 1 %}
+                                                                    {% if multiplechoicetask.checkbox %}
                                                                         <label class="checkbox-inline"><input
                                                                                 type="checkbox"
                                                                                 class="checkbox{{ answer.item.id }}"
@@ -229,7 +235,6 @@
                                                     {% endif %}
                                                     <br>
                                                     {% get_multiplechoice_options multiplechoicetask as options %}
-                                                    {% get_multiplechoice_options_correct_count multiplechoicetask as correct_count %}
                                                     {% for option in options %}
                                                         {% multiplechoice_answered option answer.text forloop.parentloop.counter as answered %}
                                                         {% if option.correct %}
@@ -239,7 +244,7 @@
                                                             <span class="glyphicon glyphicon-remove"
                                                                   style="color: red;"></span>
                                                         {% endif %}
-                                                        {% if correct_count > 1 %}
+                                                        {% if multiplechoicetask.checkbox %}
                                                             <label class="checkbox-inline"><input
                                                                     type="checkbox"
                                                                     class="checkbox{{ answer.item.id }}"
@@ -302,7 +307,8 @@
                     class="fa fa-arrow-right"
                     aria-hidden="true"></i></button>
             <ul id="endTestNav" class="nav navbar-nav navbar-right">
-                <a class="btn btn-danger btn-lg pull-right border-radius" style="margin-right: 20px;" onclick="goBack()">Avslutt fremvisning</a>
+                <a class="btn btn-danger btn-lg pull-right border-radius" style="margin-right: 20px;"
+                   onclick="goBack()">Avslutt fremvisning</a>
             </ul>
         </div>
 
@@ -315,7 +321,7 @@
     /**
      * Adds tinymce to the textareas.
      */
-    var taskcount = $('.section').length;
+    var taskcount = document.getElementById('taskcount').innerHTML;
     var divheight = document.getElementById('tasktextdiv').clientHeight;
     for (var i = 0; i < taskcount; i++) {
         var div = $('#task' + (i + 1));
@@ -372,7 +378,14 @@
     var applet = [];
     for (var i = 0; i < taskcount; i++) {
         if (document.getElementById('base64' + (i + 1)) != null) {
-            base64 = document.getElementById('base64' + (i + 1)).value;
+            var geoInfo = $('#base64' + (i + 1));
+            base64 = geoInfo.val();
+            var height = geoInfo.data('height');
+            var width = geoInfo.data('width');
+            if (height && width) {
+                viewPortHeight = height;
+                viewPortWidth = width;
+            }
             parameters = {
                 "id": "ggbApplet" + (i + 1),
                 "width": viewPortWidth,
@@ -383,8 +396,6 @@
                 "showToolBarHelp": false,
                 "borderColor": null,
                 "showMenuBar": true,
-                "enableLabelDrags": false,
-                "enableShiftDragZoom": true,
                 "capturingThreshold": null,
                 "errorDialogsActive": true,
                 "preventFocus": true,
@@ -412,17 +423,62 @@
         applet.push(app);
     }
 
-     function addVariables() {
+    function addVariables() {
+        $('.applet_scaler').css('transform-origin', '0% 0% 0px');
         for (var i = 1; i <= taskcount; i++) {
-            var variables = $('#base64' + i).data('variables');
-            if (variables) {
-                var variableTable = variables.split('|||||');
-                for (var x = 0; x < variableTable.length; x++) {
-                    window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), variableTable[x]);
+            var geo = $('#base64' + i);
+            var variables = geo.data('variables');
+            var variableTable = variables.split('|||||');
+            for (var x = 0; x < variableTable.length; x++) {
+                var param = variableTable[x];
+                window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), param);
+            }
+            if (document.getElementById('base64' + i)) {
+                width = geo.data('width');
+                height = geo.data('height');
+                if (window.innerWidth > window.innerHeight) {
+                    var scaledWidth = (window.innerWidth * 0.49) / width;
+                    var scaledHeight = (window.innerHeight * 0.70) / height;
+                } else {
+                    var scaledWidth = (window.innerWidth * 0.49) / width;
+                    var scaledHeight = (window.innerHeight * 0.50) / height;
                 }
+                var appletContainerScaler = $('#applet_container' + i + ' .applet_scaler');
+                appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
+                document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
             }
         }
+        var panelHeight = $('.panel-heading').height();
+        var navbarHeight = 50;
+        var colHeight = window.innerHeight - panelHeight - navbarHeight;
+        $('.col-md-6').css('height', colHeight + 'px');
     }
+
+    window.onresize = function (event) {
+        $('.applet_scaler').css('transform-origin', '0% 0% 0px');
+        for (var i = 1; i <= taskcount; i++) {
+            if (document.getElementById('base64' + i)) {
+                var geo = $('#base64' + i);
+                width = geo.data('width');
+                height = geo.data('height');
+                var appletContainerScaler = $('#applet_container' + i + ' .applet_scaler');
+                var scaledWidth = (window.innerWidth * 0.49) / width;
+                var scaledHeight = (window.innerHeight * 0.70) / height;
+                appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
+                document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
+            }
+        }
+        var panelHeight = $('.panel-heading').height();
+        var navbarHeight = 50;
+        var colHeight = window.innerHeight - panelHeight - navbarHeight;
+        $('.col-md-6').css('height', colHeight + 'px');
+    };
     /**
      * Function that runs when the document is ready, and sets up the fullpage plugin.
      */

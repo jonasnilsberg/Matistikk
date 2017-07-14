@@ -414,3 +414,28 @@ ul.scrollbar::-webkit-scrollbar {
 .radio-inline:last-child {
     margin-right: 0;
 }
+
+.geotesting {
+    width: 10vw;
+    height: 10vh;
+}
+
+.disabledLink {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.exportSidebar {
+    border-right: 1px solid black;
+}
+
+.colheight {
+    height: calc(100% - 55px);
+    height: -o-calc(100% - 55px); /* opera */
+    height: -webkit-calc(100% - 55px); /* google, safari */
+    height: -moz-calc(100% - 55px); /* firefox */
+}
