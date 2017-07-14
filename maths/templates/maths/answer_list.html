@@ -73,22 +73,22 @@
                     {% if geogebra %}
                         {% for geo in geogebra %}
                             {% get_geogebra_task geo.answer.item.task as geoTask %}
-                            <div class="col-sm-6 geogebra">
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 geogebra">
                                 <input id="base64{{ forloop.parentloop.counter }}" type="text"
                                        value="{{ geo.base64 }}" hidden data-variables="{{ answer.item.variables }}"
                                        data-height="{{ geoTask.height }}" data-width="{{ geoTask.width }}">
                                 <div id="applet_container{{ forloop.parentloop.counter }}"></div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ answer.item.id }}">
                                              {% if answer.item.task.variableTask %}
-                                                {% insert_params answer.item.task.text answer.item.variables as text %}
-                                                <h4>{{ text | safe }}</h4>
-                                            {% else %}
-                                                <h4>{{ answer.item.task.text | safe }}</h4>
-                                            {% endif %}
+                                                 {% insert_params answer.item.task.text answer.item.variables as text %}
+                                                 <h4>{{ text | safe }}</h4>
+                                             {% else %}
+                                                 <h4>{{ answer.item.task.text | safe }}</h4>
+                                             {% endif %}
                                         </textarea>
                                     </div>
                                     <div class="panel-body">
@@ -323,6 +323,11 @@
      */
     var taskcount = document.getElementById('taskcount').innerHTML;
     var divheight = document.getElementById('tasktextdiv').clientHeight;
+    if (divheight > 170) {
+        var divheightPrc = (divheight / 100) * 25;
+    } else {
+        var divheightPrc = (divheight / 100) * 30;
+    }
     for (var i = 0; i < taskcount; i++) {
         var div = $('#task' + (i + 1));
         var taskid = div.data('taskid');
@@ -334,7 +339,7 @@
             toolbar: false,
             menubar: false,
             statusbar: false,
-            height: '' + (divheight - 25),
+            height: '' + (divheight - divheightPrc),
             readonly: 1,
             body_id: 'tasktextID'
         });
