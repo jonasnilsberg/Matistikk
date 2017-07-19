@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="a3dadf1e-2e4f-489f-9312-8d2daafdb0f5" name="IdeaFiles" comment="Taskupdate oppdatering">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_list.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
     </list>
     <list id="de22f9bb-0d8d-43b9-a0ab-d5e54da7af91" name="Failed commit: IdeaFiles" comment="Endringer på personCreateView" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -82,11 +82,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="answer_list.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="answer_list.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-817">
-              <caret line="355" column="47" lean-forward="false" selection-start-line="355" selection-start-column="47" selection-end-line="355" selection-end-column="47" />
+            <state relative-caret-position="196">
+              <caret line="433" column="50" lean-forward="false" selection-start-line="433" selection-start-column="50" selection-end-line="433" selection-end-column="50" />
               <folding />
             </state>
           </provider>
@@ -102,7 +102,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="task_form.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="task_form.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="129">
@@ -233,11 +233,11 @@
         <option value="$PROJECT_DIR$/maths/templates/maths/equation_editor.html" />
         <option value="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/equation_editor.js" />
         <option value="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
         <option value="$PROJECT_DIR$/maths/views.py" />
         <option value="$PROJECT_DIR$/maths/forms.py" />
         <option value="$PROJECT_DIR$/maths/models.py" />
         <option value="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
       </list>
     </option>
   </component>
@@ -960,13 +960,6 @@
       <option name="presentableId" value="Default" />
       <updated>1485778837143</updated>
     </task>
-    <task id="LOCAL-00044" summary="Endringer på personCreateView">
-      <created>1491830031397</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1491830031397</updated>
-    </task>
     <task id="LOCAL-00045" summary="Endringer på models">
       <created>1491907269014</created>
       <option name="number" value="00045" />
@@ -1303,7 +1296,14 @@
       <option name="project" value="LOCAL" />
       <updated>1500452425523</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="Taskupdate oppdatering">
+      <created>1500452761630</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1500452761630</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1771,14 +1771,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-817">
-          <caret line="355" column="47" lean-forward="false" selection-start-line="355" selection-start-column="47" selection-end-line="355" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/maths/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2239">
@@ -1809,6 +1801,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="129">
           <caret line="184" column="63" lean-forward="false" selection-start-line="184" selection-start-column="63" selection-end-line="184" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="433" column="50" lean-forward="false" selection-start-line="433" selection-start-column="50" selection-end-line="433" selection-end-column="50" />
           <folding />
         </state>
       </provider>
