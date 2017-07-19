@@ -132,7 +132,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         return context
 
 
-class EquationEditorView(LoginRequiredMixin, generic.TemplateView):
+class EquationEditorView(generic.TemplateView):
     """
     Allows users to input math into the editor.
 
@@ -141,7 +141,6 @@ class EquationEditorView(LoginRequiredMixin, generic.TemplateView):
     **TemplateView:**
         Inherits generic.Template that makes a page representing a specific template.
     """
-    login_url = '/login/'
     template_name = 'maths/equation_editor.html'
 
 
@@ -454,6 +453,25 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
     pk_url_kwarg = 'task_pk'
     success_url = reverse_lazy('maths:taskList')
 
+    def get_initial(self):
+        """
+        Function that checks for preset values and sets them to the fields.
+
+        :return: List of the preset values.
+        """
+        task_pk = self.kwargs.get("task_pk")
+        task = Task.objects.get(id=task_pk)
+        data = {}
+        if GeogebraTask.objects.filter(task_id=task_pk).exists():
+            geo = GeogebraTask.objects.get(task=task)
+            data['width'] = geo.width
+            data['height'] = geo.height
+            data['showMenuBar'] = geo.showMenuBar
+            data['enableLabelDrags'] = geo.enableLabelDrags
+            data['enableShiftDragZoom'] = geo.enableShiftDragZoom
+            data['enableRightClick'] = geo.enableRightClick
+        return data
+
     def get_context_data(self, **kwargs):
         """
             Function that adds the multiple choice options and geogebra to the context.
@@ -462,8 +480,8 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
             :return: Returns the updated context
         """
         context = super(TaskUpdateView, self).get_context_data(**kwargs)
-        if GeogebraTask.objects.filter(task=self.kwargs.get("task_pk")):
-            context['geogebra'] = GeogebraTask.objects.filter(task=self.kwargs.get("task_pk"))
+        if GeogebraTask.objects.filter(task=self.kwargs.get("task_pk")).exists():
+            context['geogebra'] = GeogebraTask.objects.get(task=self.kwargs.get("task_pk"))
         if MultipleChoiceTask.objects.filter(task=self.kwargs.get("task_pk")):
             context['options'] = MultipleChoiceTask.objects.filter(task=self.kwargs.get("task_pk"))
 
@@ -481,19 +499,34 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
         task = form.save(commit=False)
         if self.request.POST.get('create_new', False):
             task.pk = None
-        task.save()
-
+            task.save()
+            item = Item(task=task)
+            item.save()
+        else:
+            task.save()
         if task.extra:
             base64 = self.request.POST['base64']
             preview = self.request.POST['preview']
+            showMenuBar = form.cleaned_data['showMenuBar']
+            enableLabelDrags = form.cleaned_data['enableLabelDrags']
+            enableShiftDragZoom = form.cleaned_data['enableShiftDragZoom']
+            enableRightClick = form.cleaned_data['enableRightClick']
             geotask = GeogebraTask.objects.filter(task=task)
             if geotask.count() > 0:
                 geogebratask = GeogebraTask.objects.get(task=task)
                 geogebratask.base64 = base64
                 geogebratask.preview = preview
+                geogebratask.showMenuBar = showMenuBar
+                geogebratask.enableLabelDrags = enableLabelDrags
+                geogebratask.enableShiftDragZoom = enableShiftDragZoom
+                geogebratask.enableRightClick = enableRightClick
                 geogebratask.save()
             else:
-                geogebratask = GeogebraTask(task=task, base64=base64, preview=preview)
+                height = form.cleaned_data['height']
+                width = form.cleaned_data['width']
+                geogebratask = GeogebraTask(task=task, base64=base64, preview=preview, height=height, width=width,
+                                            showMenuBar=showMenuBar, enableLabelDrags=enableLabelDrags,
+                                            enableShiftDragZoom=enableShiftDragZoom, enableRightClick=enableRightClick)
                 geogebratask.save()
         if task.answertype == 2:
             taskoptions = MultipleChoiceTask.objects.filter(task=task)
@@ -1131,12 +1164,15 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                 student_table = rq_students.split(',')
                 for student in student_table:
                     user = Person.objects.get(username=student)
-                    answers = Answer.objects.filter(user=user)
+                    answers = Answer.objects.filter(user=user).order_by('-id')
                     for answer in answers:
-                        geo = answer.geogebraanswer_set.first()
+                        if GeogebraAnswer.objects.filter(answer=answer).exists():
+                            geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
+                        else:
+                            geogebra_data = ""
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
                         answer_tab = [user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geo.data]
+                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_grades:
                 grade_table = rq_grades.split(',')
@@ -1145,67 +1181,82 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                     tests = Test.objects.filter(grade=grade)
                     answers = Answer.objects.filter(test__in=tests, user__in=grade.person_set.all())
                     for answer in answers:
-                        geo = answer.geogebraanswer_set.first()
+                        if GeogebraAnswer.objects.filter(answer=answer).exists():
+                            geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
+                        else:
+                            geogebra_data = ""
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
                         answer_tab = [answer.user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geo.data]
+                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_groups:
                 group_table = rq_groups.split(',')
                 for group_id in group_table:
                     group = Gruppe.objects.get(id=group_id)
                     tests = Test.objects.filter(gruppe=group)
-                    answers = Answer.objects.filter(test__in=tests, user__in=group.persons.all())
+                    answers = Answer.objects.filter(test__in=tests, user__in=group.persons.all()).order_by('-id')
                     for answer in answers:
-                        geo = answer.geogebraanswer_set.first()
+                        if GeogebraAnswer.objects.filter(answer=answer).exists():
+                            geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
+                        else:
+                            geogebra_data = ""
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
                         answer_tab = [answer.user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geo.data]
+                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_tests:
                 test_table = rq_tests.split(',')
                 for test_id in test_table:
                     test = Test.objects.get(id=test_id)
-                    answers = Answer.objects.filter(test=test)
+                    answers = Answer.objects.filter(test=test).order_by('-id')
                     for answer in answers:
+                        if GeogebraAnswer.objects.filter(answer=answer).exists():
+                            geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
+                        else:
+                            geogebra_data = ""
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
-                        geo = answer.geogebraanswer_set.first()
                         if answer.user:
                             username = answer.user.username
                         else:
                             username = "Anonym  - " + str(answer.anonymous_user)
                         answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geo.data]
+                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_tasks:
                 task_table = rq_tasks.split(',')
                 for task_id in task_table:
                     task = Task.objects.get(id=task_id)
-                    answers = Answer.objects.filter(item__task=task)
+                    answers = Answer.objects.filter(item__task=task).order_by('-id')
                     for answer in answers:
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
-                        geo = answer.geogebraanswer_set.first()
+                        if GeogebraAnswer.objects.filter(answer=answer).exists():
+                            geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
+                        else:
+                            geogebra_data = ""
                         if answer.user:
                             username = answer.user.username
                         else:
                             username = "Anonym  - " + str(answer.anonymous_user)
                         answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geo.data]
+                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_items:
                 item_table = rq_items.split(',')
                 for item_id in item_table:
                     item = Item.objects.get(id=item_id)
-                    answers = Answer.objects.filter(item=item)
+                    answers = Answer.objects.filter(item=item).order_by('-id')
                     for answer in answers:
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
-                        geo = answer.geogebraanswer_set.first()
+                        if GeogebraAnswer.objects.filter(answer=answer).exists():
+                            geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
+                        else:
+                            geogebra_data = ""
                         if answer.user:
                             username = answer.user.username
                         else:
                             username = "Anonym  - " + str(answer.anonymous_user)
                         answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geo.data]
+                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
                         data.append(answer_tab)
         elif info_js == 'true' and rq_students or rq_grades or rq_groups:
             if rq_students:

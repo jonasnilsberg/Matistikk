@@ -31,7 +31,7 @@ class CreateTaskForm(forms.ModelForm):
     :enableRightClick: Settings for GeoGebra - enableRightClick.
     """
     options = forms.CharField(max_length=100000, required=False)
-    base64 = forms.CharField(max_length=32700, required=False)
+    base64 = forms.CharField(max_length=200000, required=False)
     preview = forms.CharField(max_length=500000, required=False)
     create_new = forms.BooleanField(required=False)
     questions = forms.CharField(max_length=100000, required=False)

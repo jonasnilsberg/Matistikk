@@ -27,6 +27,7 @@
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
     </script>
     <script src="{% static 'maths/js/jquery.scrollTo.min.js' %}"></script>
+    <link rel="shortcut icon" href="{% static 'administration/images/favico.png' %}">
 
 
 </head>
@@ -59,7 +60,7 @@
     </div>
     {% for answer in object_list %}
         <div class="section" data-anchor="oppgave{{ forloop.counter }}">
-            <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid" data-taskid="{{ answer.item.id }}">
+            <div id="task{{ forloop.counter }}" class="col-xs-12 container-fluid" data-itemid="{{ answer.item.id }}">
                 {% if forloop.first %}
                     <span id="taskcount" hidden>{{ answer.test.task_collection.items.all.count }}</span>
                     <span id="testid" hidden>{{ answer.test.id }}</span>
@@ -73,13 +74,13 @@
                     {% if geogebra %}
                         {% for geo in geogebra %}
                             {% get_geogebra_task geo.answer.item.task as geoTask %}
-                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 geogebra">
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 geogebra splitdiv">
                                 <input id="base64{{ forloop.parentloop.counter }}" type="text"
                                        value="{{ geo.base64 }}" hidden data-variables="{{ answer.item.variables }}"
                                        data-height="{{ geoTask.height }}" data-width="{{ geoTask.width }}">
                                 <div id="applet_container{{ forloop.parentloop.counter }}"></div>
                             </div>
-                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 splitdiv">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ answer.item.id }}">
@@ -91,7 +92,7 @@
                                              {% endif %}
                                         </textarea>
                                     </div>
-                                    <div class="panel-body">
+                                    <div class="panel-body" style="padding: 10px 0px 0px 0px;">
                                         <ul class="nav nav-tabs">
                                             <li class="nav active"><a href="#answer{{ forloop.parentloop.counter }}"
                                                                       data-toggle="tab">Besvarelse</a>
@@ -99,7 +100,7 @@
                                             <li class="nav"><a href="#approach{{ forloop.parentloop.counter }}"
                                                                data-toggle="tab">Fremgangsmåte</a></li>
                                         </ul>
-                                        <div class="tab-content">
+                                        <div class="tab-content answerListBody">
                                             <div class="tab-pane fade in active"
                                                  id="answer{{ forloop.parentloop.counter }}">
                                                 {% if answer.item.task.answertype == 1 %}
@@ -165,39 +166,36 @@
 
                                             </div>
                                             <div class="tab-pane fade" id="approach{{ forloop.parentloop.counter }}">
-                                                <div class="modalOverflow">
-                                                    {% if geo.data %}
-                                                        <table class="table table-hover">
-                                                            <thead>
+                                                {% if geo.data %}
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>Tid</th>
+                                                            <th>Operasjon</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        {% split_geo geo.data as approach %}
+                                                        {% for test in approach %}
+                                                            {% split_geo2 test as geoapproach %}
                                                             <tr>
-                                                                <th>Tid</th>
-                                                                <th>Operasjon</th>
+                                                                {% for geotable in geoapproach %}
+                                                                    <td>
+                                                                        {% if forloop.first %}
+                                                                            {{ geotable }} sek
+                                                                        {% else %}
+                                                                            {{ geotable }}
+                                                                        {% endif %}
+                                                                    </td>
+                                                                {% endfor %}
                                                             </tr>
-                                                            </thead>
-                                                            <tbody>
-
-                                                            {% split_geo geo.data as approach %}
-                                                            {% for test in approach %}
-                                                                {% split_geo2 test as geoapproach %}
-                                                                <tr>
-                                                                    {% for geotable in geoapproach %}
-                                                                        <td>
-                                                                            {% if forloop.first %}
-                                                                                {{ geotable }} sek
-                                                                            {% else %}
-                                                                                {{ geotable }}
-                                                                            {% endif %}
-                                                                        </td>
-                                                                    {% endfor %}
-                                                                </tr>
-                                                            {% endfor %}
-                                                            </tbody>
-                                                        </table>
-                                                    {% else %}
-                                                        <h3 style="padding-top: 10px;">Geogebra ble ikke brukt.</h3>
-                                                    {% endif %}
-
-                                                </div>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                {% else %}
+                                                    <h3 style="padding-top: 10px;">Geogebra ble ikke brukt.</h3>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </div>
@@ -205,15 +203,14 @@
                             </div>
                         {% endfor %}
                     {% else %}
-                        <div class="col-sm-2"></div>
-                        <div class="col-sm-8">
+                        <div class="col-sm-12 col-md-8 col-xs-12 col-centered fulldiv">
                             <div class="panel panel-default">
                                 <div class="panel-heading" id="tasktextdiv">
                                     <textarea id="tasktext{{ answer.item.id }}">
                                         <h4>{{ answer.item.task.text | safe }}</h4>
                                     </textarea>
                                 </div>
-                                <div class="panel-body">
+                                <div class="panel-body answerbody">
                                     {% if answer.item.task.answertype == 1 %}
                                         <div id="textanswerdiv">
                                             <label for="textanswer{{ answer.item.id }}">Tekstsvar</label>
@@ -330,10 +327,10 @@
     }
     for (var i = 0; i < taskcount; i++) {
         var div = $('#task' + (i + 1));
-        var taskid = div.data('taskid');
+        var itemid = div.data('itemid');
 
         tinymce.init({
-            selector: '#tasktext' + taskid,
+            selector: '#tasktext' + itemid,
             plugins: 'placeholder',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
             toolbar: false,
@@ -343,9 +340,9 @@
             readonly: 1,
             body_id: 'tasktextID'
         });
-        if ($('#textanswer' + taskid).length) {
+        if ($('#textanswer' + itemid).length) {
             tinymce.init({
-                selector: '#textanswer' + taskid,
+                selector: '#textanswer' + itemid,
                 plugins: 'placeholder',
                 content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
                 toolbar: false,
@@ -354,9 +351,9 @@
                 readonly: 1
             });
         }
-        if ($('#reasoning' + taskid).length) {
+        if ($('#reasoning' + itemid).length) {
             tinymce.init({
-                selector: '#reasoning' + taskid,
+                selector: '#reasoning' + itemid,
                 plugins: 'placeholder',
                 content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
                 toolbar: false,
@@ -431,12 +428,32 @@
     function addVariables() {
         $('.applet_scaler').css('transform-origin', '0% 0% 0px');
         for (var i = 1; i <= taskcount; i++) {
+            var div = $('#task' + i);
             var geo = $('#base64' + i);
+            var itemid = div.data('itemid');
+            alert(itemid);
             var variables = geo.data('variables');
-            var variableTable = variables.split('|||||');
-            for (var x = 0; x < variableTable.length; x++) {
-                var param = variableTable[x];
-                window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), param);
+            if (variables) {
+                var variableTable = variables.split('|||||');
+                for (var x = 0; x < variableTable.length; x++) {
+                    var param = variableTable[x];
+                    window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), param);
+                }
+                var html = $.parseHTML(tinymce.get('tasktext' + itemid).getContent());
+                $(html).find(".mathquill-rendered-math .selectable").each(function () {
+                    var test = "<span>" + $(this).text().substring(1, $(this).text().length - 1) + "</span>";
+                    var latex = ($(test).mathquill().html());
+                    var parent = $(this).parent();
+                    parent.empty();
+                    parent.append(latex);
+                });
+                var text = "";
+                $(html).each(function () {
+                    if ($(this).text().trim()) {
+                        text += "<p>" + $(this).html() + "</p>";
+                    }
+                });
+                tinymce.get('tasktext' + itemid).setContent(text);
             }
             if (document.getElementById('base64' + i)) {
                 width = geo.data('width');
@@ -456,10 +473,17 @@
                 document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
             }
         }
-        var panelHeight = $('.panel-heading').height();
-        var navbarHeight = 50;
+        var panelHeight = 68;
+        var navbarHeight = 46;
         var colHeight = window.innerHeight - panelHeight - navbarHeight;
+        var answerheight = (colHeight * 0.75 ) - 60;
         $('.col-md-6').css('height', colHeight + 'px');
+        $('.fulldiv').css('height', colHeight + 'px');
+        $('.splitdiv').css('height', colHeight + 'px');
+        $('.answerListBody').css('height', answerheight + 'px');
+        $('.answerListBody').css('max-height', answerheight + 'px');
+
+
     }
 
     window.onresize = function (event) {

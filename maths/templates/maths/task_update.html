@@ -57,13 +57,14 @@
                     {% bootstrap_icon "check" %} Lagre
                 </button>
             </form>
-            <div class="col-sm-6" id="extradiv">
-                <input type="hidden" id="hiddenbase64" data-height="{{ geogebra.first.height }}"
-                       data-width="{{ geogebra.first.width }}"
-                       value="{{ geogebra.first.base64 }}">
+            <div class="col-sm-6 col-md-6" id="extradiv">
+                <input type="hidden" id="hiddenbase64" data-height="{{ geogebra.height }}"
+                       data-width="{{ geogebra.width }}"
+                       value="{{ geogebra.base64 }}">
                 <div id="applet_container"></div>
             </div>
-            <div class="col-sm-6">
+
+            <div id="infoDiv" class="col-sm-6 col-md-6">
                 <div class="panel panel-default">
                     <div class="panel-heading" id="tasktextdiv">
                         <label for="tasktext" style="margin-top: 10px">Oppgavetekst</label>
@@ -165,19 +166,29 @@
                                 </button>
                             {% endif %}
                         </div> <!-- #btn-group -->
+                        <button id="geogebraSettingsBtn"
+                                class="btn btn-primary pull-right {% if not geogebra %}hidden{% endif %}"
+                                data-toggle="modal" href="#geogebraSettings"><i
+                                class="fa fa-sliders"
+                                aria-hidden="true"></i>
+                            </span> Innstillinger for GeoGebra
+                        </button>
                     </div> <!-- #inner panel-footer -->
                 </div> <!-- #inner panel -->
             </div>
         </div> <!-- #panel-body -->
-        <div class="panel-footer">
-
-        </div> <!-- #panel-footer-->
     </div> <!-- #panel -->
 
     <script>
         var viewPortWidth = 1200;
         var viewPortHeight = 750;
         var base64 = document.getElementById('hiddenbase64').value;
+        if (!base64) {
+            base64 = "UEsDBBQACAgIAOBc8UoAAAAAAAAAAAAAAAAXAAAAZ2VvZ2VicmFfZGVmYXVsdHMyZC54bWztWktv2zgQPm9/BaFT9xBbki3bCeIUaYHFBkjTYBMUvdLSWOaGIrUiFcv+9UuRsiTHjzpymrqpczA11PD1fcOZoZjzD1lE0SMkgnA2tJyWbSFgPg8IC4dWKscnA+vDxbvzEHgIowSjMU8iLIeWl2uW7ZTU6vT6eR3KBDlj/AZHIGLsw50/gQhfcx9LrTqRMj5rt6fTaWvRaYsnYTsMZSsTgYXUhJgYWsXDmepuqdG0o9Vd23ba3z5fm+5PCBMSMx8spCYbwBinVAr1CBQiYBLJWQxDK+aESQtRPAI6tG5zCb0fJwB/WqhopDCwrYt3f5yLCZ8iPvoXfFUnkxTKdlpo5zrq9SdOeYKSoaWWHurf0dByPc9CmMYTnNdoVYpnkKBHTMsanEru69a6doypgIWuGuczD8C86Rb6jEQaQyQkxGqeFhIxQKCfzPrUQ6wG0tzV+iPiboJjWBnH5zwJBMqG1g2+sdCsKOem1CoasTsyLxp79Vo5o1Bb0Xm7AHs32AOIgQVKaQl7pxH2vYEGPy9GpniL4HdeCvwvrA652whyx/U05ro8mvwOqF+xfyBUa6lj3zli/yrYL1t89+jgS8S1isFW5L9Dy+dRTCF7QUIoYRW411ooyXD3j7b2T6HCfnEqcpgMqHJC/AcGQuROvxovf/ibBCpo5vPQbeA/tkQeUdwRn8jthAgIc6nE+G4hV7Q0C8RHWgpMUknzOVwxqVJkhZ6as1gZ/AEgvleNv7D7BDORp9ZGZwHuZgYTPNvGnndk75DZG6dMd3rzFSclJ6nKhsdqtkGdyGYJwsZQ1XK9Q2Xz+2htR2r/oP5LmPzz7fkFzLDXzJ+4dnc9vK3+L2iGj2rZvMLpayGWIHWOmcw+TndNIooTCYJg9r10n87Cmne4XcglM33DTJNZPfto5nU0n56zYvOObf6c7qntOD117j5QirdDvZTM35YVFdjOq4F9oFtnM34+Z8QvF/XJSCVy3d/EgTQ655AQmPHAAqHM1qPPbK0+t4sP15mj5Zmj384dU63bqyUkJEOXpsWlUbx0TdExRdcUXglVs8OVJjlWvquWoD8JFd1mp6u34FzeCP2vcEhgaQRJzV3cLOTSjDzjMFR/KSyRvIN72GQxm+1DUBIoY4qIouVEnSkinOUfhBAeCU5TCXd+AsCqix5j0FMSyEmeCqqxxyTLDce8mPCEzDmTJRgo3w6XVN8I1XfAWntxt9vLU6tVy93beWMW0mqHXhqp4sJ8RtdKT7+MraOojqZdgNlruYOOM/A6dt/pn3qD3o7gOoPG4C65IAPCLtHGsXc2qP1d0LMcxsKME792cWJvsgp70Hd7vW7P9U5P+06v29/bSlYOq3+VFdVx6mcE+tqGWouytp+nqq9xCqXcT0X1edhIJVaD3yQpwmlGKMHJ7IdiLSGr0pJ7LdTuvQ8Q6s1LUQSE1dSujFS7SDaLGROFG8ORalDg" +
+                "zz5i/yFMeMqC1RD3Ikt3DtXKNoM54pwCrpzWx4VcuyZeSTY2Abd7GPlh+9OfgP8w4tlSVNzuhYiodsa1FmrXtGt2xj7B8uRgTaRZer7bLeHJinNq1/5Tp734b6CL/wFQSwcI17MX3KcEAACUJAAAUEsDBBQACAgIAOBc8UoAAAAAAAAAAAAAAAAXAAAAZ2VvZ2VicmFfZGVmYXVsdHMzZC54bWztV91u2yAUvl6fAnHfGGI7aaq4VdRdbFJbrerNbgk+SdgccIH89dX2DnumYXBSp02mNUpVaWoucg5wfuD74ID7l8tpgeagjVAyw7RFMALJVS7kOMMzOzo9w5cXJ/0xqDEMNUMjpafMZjitLDd+rtWKO92qDy2NOJfqlk3BlIzDPZ/AlF0rzqw3nVhbnkfRYrForYO2lB5H47FtLU2OkZuQNBmulXMXbstpEXvzNiE0+n5zHcKfCmkskxwwcpPNYcRmhTVOhQKmIC2yqxIyzJUUPHY5CjaEIsNfpXUrAF7NDPGZnjv/2jnDMU0Jvjj51DcTtUBq+MPZZdjqGWz8fSOqbNzwlSqURjrD7TTFyKFH212Mhhl2oLCinDCntSgJP5r0CKUd2g7uBVuBRnNWVNa+h82s4j6i7x2xwsDa1uW+UTmEkaS2l2LqEUbGQumSY2RKgNxrYfVuHqVL5JltxBPmfsJKeJlHSLi3qwKQnQj+U4JxrMSNYJXyReQ5VBsn+IAYg5w7oJQ2bicQn31FvPkjqffXkvr2ivrRRxq6vb9bghZLNAgeg2A4aAcRB5EEkW6gggcZ5mmq/wyLaVkILmw12o/qHfBiL7ClMI2tMKian7foJ/FB9BNPPnlO/X9G9DPMS6bdgXfkcZc76OCw+P3r7yT4M8eZtmAEkw06rqqB53x0PvjYzcd+gF1eCQ1cv/n2Fq6ukh6Ea6/ngW3TnofWy02dS48F7z6QuFI6N2gZSkkoMP5/sUk1YtUtVmffW3l3gU0OBFsVqwnkWsknvBtdT5DHNeSHnLzX0kTT2POU0heXUVJDkvY6JOkkR+Ps2EdiP+IS7Gb5t5XexDj9wPgYGD/MWO7reg3B3brdxJoe9lIiye7i3Oq+eQF5i+fNzsdN1RleMKsgHtubgK9976BBJ4huEGdB9Gp09pNoZnrkHuO7rtp6aJvP5L34fAr8rtct/dcbIGp8bETrD5qLP1BLBwgbBrQ/3gIAAFcNAABQSwMEFAAICAgA4FzxSgAAAAAAAAAAAAAAABYAAABnZW9nZWJyYV9qYXZhc2NyaXB0LmpzSyvNSy7JzM9TSE9P8s/zzMss0dBUqK4FAFBLBwjWN725GQAAABcAAABQSwMEFAAICAgA4FzxSgAAAAAAAAAAAAAAAAwAAABnZW9nZWJyYS54bWytV21v2zYQ/tz+ioM+JzZJkXop7BZO2wADuqJYtmHYN1libCKyZIh0nAz98bsjJdlO2qJpkoQgeXp4d88dyWNm7+42Ndzqzpq2mUd8wiLQTdlWplnNo527Ps+id29fz1a6XellV8B1220KN48UIcd1OJvESUoyU82j93KRs" +
+                "MXF5Xn88fLyXH7gH88vLi4X5zxP5WLxIc6EvIwA7qx507Sfi42226LUV+Vab4pPbVk4r3Tt3PbNdLrf7yeD+Unbraar1XJyZ6sI0PXGzqN+8AbVnSzaxx4uGOPTf37/FNSfm8a6oil1BERrZ96+fjXbm6Zq97A3lVvPo1zyCNbarNbIM0llBFMCbZHsVpfO3GqLS4+mnrPbbCMPKxr6/iqMoB7pRFCZW1Ppbh6xCc+zVMg0YVkukiSNswjazujG9WDeG50O6ma3Ru+DXhp5k5LlKSbBWLOs9Ty6LmqLtExz3WFI0aNuh1Pr7mu9LLphfnCIn/lfhJj/NGnD7IVI4DfGzqil2JRiwZsj04qLCFzb1l4zg6/AQTFswHM4gyRFiQCuQKIkQ0kKMckUlxADQXgMUmIvScwT+qZwvWLAOYpBMBACBAcR41QpUAmolBYKxCa5V8awERrdwRaTLI6xeVkssQkaoSIV1KATKk78SBEa9StB7nthnIHM0RAJVMohRh9wnjJAjTGp556EZEB/HCSpFymIDFAf8ibNTPwgKf38kJVe8CAtQ1LUt5KSYPPZepAUeZoSzABDbmfU8dCJIGVhyuLQidDJ0KmAkWGlDNBAlMmAkfFzGQ784qfwy474cSKB+SDvfRcD+c29/9TJfpqEqd9ljLNemgVpTtPkmWTiXyLDj6yGk/kUo4PJVMqfNymeY3JkybP0sUmhvsPymcH9ZmjRlv/z7ZHJ+EnH79Gl+AsWk5OD9zKEZfbT5rnInlAFXsRkyr551YSe9/3L5CH/+Tw891oaA6F+bHI2HYrxrA8C2DVh+0Pl9MZSWNIYEjGWxoSKV18fUwGpgjQ5qpJnVCcTdSiVVCizk1KpsqN6icUyIWHqiy9WKKp2oXYKOZTPs76Afn1UQLHeyUPJQwdJFQfA+gwJ3Y597UMvxFj9hKICKBLACqkEJHQDf6cQRrBtrRkDu9b1dgy5j6Fptjt3ErdyUw1D1yK6qP2br8dXbXlzMU" +
+                "a616QL647V4nvp8CwL76eTV9urWV0sdY2P2yvaBwC3RU1H1lu4bhsHwyWXRF6dfyDO9K6sTWWK5m/M+/AY+7zbLHUHftgSSa+ElsPwkvS38/iS5HmAlG3bVVf3FrcJ3P2rO1wsuIrgPoxjLif58Q/qsGVR+9cAovqxzE9RvXJ9e6WdQ4IWijtth4CuOlMdj3+zF21djaHbtqZx74ut23X+4Y8HqSOvF82q1j5UPov4gi5vlu3dlY+RSIKuP++3egzicvW+rdsO8IAJhaRWfb8MvceQYyOKeQzziF4HKR2/81x4hO+XofcozGJwrSfKB5ZssGIshPnJNvM7gJ7ju8a4T8PEmfLmQJTwIb9DBE9V8hdSOZs+2FqzftMPG23TVjps0jjgT77PbnTX6Dpsqgazvmt3NsBDYr3XO6u/FG69aKo/9AoP5JeCbkSHjgTogV+lS7PBhUHex7mgPfAXEgvSSq86PcQjOBOy0HsJdtvporJrrd2Yi7DlDzAWyAzuz2zZmS3tWljifXyjDzuzMrbA+7w6YkRcLTpd0u2CUXYU4QiKnVu3nf8/q3AkIQvHUH+e+38k3/4PUEsHCEmD3IIpBQAA+Q4AAFBLAQIUABQACAgIAOBc8UrXsxfcpwQAAJQkAAAXAAAAAAAAAAAAAAAAAAAAAABnZW9nZWJyYV9kZWZhdWx0czJkLnhtbFBLAQIUABQACAgIAOBc8UobBrQ/3gIAAFcNAAAXAAAAAAAAAAAAAAAAAOwEAABnZW9nZWJyYV9kZWZhdWx0czNkLnhtbFBLAQIUABQACAgIAOBc8UrWN725GQAAABcAAAAWAAAAAAAAAAAAAAAAAA8IAABnZW9nZWJyYV9qYXZhc2NyaXB0LmpzUEsBAhQAFAAICAgA4FzxSkmD3IIpBQAA+Q4AAAwAAAAAAAAAAAAAAAAAbAgAAGdlb2dlYnJhLnhtbFBLBQYAAAAABAAEAAgBAADPDQAAAAA=";
+        }
         var geo = $('#hiddenbase64');
         var width = geo.data('width');
         var height = geo.data('height');
@@ -217,6 +228,9 @@
         parameters.appletOnLoad = function () {
             if (geobase64 == null || geobase64 == "") {
                 $('#extradiv').hide();
+                $('#infoDiv').addClass('col-centered');
+                $('#infoDiv').removeClass('col-sm-6 col-md-6');
+                $('#infoDiv').addClass('col-sm-8 col-md-8');
             }
             else {
                 $('#id_base64').val(geobase64);
@@ -291,6 +305,30 @@
                 }
             });
         });
+        $('#reason').change(function () {
+            if (document.getElementById('reason').checked) {
+                var reasoningTextField = $('#id_reasoningText');
+                bootbox.prompt({
+                    title: "Skriv inn tittel for begrunnelsesfeltet.",
+                    placeholder: 'Begrunnelse!',
+                    value: reasoningTextField.val(),
+                    buttons: {
+                        cancel: {
+                            label: '<i class="fa fa-times"></i> Avbryt'
+                        },
+                        confirm: {
+                            label: '<i class="fa fa-check"></i> Lagre'
+                        }
+                    },
+                    callback: function (result) {
+                        if (result) {
+                            reasoningTextField.val(result);
+                        }
+                    }
+                });
+            }
+        });
+
 
         $('.answertype').click(function (e) {
             if ($(e.target).is(":radio")) {
@@ -318,7 +356,11 @@
          * This function parse data from custom input fields into the hidden django-form
          * and clicks the submit-button in the django-form when its done.
          */
+        var submit = false;
         function updateTask(createNew) {
+            if (submit) {
+                return 0;
+            }
             var tasktext = tinyMCE.activeEditor.getContent();
             var tasktext2 = document.getElementById('id_text');
             var answertype = $('input[name=answer_type]:checked').val();
@@ -350,6 +392,14 @@
                 extra2.checked = true;
                 base64.value = ggbApplet.getBase64();
                 preview.value = ggbApplet.getPNGBase64(1, false);
+                var width = document.getElementById('id_width');
+                var height = document.getElementById('id_height');
+                if (!width.value && !height.value) {
+                    var viewPortWidth = window.innerWidth * 0.49;
+                    var viewPortHeight = window.innerHeight * 0.7;
+                    width.value = (viewPortWidth);
+                    height.value = (viewPortHeight);
+                }
             }
             else {
                 extra2.checked = false;
@@ -435,75 +485,9 @@
             }
 
             document.getElementById('submitbutton').click();
+            submit = true;
         }
 
-        /**
-         * This function changes the "option"-radio-button with associated text to a
-         * text input field so that the user can update the text of a multiple choice-option.
-         * The function runs when the user clicks the "change option"-button.
-         * The function also changes the icon and the onclick attribute of the button
-         * associated with the option in the view.
-         * @param e
-         */
-        function updateOption(e) {
-            var input = document.getElementById('option' + e);
-            var option = document.getElementById('option' + e + 'value');
-            var button = document.getElementById('option' + e + 'button');
-            var span = document.getElementById('option' + e + 'span');
-            $(input).prop('type', 'text');
-            $(input).val(option.innerHTML);
-            option.innerHTML = '';
-            button.setAttribute('onclick', 'saveUpdatedOption(' + e + ')');
-            span.className = 'glyphicon glyphicon-refresh';
-        }
-
-        /**
-         * This function is called when the user has updated the text of a multiple choice option
-         * and then clicks the refresh-button. The function changes the input field back
-         * to a radio input, and adds the text to the span associated with the input field.
-         * The function also changes the icon and the onclick attribute of the button
-         * associated with the option in the view.
-         * @param e
-         */
-        function saveUpdatedOption(e) {
-            var input = document.getElementById('option' + e);
-            var option = document.getElementById('option' + e + 'value');
-            var button = document.getElementById('option' + e + 'button');
-            var span = document.getElementById('option' + e + 'span');
-            $(input).prop('type', 'radio');
-            option.innerHTML = input.value;
-            button.setAttribute('onclick', 'updateOption(' + e + ')');
-            span.className = 'glyphicon glyphicon-pencil';
-        }
-
-        /**
-         * This function adds a input field to the div that contaions the multiple choice options
-         * for the task. The function gets called when the user clicks the "add option"-button.
-         */
-        function addOption() {
-            var div = document.getElementById('optionsdiv');
-            var inputCount = div.getElementsByTagName('input').length;
-            var n = inputCount + 1;
-            div.innerHTML += '<a class="btn btn-default" id="option' + n + 'button" onclick="saveUpdatedOption(' + n + ');"><span style="font-size:1em;" id="option' + n + 'span" class="glyphicon glyphicon-plus"></span> </a> <input type="text" id="option' + n + '" name="options"> <span id="option' + n + 'value" ></span> <a class="btn btn-default" onclick="changeCorrect(' + n + ')"><i class="fa fa-times" aria-hidden="true" id="correct' + n + '" style="font-size: 1.5em; color: #A00000"></i></a><br>';
-        }
-
-
-        function changeCorrect(e) {
-            var div = document.getElementById('optionsdiv');
-            var i = div.getElementsByTagName('i');
-            var span = div.getElementsByTagName('span');
-
-            for (var k = 0; k < i.length; k++) {
-                if (k + 1 == e) {
-                    i[k].className = 'fa fa-check';
-                    i[k].style.color = '#00A000';
-                }
-                else {
-                    i[k].className = 'fa fa-times';
-                    i[k].style.color = '#A00000';
-                }
-            }
-        }
 
         /**
          * This function hides all the parts of the task when the document get loaded,
@@ -569,11 +553,21 @@
          * changes the boolean value of the "Use extra"-switch.
          */
         $('#extra').change(function () {
+            var infoDiv = $('#infoDiv');
             if (document.getElementById('extra').checked) {
                 $('#extradiv').show();
+                infoDiv.removeClass('col-centered');
+                infoDiv.removeClass('col-sm-8 col-md-8');
+                infoDiv.addClass('col-sm-6 col-md-6');
+                $('#geogebraSettingsBtn').removeClass('hidden')
             }
             else {
                 $('#extradiv').hide();
+                infoDiv.addClass('col-centered');
+                infoDiv.removeClass('col-sm-6 col-md-6');
+                infoDiv .addClass('col-sm-8 col-md-8');
+                $('#geogebraSettingsBtn').addClass('hidden')
+
             }
         });
         function AddQuestion() {
@@ -629,7 +623,82 @@
 {% endblock %}
 
 {% block modal %}
-
+    <div class="modal fade" id="geogebraSettings" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: whitesmoke">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-center" id="myModalLabel">Innstillinger for GeoGebra</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Valgt</th>
+                            <th>Navn</th>
+                            <th>Beskrivelse</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <div class="material-switch">
+                                    <input id="showMenuBar" class="settings" name="showMenuBar" type="checkbox"
+                                           {% if geogebra.showMenuBar %}checked{% endif %}/>
+                                    <label for="showMenuBar" class="label-success"></label>
+                                </div>
+                            </td>
+                            <td>showMenuBar</td>
+                            <td>States whether the menubar of GeoGebra should be shown in the applet.</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="material-switch">
+                                    <input id="enableLabelDrags" class="settings" name="enableLabelDrags"
+                                           type="checkbox"
+                                           {% if geogebra.enableLabelDrags or not geogebra %}checked{% endif %}/>
+                                    <label for="enableLabelDrags" class="label-success"></label>
+                                </div>
+                            </td>
+                            <td>enableLabelDrags</td>
+                            <td>States whether labels can be dragged.</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="material-switch">
+                                    <input id="enableShiftDragZoom" class="settings" name="enableShiftDragZoom"
+                                           type="checkbox"
+                                           {% if geogebra.enableShiftDragZoom or not geogebra %}checked{% endif %}/>
+                                    <label for="enableShiftDragZoom" class="label-success"></label>
+                                </div>
+                            </td>
+                            <td>enableShiftDragZoom</td>
+                            <td>States whether the drawing pad should be moveable.</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="material-switch">
+                                    <input id="enableRightClick" class="settings" name="enableRightClick"
+                                           type="checkbox"
+                                           {% if geogebra.enableRightClick or not geogebra %}checked{% endif %}/>
+                                    <label for="enableRightClick" class="label-success"></label>
+                                </div>
+                            </td>
+                            <td>enableRightClick</td>
+                            <td>States whether right clicks should be handled by the applet. Setting this parameter to
+                                "false" disables context menus, properties dialogs and right-click-zooming.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="changeCategoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -663,66 +732,6 @@
                             {% endif %}
                         {% endfor %}
                     </ul>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="changeAnswerTypeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Endre Svarmåte</h4>
-                </div>
-                <div class="modal-body">
-                    <div id="accordion" class="panel-group" role="tablist">
-                        <div class="panel panel-default" id="tekstRadio">
-                            <div class=" panel-heading" role="tab">
-                                <h4 class="panel-title">
-                                    <label><input type="radio" name="answer_type" value="1" data-toggle="collapse"
-                                                  data-parent="#accordion" data-target="#collapse5" required> Tekstsvar</label>
-                                </h4>
-                            </div>
-                            <div id="collapse5" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    Hvis dette alternativet velges, vil eleven svare med tekst.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="panel panel-default" id="flervalgRadio">
-                            <div class="panel-heading" role="tab">
-                                <p class="panel-title">
-                                    <label><input type="radio" name="answer_type" value="2" data-toggle="collapse"
-                                                  data-parent="#accordion" data-target="#collapse6">
-                                        Flervalgstest</label>
-                                </p>
-                            </div>
-                            <div id="collapse6" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    Hvis dette alternativet velges, vil eleven kunne svare i en flervalgsprøve.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel panel-default" id="geoRadio">
-                            <div class=" panel-heading" role="tab">
-                                <p class="panel-title">
-                                    <label><input type="radio" name="answer_type" value="3" data-toggle="collapse"
-                                                  data-parent="#accordion" data-target="#collapse7"> Kun tillegg</label>
-                                </p>
-                            </div>
-                            <div id="collapse7" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    Hvis dette alternativet velges, vil eleven kunne svare kun med tillegg.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
@@ -871,38 +880,6 @@
         });
 
         /**
-         * This function selects the already chosen answertype when the user opens the
-         * changeAnswerTypeModal
-         */
-        $('#changeAnswerTypeModal').on('show.bs.modal', function () {
-            $("input[name=answer_type][value=" + {{ task.answertype }} +"]").prop('checked', true);
-        });
-
-        /**
-         * This function changes the visibility of the answer type-divs when the user closes the
-         * changeAnswerTypeModal and has changed the answer type for the task.
-         */
-        $('#changeAnswerTypeModal').on('hide.bs.modal', function () {
-            var answervalue = $('input[name=answer_type]:checked').val();
-
-            if (answervalue == 1) {
-                $('#textanswerdiv').show();
-                $('#multiplechoicediv').hide();
-                $('#extraanswerdiv').hide();
-            }
-            else if (answervalue == 2) {
-                $('#textanswerdiv').hide();
-                $('#multiplechoicediv').show();
-                $('#extraanswerdiv').hide();
-            }
-            else if (answervalue == 3) {
-                $('#textanswerdiv').hide();
-                $('#multiplechoicediv').hide();
-                $('#extraanswerdiv').show();
-            }
-        });
-
-        /**
          * This function adds and removes categories in the view when the user has changed the
          * selected categories for the task.
          * @param category
@@ -916,5 +893,10 @@
                 $('#list' + category).remove();
             }
         }
+
+        $('.settings').change(function (e) {
+            $('#id_' + e.target.id).click();
+        });
+
     </script>
 {% endblock %}
