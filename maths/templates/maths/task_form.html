@@ -76,7 +76,7 @@
             <h2>Lag Oppgave</h2>
         </div>
         <div class="panel-body">
-            <div class="col-md-5">
+            <div class="col-md-6 col-sm-6 col-xs-6">
                 <label for="taskname">Oppgavenavn</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-tasks"></i></span>
@@ -182,7 +182,7 @@
                     <option>Rekkefølge</option>
                 </select>
                 <div id="applet_container"></div>
-                <form class="form-horizontal form-margin hidden" action="" method="POST"
+                <form class="form-horizontal form-margin" action="" method="POST"
                       enctype="multipart/form-data">
                     {% csrf_token %}
                     {% bootstrap_form form %}
@@ -223,7 +223,7 @@
         var viewPortWidth = 1200;
         var viewPortHeight = 750;
         if (typeof window.innerWidth != 'undefined' && window.innerWidth > 1000) {
-            viewPortWidth = window.innerWidth * 0.49;
+            viewPortWidth = window.innerWidth * 0.5;
             viewPortHeight = window.innerHeight * 0.7;
         }
         var parameters = {
@@ -505,11 +505,10 @@
         $('#reasoning').change(function () {
             if (document.getElementById('reasoning').checked) {
                 var reasoningTextField = $('#id_reasoningText');
-                reasoningTextField.val("");
                 bootbox.prompt({
                     title: "Skriv inn tittel for begrunnelsesfeltet.",
                     placeholder: 'Begrunnelse!',
-                    value: $('#taskTitle').text(),
+                    value: reasoningTextField.val(),
                     buttons: {
                         cancel: {
                             label: '<i class="fa fa-times"></i> Avbryt'
@@ -766,7 +765,7 @@
                                     </div>
 
                                     <div id="reasoningdiv">
-                                        <label for="reasoning" id="reasoningText">Begrunnelse</label>
+                                        <label for="previewreasoning" id="reasoningText">Begrunnelse</label>
                                         <textarea class="form-control" id="previewreasoning" rows="6"
                                                   style="resize:vertical"
                                                   placeholder="Begrunn svaret ditt..."></textarea>
@@ -940,6 +939,6 @@
 
         $('.settings').change(function (e) {
             $('#id_' + e.target.id).click();
-        })
+        });
     </script>
 {% endblock %}

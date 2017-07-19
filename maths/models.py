@@ -102,7 +102,7 @@ class GeogebraTask(models.Model):
     enableLabelDrags = models.BooleanField(default=True)
     enableShiftDragZoom = models.BooleanField(default=True)
     enableRightClick = models.BooleanField(default=True)
-    base64 = models.CharField(max_length=32700)
+    base64 = models.TextField(null=True)
     preview = models.TextField(null=True)
 
     def __str__(self):

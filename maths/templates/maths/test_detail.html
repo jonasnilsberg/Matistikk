@@ -387,9 +387,8 @@
                         class="fa fa-clock-o" aria-hidden="true"></i>
                     Oppdater tidsfrist
                 </button>
-                <button class="btn btn-primary" onclick="download()"><i class="fa fa-download" aria-hidden="true"></i>
-                    Eksporter svarresultater
-                </button>
+                <a type="button" class="btn btn-success" href="{% url 'maths:answerCreate' test_pk=test.id %}">
+                    <i class="fa fa-list" aria-hidden="true"></i> Se gjennom test</a>
             </div> <!-- #Panel-footer -->
         {% endif %}
     </div>
