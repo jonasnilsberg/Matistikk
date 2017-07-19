@@ -26,7 +26,7 @@ class Task(models.Model):
     """The base of a task
 
     :title: The title, max 100 letters
-    :text: The text that describes what the task is, max 32700 letters
+    :text: The text that describes what the task is, max 20 000 letters
     :answertype: What kind of answer should the user give. (text, multiple choice etc.)
     :reasoning: Reason behind the users answer.
     :extra: Says if the tasks contains any extra information (geogebra etc.)
@@ -34,7 +34,7 @@ class Task(models.Model):
     :category: Which categories fits the task. 
     """
     title = models.CharField(max_length=100, default="")
-    text = models.TextField(max_length=32700, blank=True)
+    text = models.TextField(max_length=20000, blank=True)
     answertype = models.IntegerField()
     reasoning = models.BooleanField()
     reasoningText = models.CharField(max_length=1000, blank=True)
@@ -189,8 +189,8 @@ class Answer(models.Model):
     test = models.ForeignKey(Test)
     user = models.ForeignKey(Person, null=True)
     anonymous_user = models.IntegerField(null=True)
-    reasoning = models.CharField(max_length=32700, null=True)
-    text = models.CharField(max_length=32700, null=True)
+    reasoning = models.CharField(max_length=20000, null=True)
+    text = models.CharField(max_length=20000, null=True)
     date_answered = models.DateTimeField(null=True)
     timespent = models.FloatField(null=True)
     correct = models.CharField(max_length=100, null=True, default=None)
@@ -211,7 +211,7 @@ class GeogebraAnswer(models.Model):
     :data: How the user used geogebra to solve the task. (Data from listeners)
     """
     answer = models.ForeignKey(Answer)
-    base64 = models.CharField(max_length=32700)
+    base64 = models.TextField()
     data = models.CharField(max_length=2000, null=True)
 
     def __str__(self):
