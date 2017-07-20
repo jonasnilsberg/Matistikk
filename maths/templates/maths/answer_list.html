@@ -453,6 +453,7 @@
                     }
                 });
                 tinymce.get('tasktext' + itemid).setContent(text);
+                window["ggbApplet" + i].refreshViews();
             }
             if (document.getElementById('base64' + i)) {
                 width = geo.data('width');

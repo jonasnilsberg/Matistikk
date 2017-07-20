@@ -960,6 +960,7 @@
                     window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), param);
                     params += param + '|||||';
                 }
+                window["ggbApplet" + i].refreshViews();
                 var itemVariables = document.getElementById('id_task' + parseInt(i - 1) + '-variables');
                 itemVariables.value = params.slice(0, -5);
                 var html = $.parseHTML(tinymce.get('tasktext' + itemid).getContent());
