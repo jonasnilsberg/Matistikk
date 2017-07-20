@@ -941,7 +941,8 @@
             var variables = geo.data('variables');
             if (variables) {
                 var params = "";
-                if (variables.length > 6) {
+                var variableCount = window["ggbApplet" + i].getValue('matistikkAntall');
+                if (variableCount > 1) {
                     var variableTable = variables.split('|||||');
                     for (var x = 0; x < variableTable.length; x++) {
                         var param = variableTable[x];

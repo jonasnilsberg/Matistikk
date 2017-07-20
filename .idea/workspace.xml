@@ -3,7 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="a3dadf1e-2e4f-489f-9312-8d2daafdb0f5" name="IdeaFiles" comment="Taskupdate oppdatering">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/templates/administration/school_form.html" afterPath="$PROJECT_DIR$/administration/templates/administration/school_form.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_list.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/test_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/test_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/views.py" afterPath="$PROJECT_DIR$/maths/views.py" />
     </list>
     <list id="de22f9bb-0d8d-43b9-a0ab-d5e54da7af91" name="Failed commit: IdeaFiles" comment="Endringer på personCreateView" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -30,32 +36,24 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/maths/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1456">
-              <caret line="94" column="11" lean-forward="false" selection-start-line="94" selection-start-column="5" selection-end-line="94" selection-end-column="11" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="forms.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/maths/forms.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="33" column="46" lean-forward="false" selection-start-line="33" selection-start-column="46" selection-end-line="33" selection-end-column="46" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="answer_form.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="answer_form.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="551">
-              <caret line="964" column="0" lean-forward="false" selection-start-line="964" selection-start-column="0" selection-end-line="964" selection-end-column="0" />
+            <state relative-caret-position="119">
+              <caret line="943" column="33" lean-forward="true" selection-start-line="943" selection-start-column="0" selection-end-line="944" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/maths/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="620">
+              <caret line="283" column="20" lean-forward="false" selection-start-line="283" selection-start-column="13" selection-end-line="283" selection-end-column="20" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -63,8 +61,8 @@
       <file leaf-file-name="answer_list.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="656">
-              <caret line="455" column="55" lean-forward="false" selection-start-line="455" selection-start-column="55" selection-end-line="455" selection-end-column="55" />
+            <state relative-caret-position="592">
+              <caret line="460" column="48" lean-forward="true" selection-start-line="460" selection-start-column="0" selection-end-line="461" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -73,8 +71,18 @@
       <file leaf-file-name="task_update.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_update.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="608">
+            <state relative-caret-position="224">
               <caret line="239" column="16" lean-forward="true" selection-start-line="239" selection-start-column="16" selection-end-line="239" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_form.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_form.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="588">
+              <caret line="678" column="21" lean-forward="false" selection-start-line="678" selection-start-column="21" selection-end-line="678" selection-end-column="21" />
               <folding />
             </state>
           </provider>
@@ -83,18 +91,18 @@
       <file leaf-file-name="taskCollection_form.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4464">
-              <caret line="279" column="31" lean-forward="false" selection-start-line="279" selection-start-column="31" selection-end-line="279" selection-end-column="31" />
+            <state relative-caret-position="268">
+              <caret line="257" column="26" lean-forward="true" selection-start-line="257" selection-start-column="26" selection-end-line="257" selection-end-column="26" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_detail.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_detail.html">
+      <file leaf-file-name="school_form.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/administration/templates/administration/school_form.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6240">
-              <caret line="390" column="66" lean-forward="false" selection-start-line="390" selection-start-column="66" selection-end-line="390" selection-end-column="66" />
+            <state relative-caret-position="-557">
+              <caret line="88" column="25" lean-forward="false" selection-start-line="88" selection-start-column="25" selection-end-line="88" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -110,21 +118,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="task_form.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="task_form.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2944">
-              <caret line="184" column="63" lean-forward="false" selection-start-line="184" selection-start-column="63" selection-end-line="184" selection-end-column="63" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="export_view.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/maths/templates/maths/export_view.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1056">
-              <caret line="66" column="116" lean-forward="false" selection-start-line="66" selection-start-column="101" selection-end-line="66" selection-end-column="116" />
+            <state relative-caret-position="508">
+              <caret line="586" column="104" lean-forward="false" selection-start-line="586" selection-start-column="104" selection-end-line="586" selection-end-column="104" />
               <folding />
             </state>
           </provider>
@@ -142,10 +140,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>recalculateEnvironments</find>
-      <find>split</find>
-      <find>sl</find>
-      <find>slide</find>
       <find>tasktextdiv</find>
       <find>taskUpdate</find>
       <find>changeCorrect</find>
@@ -171,7 +165,11 @@
       <find>base64</find>
       <find>variabel</find>
       <find>multiselec</find>
+      <find>getVa</find>
+      <find>submit</find>
       <find>geolistener21</find>
+      <find>category</find>
+      <find>categoryCreate</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -188,7 +186,6 @@
         <option value="$PROJECT_DIR$/administration/templates/administration/login.html" />
         <option value="$PROJECT_DIR$/administration/templates/administration/person_form.html" />
         <option value="$PROJECT_DIR$/administration/templates/administration/school_detail.html" />
-        <option value="$PROJECT_DIR$/administration/templates/administration/school_form.html" />
         <option value="$PROJECT_DIR$/administration/templates/administration/school_list.html" />
         <option value="$PROJECT_DIR$/maths/templates/maths/category_form.html" />
         <option value="$PROJECT_DIR$/maths/templates/maths/category_list.html" />
@@ -214,7 +211,6 @@
         <option value="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js" />
         <option value="$PROJECT_DIR$/maths/templates/maths/link_success.html" />
         <option value="$PROJECT_DIR$/maths/templatetags/maths_extras.py" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/test_form.html" />
         <option value="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/plugin.min.js" />
         <option value="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/config.json" />
         <option value="$PROJECT_DIR$/maths/urls.py" />
@@ -228,14 +224,16 @@
         <option value="$PROJECT_DIR$/maths/templates/maths/task_update.html" />
         <option value="$PROJECT_DIR$/maths/templates/maths/equation_editor.html" />
         <option value="$PROJECT_DIR$/administration/static/tinymce/js/tinymce/plugins/equationeditor/equation_editor.js" />
-        <option value="$PROJECT_DIR$/maths/views.py" />
         <option value="$PROJECT_DIR$/maths/forms.py" />
         <option value="$PROJECT_DIR$/maths/models.py" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html" />
         <option value="$PROJECT_DIR$/maths/templates/maths/taskCollection_detail.html" />
-        <option value="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
         <option value="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/test_form.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html" />
+        <option value="$PROJECT_DIR$/administration/templates/administration/school_form.html" />
+        <option value="$PROJECT_DIR$/maths/views.py" />
+        <option value="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
       </list>
     </option>
   </component>
@@ -958,13 +956,6 @@
       <option name="presentableId" value="Default" />
       <updated>1485778837143</updated>
     </task>
-    <task id="LOCAL-00049" summary="Små endringer overalt">
-      <created>1492503582516</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1492503582516</updated>
-    </task>
     <task id="LOCAL-00050" summary="Små endringer overalt">
       <created>1492526186332</created>
       <option name="number" value="00050" />
@@ -1301,7 +1292,14 @@
       <option name="project" value="LOCAL" />
       <updated>1500552326284</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <task id="LOCAL-00098" summary="Taskupdate oppdatering">
+      <created>1500552579800</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1500552579800</updated>
+    </task>
+    <option name="localTasksCounter" value="99" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1472,13 +1470,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/administration/templates/administration/school_form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="53" column="16" lean-forward="false" selection-start-line="53" selection-start-column="16" selection-end-line="67" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/administration/templates/administration/person_list.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1600">
@@ -1625,14 +1616,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8384">
-          <caret line="524" column="21" lean-forward="false" selection-start-line="510" selection-start-column="16" selection-end-line="524" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/administration/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2448">
@@ -1685,14 +1668,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/administration/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="643">
-          <caret line="367" column="36" lean-forward="false" selection-start-line="367" selection-start-column="36" selection-end-line="367" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/administration/static/tinymce/js/tinymce/tinymce.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
@@ -1714,16 +1689,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19648">
-          <caret line="1247" column="36" lean-forward="false" selection-start-line="1247" selection-start-column="36" selection-end-line="1247" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/maths/forms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="480">
@@ -1740,26 +1705,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2944">
-          <caret line="184" column="63" lean-forward="false" selection-start-line="184" selection-start-column="63" selection-end-line="184" selection-end-column="63" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/export_view.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1056">
           <caret line="66" column="116" lean-forward="false" selection-start-line="66" selection-start-column="101" selection-end-line="66" selection-end-column="116" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4464">
-          <caret line="279" column="31" lean-forward="false" selection-start-line="279" selection-start-column="31" selection-end-line="279" selection-end-column="31" />
           <folding />
         </state>
       </provider>
@@ -1780,26 +1729,76 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_update.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="656">
-          <caret line="455" column="55" lean-forward="false" selection-start-line="455" selection-start-column="55" selection-end-line="455" selection-end-column="55" />
+        <state relative-caret-position="224">
+          <caret line="239" column="16" lean-forward="true" selection-start-line="239" selection-start-column="16" selection-end-line="239" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_update.html">
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/test_form.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="608">
-          <caret line="239" column="16" lean-forward="true" selection-start-line="239" selection-start-column="16" selection-end-line="239" selection-end-column="16" />
+        <state relative-caret-position="588">
+          <caret line="678" column="21" lean-forward="false" selection-start-line="678" selection-start-column="21" selection-end-line="678" selection-end-column="21" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="964" column="0" lean-forward="false" selection-start-line="964" selection-start-column="0" selection-end-line="964" selection-end-column="0" />
+        <state relative-caret-position="119">
+          <caret line="943" column="33" lean-forward="true" selection-start-line="943" selection-start-column="0" selection-end-line="944" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="592">
+          <caret line="460" column="48" lean-forward="true" selection-start-line="460" selection-start-column="0" selection-end-line="461" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/taskCollection_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="257" column="26" lean-forward="true" selection-start-line="257" selection-start-column="26" selection-end-line="257" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/templates/administration/school_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-557">
+          <caret line="88" column="25" lean-forward="false" selection-start-line="88" selection-start-column="25" selection-end-line="88" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/administration/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="33" column="31" lean-forward="false" selection-start-line="33" selection-start-column="31" selection-end-line="33" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="620">
+          <caret line="283" column="20" lean-forward="false" selection-start-line="283" selection-start-column="13" selection-end-line="283" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/task_form.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="508">
+          <caret line="586" column="104" lean-forward="false" selection-start-line="586" selection-start-column="104" selection-end-line="586" selection-end-column="104" />
           <folding />
         </state>
       </provider>

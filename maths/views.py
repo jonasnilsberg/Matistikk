@@ -276,10 +276,12 @@ class CategoryCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Cr
             :return: JsonResponse containing the category id.
         """
         category_title = request.POST['category']
-        category = Category(category_title=category_title)
-        category.save()
+        category, created = Category.objects.get_or_create(
+            category_title=category_title
+        )
         data = {
-            'category_id': category.id
+            'category_id': category.id,
+            'created': created
         }
         return JsonResponse(data)
 

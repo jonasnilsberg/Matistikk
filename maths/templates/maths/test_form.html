@@ -651,7 +651,11 @@
         /**
          * This functions submits the test.
          */
+        var submitted = false;
         function submit() {
+            if(submitted){
+                return 0;
+            }
             getOrder();
             var publishedDate = new Date($("#datepickerPublish").datepicker("getDate"));
             var strPublishedDate = publishedDate.getDate() + "." + (publishedDate.getMonth() + 1) + "." + publishedDate.getFullYear();
@@ -672,6 +676,7 @@
                 }
             }
             $("#createTest").click();
+            submitted = true;
         }
         /**
          * This function updates the order of the tasks in the testTaskoverview table.

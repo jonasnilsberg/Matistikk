@@ -253,7 +253,11 @@
          * Function that tries to submit the form and gives feedback in form of a success or error message depending
          * ot how it goes.
          */
+        var submitted = false;
         function submitForm() {
+            if(submitted){
+                return 0;
+            }
             $('#submitTaskCollectionBtn').click();
             var taskCheck = false;
             $('#id_items option').each(function () {
@@ -262,6 +266,7 @@
             });
             if (taskCheck == true) {
                 $('#submitTaskCollectionBtn').click();
+                submitted = true;
             } else {
                 $("#selectTaskWarning").removeClass("hidden");
                 $("#selectTaskWarning").fadeTo(5000, 500).slideUp(500, function () {
