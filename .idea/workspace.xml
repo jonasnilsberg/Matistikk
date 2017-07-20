@@ -54,7 +54,7 @@
         <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="551">
-              <caret line="964" column="37" lean-forward="false" selection-start-line="964" selection-start-column="37" selection-end-line="964" selection-end-column="37" />
+              <caret line="964" column="0" lean-forward="false" selection-start-line="964" selection-start-column="0" selection-end-line="964" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -958,13 +958,6 @@
       <option name="presentableId" value="Default" />
       <updated>1485778837143</updated>
     </task>
-    <task id="LOCAL-00048" summary="Små endringer overalt">
-      <created>1492008060218</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1492008060218</updated>
-    </task>
     <task id="LOCAL-00049" summary="Små endringer overalt">
       <created>1492503582516</created>
       <option name="number" value="00049" />
@@ -1301,7 +1294,14 @@
       <option name="project" value="LOCAL" />
       <updated>1500549025002</updated>
     </task>
-    <option name="localTasksCounter" value="97" />
+    <task id="LOCAL-00097" summary="Taskupdate oppdatering">
+      <created>1500552326284</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1500552326284</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1799,7 +1799,7 @@
     <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="551">
-          <caret line="964" column="37" lean-forward="false" selection-start-line="964" selection-start-column="37" selection-end-line="964" selection-end-column="37" />
+          <caret line="964" column="0" lean-forward="false" selection-start-line="964" selection-start-column="0" selection-end-line="964" selection-end-column="0" />
           <folding />
         </state>
       </provider>
