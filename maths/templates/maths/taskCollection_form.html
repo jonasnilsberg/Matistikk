@@ -59,7 +59,7 @@
                                    placeholder="Søk etter oppgave...">
                         </div>
                     </div>
-                    <div class="col-md-2 text-center" style="margin-bottom:10px;">
+                    <div class="col-md-2" style="margin-bottom:10px;">
                         <select id="selectCategory" class="hidden" multiple="multiple">
                             {% for category in categories %}
                                 <option id="{{ category.id }}" value="{{ category }}">{{ category }}</option>
@@ -76,7 +76,8 @@
                             <th class="col-sm-1">ID</th>
                             <th class="col-sm-4">Oppgavenavn</th>
                             <th class="col-sm-3">Kategori</th>
-                            <th class="col-sm-3"></th>
+                            <th class="col-sm-2">VariabelOppgave</th>
+                            <th class="col-sm-1"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -93,6 +94,9 @@
                                         {{ category }} -
                                     {% endif %}
                                 {% endfor %}
+                                </td>
+                                <td>
+                                    {% if task.variableTask %}Ja{% else %}Nei{% endif %}
                                 </td>
                                 <td>
                                     <button id="taskBtn{{ task.id }}" value="{{ task.id }}" type="button"
@@ -195,7 +199,7 @@
                         var variables = data.variables;
                         var parameterCount = variables[0].split('|||||').length;
                         for (var i = 1; i <= parameterCount; i++) {
-                            $('.itemHead > tr').append('<th>Variabel ' + i + '</th>')
+                            $('.itemHead > tr').append('<th>' + i + '</th>')
                         }
                         for (var i = 0; i < ids.length; i++) {
                             $('.itemBody').append('<tr id="item' + ids[i] + '" class="itemrow"><td><input type="checkbox" value="' + ids[i] + '"></td></tr>');
@@ -272,6 +276,8 @@
              */
             $('#selectCategory').multiselect({
                 buttonClass: 'form-control',
+                minWidth: '500px',
+                autoOpen: true,
                 onChange: function (option, checked, select) {
                     var category = $(option).val();
                     var selected = checked;
@@ -411,7 +417,7 @@
                             <table id="itemTable" class="table table-striped">
                                 <thead class="itemHead">
                                 <tr>
-                                    <th class="col-md-1"></th>
+                                    <th class="col-md-1">Parameter</th>
                                 </tr>
                                 </thead>
                                 <tbody class="itemBody">

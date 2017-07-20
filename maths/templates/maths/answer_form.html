@@ -998,16 +998,7 @@
                 document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
                 document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
             }
-            //alert();
         }
-        /*var testing = "<---x^{-1}---> dette er en test 1234 <---\frac{d}{dx}\sqrt{x}--->";
-         var extract = testing.match(/<---(.*)--->/).pop();
-         var tes = testing.match(new RegExp("<---" + "(.*)" + "--->"));
-         alert(tes);
-         var latex = $('<span>x^{-1}</span>').mathquill().html();
-         var test_latex = '<span class="rendered-latex mathquill-rendered-math hasCursor" contenteditable="false">' + latex + '</span>';
-         tinyMCE.get('tasktext142').execCommand('mceInsertContent', true, test_latex);
-         //$('.mathquill-embedded-latex').mathquill('revert');*/
         var panelHeight = $('.panel-heading').height();
         var navbarHeight = 50;
         var colHeight = window.innerHeight - panelHeight - navbarHeight;
@@ -1629,6 +1620,187 @@
     }
 
     /**
+     * This is a addListener-function for Geogebra. The function is called when an object is added to the Geogebra-applet.
+     * The function adds the time and the string value of the object that was added to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was added
+     */
+    function addListener21(objName) {
+        var strVal = window["ggbApplet21"].getValueString(objName);
+        var timer = document.getElementById('tasktimer21').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener21').append(time + " | Add: " + strVal + '\n');
+    }
+
+    /**
+     * This is a addListener-function for Geogebra. The function is called when an object is added to the Geogebra-applet.
+     * The function adds the time and the string value of the object that was added to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was added
+     */
+    function addListener22(objName) {
+        var strVal = window["ggbApplet22"].getValueString(objName);
+        var timer = document.getElementById('tasktimer22').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener22').append(time + " | Add: " + strVal + '\n');
+    }
+
+    /**
+     * This is a addListener-function for Geogebra. The function is called when an object is added to the Geogebra-applet.
+     * The function adds the time and the string value of the object that was added to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was added
+     */
+    function addListener23(objName) {
+        var strVal = window["ggbApplet23"].getValueString(objName);
+        var timer = document.getElementById('tasktimer23').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener23').append(time + " | Add: " + strVal + '\n');
+    }
+
+
+    /**
+     * This is a addListener-function for Geogebra. The function is called when an object is added to the Geogebra-applet.
+     * The function adds the time and the string value of the object that was added to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was added
+     */
+    function addListener24(objName) {
+        var strVal = window["ggbApplet24"].getValueString(objName);
+        var timer = document.getElementById('tasktimer24').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener24').append(time + " | Add: " + strVal + '\n');
+    }
+
+    /**
+     * This is a addListener-function for Geogebra. The function is called when an object is added to the Geogebra-applet.
+     * The function adds the time and the string value of the object that was added to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was added
+     */
+    function addListener25(objName) {
+        var strVal = window["ggbApplet25"].getValueString(objName);
+        var timer = document.getElementById('tasktimer25').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener25').append(time + " | Add: " + strVal + '\n');
+    }
+
+    /**
+     * This is a addListener-function for Geogebra. The function is called when an object is added to the Geogebra-applet.
+     * The function adds the time and the string value of the object that was added to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was added
+     */
+    function addListener26(objName) {
+        var strVal = window["ggbApplet26"].getValueString(objName);
+        var timer = document.getElementById('tasktimer26').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener26').append(time + " | Add: " + strVal + '\n');
+    }
+
+    /**
+     * This is a addListener-function for Geogebra. The function is called when an object is added to the Geogebra-applet.
+     * The function adds the time and the string value of the object that was added to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was added
+     */
+    function addListener27(objName) {
+        var strVal = window["ggbApplet27"].getValueString(objName);
+        var timer = document.getElementById('tasktimer27').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener27').append(time + " | Add: " + strVal + '\n');
+    }
+
+    /**
+     * This is a addListener-function for Geogebra. The function is called when an object is added to the Geogebra-applet.
+     * The function adds the time and the string value of the object that was added to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was added
+     */
+    function addListener28(objName) {
+        var strVal = window["ggbApplet28"].getValueString(objName);
+        var timer = document.getElementById('tasktimer28').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener28').append(time + " | Add: " + strVal + '\n');
+    }
+
+    /**
+     * This is a addListener-function for Geogebra. The function is called when an object is added to the Geogebra-applet.
+     * The function adds the time and the string value of the object that was added to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was added
+     */
+    function addListener29(objName) {
+        var strVal = window["ggbApplet29"].getValueString(objName);
+        var timer = document.getElementById('tasktimer29').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener29').append(time + " | Add: " + strVal + '\n');
+    }
+
+    /**
+     * This is a addListener-function for Geogebra. The function is called when an object is added to the Geogebra-applet.
+     * The function adds the time and the string value of the object that was added to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was added
+     */
+    function addListener30(objName) {
+        var strVal = window["ggbApplet30"].getValueString(objName);
+        var timer = document.getElementById('tasktimer30').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener30').append(time + " | Add: " + strVal + '\n');
+    }
+
+    /**
      * This is a removeListener-function for Geogebra. The function is called when an object is removed from the Geogebra-applet.
      * The function adds the time and the name of the object that was removed to a list that is saved in the database when the test is submitted.
      * @param objName - the name of the object that was removed
@@ -1966,6 +2138,166 @@
             time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
         }
         $('#geolistener20').append(time + " | Remove: " + objName + '\n');
+    }
+    /**
+     * This is a removeListener-function for Geogebra. The function is called when an object is removed from the Geogebra-applet.
+     * The function adds the time and the name of the object that was removed to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was removed
+     */
+    function removeListener21(objName) {
+        var timer = document.getElementById('tasktimer21').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener21').append(time + " | Remove: " + objName + '\n');
+    }
+    /**
+     * This is a removeListener-function for Geogebra. The function is called when an object is removed from the Geogebra-applet.
+     * The function adds the time and the name of the object that was removed to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was removed
+     */
+    function removeListener22(objName) {
+        var timer = document.getElementById('tasktimer22').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener22').append(time + " | Remove: " + objName + '\n');
+    }
+    /**
+     * This is a removeListener-function for Geogebra. The function is called when an object is removed from the Geogebra-applet.
+     * The function adds the time and the name of the object that was removed to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was removed
+     */
+    function removeListener23(objName) {
+        var timer = document.getElementById('tasktimer23').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener23').append(time + " | Remove: " + objName + '\n');
+    }
+    /**
+     * This is a removeListener-function for Geogebra. The function is called when an object is removed from the Geogebra-applet.
+     * The function adds the time and the name of the object that was removed to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was removed
+     */
+    function removeListener24(objName) {
+        var timer = document.getElementById('tasktimer24').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener24').append(time + " | Remove: " + objName + '\n');
+    }
+    /**
+     * This is a removeListener-function for Geogebra. The function is called when an object is removed from the Geogebra-applet.
+     * The function adds the time and the name of the object that was removed to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was removed
+     */
+    function removeListener25(objName) {
+        var timer = document.getElementById('tasktimer25').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener25').append(time + " | Remove: " + objName + '\n');
+    }
+    /**
+     * This is a removeListener-function for Geogebra. The function is called when an object is removed from the Geogebra-applet.
+     * The function adds the time and the name of the object that was removed to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was removed
+     */
+    function removeListener26(objName) {
+        var timer = document.getElementById('tasktimer26').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener26').append(time + " | Remove: " + objName + '\n');
+    }
+    /**
+     * This is a removeListener-function for Geogebra. The function is called when an object is removed from the Geogebra-applet.
+     * The function adds the time and the name of the object that was removed to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was removed
+     */
+    function removeListener27(objName) {
+        var timer = document.getElementById('tasktimer27').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener27').append(time + " | Remove: " + objName + '\n');
+    }
+    /**
+     * This is a removeListener-function for Geogebra. The function is called when an object is removed from the Geogebra-applet.
+     * The function adds the time and the name of the object that was removed to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was removed
+     */
+    function removeListener28(objName) {
+        var timer = document.getElementById('tasktimer28').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener28').append(time + " | Remove: " + objName + '\n');
+    }
+    /**
+     * This is a removeListener-function for Geogebra. The function is called when an object is removed from the Geogebra-applet.
+     * The function adds the time and the name of the object that was removed to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was removed
+     */
+    function removeListener29(objName) {
+        var timer = document.getElementById('tasktimer29').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener29').append(time + " | Remove: " + objName + '\n');
+    }
+    /**
+     * This is a removeListener-function for Geogebra. The function is called when an object is removed from the Geogebra-applet.
+     * The function adds the time and the name of the object that was removed to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was removed
+     */
+    function removeListener30(objName) {
+        var timer = document.getElementById('tasktimer30').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener30').append(time + " | Remove: " + objName + '\n');
     }
 
     /**
@@ -2326,6 +2658,186 @@
             time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
         }
         $('#geolistener20').append(time + " | Update: " + strVal + '\n');
+    }
+
+    /**
+     * This is an updateListener-function for Geogebra. The function is called when an object in the Geogebra-applet is updated.
+     * The function adds the time and the string value of the object that was updated to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was updated
+     */
+    function updateListener21(objName) {
+        var strVal = window["ggbApplet21"].getValueString(objName);
+        var timer = document.getElementById('tasktimer21').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener21').append(time + " | Update: " + strVal + '\n');
+    }
+
+    /**
+     * This is an updateListener-function for Geogebra. The function is called when an object in the Geogebra-applet is updated.
+     * The function adds the time and the string value of the object that was updated to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was updated
+     */
+    function updateListener22(objName) {
+        var strVal = window["ggbApplet22"].getValueString(objName);
+        var timer = document.getElementById('tasktimer22').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener22').append(time + " | Update: " + strVal + '\n');
+    }
+
+    /**
+     * This is an updateListener-function for Geogebra. The function is called when an object in the Geogebra-applet is updated.
+     * The function adds the time and the string value of the object that was updated to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was updated
+     */
+    function updateListener23(objName) {
+        var strVal = window["ggbApplet23"].getValueString(objName);
+        var timer = document.getElementById('tasktimer23').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener23').append(time + " | Update: " + strVal + '\n');
+    }
+
+    /**
+     * This is an updateListener-function for Geogebra. The function is called when an object in the Geogebra-applet is updated.
+     * The function adds the time and the string value of the object that was updated to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was updated
+     */
+    function updateListener24(objName) {
+        var strVal = window["ggbApplet24"].getValueString(objName);
+        var timer = document.getElementById('tasktimer24').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener24').append(time + " | Update: " + strVal + '\n');
+    }
+
+    /**
+     * This is an updateListener-function for Geogebra. The function is called when an object in the Geogebra-applet is updated.
+     * The function adds the time and the string value of the object that was updated to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was updated
+     */
+    function updateListener25(objName) {
+        var strVal = window["ggbApplet25"].getValueString(objName);
+        var timer = document.getElementById('tasktimer25').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener25').append(time + " | Update: " + strVal + '\n');
+    }
+
+    /**
+     * This is an updateListener-function for Geogebra. The function is called when an object in the Geogebra-applet is updated.
+     * The function adds the time and the string value of the object that was updated to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was updated
+     */
+    function updateListener26(objName) {
+        var strVal = window["ggbApplet26"].getValueString(objName);
+        var timer = document.getElementById('tasktimer26').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener26').append(time + " | Update: " + strVal + '\n');
+    }
+
+    /**
+     * This is an updateListener-function for Geogebra. The function is called when an object in the Geogebra-applet is updated.
+     * The function adds the time and the string value of the object that was updated to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was updated
+     */
+    function updateListener27(objName) {
+        var strVal = window["ggbApplet27"].getValueString(objName);
+        var timer = document.getElementById('tasktimer27').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener27').append(time + " | Update: " + strVal + '\n');
+    }
+
+    /**
+     * This is an updateListener-function for Geogebra. The function is called when an object in the Geogebra-applet is updated.
+     * The function adds the time and the string value of the object that was updated to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was updated
+     */
+    function updateListener28(objName) {
+        var strVal = window["ggbApplet28"].getValueString(objName);
+        var timer = document.getElementById('tasktimer28').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener28').append(time + " | Update: " + strVal + '\n');
+    }
+
+    /**
+     * This is an updateListener-function for Geogebra. The function is called when an object in the Geogebra-applet is updated.
+     * The function adds the time and the string value of the object that was updated to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was updated
+     */
+    function updateListener29(objName) {
+        var strVal = window["ggbApplet20"].getValueString(objName);
+        var timer = document.getElementById('tasktimer29').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener29').append(time + " | Update: " + strVal + '\n');
+    }
+
+    /**
+     * This is an updateListener-function for Geogebra. The function is called when an object in the Geogebra-applet is updated.
+     * The function adds the time and the string value of the object that was updated to a list that is saved in the database when the test is submitted.
+     * @param objName - the name of the object that was updated
+     */
+    function updateListener30(objName) {
+        var strVal = window["ggbApplet30"].getValueString(objName);
+        var timer = document.getElementById('tasktimer30').value;
+        var time;
+        if (timer == "") {
+            time = (Date.now() - taskTimerStart) / 1000;
+        }
+        else {
+            time = (parseFloat(timer) + ((Date.now() - taskTimerStart) / 1000));
+        }
+        $('#geolistener30').append(time + " | Update: " + strVal + '\n');
     }
 </script>
 </body>
