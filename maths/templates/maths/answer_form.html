@@ -940,26 +940,33 @@
             var geo = $('#base64' + i);
             var variables = geo.data('variables');
             if (variables) {
-                var variableTable = variables.split('|||||');
                 var params = "";
-                for (var x = 0; x < variableTable.length; x++) {
-                    var param = variableTable[x];
-                    var random = param.split('--->');
-                    if (random.length > 1) {
-                        var min = parseFloat(random[0]);
-                        var max = parseFloat(random[1]);
-                        param = Math.floor(Math.random() * (max - min + 1) + min);
-                        if (random.length === 3) {
-                            var increment = parseFloat(random[2]);
-                            var newMax = max / increment;
-                            var newMin = min / increment;
-                            var rand = parseFloat(Math.floor(Math.random() * (newMax - newMin + 1) + newMin));
-                            param = (rand * 10 * increment * 10) / 100;
+                if (variables.length > 6) {
+                    var variableTable = variables.split('|||||');
+                    for (var x = 0; x < variableTable.length; x++) {
+                        var param = variableTable[x];
+                        var random = param.split('--->');
+                        if (random.length > 1) {
+                            var min = parseFloat(random[0]);
+                            var max = parseFloat(random[1]);
+                            param = Math.floor(Math.random() * (max - min + 1) + min);
+                            if (random.length === 3) {
+                                var increment = parseFloat(random[2]);
+                                var newMax = max / increment;
+                                var newMin = min / increment;
+                                var rand = parseFloat(Math.floor(Math.random() * (newMax - newMin + 1) + newMin));
+                                param = (rand * 10 * increment * 10) / 100;
+                            }
                         }
+                        window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), param);
+                        params += param + '|||||';
                     }
-                    window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), param);
-                    params += param + '|||||';
+                } else {
+                    alert(variables);
+                    window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), variables);
+                    params += variables + '|||||';
                 }
+
                 window["ggbApplet" + i].refreshViews();
                 var itemVariables = document.getElementById('id_task' + parseInt(i - 1) + '-variables');
                 itemVariables.value = params.slice(0, -5);
