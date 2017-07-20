@@ -72,14 +72,24 @@
         /**
          * Function that clicks the saveNewSchoolBtn button.
          */
+        var schoolSubmitted = false;
         function submit() {
+            if(schoolSubmitted){
+                return 0;
+            }
             $('#saveNewSchoolBtn').click();
+            schoolSubmitted = true;
         }
         /**
          * Function that clicks the administratorCreate button.
          */
+        var administratorSubmitted = false;
         function modalsubmit() {
+            if(administratorSubmitted){
+                return 0;
+            }
             $('#administratorCreate').click();
+            administratorSubmitted = true;
         }
         /**
          * Function that runs when the ajax-post call is successful and shows some successfields.

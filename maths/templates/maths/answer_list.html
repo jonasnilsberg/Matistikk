@@ -433,10 +433,15 @@
             var itemid = div.data('itemid');
             var variables = geo.data('variables');
             if (variables) {
-                var variableTable = variables.split('|||||');
-                for (var x = 0; x < variableTable.length; x++) {
-                    var param = variableTable[x];
-                    window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), param);
+                var variableCount = window["ggbApplet" + i].getValue('matistikkAntall');
+                if (variableCount > 1) {
+                    var variableTable = variables.split('|||||');
+                    for (var x = 0; x < variableTable.length; x++) {
+                        var param = variableTable[x];
+                        window["ggbApplet" + i].setValue('matistikkParameter' + parseInt(x + 1), param);
+                    }
+                } else {
+                    window["ggbApplet" + i].setValue('matistikkParameter1', variables);
                 }
                 var html = $.parseHTML(tinymce.get('tasktext' + itemid).getContent());
                 $(html).find(".mathquill-rendered-math .selectable").each(function () {
