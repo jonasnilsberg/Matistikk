@@ -966,8 +966,6 @@
                     window["ggbApplet" + i].setValue('matistikkParameter1', variables);
                     params += variables + '|||||';
                 }
-
-                window["ggbApplet" + i].refreshViews();
                 var itemVariables = document.getElementById('id_task' + parseInt(i - 1) + '-variables');
                 itemVariables.value = params.slice(0, -5);
                 var html = $.parseHTML(tinymce.get('tasktext' + itemid).getContent());
@@ -1005,6 +1003,7 @@
                 appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
                 document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
                 document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
+                window["ggbApplet" + i].refreshViews();
             }
         }
         var panelHeight = $('.panel-heading').height();

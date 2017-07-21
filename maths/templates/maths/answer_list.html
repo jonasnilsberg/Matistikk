@@ -458,7 +458,6 @@
                     }
                 });
                 tinymce.get('tasktext' + itemid).setContent(text);
-                window["ggbApplet" + i].refreshViews();
             }
             if (document.getElementById('base64' + i)) {
                 width = geo.data('width');
@@ -476,6 +475,7 @@
                 appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
                 document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
                 document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
+                window["ggbApplet" + i].refreshViews();
             }
         }
         var panelHeight = 68;
