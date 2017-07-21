@@ -637,6 +637,10 @@
                 if (index > 1) {
                     taskTimerStart = Date.now();
                 }
+                var task = parseInt(index) - 1;
+                if (document.getElementById('base64' + task)) {
+                    window["ggbApplet" + task].refreshViews();
+                }
             },
             onLeave: function (index, nextIndex, direction) {
                 if (!geoFinished) {
@@ -1003,7 +1007,6 @@
                 appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
                 document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
                 document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
-                window["ggbApplet" + i].refreshViews();
             }
         }
         var panelHeight = $('.panel-heading').height();
