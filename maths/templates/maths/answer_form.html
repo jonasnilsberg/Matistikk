@@ -1225,15 +1225,17 @@
             var tab = (geolistener.value).split('\n');
             var timetab = [];
             var output = [];
+            var desctab = [];
 
             for (var z = 0; z < tab.length - 1; z++) {
                 var tab2 = tab[z].split('|');
                 timetab.push(parseFloat(tab2[0]));
+                var descript = tab2[1].split('=');
+                desctab.push(descript[0]);
             }
-
             for (var x = 0; x < timetab.length; x++) {
                 if (x !== timetab.length - 1) {
-                    if ((timetab[x] + 0.2) < timetab[x + 1]) {
+                    if ((timetab[x] + 0.2) < timetab[x + 1] || desctab[x] !== desctab[x + 1]) {
                         output.push(tab[x]);
                     }
                 }
@@ -1241,7 +1243,6 @@
                     output.push(tab[x]);
                 }
             }
-
             geolistener.value = "";
             for (var y = 0; y < output.length; y++) {
                 geolistener.value += output[y];
