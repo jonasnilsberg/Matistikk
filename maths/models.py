@@ -63,6 +63,17 @@ class Item(models.Model):
             return str(self.id) + " - " + self.task.title
 
 
+class InputFieldTask(models.Model):
+    """
+    Input field for a task
+
+    :task: The task that the multiple choice options are for.
+    :title: The title for the inputfield.
+    """
+    task = models.ForeignKey(Task)
+    title = models.CharField(max_length=200)
+
+
 class MultipleChoiceTask(models.Model):
     """Multiple choice options for a task
 
@@ -199,7 +210,8 @@ class Answer(models.Model):
         if self.user:
             return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - " + self.user.get_full_name()
         else:
-            return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - Anonym bruker: " + str(self.anonymous_user)
+            return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - Anonym bruker: " + str(
+                self.anonymous_user)
 
 
 class GeogebraAnswer(models.Model):
@@ -212,13 +224,14 @@ class GeogebraAnswer(models.Model):
     """
     answer = models.ForeignKey(Answer)
     base64 = models.TextField()
-    data = models.CharField(max_length=2000, null=True)
+    data = models.TextField(null=True)
 
     def __str__(self):
         if self.answer.user:
             return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - " + self.answer.user.get_full_name()
         else:
-            return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - Anonym bruker: " + str(self.answer.anonymous_user)
+            return "Geogebra: " + self.answer.test.task_collection.test_name + " - " + self.answer.item.task.title + " - Anonym bruker: " + str(
+                self.answer.anonymous_user)
 
 
 class LogitTestItem(models.Model):
