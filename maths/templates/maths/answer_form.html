@@ -1235,7 +1235,7 @@
             }
             for (var x = 0; x < timetab.length; x++) {
                 if (x !== timetab.length - 1) {
-                    if ((timetab[x] + 0.2) < timetab[x + 1] || desctab[x] !== desctab[x + 1]) {
+                    if ((timetab[x] + 0.2) < timetab[x + 1] || (desctab[x] !== desctab[x + 1] && !isNaN(timetab[x]))) {
                         output.push(tab[x]);
                     }
                 }
