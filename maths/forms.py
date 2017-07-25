@@ -37,6 +37,8 @@ class CreateTaskForm(forms.ModelForm):
     questions = forms.CharField(max_length=100000, required=False)
     correct = forms.CharField(max_length=100000, required=False)
     variables = forms.CharField(max_length=500, required=False)
+    inputQuestion = forms.CharField(max_length=500, required=False)
+    inputfield = forms.CharField(max_length=500, required=False)
     height = forms.CharField(max_length=100, required=False)
     width = forms.CharField(max_length=100, required=False)
     showMenuBar = forms.BooleanField(initial=False, required=False)
