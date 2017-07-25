@@ -34,6 +34,10 @@
 
                                 </div>
 
+                                <div id="inputfielddiv">
+
+                                </div>
+
                                 <div id="reasoningdiv">
                                     <label id="reasoningText" for="reasoning">Begrunnelse</label>
                                     <textarea class="form-control" id="reasoning" rows="6" style="resize:vertical"
@@ -96,6 +100,7 @@
         $('#textanswerdiv').hide();
         $('#reasoningdiv').hide();
         $('#multiplechoicediv').hide();
+        $('#inputfielddiv').hide();
         $.ajax({
             type: 'GET',
             url: '{% url 'maths:taskList' %}',
@@ -150,6 +155,25 @@
                             }
                         });
                         div.append('<br><hr>');
+                    });
+                } else if (answertype == 4) {
+                    var div = $('#inputfielddiv');
+                    div.empty();
+                    div.show();
+                    var inputfields = task.inputfields;
+                    $.each(inputfields, function (i, val) {
+                        div.append('<div id="previewInput' + i + '"></div>');
+                        var question = val.question;
+                        var inputDiv = $('#previewInput' + i);
+                        inputDiv.append('<h4>' + question + '</h4>');
+                        inputDiv.append('<form id="previewForm' + i + '" class="form-horizontal"></form>');
+                        var form = $('#previewForm' + i);
+                        $.each(val.fields, function (x, val) {
+                            var title = val;
+                            form.append('<div class="form-group"><label style="text-align: left; padding-left: 15px;" class="control-label col-md-2">' + title + ':</label>' +
+                                '<div class="col-md-10" style="padding-right: 15px;"><input type="number" class="form-control"></div></div>');
+                        });
+                        inputDiv.append('<hr>');
                     });
                 }
             },

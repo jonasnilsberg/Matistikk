@@ -34,7 +34,7 @@ class Task(models.Model):
     :category: Which categories fits the task. 
     """
     title = models.CharField(max_length=100, default="")
-    text = models.TextField(max_length=20000, blank=True)
+    text = models.TextField(max_length=15000, blank=True)
     answertype = models.IntegerField()
     reasoning = models.BooleanField()
     reasoningText = models.CharField(max_length=1000, blank=True)
@@ -64,14 +64,26 @@ class Item(models.Model):
 
 
 class InputFieldTask(models.Model):
+    task = models.ForeignKey(Task)
+    question = models.CharField(max_length=2000, null=True)
+
+    def __str__(self):
+        return self.task.__str__() + ": " + self.question
+
+
+class InputField(models.Model):
     """
     Input field for a task
 
-    :task: The task that the multiple choice options are for.
+    :inputFieldTask: The inputfieldtask that the inputfield is for.
     :title: The title for the inputfield.
     """
-    task = models.ForeignKey(Task)
+    inputFieldTask = models.ForeignKey(InputFieldTask)
     title = models.CharField(max_length=200)
+    inputnr = models.IntegerField(null=True)
+
+    def __str__(self):
+        return self.inputFieldTask.__str__() + " - " + self.title
 
 
 class MultipleChoiceTask(models.Model):
@@ -200,8 +212,8 @@ class Answer(models.Model):
     test = models.ForeignKey(Test)
     user = models.ForeignKey(Person, null=True)
     anonymous_user = models.IntegerField(null=True)
-    reasoning = models.CharField(max_length=20000, null=True)
-    text = models.CharField(max_length=20000, null=True)
+    reasoning = models.CharField(max_length=15000, null=True)
+    text = models.CharField(max_length=15000, null=True)
     date_answered = models.DateTimeField(null=True)
     timespent = models.FloatField(null=True)
     correct = models.CharField(max_length=100, null=True, default=None)
