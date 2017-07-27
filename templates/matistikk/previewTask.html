@@ -168,11 +168,27 @@
                         inputDiv.append('<h4>' + question + '</h4>');
                         inputDiv.append('<form id="previewForm' + i + '" class="form-horizontal"></form>');
                         var form = $('#previewForm' + i);
-                        $.each(val.fields, function (x, val) {
-                            var title = val;
-                            form.append('<div class="form-group"><label style="text-align: left; padding-left: 15px;" class="control-label col-md-2">' + title + ':</label>' +
-                                '<div class="col-md-10" style="padding-right: 15px;"><input type="number" class="form-control"></div></div>');
-                        });
+                        for (var x = 0; x < val.fields.length; x++) {
+                            var title = val.fields[x];
+                            var length = val.length[x];
+                            var fraction = val.fraction[x];
+                            var padding = "";
+                            var margin = "";
+                            if (length === "10") {
+                                padding = "padding-right: 15px;";
+                                margin = "margin-right: 15px;";
+                            }
+                            if (fraction) {
+                                form.append('<div class="form-group" style="margin-bottom: 0px;"><label style="text-align: left; padding-left: 15px;" class="control-label col-md-2">' + title + ':</label>' +
+                                    '<div class="col-md-' + length + '" style="' + padding + '"><input type="number" class="form-control"></div>' +
+                                    '<div class="col-md-12"><div class="col-md-2"></div><div class="col-md-' + length + '">' +
+                                    '<hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black; ' + margin + '">' +
+                                    '</div></div></div>');
+                            } else {
+                                form.append('<div class="form-group"><label style="text-align: left; padding-left: 15px;" class="control-label col-md-2">' + title + ':</label>' +
+                                    '<div class="col-md-' + length + '" style="' + padding + '"><input type="number" class="form-control"></div></div>');
+                            }
+                        }
                         inputDiv.append('<hr>');
                     });
                 }

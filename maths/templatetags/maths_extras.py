@@ -1,5 +1,5 @@
 from django import template
-from maths.models import Answer, GeogebraAnswer, MultipleChoiceTask, GeogebraTask, MultipleChoiceOption
+from maths.models import Answer, GeogebraAnswer, MultipleChoiceTask, GeogebraTask, MultipleChoiceOption, InputFieldTask
 from administration.models import Gruppe, Person, Grade
 
 register = template.Library()
@@ -131,3 +131,12 @@ def insert_params(text, variables):
     for i in range(len(variablesTable)):
         text = text.replace('matistikkParameter'+str(i+1), variablesTable[i])
     return text
+
+@register.simple_tag
+def get_inputfields(task):
+    return InputFieldTask.objects.filter(task=task)
+
+@register.simple_tag
+def get_input(answer, nr):
+    answer_list = answer.split('|||||')
+    return answer_list[nr-1]

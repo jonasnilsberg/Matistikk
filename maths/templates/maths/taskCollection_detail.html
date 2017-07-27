@@ -2,6 +2,12 @@
 {% extends 'matistikk/base.html' %}
 <!-- loads the static files of the project-->
 {% load static %}
+{% load bootstrap3 %}
+<!-- Loads CSS and javascript-->
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<!--Display django.contrib.messages as Bootstrap alerts-->
+{% bootstrap_messages %}
 {% block head %}
     <!--Import bootstrap multiselect-->
     <script type="text/javascript" src="{% static 'maths/js/bootstrap-multiselect.js' %}"></script>
@@ -56,6 +62,7 @@
             </div>
         </div>
         <div class="panel-body">
+            {% bootstrap_messages %}
             <ul class="nav nav-tabs">
                 <li class="nav active"><a href="#A" data-toggle="tab">Publiserte tester</a></li>
                 <li class="nav"><a href="#B" data-toggle="tab">Oppgaver</a></li>
@@ -157,6 +164,15 @@
         <div class="panel-footer">
             <a class="btn btn-primary" href="{% url 'maths:testCreate' taskcollection.id %}"><span
                     class="fa fa-book" aria-hidden="true"></span> Publiser test</a>
+            {% if not update %}
+                <a class="btn btn-warning" href="{% url 'maths:taskCollectionUpdate' taskcollection.id %}"><i
+                        class="fa fa-refresh" aria-hidden="true"></i>
+                    Rediger test</a>
+                <button type="button" class="btn btn-danger pull-right" data-toggle="modal"
+                        data-target="#deleteTestModal">
+                    <i class="fa fa-trash" aria-hidden="true"></i> Slett test
+                </button>
+            {% endif %}
         </div>
     </div>
     <script>
@@ -244,6 +260,9 @@
                 }
             });
             $("#selectCategory").multiselect('disable');
+            $(".alert-success").fadeTo(5000, 500).slideUp(500, function () {
+                $('.alert-success').slideUp(500);
+            });
         });
         /**
          * This function matches the text in the search field with the content in the table given in the parameter.
@@ -555,4 +574,34 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="deleteTestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: whitesmoke">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title text-center">Slett test</h3>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'maths:taskCollectionDelete' taskcollection.id %}"
+                          method="post">{% csrf_token %}
+                        <p>Er du sikker på at du vil slette testen "{{ taskcollection.test_name }}"?</p>
+                        <p>Alle publiserte versjoner av denne testen vil da bli slettet.</p>
+                        <input id="deleteTestBtn" class="btn btn-danger hidden" type="submit" value="Slett"/>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger deleteTest"><i class="fa fa-trash"
+                                                                               aria-hidden="true"></i> Slett
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('.deleteTest').click(function () {
+            $('#deleteTestBtn').click();
+        });
+    </script>
 {% endblock %}

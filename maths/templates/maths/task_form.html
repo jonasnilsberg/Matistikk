@@ -73,10 +73,10 @@
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h2>Lag Oppgave</h2>
+            <h2 class="text-center">Lag Oppgave</h2>
         </div>
         <div class="panel-body">
-            <div class="col-md-6 col-sm-6 col-xs-6">
+            <div class="col-md-6 col-sm-6 col-xs-6" id="infoDiv">
                 <label for="taskname">Oppgavenavn</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-tasks"></i></span>
@@ -137,6 +137,22 @@
                             </div>
                         </div>
                     </div>
+                    <div class="panel panel-default" id="inputRadio">
+                        <div class=" panel-heading" role="tab">
+                            <p class="panel-title">
+                                <label style="cursor: pointer"><input type="radio" name="answer_type" value="4"
+                                                                      data-toggle="collapse"
+                                                                      data-parent="#accordion"
+                                                                      data-target="#collapseInput"
+                                                                      onclick="radioClick(this)"> Inputfelt</label>
+                            </p>
+                        </div>
+                        <div id="collapseInput" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Legg til inputfelt i modalen som åpner seg.
+                            </div>
+                        </div>
+                    </div>
                     <div class="panel panel-default" id="geoRadio">
                         <div class=" panel-heading" role="tab">
                             <p class="panel-title">
@@ -172,9 +188,21 @@
                 <div id="feedback">
 
                 </div>
+                <div class="panel-footer hidden" id="infoDivFooter">
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button type="button" onclick="onSubmit()" class="btn btn-success" id="saveTaskBtn"><span
+                                class="glyphicon glyphicon-check"
+                                aria-hidden="true"></span> Lagre Oppgave
+                        </button>
+                        <button type="button" class="btn btn-warning" data-toggle="modal" href="#previewTaskModal"><span
+                                class="glyphicon glyphicon-eye-open"
+                                aria-hidden="true"></span> Forhåndsvis
+                        </button>
+                    </div>
+                </div>
 
             </div>
-            <div class="col-md-4 form-margin" id="extradiv">
+            <div class="col-md-6 form-margin" id="extradiv">
                 <label for="choosetask">Velg oppgavetype</label>
                 <select class="form-control input-lg" id="choosetask">
                     <option>Geogebra</option>
@@ -193,7 +221,7 @@
             </div>
 
         </div>
-        <div class="panel-footer">
+        <div class="panel-footer" id="footer">
             <div class="btn-group" role="group" aria-label="...">
                 <button type="button" onclick="onSubmit()" class="btn btn-success" id="saveTaskBtn"><span
                         class="glyphicon glyphicon-check"
@@ -205,8 +233,9 @@
                 </button>
             </div>
             <div class="btn-group pull-right" role="group" aria-label="...">
-                <button class="btn btn-primary" data-toggle="modal" href="#geogebraSettings"><i class="fa fa-sliders"
-                                                                                                aria-hidden="true"></i>
+                <button class="btn btn-primary geoSettings" data-toggle="modal" href="#geogebraSettings"><i
+                        class="fa fa-sliders"
+                        aria-hidden="true"></i>
                     </span> Innstillinger for GeoGebra
                 </button>
                 <button class="btn btn-primary variable"><span
@@ -272,13 +301,26 @@
          * changes the boolean value of the "Use extra"-switch.
          */
         $('#extra').change(function () {
+            var infoDiv = $('#infoDiv');
             if (document.getElementById('extra').checked) {
                 $('#extradiv').show();
+                infoDiv.removeClass('col-centered');
+                infoDiv.removeClass('col-sm-8 col-md-8');
+                infoDiv.addClass('col-sm-6 col-md-6');
                 $('.variable').removeClass('hidden');
+                $('.geoSettings').removeClass('hidden');
+                $('#footer').removeClass('hidden');
+                $('#infoDivFooter').addClass('hidden');
             }
             else {
                 $('#extradiv').hide();
+                infoDiv.addClass('col-centered');
+                infoDiv.removeClass('col-sm-6 col-md-6');
+                infoDiv.addClass('col-sm-8 col-md-8');
                 $('.variable').addClass('hidden');
+                $('.geoSettings').addClass('hidden');
+                $('#footer').addClass('hidden');
+                $('#infoDivFooter').removeClass('hidden');
             }
         });
 
@@ -348,6 +390,72 @@
             }
         }
 
+        function addInput() {
+            $('#removeInputBtn').prop('disabled', false);
+            var numInputs = $('.inputs').length;
+            var next = numInputs + 1;
+            var modalBody = $('#addInputModal .modal-body');
+            modalBody.append('<div id="input' + next + '" class="inputs"></div>');
+            var input = $('#input' + next);
+            input.append('<div id="inputFields' + next + '"></div>');
+            input.append('<div style="padding-top: 10px"><button class="btn btn-primary btn-sm" style="margin-right: 5px" onclick="addInputField(' + next + ')">' +
+                'Legg til flere inputfelt</button><button class="btn btn-danger btn-sm" onclick="removeInputField(' + next + ')" ' +
+                'id="removeInputBtn' + next + '"disabled="disabled">Fjern inputfelt</button></div>');
+            var inputFields = $('#inputFields' + next);
+            inputFields.append('<form><div class="form-group"><label for="inputText' + next + '">Deloppgave:</label>' +
+                '<input type="text" class="form-control" id="inputText' + next + '" placeholder="Oppgave"></div></form>');
+            addInputField(next);
+            input.append('<hr>');
+
+        }
+
+        function removeInput() {
+            var inputs = $('.inputs');
+            inputs.last().remove();
+            var numInputs = inputs.length;
+            if (numInputs <= 2) {
+                $('#removeInputBtn').prop('disabled', true);
+            }
+        }
+
+        function addInputField(num) {
+            $('#removeInputBtn' + num).prop('disabled', false);
+            var inputform = $('#inputFields' + num);
+            inputform.append('<div class="col-md-12 inputrow' + num + '"><div class="col-md-4"><form class="form-inline inputform' + num + '"> <div class="form-group">' +
+                '<input type="text" placeholder="Titel for inputfelt" class="form-control">' +
+                '<strong> : </strong><input type="number" class="form-control"></div></form></div><div class="col-md-2 pull-right answerform' + num + '">' +
+                '<input type="number" class="form-control" placeholder="Skriv inn rett svar"></div>' +
+                '<div class="col-md-2 pull-right selectform' + num + '"><div class="form-group"><select class="form-control"><option value="10" disabled selected>Lengden av inputfeltet</option>' +
+                '<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>' +
+                '<option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></div></div>' +
+                '<div class="col-md-2 pull-right fractionform' + num + '"><button class="btn btn-primary pull-right" style="margin-right: 5px" ' +
+                'value="0" onclick="addFractionLine(this)">Legg til brøkstrek</button></div></div>');
+        }
+
+        function removeInputField(num) {
+            var inputFields = $('.inputrow' + num);
+            inputFields.last().remove();
+            var numFields = inputFields.length;
+            if (numFields <= 2) {
+                $('#removeInputBtn' + num).prop('disabled', true);
+            }
+        }
+
+        function addFractionLine(elem) {
+            var input = $(elem).parent('.col-md-2').parent('.col-md-12').find('.form-inline .form-group');
+            if (elem.value === "0") {
+                input.append('<div class="col-md-6"></div><div class="col-md-6">' +
+                    '<hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black; padding-left: 5px;">' +
+                    '</div>');
+                elem.value = "1";
+                $(elem).text('Fjern brøkstrek');
+            } else {
+                input.find('.col-md-6').remove();
+                elem.value = "0";
+                $(elem).text('Legg til brøkstrek');
+            }
+        }
+
         /**
          * This function changes the color of the "choose answertype"-panel
          * when the user change option.
@@ -358,16 +466,27 @@
                 document.getElementById('tekstRadio').className = "panel panel-success";
                 document.getElementById('geoRadio').className = "panel panel-default";
                 document.getElementById('flervalgExtraRadio').className = "panel panel-default";
+                document.getElementById('inputRadio').className = "panel panel-default";
+
             } else if (valg == 2) {
                 document.getElementById('tekstRadio').className = "panel panel-default";
                 document.getElementById('geoRadio').className = "panel panel-default";
                 document.getElementById('flervalgExtraRadio').className = "panel panel-success";
+                document.getElementById('inputRadio').className = "panel panel-default";
+
                 $('#addMultipleChocice').modal('show');
-            } else {
+            } else if (valg == 3) {
                 document.getElementById('tekstRadio').className = "panel panel-default";
                 document.getElementById('geoRadio').className = "panel panel-success";
                 document.getElementById('flervalgExtraRadio').className = "panel panel-default";
+                document.getElementById('inputRadio').className = "panel panel-default";
 
+            } else {
+                document.getElementById('inputRadio').className = "panel panel-success";
+                document.getElementById('tekstRadio').className = "panel panel-default";
+                document.getElementById('geoRadio').className = "panel panel-default";
+                document.getElementById('flervalgExtraRadio').className = "panel panel-default";
+                $('#addInputModal').modal('show');
             }
         }
 
@@ -480,6 +599,43 @@
                 options.value = options.value.slice(0, -5);
                 correct.value = correct.value.slice(0, -5);
                 questionsField.value = questionsField.value.slice(0, -5);
+            }
+            if (answertype1 == 4) {
+                var numInputs = $('.inputs').length;
+                var inputfield = document.getElementById('id_inputField');
+                var inputQuestion = document.getElementById('id_inputQuestion');
+                var inputLength = document.getElementById('id_inputLength');
+                var inputCorrect = document.getElementById('id_inputCorrect');
+                var inputFraction = document.getElementById('id_inputFraction');
+                for (var i = 1; i <= numInputs; i++) {
+                    var question = $('#inputText' + i).val();
+                    inputQuestion.value += question + "|||||";
+                    $('.inputform' + i + ' input[type=text]').each(function () {
+                        inputfield.value += $(this).val() + "|||||";
+                    });
+                    $('.selectform' + i + ' .form-control').each(function () {
+                        inputLength.value += $(this).find(":selected").val() + "|||||";
+                    });
+                    $('.answerform' + i + ' input[type=number').each(function () {
+                        inputCorrect.value += $(this).val() + "|||||";
+                    });
+                    $('.fractionform' + i + ' :button').each(function () {
+                        inputFraction.value += $(this).val() + "|||||";
+                    });
+                    inputfield.value = inputfield.value.slice(0, -5);
+                    inputfield.value += "<--->";
+                    inputLength.value = inputLength.value.slice(0, -5);
+                    inputLength.value += "<--->";
+                    inputCorrect.value = inputCorrect.value.slice(0, -5);
+                    inputCorrect.value += "<--->";
+                    inputFraction.value = inputFraction.value.slice(0, -5);
+                    inputFraction.value += "<--->";
+                }
+                inputfield.value = inputfield.value.slice(0, -5);
+                inputQuestion.value = inputQuestion.value.slice(0, -5);
+                inputLength.value = inputLength.value.slice(0, -5);
+                inputCorrect.value = inputCorrect.value.slice(0, -5);
+                inputFraction.value = inputFraction.value.slice(0, -5);
             }
             var z = categoryselect1.length;
             var categoryflag = false;
@@ -747,10 +903,10 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-3 hidden" id="notGeogebraDiv"></div>
-                        <div class="col-sm-6" id="geogebradiv">
+                        <div class="col-md-6" id="geogebradiv">
                             <img id='previewbilde' alt='' width="100%"/>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h4><span id="previewtasktext"></span></h4>
@@ -765,6 +921,7 @@
 
                                     <div id="multiplechoicediv">
                                     </div>
+                                    <div id="inputfielddiv"></div>
 
                                     <div id="reasoningdiv">
                                         <label for="previewreasoning" id="reasoningText">Begrunnelse</label>
@@ -788,7 +945,7 @@
         </div>
     </div>
     <div class="modal fade" id="addMultipleChocice" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog modal-lg" role="document" style="width: 80vw;">
+        <div class="modal-dialog modal-lg" role="document" style="width: 80%;">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: whitesmoke">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -848,6 +1005,76 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="addInputModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document" style="width: 80%;">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: whitesmoke">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title text-center" id="myModalLabel">Legg til inputfelter</h3>
+                </div>
+                <div class="modal-body">
+                    <div id="input1" class="inputs">
+                        <div id="inputFields1">
+                            <form>
+                                <div class="form-group">
+                                    <label for="inputText1">Deloppgave:</label>
+                                    <input type="text" class="form-control" id="inputText1" placeholder="Oppgave">
+                                </div>
+                            </form>
+                            <div class="col-md-12 inputrow1">
+                                <div class="col-md-4">
+                                    <form class="form-inline inputform1">
+                                        <div class="form-group">
+                                            <input type="text" placeholder="Titel for inputfelt"
+                                                   class="form-control">
+                                            <strong> : </strong>
+                                            <input type="number" class="form-control">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-2 pull-right answerform1">
+                                    <input type="number" class="form-control" placeholder="Skriv inn rett svar">
+                                </div>
+                                <div class="col-md-2 pull-right selectform1">
+                                    <div class="form-group">
+                                        <select class="form-control">
+                                            <option value="10" disabled selected>Lengden av inputfeltet</option>
+                                            {% for x in "xxxxxxxxxx" %}
+                                                <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 pull-right fractionform1">
+                                    <button class="btn btn-primary pull-right" style="margin-right: 5px" value="0"
+                                            onclick="addFractionLine(this)">Legg til
+                                        brøkstrek
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="padding-top: 10px">
+                            <button class="btn btn-primary btn-sm" onclick="addInputField(1)">Legg til flere inputfelt
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="removeInputField(1)" id="removeInputBtn1"
+                                    disabled="disabled">Fjern inputfelt
+                            </button>
+
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="addInput()">Legg til flere deloppgaver</button>
+                    <button class="btn btn-danger" onclick="removeInput()" id="removeInputBtn"
+                            disabled="disabled">Fjern deloppgave
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
 
         $(document).on('change', '.multiplechoice :checkbox', function () {
@@ -869,6 +1096,7 @@
             $('#textanswerdiv').hide();
             $('#reasoningdiv').hide();
             $('#multiplechoicediv').hide();
+            $('#inputfielddiv').hide();
             var notGeo = $('#notGeogebraDiv');
             var answertype = $("input[type='radio'][name='answer_type']:checked").val();
             var previewtext = tinyMCE.get('tasktext').getContent();
@@ -925,6 +1153,41 @@
                         }
                     });
                     div.append('<br><hr>');
+                }
+            } else if (answertype == 4) {
+                var div = $('#inputfielddiv');
+                div.empty();
+                div.show();
+                var numInputs = $('.inputs').length;
+                for (var i = 1; i <= numInputs; i++) {
+                    div.append('<div id="previewInput' + i + '"></div>');
+                    var question = $('#inputText' + i).val();
+                    var inputDiv = $('#previewInput' + i);
+                    inputDiv.append('<h4>' + question + '</h4>');
+                    inputDiv.append('<form id="previewForm' + i + '" class="form-horizontal"></form>');
+                    var form = $('#previewForm' + i);
+                    $('.inputrow' + i).each(function () {
+                        var title = $(this).find('input[type=text]').val();
+                        var length = $(this).find('.selectform' + i + ' .form-control :selected').val();
+                        var fraction = $(this).find(':button').val();
+                        var padding = "";
+                        var margin = "";
+                        if (length === "10"){
+                            padding = "padding-right: 15px;"
+                            margin = "margin-right: 15px;"
+                        }
+                        if (fraction === "1") {
+                            form.append('<div class="form-group" style="margin-bottom: 0px;"><label style="text-align: left; padding-left: 15px;" class="control-label col-md-2">' + title + ':</label>' +
+                                '<div class="col-md-' + length + '" style="'+padding+'"><input type="number" class="form-control"></div>' +
+                                '<div class="col-md-12"><div class="col-md-2"></div><div class="col-md-' + length + '">' +
+                                '<hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black; '+margin+'">' +
+                                '</div></div></div>');
+                        } else {
+                            form.append('<div class="form-group"><label style="text-align: left; padding-left: 15px;" class="control-label col-md-2">' + title + ':</label>' +
+                                '<div class="col-md-' + length + '" style="'+padding+'"><input type="number" class="form-control"></div></div>');
+                        }
+                    });
+                    inputDiv.append('<hr>');
                 }
             }
             if (document.getElementById('reasoning').checked) {

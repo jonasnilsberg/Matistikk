@@ -79,8 +79,11 @@ class InputField(models.Model):
     :title: The title for the inputfield.
     """
     inputFieldTask = models.ForeignKey(InputFieldTask)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, blank=True)
     inputnr = models.IntegerField(null=True)
+    inputlength = models.IntegerField(default=10)
+    correct = models.CharField(max_length=100, null=True, blank=True)
+    fraction = models.BooleanField(default=False)
 
     def __str__(self):
         return self.inputFieldTask.__str__() + " - " + self.title
@@ -182,6 +185,9 @@ class Test(models.Model):
     def __str__(self):
         return self.task_collection.test_name
 
+    def get_absolute_url(self):
+        return reverse('maths:testDetail', kwargs={'test_pk': self.id})
+
 
 class TaskOrder(models.Model):
     """
@@ -212,8 +218,8 @@ class Answer(models.Model):
     test = models.ForeignKey(Test)
     user = models.ForeignKey(Person, null=True)
     anonymous_user = models.IntegerField(null=True)
-    reasoning = models.CharField(max_length=15000, null=True)
-    text = models.CharField(max_length=15000, null=True)
+    reasoning = models.CharField(max_length=6000, null=True)
+    text = models.CharField(max_length=6000, null=True)
     date_answered = models.DateTimeField(null=True)
     timespent = models.FloatField(null=True)
     correct = models.CharField(max_length=100, null=True, default=None)

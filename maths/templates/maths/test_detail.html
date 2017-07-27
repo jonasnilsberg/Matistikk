@@ -389,6 +389,12 @@
                 </button>
                 <a type="button" class="btn btn-success" href="{% url 'maths:answerCreate' test_pk=test.id %}">
                     <i class="fa fa-list" aria-hidden="true"></i> Se gjennom test</a>
+                {% if not test.answer_set.exists %}
+                    <button type="button" class="btn btn-danger pull-right" data-toggle="modal"
+                            data-target="#deleteTestModal">
+                        <i class="fa fa-trash" aria-hidden="true"></i> Slett publisert test
+                    </button>
+                {% endif %}
             </div> <!-- #Panel-footer -->
         {% endif %}
     </div>
@@ -595,14 +601,6 @@
          */
         function publishModal() {
             $('#publishModal').modal('show');
-        }
-        /**
-         * Redirects the user to a page that downloads all the answers on that test.
-         */
-        function download() {
-            var testID = "{{ test.id }}";
-            var exportURL = "{% url 'maths:answerExport' test_pk=1234 %}".replace(/1234/, testID);
-            document.location.href = exportURL;
         }
         /**
          * Function that publishes the test to the selected users in the modal.
@@ -1034,6 +1032,27 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="deleteTestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: whitesmoke">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title text-center">Slett publisert test</h3>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'maths:testDelete' test.id %}" method="post">{% csrf_token %}
+                        <p>Er du sikker på at du vil slette den publiserte testen "{{ test }}"?</p>
+                        <input id="deleteTestBtn" class="btn btn-danger hidden" type="submit" value="Slett"/>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger deleteTest"><i class="fa fa-trash" aria-hidden="true"></i> Slett</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         $('.clockpicker').clockpicker({
             autoclose: true
@@ -1089,6 +1108,10 @@
             } else {
                 $checkbox.click();
             }
+        });
+
+        $('.deleteTest').click(function () {
+           $('#deleteTestBtn').click();
         });
         /**
          * Function that shows only the users matching the input in the search field.

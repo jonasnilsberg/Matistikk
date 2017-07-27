@@ -4,7 +4,7 @@ from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, \
-    GeogebraAnswer, Item, MultipleChoiceOption
+    GeogebraAnswer, Item, MultipleChoiceOption, InputFieldTask, InputField
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
@@ -219,6 +219,32 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
                 option_split.pop(0)
                 correct_split.pop(0)
                 x += 1
+        elif task.answertype == 4:
+            input_questions = form.cleaned_data['inputQuestion']
+            inputfield = form.cleaned_data['inputField']
+            inputlength = form.cleaned_data['inputLength']
+            inputcorrect = form.cleaned_data['inputCorrect']
+            inputfraction = form.cleaned_data['inputFraction']
+            inputfield_split = inputfield.split('<--->')
+            inputlength_split = inputlength.split('<--->')
+            inputcorrect_split = inputcorrect.split('<--->')
+            inputfraction_split = inputfraction.split('<--->')
+            input_questions_split = input_questions.split('|||||')
+            x = 1
+            for i in range(0, len(input_questions_split)):
+                inputfieldtask = InputFieldTask(task=task, question=input_questions_split[i])
+                inputfieldtask.save()
+                inputfields = inputfield_split[i].split('|||||')
+                input_length = inputlength_split[i].split('|||||')
+                input_correct = inputcorrect_split[i].split('|||||')
+                input_fraction = inputfraction_split[i].split('|||||')
+                for y in range(0, len(inputfields)):
+                    input = InputField(inputFieldTask=inputfieldtask, title=inputfields[y], inputnr=x,
+                                       correct=input_correct[y], inputlength=input_length[y])
+                    if input_fraction[y] == "1":
+                        input.fraction = True
+                    input.save()
+                    x += 1
         if task.extra:
             base64 = self.request.POST['base64']
             preview = self.request.POST['preview']
@@ -334,6 +360,7 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
             :return: JsonResponse containing the necessary Task information.
         """
         multiplechoice = []
+        inputfield = []
         task_id = request.GET['task_id']
         task = Task.objects.get(id=task_id)
         data = {
@@ -343,7 +370,8 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
             'task_reasoningText': task.reasoningText,
             'task_extra': task.extra,
             'task_answertype': task.answertype,
-            'options': multiplechoice
+            'options': multiplechoice,
+            'inputfields': inputfield
         }
         if task.extra:
             geogebra = GeogebraTask.objects.get(task_id=task_id)
@@ -359,6 +387,23 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
                     'question': choices.question,
                     'checkbox': choices.checkbox,
                     'options': options
+                })
+        elif task.answertype == 4:
+            inputfieldtasks = InputFieldTask.objects.filter(task=task)
+            for inputfieldtask in inputfieldtasks:
+                fields = []
+                length = []
+                fraction = []
+                inputfields = InputField.objects.filter(inputFieldTask=inputfieldtask)
+                for input in inputfields:
+                    fields.append(input.title)
+                    length.append(input.inputlength)
+                    fraction.append(input.fraction)
+                inputfield.append({
+                    "question": inputfieldtask.question,
+                    "fields": fields,
+                    "length": length,
+                    "fraction": fraction
                 })
         return JsonResponse(data)
 
@@ -562,6 +607,36 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
                 option_split.pop(0)
                 correct_split.pop(0)
                 x += 1
+        elif task.answertype == 4:
+            created_inputs = InputFieldTask.objects.filter(task=task)
+            created_inputs.delete()
+            input_questions = form.cleaned_data['inputQuestion']
+            inputfield = form.cleaned_data['inputField']
+            inputlength = form.cleaned_data['inputLength']
+            inputcorrect = form.cleaned_data['inputCorrect']
+            inputfraction = form.cleaned_data['inputFraction']
+            inputfield_split = inputfield.split('<--->')
+            inputlength_split = inputlength.split('<--->')
+            inputcorrect_split = inputcorrect.split('<--->')
+            inputfraction_split = inputfraction.split('<--->')
+            input_questions_split = input_questions.split('|||||')
+            x = 1
+            for i in range(0, len(input_questions_split)):
+                inputfieldtask = InputFieldTask(task=task, question=input_questions_split[i])
+                inputfieldtask.save()
+                inputfields = inputfield_split[i].split('|||||')
+                input_length = inputlength_split[i].split('|||||')
+                input_correct = inputcorrect_split[i].split('|||||')
+                input_fraction = inputfraction_split[i].split('|||||')
+                for y in range(0, len(inputfields)):
+                    input = InputField(inputFieldTask=inputfieldtask, title=inputfields[y], inputnr=x,
+                                       inputlength=input_length[y])
+                    if input_correct[y]:
+                        input.correct = input_correct[y]
+                    if input_fraction[y] == "1":
+                        input.fraction = True
+                    input.save()
+                    x += 1
         return super(TaskUpdateView, self).form_valid(form)
 
 
@@ -605,6 +680,7 @@ class TaskCollectionCreateView(AdministratorCheck, views.AjaxResponseMixin, gene
         context = super(TaskCollectionCreateView, self).get_context_data(**kwargs)
         context['tasks'] = Task.objects.all()
         context['categories'] = Category.objects.all()
+        context['update'] = False
         return context
 
     def form_valid(self, form):
@@ -717,7 +793,48 @@ class TaskCollectionDetailView(AdministratorCheck, views.AjaxResponseMixin, gene
         context = super(TaskCollectionDetailView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         context['publishedTests'] = Test.objects.filter(task_collection_id=self.kwargs.get('taskCollection_pk'))
+        context['update'] = Answer.objects.filter(test__task_collection_id=self.kwargs.get('taskCollection_pk')).exists()
         return context
+
+
+class TaskCollectionUpdateView(AdministratorCheck, views.AjaxResponseMixin, generic.UpdateView):
+    template_name = 'maths/taskCollection_form.html'
+    model = TaskCollection
+    fields = ['test_name', 'items']
+    pk_url_kwarg = 'taskCollection_pk'
+
+    def get_ajax(self, request, *args, **kwargs):
+        item_id = request.GET['id']
+        item = Item.objects.get(id=item_id)
+        data = {
+            'id': item.task.id
+        }
+        return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        """
+            Function that adds all the task and category objects to the context.
+
+            :param kwargs: Keyword arguments
+            :return: Returns the updated context
+        """
+        context = super(TaskCollectionUpdateView, self).get_context_data(**kwargs)
+        context['tasks'] = Task.objects.all()
+        context['categories'] = Category.objects.all()
+        context['update'] = True
+        return context
+
+
+class TaskCollectionDeleteView(AdministratorCheck, generic.DeleteView):
+    model = TaskCollection
+    pk_url_kwarg = 'taskCollection_pk'
+    success_url = reverse_lazy('maths:taskCollectionList')
+
+    def delete(self, request, *args, **kwargs):
+        task_collection = TaskCollection.objects.get(id=self.kwargs.get('taskCollection_pk'))
+        success_message = 'Testen "' + task_collection.test_name + '" ble slettet.'
+        messages.success(self.request, success_message)
+        return super(TaskCollectionDeleteView, self).delete(request, *args, **kwargs)
 
 
 class TestCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.CreateView):
@@ -734,15 +851,6 @@ class TestCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Create
     """
     form_class = CreateTestForm
     template_name = 'maths/test_form.html'
-
-    def get_success_url(self):
-        """
-        Function that sets the success url.
-        :return: Success url
-        """
-        success = reverse_lazy('maths:taskCollectionDetail',
-                               kwargs={'taskCollection_pk': self.kwargs.get('taskCollection_pk')})
-        return success
 
     def post_ajax(self, request, *args, **kwargs):
         """
@@ -978,6 +1086,23 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
                 answer.item = item
             if correct:
                 answer.correct = correct
+            elif answer.item.task.answertype == 4:
+                input_answers = text.split('|||||')
+                inputfield_tasks = InputFieldTask.objects.filter(task=answer.item.task)
+                x = 0
+                score = 0
+                score_tasks = False
+                for inputfield_task in inputfield_tasks:
+                    inputfields = InputField.objects.filter(inputFieldTask=inputfield_task)
+                    for inputfield in inputfields:
+                        if inputfield.correct:
+                            input_answer = input_answers[x].strip()
+                            score_tasks = True
+                            if float(input_answer) == float(inputfield.correct):
+                                score += 1
+                        x += 1
+                if score_tasks:
+                    answer.correct = score
             answer.date_answered = datetime.datetime.now()
             answer.save()
             base64 = request.POST["task" + str(y) + "-base64answer"]
@@ -1094,6 +1219,23 @@ class TestListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
         return context
 
 
+class TestDeleteView(AdministratorCheck, generic.DeleteView):
+    model = Test
+    pk_url_kwarg = 'test_pk'
+    success_message = "Den publiserte testen ble slettet."
+
+    def get_success_url(self):
+        test = Test.objects.get(id=self.kwargs.get('test_pk'))
+        return reverse_lazy('maths:taskCollectionDetail', kwargs={
+            'taskCollection_pk': test.task_collection.id
+        })
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super(TestDeleteView, self).delete(request, *args, **kwargs)
+
+
+
 class AnswerListView(AnswerCheck, generic.ListView):
     """
     Class that displays a list of answers for all the tasks in a specific test for a specific user.
@@ -1172,7 +1314,8 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                             geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
                         else:
                             geogebra_data = ""
-                        date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
+                        date_answered = formats.date_format(timezone.localtime(answer.date_answered),
+                                                            "SHORT_DATETIME_FORMAT")
                         answer_tab = [user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
                                       answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
                         data.append(answer_tab)
@@ -1187,7 +1330,8 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                             geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
                         else:
                             geogebra_data = ""
-                        date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
+                        date_answered = formats.date_format(timezone.localtime(answer.date_answered),
+                                                            "SHORT_DATETIME_FORMAT")
                         answer_tab = [answer.user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
                                       answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
                         data.append(answer_tab)
@@ -1202,7 +1346,8 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                             geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
                         else:
                             geogebra_data = ""
-                        date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
+                        date_answered = formats.date_format(timezone.localtime(answer.date_answered),
+                                                            "SHORT_DATETIME_FORMAT")
                         answer_tab = [answer.user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
                                       answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
                         data.append(answer_tab)
@@ -1216,7 +1361,8 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                             geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
                         else:
                             geogebra_data = ""
-                        date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
+                        date_answered = formats.date_format(timezone.localtime(answer.date_answered),
+                                                            "SHORT_DATETIME_FORMAT")
                         if answer.user:
                             username = answer.user.username
                         else:
@@ -1230,7 +1376,8 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                     task = Task.objects.get(id=task_id)
                     answers = Answer.objects.filter(item__task=task).order_by('-id')
                     for answer in answers:
-                        date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
+                        date_answered = formats.date_format(timezone.localtime(answer.date_answered),
+                                                            "SHORT_DATETIME_FORMAT")
                         if GeogebraAnswer.objects.filter(answer=answer).exists():
                             geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
                         else:
@@ -1248,7 +1395,8 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                     item = Item.objects.get(id=item_id)
                     answers = Answer.objects.filter(item=item).order_by('-id')
                     for answer in answers:
-                        date_answered = formats.date_format(timezone.localtime(answer.date_answered), "SHORT_DATETIME_FORMAT")
+                        date_answered = formats.date_format(timezone.localtime(answer.date_answered),
+                                                            "SHORT_DATETIME_FORMAT")
                         if GeogebraAnswer.objects.filter(answer=answer).exists():
                             geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
                         else:

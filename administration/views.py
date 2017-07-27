@@ -662,7 +662,6 @@ class PersonDeleteView(SchoolAdministratorCheck, generic.DeleteView):
 
     def get_success_url(self):
         success_url = reverse_lazy('administration:personList')
-        print(self.kwargs.get('grade_pk'))
         if self.kwargs.get('grade_pk'):
             print()
             success_url = reverse_lazy('administration:gradeDetail',
