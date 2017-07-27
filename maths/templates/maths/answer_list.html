@@ -153,6 +153,32 @@
                                                             <hr>
                                                         {% endfor %}
                                                     </div>
+                                                {% elif answer.item.task.answertype == 4 %}
+                                                    <div id="inputfieldsdiv{{ answer.item.id }}">
+                                                        {% get_inputfields answer.item.task as inputfields %}
+                                                        {% for inputfield in inputfields %}
+                                                            <h4>{{ inputfield.question }}</h4>
+                                                            <form class="form-horizontal">
+                                                                {% for inputs in inputfield.inputfield_set.all %}
+                                                                    <div class="form-group" style="margin-bottom: 0px;"><label
+                                                                            style="text-align: left; padding-left: 15px; height: auto"
+                                                                            class="control-label col-md-2">{{ inputs.title }}:</label>
+                                                                        <div class="col-md-{{ inputs.inputlength }}"
+                                                                             style="padding-right: 15px; height: auto">
+                                                                            <input
+                                                                                    type="number"
+                                                                                    class="form-control"
+                                                                                    value="{% get_input answer.text inputs.inputnr %}"
+                                                                                    disabled>
+                                                                            {% if inputs.fraction %}
+                                                                                <hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black;">
+                                                                            {% endif %}</div>
+                                                                    </div>
+                                                                {% endfor %}
+                                                            </form>
+                                                            <hr>
+                                                        {% endfor %}
+                                                    </div>
                                                 {% endif %}
                                                 {% if answer.item.task.reasoning %}
                                                     <div id="reasoningdiv">
@@ -258,6 +284,32 @@
                                                         {% endif %}
                                                     {% endfor %}
                                                 </div>
+                                                <hr>
+                                            {% endfor %}
+                                        </div>
+                                    {% elif answer.item.task.answertype == 4 %}
+                                        <div id="inputfieldsdiv{{ answer.item.id }}">
+                                            {% get_inputfields answer.item.task as inputfields %}
+                                            {% for inputfield in inputfields %}
+                                                <h4>{{ inputfield.question }}</h4>
+                                                <form class="form-horizontal">
+                                                    {% for inputs in inputfield.inputfield_set.all %}
+                                                        <div class="form-group" style="margin-bottom: 0px;"><label
+                                                                style="text-align: left; padding-left: 15px; height: auto"
+                                                                class="control-label col-md-2">{{ inputs.title }}:</label>
+                                                            <div class="col-md-{{ inputs.inputlength }}"
+                                                                 style="padding-right: 15px; height: auto">
+                                                                <input
+                                                                        type="number"
+                                                                        class="form-control"
+                                                                        value="{% get_input answer.text inputs.inputnr %}"
+                                                                        disabled>
+                                                                {% if inputs.fraction %}
+                                                                    <hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black;">
+                                                                {% endif %}</div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </form>
                                                 <hr>
                                             {% endfor %}
                                         </div>

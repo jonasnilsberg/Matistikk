@@ -38,7 +38,12 @@
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h2>Lag test</h2>
+            {% if update %}
+                <h2 class="text-center">Oppdater test</h2>
+
+            {% else %}
+                <h2 class="text-center">Lag test</h2>
+            {% endif %}
         </div>
         <div class="panel-body">
             <form class="form-margin" action="" method="POST" enctype="multipart/form-data">
@@ -255,19 +260,24 @@
          */
         var submitted = false;
         function submitForm() {
-            if(submitted){
+            if (submitted) {
                 return 0;
             }
-            $('#submitTaskCollectionBtn').click();
             var taskCheck = false;
+            var taskTitle = false;
             $('#id_items option').each(function () {
                 if (this.selected)
                     taskCheck = true;
             });
-            if (taskCheck == true) {
+            if ($('#id_test_name').val()) {
+                taskTitle = true;
+            } else {
+                $('#submitTaskCollectionBtn').click();
+            }
+            if (taskCheck == true && taskTitle == true) {
                 $('#submitTaskCollectionBtn').click();
                 submitted = true;
-            } else {
+            } else if (taskCheck == false) {
                 $("#selectTaskWarning").removeClass("hidden");
                 $("#selectTaskWarning").fadeTo(5000, 500).slideUp(500, function () {
                     $("#selectTaskWarning").slideUp(500);
@@ -325,7 +335,28 @@
 
 
             });
+            itemCount();
+            $('#id_items option:selected').each(function () {
+                var id = $(this).val();
+                var taskCollection_pk = "{{ taskcollection.id }}";
+                $.ajax({
+                    type: 'GET',
+                    url: '{% url 'maths:taskCollectionUpdate' taskCollection_pk=12345 %}'.replace(/12345/, taskCollection_pk),
+                    data: {
+                        'id': id
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#task' + data.id).addClass('success');
+                        $('#task' + data.id).find(':checkbox').prop('checked', true);
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            });
         });
+
         /**
          * This function matches the text in the search field with the content in the table given in the parameter.
          * and removes rows that don't match the search criteria.
@@ -353,6 +384,7 @@
                 }
             }
         }
+
         function randomRow(val) {
             var numRows = $('.itemrow').length;
             if (val == 0) {
@@ -369,8 +401,6 @@
                     randomtr.click();
                 }
             }
-
-
         }
     </script>
 {% endblock %}

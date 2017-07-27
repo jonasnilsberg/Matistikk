@@ -206,6 +206,32 @@
                                                     <hr>
                                                 {% endfor %}
                                             </div>
+                                        {% elif item.task.answertype == 4 %}
+                                            <div id="inputfieldsdiv{{ item.id }}">
+                                                {% get_inputfields item.task as inputfields %}
+                                                {% for inputfield in inputfields %}
+                                                    <h4>{{ inputfield.question }}</h4>
+                                                    <form class="form-horizontal">
+                                                        {% for inputs in inputfield.inputfield_set.all %}
+                                                            <div class="form-group" style="margin-bottom: 0px;"><label
+                                                                    style="text-align: left; padding-left: 15px; height: auto"
+                                                                    class="control-label col-md-2">{{ inputs.title }}</label>
+                                                                <div class="col-md-{{ inputs.inputlength }}"
+                                                                     style="padding-right: 15px; height: auto"><input
+                                                                        type="number"
+                                                                        data-inputnr="{{ inputs.inputnr }}"
+                                                                        data-counter="{{ forloop.parentloop.parentloop.counter }}"
+                                                                        class="form-control inputs">
+                                                                    {% if inputs.fraction %}
+                                                                        <hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black;">
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </form>
+                                                    <hr>
+                                                {% endfor %}
+                                            </div>
                                         {% endif %}
 
                                         {% if item.task.reasoning %}
@@ -268,6 +294,31 @@
                                                             {% endif %}
                                                         {% endfor %}
                                                     </div>
+                                                    <hr>
+                                                {% endfor %}
+                                            </div>
+                                        {% elif item.task.answertype == 4 %}
+                                            <div id="inputfieldsdiv{{ item.id }}">
+                                                {% get_inputfields item.task as inputfields %}
+                                                {% for inputfield in inputfields %}
+                                                    <h4>{{ inputfield.question }}</h4>
+                                                    <form class="form-horizontal">
+                                                        {% for inputs in inputfield.inputfield_set.all %}
+                                                            <div class="form-group" style="margin-bottom: 0px;"><label
+                                                                    style="text-align: left; padding-left: 15px; height: auto"
+                                                                    class="control-label col-md-2">{{ inputs.title }}</label>
+                                                                <div class="col-md-{{ inputs.inputlength }}"
+                                                                     style="padding-right: 15px; height: auto"><input
+                                                                        type="number"
+                                                                        data-inputnr="{{ inputs.inputnr }}"
+                                                                        data-counter="{{ forloop.parentloop.parentloop.counter }}"
+                                                                        class="form-control inputs">
+                                                                    {% if inputs.fraction %}
+                                                                        <hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black;">
+                                                                    {% endif %}</div>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </form>
                                                     <hr>
                                                 {% endfor %}
                                             </div>
@@ -405,6 +456,32 @@
                                                     <hr>
                                                 {% endfor %}
                                             </div>
+                                        {% elif taskorder.item.task.answertype == 4 %}
+                                            <div id="inputfieldsdiv{{ taskorder.item.id }}">
+                                                {% get_inputfields taskorder.item.task as inputfields %}
+                                                {% for inputfield in inputfields %}
+                                                    <h4>{{ inputfield.question }}</h4>
+                                                    <form class="form-horizontal">
+                                                        {% for inputs in inputfield.inputfield_set.all %}
+                                                            <div class="form-group" style="margin-bottom: 0px;"><label
+                                                                    style="text-align: left; padding-left: 15px; height: auto"
+                                                                    class="control-label col-md-2">{{ inputs.title }}:</label>
+                                                                <div class="col-md-{{ inputs.inputlength }}"
+                                                                     style="padding-right: 15px; height: auto"><input
+                                                                        type="number"
+                                                                        data-inputnr="{{ inputs.inputnr }}"
+                                                                        data-counter="{{ forloop.parentloop.parentloop.counter }}"
+                                                                        class="form-control inputs">
+                                                                    {% if inputs.fraction %}
+                                                                        <hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black;">
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </form>
+                                                    <hr>
+                                                {% endfor %}
+                                            </div>
                                         {% endif %}
 
                                         {% if taskorder.item.task.reasoning %}
@@ -473,8 +550,33 @@
                                                     <hr>
                                                 {% endfor %}
                                             </div>
+                                        {% elif taskorder.item.task.answertype == 4 %}
+                                            <div id="inputfieldsdiv{{ taskorder.item.id }}">
+                                                {% get_inputfields taskorder.item.task as inputfields %}
+                                                {% for inputfield in inputfields %}
+                                                    <h4>{{ inputfield.question }}</h4>
+                                                    <form class="form-horizontal">
+                                                        {% for inputs in inputfield.inputfield_set.all %}
+                                                            <div class="form-group" style="margin-bottom: 0px;"><label
+                                                                    style="text-align: left; padding-left: 15px; height: auto"
+                                                                    class="control-label col-md-2">{{ inputs.title }}</label>
+                                                                <div class="col-md-{{ inputs.inputlength }}"
+                                                                     style="padding-right: 15px; height: auto"><input
+                                                                        type="number"
+                                                                        data-inputnr="{{ inputs.inputnr }}"
+                                                                        data-counter="{{ forloop.parentloop.parentloop.counter }}"
+                                                                        class="form-control inputs">
+                                                                    {% if inputs.fraction %}
+                                                                        <hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black;">
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </form>
+                                                    <hr>
+                                                {% endfor %}
+                                            </div>
                                         {% endif %}
-
                                         {% if taskorder.item.task.reasoning %}
                                             <div id="reasoningdiv{{ taskorder.item.id }}">
                                                 <label for="reasoning">{% if taskorder.item.task.reasoningText %}
@@ -618,9 +720,6 @@
      * This function runs when the document is ready.
      */
     $(document).ready(function () {
-        //$('.mathquill-embedded-latex').mathquill('write', '\\frac{d}{dx}');
-        //$('.mathquill-rendered-math').addClass('mathquill-embedded-latex');
-        //$('.mathquill-embedded-latex').mathquill();
         start = Date.now();
         var notGeo = parseInt(taskcount - geocount);
         var percent = ((geoloaded + notGeo) / taskcount) * 100;
@@ -1039,6 +1138,16 @@
         $('.col-md-6').css('height', colHeight + 'px');
     };
 
+    $('.inputs').change(function () {
+        var input = $(this);
+        var i = input.data('counter');
+        var value = input.val();
+        var inputnr = input.data('inputnr');
+        if (document.getElementById('base64' + i)) {
+            window["ggbApplet" + i].setValue("input" + inputnr, value);
+        }
+    });
+
 
     /**
      * This function checks the HTML-elements in every task in the test.
@@ -1052,6 +1161,7 @@
             var taskflag = true;
             var textanswerbool = false;
             var reasoningbool = false;
+            var inputfieldbool = false;
             var multiplechoicebool = false;
             var div = $('#task' + (i + 1));
             var itemid = div.data('itemid');
@@ -1066,20 +1176,14 @@
             if ($('#optionsdiv' + itemid).exists()) {
                 multiplechoicebool = true;
             }
+            if ($('#inputfieldsdiv' + itemid).exists()) {
+                inputfieldbool = true
+            }
             var status = document.getElementById('status' + itemid);
             status.innerHTML = "";
             if (textanswerbool) {
                 if (textanswer.trim() == '' || textanswer == null || textanswer == '<div>&nbsp;</div>') {
                     status.innerHTML += "Mangler tekstsvar | ";
-                    status.parentNode.className = "danger";
-                    flag = false;
-                    taskflag = false;
-                }
-            }
-
-            if (reasoningbool) {
-                if (reasoning == '' || reasoning == null || reasoning == '<div>&nbsp;</div>') {
-                    status.innerHTML += "Mangler begrunnelse | ";
                     status.parentNode.className = "danger";
                     flag = false;
                     taskflag = false;
@@ -1103,6 +1207,29 @@
                 }
             }
 
+            if (inputfieldbool) {
+                var complete = true;
+                $('#inputfieldsdiv' + itemid + ' input[type=number]').each(function () {
+                    if (!$(this).val()) {
+                        complete = false;
+                    }
+                });
+                if (!complete) {
+                    status.innerHTML += "Mangler svar på inputfelt | ";
+                    status.parentNode.className = "danger";
+                    flag = false;
+                    taskflag = false;
+                }
+            }
+            if (reasoningbool) {
+                if (reasoning == '' || reasoning == null || reasoning == '<div>&nbsp;</div>') {
+                    status.innerHTML += "Mangler begrunnelse | ";
+                    status.parentNode.className = "danger";
+                    flag = false;
+                    taskflag = false;
+                }
+            }
+            status.innerHTML = status.innerHTML.slice(0, -2);
             if (taskflag) {
                 status.innerHTML = "Denne oppgaven har ingen mangler";
                 status.parentNode.className = "success";
@@ -1121,6 +1248,7 @@
         var textanswerbool = false;
         var reasoningbool = false;
         var multiplechoicebool = false;
+        var inputfieldbool = false;
         if ($(('#textanswer' + itemid)).exists()) {
             textanswerbool = true;
             var textanswer = tinyMCE.get('textanswer' + itemid).getContent();
@@ -1131,6 +1259,9 @@
         }
         if ($('#optionsdiv' + itemid).exists()) {
             multiplechoicebool = true;
+        }
+        if ($('#inputfieldsdiv' + itemid).exists()) {
+            inputfieldbool = true
         }
 
         if (textanswerbool) {
@@ -1156,6 +1287,17 @@
                 return false;
             }
 
+        }
+        if (inputfieldbool) {
+            var complete = true;
+            $('#inputfieldsdiv' + itemid + ' input[type=number]').each(function () {
+                if (!$(this).val()) {
+                    complete = false;
+                }
+            });
+            if (!complete) {
+                return false
+            }
         }
         return true;
     }
@@ -1204,6 +1346,14 @@
                 textanswer2.value = textanswer2.value.slice(0, -7);
 
             }
+            if ($('#inputfieldsdiv' + itemid)) {
+                var answer = "";
+                $('#inputfieldsdiv' + itemid + " .inputs").each(function () {
+                    answer += $(this).val() + "|||||";
+                });
+                answer = answer.slice(0, -5);
+                textanswer2.value = answer;
+            }
             var reasoning2 = document.getElementById('id_task' + i + '-reasoning');
             var base64;
             if (window["ggbApplet" + (i + 1)]) {
@@ -1225,7 +1375,7 @@
             var tab = (geolistener.value).split('\n');
             var timetab = [];
             var output = [];
-            var desctab = [];
+            var desctab = [];
 
             for (var z = 0; z < tab.length - 1; z++) {
                 var tab2 = tab[z].split('|');
