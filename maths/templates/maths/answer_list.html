@@ -123,30 +123,68 @@
                                                                     <label for=multipleChoice>Svaralternativer:</label>
                                                                 {% endif %}
                                                                 <br>
-                                                                {% get_multiplechoice_options multiplechoicetask as options %}
-                                                                {% for option in options %}
+                                                                {% get_multiplechoice_options_length multiplechoicetask as length %}
+                                                                {% for option in multiplechoicetask.multiplechoiceoption_set.all %}
                                                                     {% multiplechoice_answered option answer.text forloop.parentloop.counter as answered %}
-                                                                    {% if option.correct %}
-                                                                        <span class="glyphicon glyphicon-ok"
-                                                                              style="color: green"></span>
+                                                                    {% if length > 50 %}
+                                                                        {% if multiplechoicetask.checkbox %}
+                                                                            <div class="checkbox">
+                                                                                <label><input
+                                                                                        type="checkbox"
+                                                                                        class="checkbox{{ answer.item.id }}"
+                                                                                        value="{{ option.option }}"
+                                                                                        {% if answered %}checked{% endif %}>{{ option.option }}
+                                                                                    {% if option.correct %}
+                                                                                        <span class="glyphicon glyphicon-ok"
+                                                                                              style="color: green"></span>
+                                                                                    {% else %}
+                                                                                        <span class="glyphicon glyphicon-remove"
+                                                                                              style="color: red;"></span>
+                                                                                    {% endif %}
+                                                                                </label>
+                                                                            </div>
+                                                                        {% else %}
+                                                                            <div class="radio">
+                                                                                <label>
+                                                                                    {% if option.correct %}
+                                                                                        <span class="glyphicon glyphicon-ok"
+                                                                                              style="color: green; margin-right: 25px;"></span>
+                                                                                    {% else %}
+                                                                                        <span class="glyphicon glyphicon-remove"
+                                                                                              style="color: red; margin-right: 25px;"></span>
+                                                                                    {% endif %}<input
+                                                                                        type="radio"
+                                                                                        value="{{ option.option }}"
+                                                                                        class="checkbox{{ answer.item.id }}"
+                                                                                        name="{{ forloop.parentloop.counter }}choices{{ answer.item.id }}"
+                                                                                        {% if answered %}checked{% endif %}>{{ option.option }}
+                                                                                </label>
+                                                                            </div>
+                                                                        {% endif %}
                                                                     {% else %}
-                                                                        <span class="glyphicon glyphicon-remove"
-                                                                              style="color: red;"></span>
-                                                                    {% endif %}
-                                                                    {% if multiplechoicetask.checkbox %}
-                                                                        <label class="checkbox-inline"><input
-                                                                                type="checkbox"
-                                                                                class="checkbox{{ answer.item.id }}"
-                                                                                value="{{ option.option }}"
-                                                                                {% if answered %}checked{% endif %}>{{ option.option }}
-                                                                        </label>
-                                                                    {% else %}
-                                                                        <label class="radio-inline"><input type="radio"
-                                                                                                           value="{{ option.option }}"
-                                                                                                           class="checkbox{{ answer.item.id }}"
-                                                                                                           name="{{ forloop.parentloop.counter }}choices{{ answer.item.id }}"
-                                                                                                           {% if answered %}checked{% endif %}>{{ option.option }}
-                                                                        </label>
+                                                                        {% if option.correct %}
+                                                                            <span class="glyphicon glyphicon-ok"
+                                                                                  style="color: green"></span>
+                                                                        {% else %}
+                                                                            <span class="glyphicon glyphicon-remove"
+                                                                                  style="color: red;"></span>
+                                                                        {% endif %}
+                                                                        {% if multiplechoicetask.checkbox %}
+                                                                            <label class="checkbox-inline"><input
+                                                                                    type="checkbox"
+                                                                                    class="checkbox{{ answer.item.id }}"
+                                                                                    value="{{ option.option }}"
+                                                                                    {% if answered %}checked{% endif %}>{{ option.option }}
+                                                                            </label>
+                                                                        {% else %}
+                                                                            <label class="radio-inline"><input
+                                                                                    type="radio"
+                                                                                    value="{{ option.option }}"
+                                                                                    class="checkbox{{ answer.item.id }}"
+                                                                                    name="{{ forloop.parentloop.counter }}choices{{ answer.item.id }}"
+                                                                                    {% if answered %}checked{% endif %}>{{ option.option }}
+                                                                            </label>
+                                                                        {% endif %}
                                                                     {% endif %}
                                                                 {% endfor %}
                                                             </div>
@@ -160,9 +198,11 @@
                                                             <h4>{{ inputfield.question }}</h4>
                                                             <form class="form-horizontal">
                                                                 {% for inputs in inputfield.inputfield_set.all %}
-                                                                    <div class="form-group" style="margin-bottom: 0px;"><label
-                                                                            style="text-align: left; padding-left: 15px; height: auto"
-                                                                            class="control-label col-md-2">{{ inputs.title }}:</label>
+                                                                    <div class="form-group"
+                                                                         style="margin-bottom: {% get_margin inputs.fraction %}px;">
+                                                                        <label
+                                                                                style="text-align: left; padding-left: 15px; height: auto"
+                                                                                class="control-label col-md-2">{{ inputs.title }}:</label>
                                                                         <div class="col-md-{{ inputs.inputlength }}"
                                                                              style="padding-right: 15px; height: auto">
                                                                             <input
@@ -176,7 +216,9 @@
                                                                     </div>
                                                                 {% endfor %}
                                                             </form>
-                                                            <hr>
+                                                            {% if not forloop.last %}
+                                                                <hr>
+                                                            {% endif %}
                                                         {% endfor %}
                                                     </div>
                                                 {% endif %}
@@ -257,30 +299,67 @@
                                                         <label for=multipleChoice>Svaralternativer:</label>
                                                     {% endif %}
                                                     <br>
-                                                    {% get_multiplechoice_options multiplechoicetask as options %}
-                                                    {% for option in options %}
+                                                    {% get_multiplechoice_options_length multiplechoicetask as length %}
+                                                    {% for option in multiplechoicetask.multiplechoiceoption_set.all %}
                                                         {% multiplechoice_answered option answer.text forloop.parentloop.counter as answered %}
-                                                        {% if option.correct %}
-                                                            <span class="glyphicon glyphicon-ok"
-                                                                  style="color: green"></span>
+                                                        {% if length > 75 %}
+                                                            {% if multiplechoicetask.checkbox %}
+                                                                <div class="checkbox">
+                                                                    <label>{% if option.correct %}
+                                                                        <span class="glyphicon glyphicon-ok"
+                                                                              style="color: green; margin-right: 25px;"></span>
+                                                                    {% else %}
+                                                                        <span class="glyphicon glyphicon-remove"
+                                                                              style="color: red; margin-right: 25px;"></span>
+                                                                    {% endif %}<input
+                                                                            type="checkbox"
+                                                                            class="checkbox{{ answer.item.id }}"
+                                                                            value="{{ option.option }}"
+                                                                            {% if answered %}checked{% endif %}>{{ option.option }}
+                                                                    </label>
+                                                                </div>
+                                                            {% else %}
+                                                                <div class="radio">
+                                                                    <label><input
+                                                                            type="radio"
+                                                                            value="{{ option.option }}"
+                                                                            class="checkbox{{ answer.item.id }}"
+                                                                            name="{{ forloop.parentloop.counter }}choices{{ answer.item.id }}"
+                                                                            {% if answered %}checked{% endif %}>{{ option.option }}
+                                                                        {% if option.correct %}
+                                                                            <span class="glyphicon glyphicon-ok"
+                                                                                  style="color: green"></span>
+                                                                        {% else %}
+                                                                            <span class="glyphicon glyphicon-remove"
+                                                                                  style="color: red;"></span>
+                                                                        {% endif %}
+                                                                    </label>
+                                                                </div>
+                                                            {% endif %}
                                                         {% else %}
-                                                            <span class="glyphicon glyphicon-remove"
-                                                                  style="color: red;"></span>
-                                                        {% endif %}
-                                                        {% if multiplechoicetask.checkbox %}
-                                                            <label class="checkbox-inline"><input
-                                                                    type="checkbox"
-                                                                    class="checkbox{{ answer.item.id }}"
-                                                                    value="{{ option.option }}"
-                                                                    {% if answered %}checked{% endif %}>{{ option.option }}
-                                                            </label>
-                                                        {% else %}
-                                                            <label class="radio-inline"><input type="radio"
-                                                                                               {% if answered %}checked{% endif %}
-                                                                                               value="{{ option.option }}"
-                                                                                               class="checkbox{{ answer.item.id }}"
-                                                                                               name="{{ forloop.parentloop.counter }}choices{{ answer.item.id }}">{{ option.option }}
-                                                            </label>
+                                                            {% if option.correct %}
+                                                                <span class="glyphicon glyphicon-ok"
+                                                                      style="color: green"></span>
+                                                            {% else %}
+                                                                <span class="glyphicon glyphicon-remove"
+                                                                      style="color: red;"></span>
+                                                            {% endif %}
+                                                            {% if multiplechoicetask.checkbox %}
+                                                                <label class="checkbox-inline"><input
+                                                                        type="checkbox"
+                                                                        class="checkbox{{ answer.item.id }}"
+                                                                        value="{{ option.option }}"
+                                                                        {% if answered %}checked{% endif %}>{{ option.option }}
+                                                                </label>
+                                                            {% else %}
+                                                                <label class="radio-inline"><input
+                                                                        type="radio"
+                                                                        value="{{ option.option }}"
+                                                                        class="checkbox{{ answer.item.id }}"
+                                                                        name="{{ forloop.parentloop.counter }}choices{{ answer.item.id }}"
+                                                                        {% if answered %}checked{% endif %}>{{ option.option }}
+                                                                </label>
+                                                            {% endif %}
                                                         {% endif %}
                                                     {% endfor %}
                                                 </div>
@@ -294,9 +373,11 @@
                                                 <h4>{{ inputfield.question }}</h4>
                                                 <form class="form-horizontal">
                                                     {% for inputs in inputfield.inputfield_set.all %}
-                                                        <div class="form-group" style="margin-bottom: 0px;"><label
-                                                                style="text-align: left; padding-left: 15px; height: auto"
-                                                                class="control-label col-md-2">{{ inputs.title }}:</label>
+                                                        <div class="form-group"
+                                                             style="margin-bottom: {% get_margin inputs.fraction %}px;">
+                                                            <label
+                                                                    style="text-align: left; padding-left: 15px; height: auto"
+                                                                    class="control-label col-md-2">{{ inputs.title }}:</label>
                                                             <div class="col-md-{{ inputs.inputlength }}"
                                                                  style="padding-right: 15px; height: auto">
                                                                 <input
@@ -310,7 +391,9 @@
                                                         </div>
                                                     {% endfor %}
                                                 </form>
-                                                <hr>
+                                                {% if not forloop.last %}
+                                                    <hr>
+                                                {% endif %}
                                             {% endfor %}
                                         </div>
                                     {% endif %}

@@ -54,8 +54,11 @@ def get_mutiplechoice(task):
 
 
 @register.simple_tag
-def get_multiplechoice_options(multiplechoice_task):
-    return MultipleChoiceOption.objects.filter(MutipleChoiceTask=multiplechoice_task)
+def get_multiplechoice_options_length(multiplechoice_task):
+    length = 0
+    for option in multiplechoice_task.multiplechoiceoption_set.all():
+        length += (len(option.option))
+    return length
 
 
 @register.simple_tag
@@ -140,3 +143,10 @@ def get_inputfields(task):
 def get_input(answer, nr):
     answer_list = answer.split('|||||')
     return answer_list[nr-1]
+
+@register.simple_tag
+def get_margin(fraction):
+    if fraction:
+        return 0
+    else:
+        return 10
