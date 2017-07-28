@@ -892,8 +892,7 @@
                                 </div>
                                 <div class="row">
                                     <div id="choicesDiv{{ forloop.counter }}" class="col-md-10">
-                                        {% get_multiplechoice_options multiplechoice as options %}
-                                        {% for option in options %}
+                                        {% for option in multiplechoice.multiplechoiceoption_set.all %}
                                             <label class="checkbox-inline"><input type="checkbox"
                                                                                   value="{{ forloop.parentloop.counter }}"
                                                                                   {% if option.correct %}checked{% endif %}>

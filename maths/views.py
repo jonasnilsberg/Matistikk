@@ -1103,6 +1103,20 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
                         x += 1
                 if score_tasks:
                     answer.correct = score
+            if answer.item.task.answertype == 2:
+                score = 0
+                multiplechoice_answer = text.split('<--|-->')
+                count = 0
+                for multiplechoicetask in answer.item.task.multiplechoicetask_set.all():
+                    correct_string = ""
+                    for option in multiplechoicetask.multiplechoiceoption_set.all():
+                        if option.correct:
+                            correct_string += option.option + '|||||'
+                    correct_string = correct_string[:-5]
+                    if multiplechoice_answer[count] == correct_string:
+                        score += 1
+                    count += 1
+                answer.correct = score
             answer.date_answered = datetime.datetime.now()
             answer.save()
             base64 = request.POST["task" + str(y) + "-base64answer"]

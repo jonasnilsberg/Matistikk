@@ -154,7 +154,7 @@
                                 <div id="applet_container{{ forloop.counter }}"></div>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 splitdiv">
-                                <div class="panel panel-default">
+                                <div class="panel panel-default" style="box-shadow: none;">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ item.id }}">
                                              {% if item.task.variableTask %}
@@ -187,19 +187,39 @@
                                                             <label for=multipleChoice>Svaralternativer:</label>
                                                         {% endif %}
                                                         <br>
-                                                        {% get_multiplechoice_options multiplechoicetask as options %}
-                                                        {% for option in options %}
-                                                            {% if multiplechoicetask.checkbox %}
-                                                                <label class="checkbox-inline"><input type="checkbox"
-                                                                                                      class="checkbox{{ item.id }}"
-                                                                                                      value="{{ option.option }}">{{ option.option }}
-                                                                </label>
+                                                        {% get_multiplechoice_options_length multiplechoicetask as length %}
+                                                        {% for option in multiplechoicetask.multiplechoiceoption_set.all %}
+                                                            {% if length > 50 %}
+                                                                {% if multiplechoicetask.checkbox %}
+                                                                    <div class="checkbox">
+                                                                        <label><input
+                                                                                type="checkbox"
+                                                                                class="checkbox{{ taskorder.item.id }}"
+                                                                                value="{{ option.option }}">{{ option.option }}
+                                                                        </label>
+                                                                    </div>
+                                                                {% else %}
+                                                                    <div class="radio">
+                                                                        <label><input type="radio"
+                                                                                      value="{{ option.option }}"
+                                                                                      class="checkbox{{ taskorder.item.id }}"
+                                                                                      name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
+                                                                    </div>
+                                                                {% endif %}
                                                             {% else %}
-                                                                <label class="radio-inline"><input type="radio"
-                                                                                                   value="{{ option.option }}"
-                                                                                                   class="checkbox{{ item.id }}"
-                                                                                                   name="{{ forloop.parentloop.counter }}choices{{ item.id }}">{{ option.option }}
-                                                                </label>
+                                                                {% if multiplechoicetask.checkbox %}
+                                                                    <label class="checkbox-inline"><input
+                                                                            type="checkbox"
+                                                                            class="checkbox{{ taskorder.item.id }}"
+                                                                            value="{{ option.option }}">{{ option.option }}
+                                                                    </label>
+                                                                {% else %}
+                                                                    <label class="radio-inline"><input type="radio"
+                                                                                                       value="{{ option.option }}"
+                                                                                                       class="checkbox{{ taskorder.item.id }}"
+                                                                                                       name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
+                                                                    </label>
+                                                                {% endif %}
                                                             {% endif %}
                                                         {% endfor %}
                                                     </div>
@@ -213,9 +233,11 @@
                                                     <h4>{{ inputfield.question }}</h4>
                                                     <form class="form-horizontal">
                                                         {% for inputs in inputfield.inputfield_set.all %}
-                                                            <div class="form-group" style="margin-bottom: 0px;"><label
-                                                                    style="text-align: left; padding-left: 15px; height: auto"
-                                                                    class="control-label col-md-2">{{ inputs.title }}</label>
+                                                            <div class="form-group"
+                                                                 style="margin-bottom: {% get_margin inputs.fraction %}px;">
+                                                                <label
+                                                                        style="text-align: left; padding-left: 15px; height: auto"
+                                                                        class="control-label col-md-2">{{ inputs.title }}</label>
                                                                 <div class="col-md-{{ inputs.inputlength }}"
                                                                      style="padding-right: 15px; height: auto"><input
                                                                         type="number"
@@ -229,7 +251,9 @@
                                                             </div>
                                                         {% endfor %}
                                                     </form>
-                                                    <hr>
+                                                    {% if not forloop.last or item.task.reasoning %}
+                                                        <hr>
+                                                    {% endif %}
                                                 {% endfor %}
                                             </div>
                                         {% endif %}
@@ -250,7 +274,7 @@
                         {% else %}
                             <div class="col-md-2"></div>
                             <div class="col-md-8 col-sm-12 col-xs-12 fulldiv">
-                                <div class="panel panel-default">
+                                <div class="panel panel-default" style="box-shadow: none;">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ item.id }}">
                                             <h4>{{ item.task.text | safe }}</h4>
@@ -278,19 +302,39 @@
                                                             <label for=multipleChoice>Svaralternativer:</label>
                                                         {% endif %}
                                                         <br>
-                                                        {% get_multiplechoice_options multiplechoicetask as options %}
-                                                        {% for option in options %}
-                                                            {% if multiplechoicetask.checkbox %}
-                                                                <label class="checkbox-inline"><input type="checkbox"
-                                                                                                      class="checkbox{{ item.id }}"
-                                                                                                      value="{{ option.option }}">{{ option.option }}
-                                                                </label>
+                                                        {% get_multiplechoice_options_length multiplechoicetask as length %}
+                                                        {% for option in multiplechoicetask.multiplechoiceoption_set.all %}
+                                                            {% if length > 50 %}
+                                                                {% if multiplechoicetask.checkbox %}
+                                                                    <div class="checkbox">
+                                                                        <label><input
+                                                                                type="checkbox"
+                                                                                class="checkbox{{ taskorder.item.id }}"
+                                                                                value="{{ option.option }}">{{ option.option }}
+                                                                        </label>
+                                                                    </div>
+                                                                {% else %}
+                                                                    <div class="radio">
+                                                                        <label><input type="radio"
+                                                                                      value="{{ option.option }}"
+                                                                                      class="checkbox{{ taskorder.item.id }}"
+                                                                                      name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
+                                                                    </div>
+                                                                {% endif %}
                                                             {% else %}
-                                                                <label class="radio-inline"><input type="radio"
-                                                                                                   value="{{ option.option }}"
-                                                                                                   class="checkbox{{ item.id }}"
-                                                                                                   name="{{ forloop.parentloop.counter }}choices{{ item.id }}">{{ option.option }}
-                                                                </label>
+                                                                {% if multiplechoicetask.checkbox %}
+                                                                    <label class="checkbox-inline"><input
+                                                                            type="checkbox"
+                                                                            class="checkbox{{ taskorder.item.id }}"
+                                                                            value="{{ option.option }}">{{ option.option }}
+                                                                    </label>
+                                                                {% else %}
+                                                                    <label class="radio-inline"><input type="radio"
+                                                                                                       value="{{ option.option }}"
+                                                                                                       class="checkbox{{ taskorder.item.id }}"
+                                                                                                       name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
+                                                                    </label>
+                                                                {% endif %}
                                                             {% endif %}
                                                         {% endfor %}
                                                     </div>
@@ -304,9 +348,11 @@
                                                     <h4>{{ inputfield.question }}</h4>
                                                     <form class="form-horizontal">
                                                         {% for inputs in inputfield.inputfield_set.all %}
-                                                            <div class="form-group" style="margin-bottom: 0px;"><label
-                                                                    style="text-align: left; padding-left: 15px; height: auto"
-                                                                    class="control-label col-md-2">{{ inputs.title }}</label>
+                                                            <div class="form-group"
+                                                                 style="margin-bottom: {% get_margin inputs.fraction %}px;">
+                                                                <label
+                                                                        style="text-align: left; padding-left: 15px; height: auto"
+                                                                        class="control-label col-md-2">{{ inputs.title }}</label>
                                                                 <div class="col-md-{{ inputs.inputlength }}"
                                                                      style="padding-right: 15px; height: auto"><input
                                                                         type="number"
@@ -319,7 +365,9 @@
                                                             </div>
                                                         {% endfor %}
                                                     </form>
-                                                    <hr>
+                                                    {% if not forloop.last or item.task.reasoning %}
+                                                        <hr>
+                                                    {% endif %}
                                                 {% endfor %}
                                             </div>
                                         {% endif %}
@@ -403,7 +451,7 @@
                                 <div id="applet_container{{ forloop.counter }}"></div>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 splitdiv">
-                                <div class="panel panel-default">
+                                <div class="panel panel-default" style="box-shadow: none;">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ taskorder.item.id }}" style="cursor:pointer;">
                                             {% if taskorder.item.task.variableTask %}
@@ -437,19 +485,39 @@
                                                             <label for=multipleChoice>Svaralternativer:</label>
                                                         {% endif %}
                                                         <br>
-                                                        {% get_multiplechoice_options multiplechoicetask as options %}
-                                                        {% for option in options %}
-                                                            {% if multiplechoicetask.checkbox %}
-                                                                <label class="checkbox-inline"><input type="checkbox"
-                                                                                                      class="checkbox{{ taskorder.item.id }}"
-                                                                                                      value="{{ option.option }}">{{ option.option }}
-                                                                </label>
+                                                        {% get_multiplechoice_options_length multiplechoicetask as length %}
+                                                        {% for option in multiplechoicetask.multiplechoiceoption_set.all %}
+                                                            {% if length > 50 %}
+                                                                {% if multiplechoicetask.checkbox %}
+                                                                    <div class="checkbox">
+                                                                        <label><input
+                                                                                type="checkbox"
+                                                                                class="checkbox{{ taskorder.item.id }}"
+                                                                                value="{{ option.option }}">{{ option.option }}
+                                                                        </label>
+                                                                    </div>
+                                                                {% else %}
+                                                                    <div class="radio">
+                                                                        <label><input type="radio"
+                                                                                      value="{{ option.option }}"
+                                                                                      class="checkbox{{ taskorder.item.id }}"
+                                                                                      name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
+                                                                    </div>
+                                                                {% endif %}
                                                             {% else %}
-                                                                <label class="radio-inline"><input type="radio"
-                                                                                                   value="{{ option.option }}"
-                                                                                                   class="checkbox{{ taskorder.item.id }}"
-                                                                                                   name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
-                                                                </label>
+                                                                {% if multiplechoicetask.checkbox %}
+                                                                    <label class="checkbox-inline"><input
+                                                                            type="checkbox"
+                                                                            class="checkbox{{ taskorder.item.id }}"
+                                                                            value="{{ option.option }}">{{ option.option }}
+                                                                    </label>
+                                                                {% else %}
+                                                                    <label class="radio-inline"><input type="radio"
+                                                                                                       value="{{ option.option }}"
+                                                                                                       class="checkbox{{ taskorder.item.id }}"
+                                                                                                       name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
+                                                                    </label>
+                                                                {% endif %}
                                                             {% endif %}
                                                         {% endfor %}
                                                     </div>
@@ -463,23 +531,27 @@
                                                     <h4>{{ inputfield.question }}</h4>
                                                     <form class="form-horizontal">
                                                         {% for inputs in inputfield.inputfield_set.all %}
-                                                            <div class="form-group" style="margin-bottom: 0px;"><label
-                                                                    style="text-align: left; padding-left: 15px; height: auto"
-                                                                    class="control-label col-md-2">{{ inputs.title }}:</label>
+                                                            <div class="form-group"
+                                                                 style="margin-bottom: {% get_margin inputs.fraction %}px;">
+                                                                <label
+                                                                        style="text-align: left; padding-left: 15px; height: auto"
+                                                                        class="control-label col-md-2">{{ inputs.title }}:</label>
                                                                 <div class="col-md-{{ inputs.inputlength }}"
                                                                      style="padding-right: 15px; height: auto"><input
                                                                         type="number"
                                                                         data-inputnr="{{ inputs.inputnr }}"
                                                                         data-counter="{{ forloop.parentloop.parentloop.counter }}"
                                                                         class="form-control inputs">
-                                                                    {% if inputs.fraction %}
+                                                                    {% if inputs.fraction or taskorder.item.task.reasoning %}
                                                                         <hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black;">
                                                                     {% endif %}
                                                                 </div>
                                                             </div>
                                                         {% endfor %}
                                                     </form>
-                                                    <hr>
+                                                    {% if not forloop.last %}
+                                                        <hr>
+                                                    {% endif %}
                                                 {% endfor %}
                                             </div>
                                         {% endif %}
@@ -502,7 +574,7 @@
                         {% else %}
                             <div class="col-md-2 fulldiv"></div>
                             <div class="col-md-8 col-sm-12 col-xs-12 fulldiv">
-                                <div class="panel panel-default">
+                                <div class="panel panel-default" style="box-shadow: none;">
                                     <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ taskorder.item.id }}">
                                             <h4>{{ taskorder.item.task.text | safe }}</h4>
@@ -531,19 +603,39 @@
                                                             <label for=multipleChoice>Svaralternativer:</label>
                                                         {% endif %}
                                                         <br>
-                                                        {% get_multiplechoice_options multiplechoicetask as options %}
-                                                        {% for option in options %}
-                                                            {% if multiplechoicetask.checkbox %}
-                                                                <label class="checkbox-inline"><input type="checkbox"
-                                                                                                      class="checkbox{{ taskorder.item.id }}"
-                                                                                                      value="{{ option.option }}">{{ option.option }}
-                                                                </label>
+                                                        {% get_multiplechoice_options_length multiplechoicetask as length %}
+                                                        {% for option in multiplechoicetask.multiplechoiceoption_set.all %}
+                                                            {% if length > 50 %}
+                                                                {% if multiplechoicetask.checkbox %}
+                                                                    <div class="checkbox">
+                                                                        <label><input
+                                                                                type="checkbox"
+                                                                                class="checkbox{{ taskorder.item.id }}"
+                                                                                value="{{ option.option }}">{{ option.option }}
+                                                                        </label>
+                                                                    </div>
+                                                                {% else %}
+                                                                    <div class="radio">
+                                                                        <label><input type="radio"
+                                                                                      value="{{ option.option }}"
+                                                                                      class="checkbox{{ taskorder.item.id }}"
+                                                                                      name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
+                                                                    </div>
+                                                                {% endif %}
                                                             {% else %}
-                                                                <label class="radio-inline"><input type="radio"
-                                                                                                   value="{{ option.option }}"
-                                                                                                   class="checkbox{{ taskorder.item.id }}"
-                                                                                                   name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
-                                                                </label>
+                                                                {% if multiplechoicetask.checkbox %}
+                                                                    <label class="checkbox-inline"><input
+                                                                            type="checkbox"
+                                                                            class="checkbox{{ taskorder.item.id }}"
+                                                                            value="{{ option.option }}">{{ option.option }}
+                                                                    </label>
+                                                                {% else %}
+                                                                    <label class="radio-inline"><input type="radio"
+                                                                                                       value="{{ option.option }}"
+                                                                                                       class="checkbox{{ taskorder.item.id }}"
+                                                                                                       name="{{ forloop.parentloop.counter }}choices{{ taskorder.item.id }}">{{ option.option }}
+                                                                    </label>
+                                                                {% endif %}
                                                             {% endif %}
                                                         {% endfor %}
                                                     </div>
@@ -557,9 +649,11 @@
                                                     <h4>{{ inputfield.question }}</h4>
                                                     <form class="form-horizontal">
                                                         {% for inputs in inputfield.inputfield_set.all %}
-                                                            <div class="form-group" style="margin-bottom: 0px;"><label
-                                                                    style="text-align: left; padding-left: 15px; height: auto"
-                                                                    class="control-label col-md-2">{{ inputs.title }}</label>
+                                                            <div class="form-group"
+                                                                 style="margin-bottom: {% get_margin inputs.fraction %}px;">
+                                                                <label
+                                                                        style="text-align: left; padding-left: 15px; height: auto"
+                                                                        class="control-label col-md-2">{{ inputs.title }}</label>
                                                                 <div class="col-md-{{ inputs.inputlength }}"
                                                                      style="padding-right: 15px; height: auto"><input
                                                                         type="number"
@@ -573,7 +667,9 @@
                                                             </div>
                                                         {% endfor %}
                                                     </form>
-                                                    <hr>
+                                                    {% if not forloop.last or taskorder.item.task.reasoning %}
+                                                        <hr>
+                                                    {% endif %}
                                                 {% endfor %}
                                             </div>
                                         {% endif %}
@@ -1333,7 +1429,7 @@
                 reasoning = tinyMCE.get('reasoning' + itemid).getContent();
 
             }
-            if ($('#optiondiv' + itemid)) {
+            if ($('#optionsdiv' + itemid).exists()) {
                 var length = $('.multipleChoiceAlt' + itemid).length;
                 for (var x = 1; x <= length; x++) {
                     var checked = $('#' + itemid + 'multipleChoiceAlt' + x + ' :input:checked');
@@ -1346,7 +1442,8 @@
                 textanswer2.value = textanswer2.value.slice(0, -7);
 
             }
-            if ($('#inputfieldsdiv' + itemid)) {
+            if ($('#inputfieldsdiv' + itemid).exists()) {
+                alert('test');
                 var answer = "";
                 $('#inputfieldsdiv' + itemid + " .inputs").each(function () {
                     answer += $(this).val() + "|||||";
@@ -1416,6 +1513,7 @@
                 base642.value = base64;
             }
         }
+
         $('#submitbutton').click();
         submit = true;
     }
