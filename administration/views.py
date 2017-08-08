@@ -17,6 +17,8 @@ from maths.models import Test, TaskCollection
 from django.db.models import Q
 from django.http import Http404
 
+from django.core.mail import EmailMessage
+
 
 class AdministratorCheck(views.UserPassesTestMixin):
     """
@@ -512,7 +514,21 @@ class PersonCreateView(RoleCheck, generic.CreateView):
             person.is_staff = True
         username = Person.create_username(person)
         person.username = username
-        person.set_password('ntnu123')
+        mail = []
+        if person.email:
+            mail.append(person.email)
+            password = Person.objects.make_random_password()
+            person.set_password(password)
+            subject = "En bruker på Matistikk har blitt opprettet for deg med følgende informasjon. <br>" + \
+                      "Brukernavn: " + person.username + "<br>" + \
+                      "Passord: " + password + "<br>" + \
+                      "<br><br>" + \
+                      "For å logge inn gå til http://hv-6069.idi.ntnu.no"
+            msg = EmailMessage('Velkommen til Matistikk', subject, 'ntnu.matistikk@gmail.com', mail)
+            msg.content_subtype = "html"
+            msg.send()
+        else:
+            person.set_password('ntnu123')
         person.save()
         messages.success(self.request, person.get_full_name() + " ble opprettet med brukernavnet: " + person.username)
         return super(PersonCreateView, self).form_valid(form)
