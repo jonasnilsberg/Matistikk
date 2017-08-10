@@ -438,7 +438,121 @@ ul.scrollbar::-webkit-scrollbar {
     height: -webkit-calc(100% - 55px); /* google, safari */
     height: -moz-calc(100% - 55px); /* firefox */
 }
+
 .answerbody {
     max-height: 75%;
     overflow: auto;
+}
+
+.tasktable tbody:before {
+    content: "-";
+    display: block;
+    line-height: 10px;
+    color: transparent;
+}
+
+.zeroMargin {
+    margin: 0px;
+}
+
+.directory {
+    cursor: pointer;
+}
+
+.breadcrumb-item {
+    cursor: pointer;
+}
+
+.breadcrumb-item:hover {
+    color: black;
+}
+
+.mainBody {
+    overflow: auto;
+}
+
+.table > tbody > tr.active > td {
+    background: #337ab7;
+    color: #fff;
+}
+
+/* Flytte fil modal */
+
+.list-group.list-group-root {
+    padding: 0;
+    overflow: hidden;
+}
+
+.list-group.list-group-root .list-group {
+    margin-bottom: 0;
+}
+
+.list-group.list-group-root .list-group-item {
+    border-radius: 0;
+    border-width: 1px 0 0 0;
+}
+
+.list-group.list-group-root > .list-group-item:first-child {
+    border-top-width: 0;
+}
+
+.list-group.list-group-root > .list-group > .list-group-item {
+    padding-left: 30px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group-item {
+    padding-left: 50px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 70px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 90px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 110px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 130px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 150px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 170px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 190px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 210px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 230px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 230px;
+}
+
+.list-group-item .glyphicon {
+    margin-right: 5px;
+}
+
+/* Flytte fil modal slutt */
+
+.not-active {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.6;
+
 }

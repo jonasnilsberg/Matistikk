@@ -22,6 +22,36 @@ class Category(models.Model):
         return self.category_title
 
 
+class Directory(models.Model):
+    name = models.CharField(max_length=500)
+    parent_directory = models.ForeignKey('self', blank=True, null=True)
+    date_created = models.DateTimeField()
+    author = models.ForeignKey(Person, null=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        path_tab = self.path()
+        path = ""
+        for name in path_tab:
+            path += name + " / "
+        return path + self.name
+
+    def path(self):
+        path = []
+        parent = True
+        if self.parent_directory:
+            parent_directory = self.parent_directory
+            while parent:
+                if parent_directory:
+                    path.insert(0, parent_directory.name)
+                    parent_directory = parent_directory.parent_directory
+                else:
+                    parent = False
+        return path
+
+
 class Task(models.Model):
     """The base of a task
 
@@ -43,6 +73,7 @@ class Task(models.Model):
     variableDescription = models.CharField(max_length=10000, null=True, blank=True)
     author = models.ForeignKey(Person)
     category = models.ManyToManyField(Category)
+    directory = models.ForeignKey(Directory)
 
     class Meta:
         ordering = ['-id']

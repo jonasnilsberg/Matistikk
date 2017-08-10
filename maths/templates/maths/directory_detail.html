@@ -1,0 +1,1171 @@
+<!--Extends the base.html file that includes different imports and the navbar-->
+{% extends 'matistikk/base.html' %}
+<!--Loads the tag library-->
+{% load bootstrap3 %}
+<!-- loads the static files of the project-->
+{% load staticfiles %}
+{% load static %}
+{% load maths_extras %}
+<!-- Loads CSS and javascript-->
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<!--Display django.contrib.messages as Bootstrap alerts-->
+{% bootstrap_messages %}
+{% block head %}
+    <!--Imports bootstrap multiselect-->
+    <script type="text/javascript" src="{% static 'maths/js/bootstrap-multiselect.js' %}"></script>
+    <!--Imports bootstrap multiselect css-->
+    <link rel="stylesheet" href="{% static 'maths/css/bootstrap-multiselect.css' %}" type="text/css"/>
+    <!--Imports bootbox-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <!--Imports tinymce-->
+    <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <!--Imports mathquill-->
+    <script type="text/javascript"
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+    <script>
+        var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
+        tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
+
+    </script>
+
+
+
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+    <link href="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.css" rel="stylesheet"
+          type="text/css"/>
+
+    <script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.js"
+            type="text/javascript"></script>
+
+    <script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.ui.position.min.js"
+            type="text/javascript"></script>
+
+    <script src="https://swisnl.github.io/jQuery-contextMenu/js/main.js" type="text/javascript"></script>
+
+{% endblock %}
+
+{% block body %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="col-md-10"><h2 style="margin-bottom: 10px; margin-top: 0px">Oppgaveoversikt</h2></div>
+            <div class="col-md-2">
+                <a class="btn btn-primary pull-right" href="{% url 'maths:taskList' %}"><i class="fa fa-list"
+                                                                                           aria-hidden="true"></i>
+                    Se alle oppgaver</a>
+            </div>
+
+            <div class="row">
+                <div class="col-md-10" style="padding-right: 10px">
+                    <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                        <input type="text" class="form-control" id="search"
+                               onkeyup="taskSearch('tasktable')"
+                               placeholder="Søk etter oppgave...">
+                    </div>
+                </div>
+                <div class="col-md-2" style="padding-left: 10px;">
+                    <select class="hidden" id="selectCategory" multiple="multiple">
+                        {% for category in categories %}
+                            <option id="{{ category.id }}" value="{{ category }}">{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            {% bootstrap_messages %}
+            <div class="col-md-3">
+                <ol class="breadcrumb" style="margin-bottom: 10px">
+                    {% if  breadcrumbs %}
+                        {% for breadcrumb in breadcrumbs %}
+                            {% if not forloop.last %}
+                                <li data-value="{{ breadcrumb.id }}" class="breadcrumb-item">
+                                    {{ breadcrumb.name }}
+                                </li>
+                            {% else %}
+                                <li data-value="{{ breadcrumb.id }}" class="breadcrumb-item active">
+                                    {{ breadcrumb.name }}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <li data-value="{{ directory.id }}" class="breadcrumb-item active">
+                            Matistikk
+                        </li>
+                    {% endif %}
+
+                </ol>
+                <div class="list-group directoryList zeroMargin" style="overflow: auto">
+                    {% for sub_directory in sub_directories %}
+                        <a data-id="{{ sub_directory.id }}" class="list-group-item directory context-menu-one"><i
+                                class="fa fa-folder"
+                                aria-hidden="true"></i> {{ sub_directory.name }}</a>
+                    {% empty %}
+                        <div class="well text-center">Denne mappen inneholder ingen mapper.</div>
+                    {% endfor %}
+                </div>
+
+            </div>
+            <div class="col-md-9 mainBody" style="padding-left: 10px">
+                <table class="table tasktable table-striped table-responsive" id="tasktable" style="margin-bottom: 0px">
+                    <thead>
+                    <tr>
+                        <th style="border: none; width: 30px;"></th>
+                        <th class="col-sm-1" style="border: none">ID</th>
+                        <th class="col-sm-3" style="border: none">Oppgavenavn</th>
+                        <th class="col-sm-3" style="border: none">Kategori</th>
+                        <th class="col-sm-2" style="border: none">Laget av</th>
+                        <th class="col-md-4" style="border: none">Alternativer</th>
+                    </tr>
+
+                    </thead>
+                    <tbody class="tasktablebody">
+                    {% for task in tasks %}
+                        <tr id="task{{ task.id }}" class="context-menu-two">
+                            <td><i class="fa fa-file" aria-hidden="true"></i></td>
+                            <td>{{ task.id }}</td>
+                            <td>{{ task.title }}</td>
+                            <td>
+                                {% for category in task.category.all %}
+                                    {% if forloop.last %}
+                                        {{ category }}
+                                    {% else %}
+                                        {{ category }} -
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>{{ task.author.username }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group" aria-label="...">
+                                    <button type="button" value="{{ task.id }}" class="btn btn-info items"
+                                            {% if not task.variableTask %}
+                                            disabled="disabled"
+                                            {% endif %}><i
+                                            class="fa fa-sitemap" aria-hidden="true"></i> Items
+                                    </button>
+                                    <a class="btn btn-info updatetask"
+                                       href="{% url 'maths:taskUpdate' task.id %}" id="update{{ task.id }}"><span
+                                            class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater
+                                    </a>
+                                    <button type="button" value="{{ task.id }}" class="btn btn-info previewtask"
+                                            onclick="previewTask(this)"><span
+                                            class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% if not tasks %}
+                    <div class="well noTasks text-center">Denne mappen inneholder ingen oppgaver.</div>
+                {% endif %}
+            </div>
+
+        </div> <!-- #Panel-body -->
+        <div class="panel-footer">
+            <button class="btn btn-primary createFolder"><span
+                    class="fa fa-folder" aria-hidden="true"></span> Opprett ny mappe
+            </button>
+            <button class="btn btn-primary createTask"><span
+                    class="glyphicon glyphicon-plus" aria-hidden="true"></span> Opprett ny oppgave
+            </button>
+            <button class="btn btn-danger pull-right" data-toggle='modal' data-target="#deleteDirectoryModal">
+                <i class="fa fa-trash-o" aria-hidden="true"></i> Slett mappe
+            </button>
+        </div> <!-- #Panel-footer -->
+    </div>
+    <form class="hidden">
+        {% csrf_token %}
+        <input type="text">
+    </form>
+
+    <script>
+        /**
+         * This function runs when a ajax-call is sent.
+         */
+        $(document).ajaxSend(function (event, request, settings) {
+            $('#loading-indicator').show();
+        });
+        /**
+         * This function runs when the ajax-call is completed.
+         */
+        $(document).ajaxComplete(function (event, request, settings) {
+            $('#loading-indicator').hide();
+            $('#previewBody').removeClass('hidden');
+        });
+        $(document).ready(function () {
+            var headerHeight = $('.panel-heading').outerHeight();
+            var navbarHeight = $('.navbar').outerHeight();
+            var footerHeight = $('.panel-footer').outerHeight();
+            var totalHeight = headerHeight + navbarHeight + footerHeight;
+            var screenHeight = window.innerHeight;
+            var bodyHeight = screenHeight - totalHeight - 30;
+            var directoryListHeight = bodyHeight - $('.breadcrumb').outerHeight() - 10;
+            $('.mainBody').css('height', bodyHeight + 'px');
+            $('.directoryList').css('max-height', directoryListHeight + 'px');
+            $(function () {
+                $.contextMenu({
+                    selector: '.context-menu-one',
+                    callback: function (key, options) {
+                        var id = $(this).data('id');
+                        var name = $(this).text();
+                        if (key === "go") {
+                            openDirectory(id, name, false);
+                        } else if (key === "edit") {
+                            bootbox.prompt({
+                                title: "<h3 class='text-center zeroMargin'>Endre navn</h3>",
+                                placeholder: 'Skriv inn det nye navnet på mappen',
+                                value: $('#taskTitle').text(),
+                                buttons: {
+                                    cancel: {
+                                        label: '<i class="fa fa-times"></i> Avbryt'
+                                    },
+                                    confirm: {
+                                        label: '<i class="fa fa-check"></i> Lagre'
+                                    }
+                                },
+                                callback: function (result) {
+                                    if (result) {
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: '{% url 'maths:directoryEdit' %}',
+                                            data: {
+                                                'id': id,
+                                                'newName': result,
+                                                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                                            },
+                                            dataType: 'json',
+                                            success: function (json) {
+                                                result = '<i class="fa fa-folder" aria-hidden="true"></i> ' + result;
+                                                $(".directory[data-id='" + json.id + "']").html(result);
+                                            },
+                                            error: function (xhr) {
+                                                alert(xhr.responseText);
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        } else if (key === "move") {
+                            createMoveModal(true);
+                            $('#moveModal').modal('show');
+                        } else if (key === "delete") {
+                            $('#deleteDirectoryModal').modal('show');
+                            var deleteBtn = $('#deleteDirBtn');
+                            deleteBtn.data('value', id);
+                            deleteBtn.data('position', 'directory');
+                        }
+                    },
+                    items: {
+                        "go": {name: "Åpne", icon: "fa-folder-open-o"},
+                        "edit": {name: "Endre navn", icon: "edit"},
+                        "move": {name: "Flytt", icon: "fa-arrows"},
+                        "delete": {name: "Slett", icon: "delete"}
+
+                    }
+                });
+            });
+            $(function () {
+                $.contextMenu({
+                    selector: '.context-menu-two',
+                    zIndex: 9999,
+                    callback: function (key, options) {
+                        if (key === "preview") {
+                            $(this).find('.previewtask').click();
+                        } else if (key === "update") {
+                            window.location.href = $(this).find('.updatetask').attr('href');
+                        } else if (key === "move") {
+                            createMoveModal(false);
+                            $('#moveModal').modal('show');
+                        }
+                    },
+                    items: {
+                        "preview": {name: "Forhåndsvis", icon: "fa-eye"},
+                        "update": {name: "Oppdater", icon: "edit"},
+                        "sep1": "---------",
+                        "move": {name: "Flytt", icon: "fa-arrows"}
+                    }
+                });
+            });
+            $(function () {
+                $.contextMenu({
+                    selector: '.folder',
+                    callback: function (key, options) {
+                        var id = $(this).data('id');
+                        var name = $(this).text();
+                        if (key === "go") {
+                            var divID = $(this).attr('href');
+                            var collapsed = $(divID).attr('aria-expanded');
+                            if (!collapsed || collapsed === "false") {
+                                $(this).click();
+                            }
+                        } else if (key === "edit") {
+                            bootbox.prompt({
+                                size: 'small',
+                                title: "<h3 class='text-center zeroMargin'>Endre navn</h3>",
+                                placeholder: 'Skriv inn det nye navnet på mappen',
+                                value: $('#taskTitle').text(),
+                                buttons: {
+                                    cancel: {
+                                        label: '<i class="fa fa-times"></i> Avbryt'
+                                    },
+                                    confirm: {
+                                        label: '<i class="fa fa-check"></i> Lagre'
+                                    }
+                                },
+                                callback: function (result) {
+                                    if (result) {
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: '{% url 'maths:directoryEdit' %}',
+                                            data: {
+                                                'id': id,
+                                                'newName': result,
+                                                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                                            },
+                                            dataType: 'json',
+                                            success: function (json) {
+                                                result = '<i class="fa fa-folder" aria-hidden="true"></i> ' + result;
+                                                $(".directory[data-id='" + json.id + "']").html(result);
+                                                result = '<i class="glyphicon glyphicon-chevron-right"></i> ' + result;
+                                                $(".folder[data-id='" + json.id + "']").html(result);
+                                            },
+                                            error: function (xhr) {
+                                                alert(xhr.responseText);
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                            var modalHeight = $('#moveModal .modal-dialog').height();
+                            var bootboxModal = $('.bootbox .modal-dialog');
+                            var bootboxHeight = bootboxModal.height();
+                            var height = (modalHeight - bootboxHeight) / 2;
+                            bootboxModal.css('margin-top', height + 'px');
+                        } else if (key === "delete") {
+                            bootbox.confirm({
+                                size: 'small',
+                                message: "Er du sikker på at du vil slette " + name + "?",
+                                buttons: {
+                                    cancel: {
+                                        label: '<i class="fa fa-times"></i> Avbryt'
+                                    },
+                                    confirm: {
+                                        label: '<i class="fa fa-trash"></i> Slett',
+                                        className: 'btn-danger'
+                                    }
+                                },
+                                callback: function (result) {
+                                    if (result) {
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: '{% url 'maths:directoryDelete' %}',
+                                            data: {
+                                                'id': id,
+                                                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                                            },
+                                            dataType: 'json',
+                                            success: function (json) {
+                                                $(".directory[data-id='" + id + "']").remove();
+                                                $(".folder[data-id='" + id + "']").remove();
+                                                $("#folder-" + id).remove();
+                                            },
+                                            error: function (xhr) {
+                                                alert(xhr.responseText);
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                            var modalHeight = $('#moveModal .modal-dialog').height();
+                            var bootboxModal = $('.bootbox .modal-dialog');
+                            var bootboxHeight = bootboxModal.height();
+                            var height = (modalHeight - bootboxHeight) / 2;
+                            bootboxModal.css('margin-top', height + 'px');
+                        }
+                    },
+                    items: {
+                        "go": {name: "Åpne", icon: "fa-folder-open-o"},
+                        "edit": {name: "Endre navn", icon: "edit"},
+                        "delete": {name: "Slett", icon: "fa-trash"}
+                    }
+                });
+            });
+            /**
+             * Sets up the multiselect widget for the category filtering.
+             */
+            $('#selectCategory').multiselect({
+                buttonClass: 'form-control',
+                onChange: function (option, checked, select) {
+                    var selected = checked;
+                    $('#tasktable > tbody  > tr').each(function () {
+                        var show = true;
+                        var taskCategory = $(this).find("td:eq(3)").html();
+                        $('#selectCategory option:selected').map(function (a, item) {
+                            if (taskCategory.indexOf(item.value) == -1) {
+                                show = false
+                            }
+                        });
+                        if (show == false) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+
+                },
+                buttonText: function (options, select) {
+                    if (options.length === 0) {
+                        return 'Velg Kategori';
+                    }
+                    else if (options.length > 3) {
+                        return 'Mer enn 3 alternativer valgt';
+                    }
+                    else {
+                        var labels = [];
+                        options.each(function () {
+                            if ($(this).attr('label') !== undefined) {
+                                labels.push($(this).attr('label'));
+                            }
+                            else {
+                                labels.push($(this).html());
+                            }
+                        });
+                        return labels.join(', ') + '';
+                    }
+                }
+            });
+            $(".alert-success").fadeTo(5000, 500).slideUp(500, function () {
+                $('.alert-success').slideUp(500);
+            });
+            var height = window.innerHeight - 60;
+            $('#moveModal .modal-content').css('max-height', height + "px");
+            var bodyHeight = height - 55 - 64;
+            $('#moveModal .modal-body').css('max-height', bodyHeight + "px");
+        });
+        $('.directoryList').on('contextmenu', '.context-menu-one', function () {
+            $('.context-menu-two').removeClass('active');
+            var row = $(this);
+            if (!row.hasClass('active')) {
+                $('.context-menu-one').removeClass('active');
+                $(this).addClass('active');
+            }
+        });
+        $('.tasktablebody').on('contextmenu', '.context-menu-two', function () {
+            $('.context-menu-one').removeClass('active');
+            var row = $(this);
+            if (!row.hasClass('active')) {
+                $('.context-menu-two').removeClass('active');
+                $(this).addClass('active');
+            }
+        });
+
+        function createMoveModal(directory) {
+            $.ajax({
+                type: 'GET',
+                data: {
+                    'root': true,
+                    'id': []
+                },
+                url: '{% url 'maths:directoryMove' %}',
+                dataType: 'json',
+                success: function (json) {
+                    var id_arr = [];
+                    $('.directory.active').each(function () {
+                        id_arr.push($(this).data('id'));
+                    });
+                    var arr = [];
+                    arr.push('<a href="#folder');
+                    arr.push('-');
+                    arr.push(json.root_id);
+                    arr.push('" class="list-group-item folder active" data-toggle="collapse" data-id="');
+                    arr.push(json.root_id);
+                    arr.push('"><i class="glyphicon glyphicon-chevron-down"></i> <i class="fa fa-folder" aria-hidden="true"></i> ');
+                    arr.push(json.root_name);
+                    arr.push('</a>');
+                    arr.push('<div class="list-group collapse in" id="folder');
+                    arr.push('-');
+                    arr.push(json.root_id);
+                    arr.push('">');
+                    $.each(json.directories, function (i, key) {
+                        arr.push('<a href="#folder');
+                        arr.push('-');
+                        arr.push(key.id);
+                        if (directory) {
+                            if ($.inArray(key.id, id_arr) !== -1) {
+                                arr.push('" class="list-group-item folder not-active" data-toggle="collapse" data-id="');
+                            } else {
+                                arr.push('" class="list-group-item folder" data-toggle="collapse" data-id="');
+                            }
+                        } else {
+                            arr.push('" class="list-group-item folder" data-toggle="collapse" data-id="');
+                        }
+                        arr.push(key.id);
+                        arr.push('"><i class="glyphicon glyphicon-chevron-right"></i> <i class="fa fa-folder" aria-hidden="true"></i> ');
+                        arr.push(key.name);
+                        arr.push('</a>');
+                        arr.push('<div class="list-group collapse" id="folder');
+                        arr.push('-');
+                        arr.push(key.id);
+                        arr.push('">');
+                        $.each(key.child, function (i, child_key) {
+                            arr.push('<a href="#folder');
+                            arr.push('-');
+                            arr.push(child_key.id);
+                            if (directory) {
+                                if ($.inArray(child_key.id, id_arr) !== -1) {
+                                    if (child_key.parent) {
+                                        arr.push('" class="list-group-item folder not-active parent" data-id="');
+                                    } else {
+                                        arr.push('" class="list-group-item folder not-active" data-id="');
+                                    }
+                                } else {
+                                    if (child_key.parent) {
+                                        arr.push('" class="list-group-item folder parent" data-id="');
+                                    } else {
+                                        arr.push('" class="list-group-item folder" data-id="');
+                                    }
+                                }
+                            } else {
+                                if (child_key.parent) {
+                                    arr.push('" class="list-group-item folder parent" data-id="');
+                                } else {
+                                    arr.push('" class="list-group-item folder" data-id="');
+                                }
+                            }
+                            arr.push(child_key.id);
+                            arr.push('"data-toggle="collapse">' +
+                                '<i class="glyphicon glyphicon-chevron-right"></i> <i class="fa fa-folder" aria-hidden="true"></i> ');
+                            arr.push(child_key.name);
+                            arr.push('</a>');
+                            arr.push('<div class="list-group collapse" id="folder');
+                            arr.push('-');
+                            arr.push(child_key.id);
+                            arr.push('">');
+                            arr.push('</div>');
+                        });
+                        arr.push('</div>');
+                    });
+                    arr.push('</div>');
+                    $('.files').empty().append(arr.join(''));
+
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        $('.createFolder').click(function () {
+            bootbox.prompt({
+                title: "<h3 class='text-center zeroMargin'>Opprett ny mappe</h3>",
+                placeholder: 'Skriv inn navnet på mappen',
+                value: $('#taskTitle').text(),
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Avbryt'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Lagre'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        var parent = $('.breadcrumb .active').data('value');
+                        $.ajax({
+                            type: 'POST',
+                            url: '{% url 'maths:directoryRoot' %}',
+                            data: {
+                                'id': 0,
+                                'parent': parent,
+                                'name': result,
+                                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                            },
+                            dataType: 'json',
+                            success: function (json) {
+                                $('.noDirectories').remove();
+                                var directory = '<a data-id="' + json.id + '" class="list-group-item directory context-menu-one">' +
+                                    '<i class="fa fa-folder" aria-hidden="true"></i> ' + result + '</a>';
+                                $('.directoryList').append(directory);
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        $('.createTask').click(function () {
+            var id = $('.breadcrumb-item.active').data('value');
+            var href = "{% url "maths:createTaskDirectory" 12345 %}".replace(/12345/, id);
+            window.location.replace(href);
+        });
+
+        function deleteDirectory(elem) {
+            var id = "";
+            var value = $(elem).data('value');
+            var position = $(elem).data('position');
+            if (value === "0") {
+                id = $('.breadcrumb-item').last().data('value');
+            } else {
+                id = value;
+            }
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'maths:directoryDelete' %}',
+                data: {
+                    'id': id,
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: 'json',
+                success: function (json) {
+                    if (json.deleted) {
+                        if (position === "breadcrumb") {
+                            $(".breadcrumb").find("[data-value='" + json.parent + "']").click();
+                        } else if (position === "directory") {
+                            $('.directory.active').remove();
+                        }
+                        $('#deleteDirectoryModal').modal('hide');
+                    } else {
+                        $('.deleteWarning').removeClass('hidden');
+                        $(".deleteWarning").fadeTo(10000, 500).slideUp(500, function () {
+                            $('.deleteWarning').slideUp(500);
+                        });
+                    }
+
+
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+            $(elem).data('value', "0");
+            $(elem).data('position', "breadcrumb");
+        }
+
+        $('.directoryList').on('click', '.directory', function (event) {
+            $('.context-menu-two').removeClass('active');
+
+            if (event.ctrlKey || event.metaKey) {
+                if ($(this).hasClass('active')) {
+                    $(this).removeClass('active');
+                } else {
+                    $(this).addClass('active');
+                }
+            } else if (event.shiftKey) {
+                var last = $('.directory.active').last();
+                if (last.prevAll().filter(this).length) {
+                    $(this).nextUntil(last).add(this).addClass('active');
+                } else {
+                    last.nextUntil(this).add(this).addClass('active');
+                }
+            }
+            else {
+                $('.list-group-item').removeClass('active');
+                $(this).addClass('active');
+            }
+        });
+        $('.tasktablebody').on('click', '.context-menu-two', function (event) {
+            $('.directory').removeClass('active');
+            if (event.ctrlKey || event.metaKey) {
+                if ($(this).hasClass('active')) {
+                    $(this).removeClass('active');
+                } else {
+                    $(this).addClass('active');
+                }
+            } else if (event.shiftKey) {
+                var last = $('.context-menu-two.active').last();
+                if (last.prevAll().filter(this).length) {
+                    $(this).nextUntil(last).add(this).addClass('active');
+                } else {
+                    last.nextUntil(this).add(this).addClass('active');
+                }
+            } else {
+                $('.context-menu-two').removeClass('active');
+                $(this).addClass('active');
+            }
+
+
+        });
+        $(".tasktablebody, .directoryList").mousedown(function (e) {
+            if (e.ctrlKey || e.shiftKey) {
+                e.preventDefault();
+            }
+        });
+
+
+        $('.directoryList').on('dblclick', '.directory', function () {
+            var id = $(this).data('id');
+            var name = $(this).text();
+            openDirectory(id, name, false);
+
+        });
+        $('.breadcrumb').on('click', '.breadcrumb-item', function () {
+            var directory = $(this);
+            if (!directory.hasClass('active')) {
+                var id = directory.data('value');
+                var name = directory.text();
+                openDirectory(id, name, true);
+            }
+        });
+
+        function openDirectory(id, name, breadcrumbBool) {
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'maths:directoryRoot' %}',
+                data: {
+                    'directory': id
+                },
+                dataType: 'json',
+                success: function (json) {
+                    var sub_directories = json.sub_directories;
+                    var directoryList = $('.directoryList');
+                    directoryList.empty();
+
+                    if (breadcrumbBool) {
+                        var breadCrumbClicked = $(".breadcrumb").find("[data-value='" + id + "']");
+                        breadCrumbClicked.nextAll().remove();
+                        breadCrumbClicked.addClass('active');
+                    } else {
+                        var breadcrumb = $('.breadcrumb');
+                        breadcrumb.find('.active').removeClass('active');
+                        breadcrumb.append('<li data-value="' + id + '" class="breadcrumb-item active">' + name + ' </li>');
+                    }
+                    var breadcrumbHeight = $('.breadcrumb').outerHeight();
+                    var bodyHeight = $('.mainBody').outerHeight();
+                    var listHeight = bodyHeight - breadcrumbHeight - 10;
+                    directoryList.css('max-height', listHeight + 'px');
+                    var dir_arr = [];
+                    if (!sub_directories.length) {
+                        $('.directoryList').append('<div class="well noDirectories text-center">Denne mappen inneholder ingen mapper.</div>')
+                    } else {
+                        $('.noDirectories').remove();
+                    }
+                    $.each(sub_directories, function (i, val) {
+                        dir_arr.push('<a data-id="');
+                        dir_arr.push(val.id);
+                        dir_arr.push('" class="list-group-item context-menu-one directory"><i class="fa fa-folder" aria-hidden="true"></i> ');
+                        dir_arr.push(val.name);
+                        dir_arr.push('</a>');
+                    });
+                    directoryList.append(dir_arr.join(''));
+                    var tasks = json.tasks;
+                    var task_arr = [];
+                    var tbody = $('#tasktable > tbody');
+                    tbody.empty();
+                    if (!tasks.length) {
+                        if (!$('.noTasks').length) {
+                            $('.mainBody').append('<div class="well noTasks text-center">Denne mappen inneholder ingen oppgaver.</div>');
+                        }
+                    } else {
+                        $('.noTasks').remove();
+                    }
+                    $.each(tasks, function (i, val) {
+                        task_arr.push('<tr class="context-menu-two"><td><i class="fa fa-file" aria-hidden="true"></i></td><td>');
+                        task_arr.push(val.id);
+                        task_arr.push('</td><td>');
+                        task_arr.push(val.title);
+                        task_arr.push('</td><td>');
+                        task_arr.push(val.categories);
+                        task_arr.push('</td><td>');
+                        task_arr.push(val.author);
+                        task_arr.push('</td><td>');
+                        task_arr.push('<div class="btn-group btn-group-sm" role="group" aria-label="..."><button type="button" value="');
+                        task_arr.push(val.id);
+                        task_arr.push('" class="btn btn-info items"');
+                        if (!val.variableTask) {
+                            task_arr.push('disabled="disabled"');
+                        }
+                        task_arr.push('><i class="fa fa-sitemap" aria-hidden="true"></i> Items </button><a class="btn btn-info updatetask" href="');
+                        task_arr.push("{% url 'maths:taskUpdate' 12345 %}".replace(/12345/, val.id));
+                        task_arr.push('"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater </a><button type="button" value="');
+                        task_arr.push(val.id);
+                        task_arr.push('" class="btn btn-info previewtask" onclick="previewTask(this)"><span class="glyphicon glyphicon-eye-open"></span> Forhåndsvis </button></div>');
+                        task_arr.push('</td></tr>');
+                    });
+                    tbody.append(task_arr.join(''));
+                    var categories = json.categories;
+                    var selectCategories = $('#selectCategory');
+                    selectCategories.empty();
+                    var cat_arr = []
+                    $.each(categories, function (i, val) {
+                        cat_arr.push('<option id="');
+                        cat_arr.push(val.id);
+                        cat_arr.push(" value=");
+                        cat_arr.push(val.name);
+                        cat_arr.push('">');
+                        cat_arr.push(val.name);
+                        cat_arr.push('</option>');
+                    });
+                    selectCategories.append(cat_arr.join(''));
+                    $("#selectCategory").multiselect('rebuild');
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        $('.items').click(function () {
+            var id = $(this).val();
+            var url = "{% url 'maths:taskDetail' task_pk=1234 %}".replace(/1234/, id);
+            window.location.href = url;
+        });
+
+        /**
+         * This function matches the text in the search field with the content in the table given in the parameter.
+         * and removes rows that don't match the search criteria.
+         * @param inputTable
+         */
+        function taskSearch(inputTable) {
+            var input, filter, table, tr, td, i, td1, td2, td3;
+            input = document.getElementById("search");
+            filter = input.value.toUpperCase();
+            table = document.getElementById(inputTable);
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
+                td3 = tr[i].getElementsByTagName("td")[3];
+
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1
+                        || td2.innerHTML.toUpperCase().indexOf(filter) > -1 || td3.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+{% endblock %}
+
+{% block modal %}
+    {% include 'matistikk/previewTask.html' %}
+    <div class="modal fade" id="deleteDirectoryModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Bekreft sletting</h4>
+                </div>
+                <div class="modal-body">
+                    Er du sikker på at du vil slette denne mappen?
+                    <div class="alert alert-warning deleteWarning hidden">
+                        <strong>Noe gikk galt!</strong> <br>
+                        Mappen kan ikke slettes vist den inneholder oppgaver eller andre mapper. <br>
+                        Slett eller flytt innholdet i mappen og prøv på nytt.
+                    </div>
+                </div>
+                <div class="modal-footer delete">
+                    <button type="button" data-value="0" data-position="breadcrumb" id="deleteDirBtn"
+                            class="btn btn-danger deleteDirectory" onclick="deleteDirectory(this)"><i
+                            class="fa fa-trash"
+                            aria-hidden="true"></i>
+                        Slett mappe
+                    </button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-sign-out"
+                                                                                          aria-hidden="true"></i>
+                        Avbryt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="moveModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title text-center">Velg mappen de valgte elementene skal flyttes til.</h4>
+                </div>
+                <div class="modal-body" style="overflow: auto">
+                    <div class="just-padding">
+                        <div class="list-group list-group-root well files">
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer delete">
+
+                    <button type="button" class="btn btn-success pull-left moveBtn"><i class="fa fa-arrows"
+                                                                                       aria-hidden="true"></i> Flytt
+                    </button>
+                    <button type="button" class="btn btn-success createFolderMove"><i class="fa fa-plus"
+                                                                                      aria-hidden="true"></i> Ny mappe
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-sign-out"
+                                                                                          aria-hidden="true"></i>
+                        Avbryt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        $('.createFolderMove').click(function () {
+            bootbox.prompt({
+                size: 'small',
+                title: "<h3 class='text-center zeroMargin'>Opprett ny mappe</h3>",
+                placeholder: 'Skriv inn navnet på mappen',
+                value: $('#taskTitle').text(),
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Avbryt'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Lagre'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        var parent = $('.files .active').data('id');
+                        $.ajax({
+                            type: 'POST',
+                            url: '{% url 'maths:directoryRoot' %}',
+                            data: {
+                                'id': 0,
+                                'parent': parent,
+                                'name': result,
+                                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                            },
+                            dataType: 'json',
+                            success: function (json) {
+                                var arr = [];
+                                arr.push('<a href="#folder');
+                                arr.push('-');
+                                arr.push(json.id);
+                                arr.push('" class="list-group-item folder" data-id="');
+                                arr.push(json.id);
+                                arr.push('"data-toggle="collapse">' +
+                                    '<i class="glyphicon glyphicon-chevron-right"></i> <i class="fa fa-folder" aria-hidden="true"></i> ');
+                                arr.push(result);
+                                arr.push('</a>');
+                                arr.push('<div class="list-group collapse" id="folder');
+                                arr.push('-');
+                                arr.push(json.id);
+                                arr.push('">');
+                                arr.push('</div>');
+                                var div = $('#folder-' + parent);
+                                div.append(arr.join(''));
+                                var parentShowing = $('.breadcrumb-item.active').data('value');
+                                if (parent === parentShowing) {
+                                    var dir_arr = [];
+                                    dir_arr.push('<a data-id="');
+                                    dir_arr.push(json.id);
+                                    dir_arr.push('" class="list-group-item directory"><i class="fa fa-folder" aria-hidden="true"></i> ');
+                                    dir_arr.push(result);
+                                    dir_arr.push('</a>');
+                                    $('.directoryList').append(dir_arr.join(''));
+                                }
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    }
+                }
+            });
+            var modalHeight = $('#moveModal .modal-dialog').height();
+            var bootboxModal = $('.bootbox .modal-dialog');
+            var bootboxHeight = bootboxModal.height();
+            var height = (modalHeight - bootboxHeight) / 2;
+            bootboxModal.css('margin-top', height + 'px');
+        });
+        $(function () {
+            $('.files').on('click', '.folder', function () {
+                var id_arr = [];
+                $('.directory.active').each(function () {
+                    id_arr.push($(this).data('id'));
+                });
+                $('.folder').removeClass('active');
+                $(this).addClass('active');
+                $('.glyphicon', this)
+                    .toggleClass('glyphicon-chevron-right')
+                    .toggleClass('glyphicon-chevron-down');
+                var id = $(this).attr('href');
+                var children = $(id).find('.parent');
+                var collapse = $(id).attr('aria-expanded');
+                if (!collapse || collapse == "false") {
+                    $.each(children, function () {
+                        var id = $(this).data('id');
+                        var div = $($(this).attr('href'));
+                        $.ajax({
+                            type: 'GET',
+                            data: {
+                                'root': false,
+                                'id': id
+                            },
+                            url: '{% url 'maths:directoryMove' %}',
+                            dataType: 'json',
+                            success: function (json) {
+                                var arr = [];
+                                $.each(json.directories, function (i, key) {
+                                    arr.push('<a href="#folder');
+                                    arr.push('-');
+                                    arr.push(key.id);
+                                    if (id_arr.length) {
+                                        if ($.inArray(key.id, id_arr) !== -1) {
+                                            arr.push('" class="list-group-item folder not-active" data-id="');
+                                        } else {
+                                            arr.push('" class="list-group-item folder" data-id="');
+                                        }
+                                    } else {
+                                        arr.push('" class="list-group-item folder" data-id="');
+                                    }
+                                    arr.push(key.id);
+                                    arr.push('"data-toggle="collapse">' +
+                                        '<i class="glyphicon glyphicon-chevron-right"></i> <i class="fa fa-folder" aria-hidden="true"></i> ');
+                                    arr.push(key.name);
+                                    arr.push('</a>');
+                                    arr.push('<div class="list-group collapse" id="folder');
+                                    arr.push('-');
+                                    arr.push(key.id);
+                                    arr.push('">');
+                                    $.each(key.child, function (i, child_key) {
+                                        arr.push('<a href="#folder');
+                                        arr.push('-');
+                                        arr.push(child_key.id);
+                                        if (id_arr.length) {
+                                            if ($.inArray(child_key.id, id_arr) !== -1) {
+                                                if (child_key.parent) {
+                                                    arr.push('" class="list-group-item folder parent not-active" data-id="');
+                                                } else {
+                                                    arr.push('" class="list-group-item folder" data-id="');
+                                                }
+                                            } else {
+                                                if (child_key.parent) {
+                                                    arr.push('" class="list-group-item folder parent" data-id="');
+                                                } else {
+                                                    arr.push('" class="list-group-item folder" data-id="');
+                                                }
+                                            }
+                                        } else {
+                                            if (child_key.parent) {
+                                                arr.push('" class="list-group-item folder parent" data-id="');
+                                            } else {
+                                                arr.push('" class="list-group-item folder" data-id="');
+                                            }
+                                        }
+                                        arr.push(child_key.id);
+                                        arr.push('"data-toggle="collapse">' +
+                                            '<i class="glyphicon glyphicon-chevron-right"></i> <i class="fa fa-folder" aria-hidden="true"></i> ');
+                                        arr.push(child_key.name);
+                                        arr.push('</a>');
+                                        arr.push('<div class="list-group collapse" id="folder');
+                                        arr.push('-');
+                                        arr.push(child_key.id);
+                                        arr.push('">');
+                                        arr.push('</div>');
+                                    });
+                                    arr.push('</div>');
+                                });
+                                div.empty().append(arr.join(''));
+                                children.removeClass('parent');
+                            },
+                            error: function (xhr) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    });
+                }
+            });
+
+        });
+        $('.files').on('contextmenu', '.folder', function () {
+            var row = $(this);
+            if (!row.hasClass('active')) {
+                $('.folder').removeClass('active');
+                $(this).addClass('active');
+            }
+        });
+
+        $('.moveBtn').click(function () {
+            var activeTasks = $('.tasktablebody .active');
+            var activeDirectories = $('.directory.active');
+            var destination = $('.folder.active').data('id');
+            var tasks = "";
+            var directories = "";
+            $.each(activeTasks, function () {
+                tasks += ($(this).find('td:eq("1")').text()) + ",";
+            });
+            $.each(activeDirectories, function () {
+                directories += ($(this).data('id')) + ",";
+            });
+            if (activeTasks.length > 0) {
+                tasks = tasks.slice(0, -1);
+            } else {
+                directories = directories.slice(0, -1);
+            }
+            $.ajax({
+                type: 'POST',
+                data: {
+                    'destination': destination,
+                    'tasks': tasks,
+                    'directories': directories,
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                },
+                url: '{% url 'maths:directoryMove' %}',
+                dataType: 'json',
+                success: function (json) {
+                    var activeDirectory = $('.breadcrumb-item.active').data('value');
+                    if (activeDirectory != destination) {
+                        activeTasks.remove();
+                        activeDirectories.remove();
+                    }
+                    $('#moveModal').modal('hide');
+                    bootbox.confirm({
+                        title: 'Flytting fullført',
+                        message: "De valgte elementene ble flyttet til: <strong>" + json.path + "</strong>",
+                        buttons: {
+                            confirm: {
+                                label: '<i class="fa fa-folder-open-o" aria-hidden="true"></i> Gå til mappen',
+                                className: 'btn-success'
+                            },
+                            cancel: {
+                                label: '<i class="fa fa-times-circle-o" aria-hidden="true"></i> Lukk',
+                            }
+
+                        },
+                        callback: function (result) {
+                            if (result) {
+                                openDirectory(destination, json.name, true);
+                                var breadcrumb = $('.breadcrumb');
+                                breadcrumb.empty();
+                                $.each(json.breadcrumb, function (i, val) {
+                                    var arr = [];
+                                    arr.push('<li data-value="');
+                                    arr.push(val.id);
+                                    arr.push('" class="breadcrumb-item">');
+                                    arr.push(val.name);
+                                    arr.push(' </li>');
+                                    breadcrumb.append(arr.join(''));
+                                })
+                            }
+                        }
+                    });
+                    var bootboxModal = $('.bootbox .modal-dialog');
+                    var bootboxHeight = bootboxModal.outerHeight();
+                    var height = (window.innerHeight) / 4;
+                    bootboxModal.css('margin-top', height + 'px');
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        })
+    </script>
+{% endblock %}

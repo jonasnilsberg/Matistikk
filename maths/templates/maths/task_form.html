@@ -72,9 +72,6 @@
 
 {% block body %}
     <div class="panel panel-info">
-        <div class="panel-heading">
-            <h2 class="text-center">Lag Oppgave</h2>
-        </div>
         <div class="panel-body">
             <div class="col-md-6 col-sm-6 col-xs-6" id="infoDiv">
                 <label for="taskname">Oppgavenavn</label>
@@ -185,6 +182,18 @@
                         </div>
                     </li>
                 </ul>
+                <form class="" action="" method="POST"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="hidden">
+                        {% bootstrap_form form exclude="directory" %}
+                    </div>
+                    <label for="id_directory">Plassering</label>
+                    {% bootstrap_field form.directory label_class='hidden' form_group_class='form-group'%}
+                    <button type="submit" id="submitbutton" class="btn btn-success hidden">
+                        {% bootstrap_icon "check" %} Lagre
+                    </button>
+                </form>
                 <div id="feedback">
 
                 </div>
@@ -210,14 +219,6 @@
                     <option>Rekkefølge</option>
                 </select>
                 <div id="applet_container"></div>
-                <form class="form-horizontal form-margin hidden" action="" method="POST"
-                      enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {% bootstrap_form form %}
-                    <button type="submit" id="submitbutton" class="btn btn-success">
-                        {% bootstrap_icon "check" %} Lagre
-                    </button>
-                </form>
             </div>
 
         </div>
@@ -1172,19 +1173,19 @@
                         var fraction = $(this).find(':button').val();
                         var padding = "";
                         var margin = "";
-                        if (length === "10"){
+                        if (length === "10") {
                             padding = "padding-right: 15px;"
                             margin = "margin-right: 15px;"
                         }
                         if (fraction === "1") {
                             form.append('<div class="form-group" style="margin-bottom: 0px;"><label style="text-align: left; padding-left: 15px;" class="control-label col-md-2">' + title + ':</label>' +
-                                '<div class="col-md-' + length + '" style="'+padding+'"><input type="number" class="form-control"></div>' +
+                                '<div class="col-md-' + length + '" style="' + padding + '"><input type="number" class="form-control"></div>' +
                                 '<div class="col-md-12"><div class="col-md-2"></div><div class="col-md-' + length + '">' +
-                                '<hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black; '+margin+'">' +
+                                '<hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black; ' + margin + '">' +
                                 '</div></div></div>');
                         } else {
                             form.append('<div class="form-group"><label style="text-align: left; padding-left: 15px;" class="control-label col-md-2">' + title + ':</label>' +
-                                '<div class="col-md-' + length + '" style="'+padding+'"><input type="number" class="form-control"></div></div>');
+                                '<div class="col-md-' + length + '" style="' + padding + '"><input type="number" class="form-control"></div></div>');
                         }
                     });
                     inputDiv.append('<hr>');
