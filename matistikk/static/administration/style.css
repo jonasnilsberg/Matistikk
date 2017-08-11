@@ -1,0 +1,443 @@
+.tab-content {
+    overflow: auto;
+    max-height: 60vh;
+    min-height: 40vh;
+}
+
+.btn-block {
+    width: 300px;
+}
+
+.border-radius {
+    border-radius: 0 !important;
+}
+
+.navbar {
+    margin-bottom: 0;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    color: black;
+}
+
+.btn {
+    color: black;
+}
+
+.btn-primary {
+    color: whitesmoke;
+}
+
+.filterBtn {
+    margin-left: 10px;
+}
+
+.jumbotron p {
+    font-size: smaller;
+    color: black;
+}
+
+.navbar {
+    border-bottom-color: black;
+}
+
+.footer {
+    box-shadow: 0px 0px 1px #444;
+}
+
+.page-header h1 {
+    font-size: large;
+}
+
+.page-header h2 {
+    font-size: medium;
+}
+
+.page-header h3 {
+    font-size: small;
+}
+
+p {
+    color: black;
+    opacity: 1;
+}
+
+h {
+    color: black;
+    opacity: 1;
+}
+
+logo {
+    margin-left: 30px;
+}
+
+.centered-text {
+    position: absolute;
+    top: 48%;
+    color: white;
+    text-align: center;
+    left: 0;
+    width: 100%;
+    font-size: x-large;
+}
+
+.hidden {
+    display: none;
+}
+
+.form-margin {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
+html, body {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.alert {
+    border-radius: 0;
+}
+
+.container {
+    width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media screen and (min-width: 1921px) {
+    .container {
+        max-width: 85%;
+        border-style: solid;
+        border-width: 0px 1px 1px 1px;
+        border-color: darkgray;
+    }
+}
+
+.col-xs-1, .col-sm-1, .col-md-1, .col-sm-1,
+.col-xs-2, .col-sm-2, .col-md-2, .col-sm-2,
+.col-xs-3, .col-sm-3, .col-md-3, .col-sm-3,
+.col-xs-4, .col-sm-4, .col-md-4, .col-sm-4,
+.col-xs-5, .col-sm-5, .col-md-5, .col-sm-5,
+.col-xs-6, .col-sm-6, .col-md-6, .col-sm-6,
+.col-xs-7, .col-sm-7, .col-md-7, .col-sm-7,
+.col-xs-8, .col-sm-8, .col-md-8, .col-sm-8,
+.col-xs-9, .col-sm-9, .col-md-9, .col-sm-9,
+.col-xs-10, .col-sm-10, .col-md-10, .col-sm-10,
+.col-xs-11, .col-sm-11, .col-md-11, .col-sm-11,
+.col-xs-12, .col-sm-12, .col-md-12, .col-sm-12 {
+    position: relative;
+    height: 100%;
+    min-height: 1px;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.row {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.footer {
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-top: none;
+}
+
+.panel {
+    border: none;
+}
+
+.panel-height {
+    max-height: 80vh;
+    overflow: scroll;
+}
+
+.btn .caret {
+    margin-left: 5px;
+}
+
+.nav.nav-tabs .form-group {
+    margin-bottom: 15px;
+    float: right;
+    width: 50%;
+    padding-left: 10px;
+}
+
+.table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+    table-layout: fixed;
+}
+
+.modalOverflow {
+    overflow: auto;
+    max-height: 50vh;
+    min-height: 20vh;
+}
+
+.modal-body .table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+    table-layout: auto;
+}
+
+.material-switch > input[type="checkbox"] {
+    display: none;
+}
+
+.material-switch > label {
+    cursor: pointer;
+    height: 0px;
+    position: relative;
+    width: 40px;
+}
+
+.material-switch > label::before {
+    background: rgb(0, 0, 0);
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    content: '';
+    height: 16px;
+    margin-top: -8px;
+    position: absolute;
+    opacity: 0.3;
+    transition: all 0.4s ease-in-out;
+    width: 40px;
+}
+
+.material-switch > label::after {
+    background: rgb(255, 255, 255);
+    border-radius: 16px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    content: '';
+    height: 24px;
+    left: -4px;
+    margin-top: -8px;
+    position: absolute;
+    top: -4px;
+    transition: all 0.3s ease-in-out;
+    width: 24px;
+}
+
+.material-switch > input[type="checkbox"]:checked + label::before {
+    background: inherit;
+    opacity: 0.5;
+}
+
+.material-switch > input[type="checkbox"]:checked + label::after {
+    background: inherit;
+    left: 20px;
+}
+
+.panel-heading h2 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.btn-default {
+    background-color: inherit;
+}
+
+.panel {
+    margin-bottom: 0px;
+}
+
+.clockpicker-popover {
+    z-index: 9999;
+}
+
+.loading-indicator {
+    width: 50px; /* This value will depend on what size you want for your loading image, let's say it's 50px */
+    height: 50px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -25px; /* This needs to be half of the height */
+    margin-left: -25px; /* This needs to be half of the width */
+}
+
+.loading-indicator-modal {
+    width: 50px; /* This value will depend on what size you want for your loading image, let's say it's 50px */
+    height: 50px;
+    position: absolute;
+    left: 50%;
+    top: 75%;
+    margin-top: -25px; /* This needs to be half of the height */
+    margin-left: -25px; /* This needs to be half of the width */
+}
+
+.middle {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
+/* This code is from http://tobiasahlin.com/spinkit/ */
+.sk-cube-grid {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150px;
+    height: 150px;
+    margin-top: -75px;
+    margin-left: -75px;
+}
+
+.sk-cube-grid .sk-cube {
+    width: 33%;
+    height: 33%;
+    background-color: #333;
+    float: left;
+    -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+    animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+}
+
+.sk-cube-grid .sk-cube1 {
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+}
+
+.sk-cube-grid .sk-cube2 {
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s;
+}
+
+.sk-cube-grid .sk-cube3 {
+    -webkit-animation-delay: 0.4s;
+    animation-delay: 0.4s;
+}
+
+.sk-cube-grid .sk-cube4 {
+    -webkit-animation-delay: 0.1s;
+    animation-delay: 0.1s;
+}
+
+.sk-cube-grid .sk-cube5 {
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+}
+
+.sk-cube-grid .sk-cube6 {
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s;
+}
+
+.sk-cube-grid .sk-cube7 {
+    -webkit-animation-delay: 0s;
+    animation-delay: 0s;
+}
+
+.sk-cube-grid .sk-cube8 {
+    -webkit-animation-delay: 0.1s;
+    animation-delay: 0.1s;
+}
+
+.sk-cube-grid .sk-cube9 {
+    -webkit-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+}
+
+@-webkit-keyframes sk-cubeGridScaleDelay {
+    0%, 70%, 100% {
+        -webkit-transform: scale3D(1, 1, 1);
+        transform: scale3D(1, 1, 1);
+    }
+    35% {
+        -webkit-transform: scale3D(0, 0, 1);
+        transform: scale3D(0, 0, 1);
+    }
+}
+
+@keyframes sk-cubeGridScaleDelay {
+    0%, 70%, 100% {
+        -webkit-transform: scale3D(1, 1, 1);
+        transform: scale3D(1, 1, 1);
+    }
+    35% {
+        -webkit-transform: scale3D(0, 0, 1);
+        transform: scale3D(0, 0, 1);
+    }
+}
+
+/* End */
+.box:hover {
+    background-color: darkgray; /* make this whatever you want */
+    cursor: pointer;
+}
+
+#tasktextdiv {
+    height: 25%;
+}
+
+.orderinfo {
+    border-radius: 10px !important;
+    height: 42px;
+    width: 42px;
+    margin-left: 3px;
+}
+
+.itemrow {
+    cursor: pointer;
+}
+
+.col-centered {
+    float: none;
+    margin: 0 auto;
+}
+
+ul.scrollbar::-webkit-scrollbar {
+    height: 0px;
+    width: 0px; /* remove scrollbar space */
+    background: transparent; /* optional: just make scrollbar invisible */
+}
+
+.checkbox-inline,
+.checkbox-inline + .checkbox-inline,
+.checkbox-inline + .radio-inline,
+.radio-inline,
+.radio-inline + .radio-inline,
+.radio-inline + .checkbox-inline {
+    margin-left: 0;
+    margin-right: 10px;
+}
+
+.checkbox-inline:last-child,
+.radio-inline:last-child {
+    margin-right: 0;
+}
+
+.geotesting {
+    width: 10vw;
+    height: 10vh;
+}
+
+.disabledLink {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.exportSidebar {
+    border-right: 1px solid black;
+}
+
+.colheight {
+    height: calc(100% - 55px);
+    height: -webkit-calc(100% - 55px); /* google, safari */
+    height: -moz-calc(100% - 55px); /* firefox */
+}
+.answerbody {
+    max-height: 75%;
+    overflow: auto;
+}

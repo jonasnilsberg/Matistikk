@@ -556,3 +556,8 @@ ul.scrollbar::-webkit-scrollbar {
     opacity: 0.6;
 
 }
+
+.taskcollectionbar {
+    margin-top: 3px;
+    margin-bottom: 7px;
+}

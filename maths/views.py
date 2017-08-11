@@ -164,6 +164,12 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
                 'directory': self.kwargs.get('directory_pk')
             }
             return data
+        else:
+            directory = Directory.objects.get(parent_directory=None)
+            data = {
+                'directory': directory.id
+            }
+            return data
 
     def get_context_data(self, **kwargs):
         """
@@ -690,6 +696,9 @@ class TaskCollectionCreateView(AdministratorCheck, views.AjaxResponseMixin, gene
             :return: Returns the updated context
         """
         context = super(TaskCollectionCreateView, self).get_context_data(**kwargs)
+        directory = Directory.objects.get(parent_directory=None)
+        context['directory'] = directory
+        context['sub_directories'] = Directory.objects.filter(parent_directory=directory)
         context['tasks'] = Task.objects.all()
         context['categories'] = Category.objects.all()
         context['update'] = False
@@ -832,6 +841,9 @@ class TaskCollectionUpdateView(AdministratorCheck, views.AjaxResponseMixin, gene
             :return: Returns the updated context
         """
         context = super(TaskCollectionUpdateView, self).get_context_data(**kwargs)
+        directory = Directory.objects.get(parent_directory=None)
+        context['directory'] = directory
+        context['sub_directories'] = Directory.objects.filter(parent_directory=directory)
         context['tasks'] = Task.objects.all()
         context['categories'] = Category.objects.all()
         context['update'] = True
@@ -1054,7 +1066,10 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
         """
         if test.randomOrder:
             randomtest = sorted(test.task_collection.items.all(), key=lambda x: random.random())
-            context['randomtest'] = randomtest
+            context['items'] = randomtest
+        else:
+            task_order = TaskOrder.objects.filter(test=test)
+            context['items'] = Item.objects.filter(taskorder__in=task_order)
         forms = []
         for z in range(0, len(test.task_collection.items.all())):
             forms.append(CreateAnswerForm(prefix="task" + str(z)))
