@@ -1,5 +1,6 @@
 from django import template
-from maths.models import Answer, GeogebraAnswer, MultipleChoiceTask, GeogebraTask, MultipleChoiceOption, InputFieldTask
+from maths.models import Answer, GeogebraAnswer, MultipleChoiceTask, GeogebraTask, MultipleChoiceOption, \
+    InputFieldTask, Directory
 from administration.models import Gruppe, Person, Grade
 
 register = template.Library()
@@ -135,14 +136,17 @@ def insert_params(text, variables):
         text = text.replace('matistikkParameter'+str(i+1), variablesTable[i])
     return text
 
+
 @register.simple_tag
 def get_inputfields(task):
     return InputFieldTask.objects.filter(task=task)
+
 
 @register.simple_tag
 def get_input(answer, nr):
     answer_list = answer.split('|||||')
     return answer_list[nr-1]
+
 
 @register.simple_tag
 def get_margin(fraction):
@@ -150,3 +154,10 @@ def get_margin(fraction):
         return 0
     else:
         return 10
+
+
+@register.simple_tag
+def get_directory_path(directory_id):
+    directory = Directory.objects.get(id=directory_id)
+    return directory.__str__()
+

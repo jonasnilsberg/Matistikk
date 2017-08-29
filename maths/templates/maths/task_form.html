@@ -72,11 +72,8 @@
 
 {% block body %}
     <div class="panel panel-info">
-        <div class="panel-heading">
-            <h2 class="text-center">Lag Oppgave</h2>
-        </div>
-        <div class="panel-body">
-            <div class="col-md-6 col-sm-6 col-xs-6" id="infoDiv">
+        <div class="col-md-6 col-sm-6 col-xs-6" id="infoDiv">
+            <div class="panel-body" style="padding-bottom: 5px; padding-top: 5px">
                 <label for="taskname">Oppgavenavn</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-tasks"></i></span>
@@ -103,18 +100,18 @@
                 </div>
                 <label for="accordion">Velg svartype</label>
                 <div id="accordion" class="panel-group" role="tablist">
-                    <div class="panel panel-default" id="tekstRadio">
+                    <div class="panel panel-default panel-success" id="tekstRadio">
                         <div class=" panel-heading" role="tab">
                             <h4 class="panel-title">
                                 <label style="cursor: pointer"><input type="radio" name="answer_type" value="1"
                                                                       data-toggle="collapse"
                                                                       data-parent="#accordion" data-target="#collapse5"
                                                                       onclick="radioClick(this)" required
-                                                                      id="textAnswerRadio">
+                                                                      id="textAnswerRadio" checked>
                                     Tekstsvar</label>
                             </h4>
                         </div>
-                        <div id="collapse5" class="panel-collapse collapse">
+                        <div id="collapse5" class="panel-collapse collapse in">
                             <div class="panel-body">
                                 Hvis dette alternativet velges, vil eleven svare med tekst.
                             </div>
@@ -185,65 +182,62 @@
                         </div>
                     </li>
                 </ul>
+                <form class="" action="" method="POST"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="hidden">
+                        {% bootstrap_form form exclude="directory" %}
+                    </div>
+                    <label for="id_directory">Plassering</label>
+                    {% bootstrap_field form.directory label_class='hidden' form_group_class='form-group' %}
+                    <button type="submit" id="submitbutton" class="btn btn-success hidden">
+                        {% bootstrap_icon "check" %} Lagre
+                    </button>
+                </form>
                 <div id="feedback">
 
                 </div>
-                <div class="panel-footer hidden" id="infoDivFooter">
+                <div class="panel-footer" id="infoDivFooter">
+                    <div class="btn-group hidden" role="group" aria-label="...">
+                        <button type="button" onclick="onSubmit()" class="btn btn-success" id="saveTaskBtn"><span
+                                class="glyphicon glyphicon-check"
+                                aria-hidden="true"></span> Lagre Oppgave
+                        </button>
+                        <button type="button" class="btn btn-warning hidden" data-toggle="modal"
+                                href="#previewTaskModal"><span
+                                class="glyphicon glyphicon-eye-open"
+                                aria-hidden="true"></span> Forhåndsvis
+                        </button>
+                    </div>
                     <div class="btn-group" role="group" aria-label="...">
                         <button type="button" onclick="onSubmit()" class="btn btn-success" id="saveTaskBtn"><span
                                 class="glyphicon glyphicon-check"
                                 aria-hidden="true"></span> Lagre Oppgave
                         </button>
-                        <button type="button" class="btn btn-warning" data-toggle="modal" href="#previewTaskModal"><span
+                        <button type="button" class="btn btn-warning" data-toggle="modal"
+                                href="#previewTaskModal"><span
                                 class="glyphicon glyphicon-eye-open"
                                 aria-hidden="true"></span> Forhåndsvis
+                        </button>
+                    </div>
+                    <div class="btn-group pull-right" role="group" aria-label="...">
+                        <button class="btn btn-primary geoSettings" data-toggle="modal" href="#geogebraSettings"><i
+                                class="fa fa-sliders"
+                                aria-hidden="true"></i>
+                            </span> Innstillinger for GeoGebra
+                        </button>
+                        <button class="btn btn-primary variable"><span
+                                class="glyphicon glyphicon-blackboard"
+                                aria-hidden="true">
+                </span> Legg til variabler
                         </button>
                     </div>
                 </div>
 
             </div>
-            <div class="col-md-6 form-margin" id="extradiv">
-                <label for="choosetask">Velg oppgavetype</label>
-                <select class="form-control input-lg" id="choosetask">
-                    <option>Geogebra</option>
-                    <option>Velg riktig</option>
-                    <option>Rekkefølge</option>
-                </select>
-                <div id="applet_container"></div>
-                <form class="form-horizontal form-margin hidden" action="" method="POST"
-                      enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {% bootstrap_form form %}
-                    <button type="submit" id="submitbutton" class="btn btn-success">
-                        {% bootstrap_icon "check" %} Lagre
-                    </button>
-                </form>
-            </div>
-
         </div>
-        <div class="panel-footer" id="footer">
-            <div class="btn-group" role="group" aria-label="...">
-                <button type="button" onclick="onSubmit()" class="btn btn-success" id="saveTaskBtn"><span
-                        class="glyphicon glyphicon-check"
-                        aria-hidden="true"></span> Lagre Oppgave
-                </button>
-                <button type="button" class="btn btn-warning" data-toggle="modal" href="#previewTaskModal"><span
-                        class="glyphicon glyphicon-eye-open"
-                        aria-hidden="true"></span> Forhåndsvis
-                </button>
-            </div>
-            <div class="btn-group pull-right" role="group" aria-label="...">
-                <button class="btn btn-primary geoSettings" data-toggle="modal" href="#geogebraSettings"><i
-                        class="fa fa-sliders"
-                        aria-hidden="true"></i>
-                    </span> Innstillinger for GeoGebra
-                </button>
-                <button class="btn btn-primary variable"><span
-                        class="glyphicon glyphicon-blackboard"
-                        aria-hidden="true">
-                </span> Legg til variabler
-                </button>
-            </div>
+        <div class="col-md-6" id="extradiv" style="padding-top: 2px;">
+            <div id="applet_container"></div>
         </div>
     </div>
 
@@ -253,7 +247,7 @@
         var viewPortHeight = 750;
         if (typeof window.innerWidth != 'undefined' && window.innerWidth > 1000) {
             viewPortWidth = window.innerWidth * 0.5;
-            viewPortHeight = window.innerHeight * 0.7;
+            viewPortHeight = window.innerHeight * 0.93;
         }
         var parameters = {
             "id": "ggbApplet",
@@ -264,16 +258,15 @@
             "showToolBar": true,
             "borderColor": null,
             "showMenuBar": true,
-            "allowStyleBar": true,
+            "allowStyleBar": false,
             "showAlgebraInput": true,
             "enableLabelDrags": false,
             "enableShiftDragZoom": true,
             "capturingThreshold": null,
-            "showToolBarHelp": false,
+            "showToolBarHelp": true,
             "errorDialogsActive": true,
-            "showTutorialLink": false,
-            "showLogging": false,
-            "useBrowserForJS": false
+            "useBrowserForJS": false,
+            "scaleContainerClass": 'col-md-6'
         };
 
         // Applet som inneholder GeoGebra-vinduet som lastes inn i createfunctiontask.jsp
@@ -1172,19 +1165,19 @@
                         var fraction = $(this).find(':button').val();
                         var padding = "";
                         var margin = "";
-                        if (length === "10"){
+                        if (length === "10") {
                             padding = "padding-right: 15px;"
                             margin = "margin-right: 15px;"
                         }
                         if (fraction === "1") {
                             form.append('<div class="form-group" style="margin-bottom: 0px;"><label style="text-align: left; padding-left: 15px;" class="control-label col-md-2">' + title + ':</label>' +
-                                '<div class="col-md-' + length + '" style="'+padding+'"><input type="number" class="form-control"></div>' +
+                                '<div class="col-md-' + length + '" style="' + padding + '"><input type="number" class="form-control"></div>' +
                                 '<div class="col-md-12"><div class="col-md-2"></div><div class="col-md-' + length + '">' +
-                                '<hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black; '+margin+'">' +
+                                '<hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black; ' + margin + '">' +
                                 '</div></div></div>');
                         } else {
                             form.append('<div class="form-group"><label style="text-align: left; padding-left: 15px;" class="control-label col-md-2">' + title + ':</label>' +
-                                '<div class="col-md-' + length + '" style="'+padding+'"><input type="number" class="form-control"></div></div>');
+                                '<div class="col-md-' + length + '" style="' + padding + '"><input type="number" class="form-control"></div></div>');
                         }
                     });
                     inputDiv.append('<hr>');

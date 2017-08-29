@@ -6,6 +6,7 @@ urlpatterns = [
 
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'nyoppgave/$', views.TaskCreateView.as_view(), name='createTask'),
+    url(r'nyoppgave/mappe/(?P<directory_pk>[0-9]+)/$', views.TaskCreateView.as_view(), name='createTaskDirectory'),
     url(r'equationEditor/$', views.EquationEditorView.as_view(), name='equationEditor'),
     url(r'oppgaver/$', views.TaskListView.as_view(), name='taskList'),
     url(r'oppgaver/(?P<task_pk>[0-9]+)/$', views.TaskDetailView.as_view(), name='taskDetail'),
@@ -37,6 +38,11 @@ urlpatterns = [
     url(r'test/(?P<test_pk>[0-9]+)/svar/$', views.AnswerCreateView.as_view(), name='answerCreate'),
     url(r'test/(?P<test_pk>[0-9]+)/eksporter/$', views.export_data, name='answerExport'),
     url(r'test/fullført/$', views.LinkSuccess.as_view(), name='answerFinished'),
-    url(r'eksportering/$', views.ExportData.as_view(), name='exportData')
+    url(r'eksportering/$', views.ExportData.as_view(), name='exportData'),
+    url(r'oppgaver/mappe/matistikk/$', views.DirectoryDetailView.as_view(), name='directoryRoot'),
+    url(r'oppgaver/mappe/(?P<directory_pk>[0-9]+)/$', views.DirectoryDetailView.as_view(), name='directoryDetail'),
+    url(r'oppgaver/mapper/slett/$', views.DirectoryDelete.as_view(), name='directoryDelete'),
+    url(r'oppgaver/mapper/endre/$', views.DirectoryEdit.as_view(), name='directoryEdit'),
+    url(r'oppgaver/mapper/flytt/$', views.DirectoryMove.as_view(), name='directoryMove')
 
 ]

@@ -37,14 +37,6 @@
 {% endblock %}
 {% block body %}
     <div class="panel panel-info">
-        <div class="panel-heading">
-            {% if update %}
-                <h2 class="text-center">Oppdater test</h2>
-
-            {% else %}
-                <h2 class="text-center">Lag test</h2>
-            {% endif %}
-        </div>
         <div class="panel-body">
             <form class="form-margin" action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -54,17 +46,23 @@
                     <strong>Ikke lagret!</strong> Vennligst velg noen oppgaver.
                 </div>
                 <div class="row">
-                    <div class="col-md-9" style="padding-right: 10px; margin-bottom: 10px;">
+                    <div class="col-md-3">
+                        <ul class="nav nav-pills nav-justified">
+                            <li class="active"><a data-toggle="pill" href="#matistikkdir">Matistikk</a></li>
+                            <li><a data-toggle="pill" href="#alltasks">Alle oppgaver</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 taskcollectionbar" style="padding-right: 10px;">
                         <div class="input-group">
                     <span class="input-group-addon">
                         <i class="fa fa-search"></i>
                     </span>
                             <input type="text" class="form-control" id="search"
-                                   onkeyup="taskSearch('table')"
+                                   onkeyup="taskSearch('table'); taskSearch('tasktable')"
                                    placeholder="Søk etter oppgave...">
                         </div>
                     </div>
-                    <div class="col-md-2" style="margin-bottom:10px;">
+                    <div class="col-md-2 taskcollectionbar">
                         <select id="selectCategory" class="hidden" multiple="multiple">
                             {% for category in categories %}
                                 <option id="{{ category.id }}" value="{{ category }}">{{ category }}</option>
@@ -72,56 +70,134 @@
                         </select>
                     </div>
                 </div>
-                <div id="tableDiv"
-                     style="min-height: 20vh; border: 1px solid; border-color: lightgray; overflow: auto; max-height: 47vh; max-width: 100%">
-                    <table id="table" class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th class="col-sm-1">Legg til</th>
-                            <th class="col-sm-1">ID</th>
-                            <th class="col-sm-4">Oppgavenavn</th>
-                            <th class="col-sm-3">Kategori</th>
-                            <th class="col-sm-2">VariabelOppgave</th>
-                            <th class="col-sm-1"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for task in tasks %}
-                            <tr id="task{{ task.id }}" style="cursor: pointer" data-variable="{{ task.variableTask }}">
-                                <td class="test"><input type="checkbox" value="{{ task.id }}"
-                                ></td>
-                                <td>{{ task.id }}</td>
-                                <td>{{ task.title }}</td>
-                                <td>{% for category in task.category.all %}
-                                    {% if forloop.last %}
-                                        {{ category }}
-                                    {% else %}
-                                        {{ category }} -
-                                    {% endif %}
+                <div class="tab-content" style="border: 1px solid; border-color: lightgray;">
+                    <div id="matistikkdir" class="tab-pane fade in active">
+                        <div class="col-md-12" style="">
+                            <div class="col-md-3">
+                                <ol class="breadcrumb" style="margin-bottom: 10px">
+                                    <li data-value="{{ directory.id }}" class="breadcrumb-item active">
+                                        Matistikk
+                                    </li>
+                                </ol>
+                                <div class="list-group directoryList zeroMargin" style="overflow: auto">
+                                    {% for sub_directory in sub_directories %}
+                                        <a data-id="{{ sub_directory.id }}"
+                                           class="list-group-item directory context-menu-one"><i
+                                                class="fa fa-folder"
+                                                aria-hidden="true"></i> {{ sub_directory.name }}</a>
+                                    {% empty %}
+                                        <div class="well text-center">Denne mappen inneholder ingen mapper.</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-9 mainBody" style="padding-left: 10px">
+                                <table class="table tasktable table-striped table-responsive" id="tasktable"
+                                       style="margin-bottom: 0px">
+                                    <thead>
+                                    <tr>
+                                        <th style="border: none; width: 40px;"></th>
+                                        <th class="col-sm-1" style="border: none">ID</th>
+                                        <th class="col-sm-3" style="border: none">Oppgavenavn</th>
+                                        <th class="col-sm-3" style="border: none">Kategori</th>
+                                        <th class="col-sm-1" style="border: none">Variabel</th>
+                                        <th class="col-md-4" style="border: none">Alternativer</th>
+                                    </tr>
+
+                                    </thead>
+                                    <tbody class="tasktablebody">
+                                    {% for task in tasks %}
+                                        {% if task.directory_id == directory.id %}
+                                            <tr class="task{{ task.id }}" style="cursor: pointer"
+                                                data-variable="{{ task.variableTask }}">
+                                                <td><input type="checkbox" value="{{ task.id }}"></td>
+                                                <td>{{ task.id }}</td>
+                                                <td>{{ task.title }}</td>
+                                                <td>
+                                                    {% for category in task.category.all %}
+                                                        {% if forloop.last %}
+                                                            {{ category }}
+                                                        {% else %}
+                                                            {{ category }} -
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </td>
+                                                <td>
+                                                    {% if task.variableTask %}Ja{% else %}Nei{% endif %}
+                                                </td>
+                                                <td>
+                                                    <button type="button" value="{{ task.id }}"
+                                                            class="btn btn-info btn-sm previewtask"
+                                                            onclick="previewTask(this)"><span
+                                                            class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                {% if not tasks %}
+                                    <div class="well noTasks text-center">Denne mappen inneholder ingen oppgaver.</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="alltasks" class="tab-pane fade">
+                        <div id="tableDiv"
+                             style="overflow: auto; max-width: 100%">
+                            <table id="table" class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th style="width: 40px"></th>
+                                    <th class="col-sm-1">ID</th>
+                                    <th class="col-sm-3">Oppgavenavn</th>
+                                    <th class="col-sm-3">Kategori</th>
+                                    <th class="col-sm-1">Variabel</th>
+                                    <th class="col-sm-2"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for task in tasks %}
+                                    <tr id="task{{ task.id }}" style="cursor: pointer"
+                                        data-variable="{{ task.variableTask }}" class="task{{ task.id }}">
+                                        <td><input type="checkbox" value="{{ task.id }}"
+                                        ></td>
+                                        <td>{{ task.id }}</td>
+                                        <td>{{ task.title }}</td>
+                                        <td>{% for category in task.category.all %}
+                                            {% if forloop.last %}
+                                                {{ category }}
+                                            {% else %}
+                                                {{ category }} -
+                                            {% endif %}
+                                        {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% if task.variableTask %}Ja{% else %}Nei{% endif %}
+                                        </td>
+                                        <td>
+                                            <button id="taskBtn{{ task.id }}" value="{{ task.id }}" type="button"
+                                                    class="btn btn-info btn-sm"><span
+                                                    class="glyphicon glyphicon-eye-open"
+                                                    aria-hidden="true"></span> Forhåndsvis
+                                            </button>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
-                                </td>
-                                <td>
-                                    {% if task.variableTask %}Ja{% else %}Nei{% endif %}
-                                </td>
-                                <td>
-                                    <button id="taskBtn{{ task.id }}" value="{{ task.id }}" type="button"
-                                            class="btn btn-info btn-sm"><span
-                                            class="glyphicon glyphicon-eye-open"
-                                            aria-hidden="true"></span> Forhåndsvis
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <h4>Antall valgte oppgaver: <span id="itemsSelected">0</span></h4>
+
+                <h4 style="margin-bottom: 0; margin-top: 20px;">Antall valgte oppgaver: <span
+                        id="itemsSelected">0</span></h4>
                 <button id='submitTaskCollectionBtn' type="submit" class="hidden"></button>
             </form>
         </div>
         <div class="panel-footer">
             <button type="button" onclick="submitForm()" class="btn btn-success" id="saveTaskCollectionBtn">
-                {% bootstrap_icon "check" %} Lagre test
+                {% bootstrap_icon "check" %} {% if update %}Oppdater{% else %}Lagre{% endif %}
             </button>
         </div>
     </div>
@@ -141,7 +217,7 @@
         /**
          * Function that selects the clicked on tablerow and adds success to it.
          */
-        $("#table tbody tr").click(function (e) {
+        $(".table tbody").on('click', 'tr', function (e) {
             var $checkbox = $(this).find(':checkbox');
             var $button = $(this).find(':button');
             var variableTask = $(this).data('variable');
@@ -151,14 +227,16 @@
             }
             else if (e.target.type == "checkbox") {
                 e.stopPropagation();
-                $('#tasktitlespan').text($(this).find('td').eq(2).text());
                 if ($checkbox.is(':checked')) {
                     if (variableTask == 'True') {
+                        $('#tasktitlespan').text($(this).find('td').eq(2).text());
                         $(this).addClass('info');
                         getVariables($checkbox.val());
                     } else {
                         getVariables($checkbox.val());
-                        $(this).addClass('success');
+                        var task = $('.task' + $checkbox.val());
+                        task.addClass('success');
+                        task.find(':checkbox').prop('checked', true);
 
                     }
                 } else {
@@ -170,8 +248,9 @@
                     } else {
                         var itemID = $(this).attr('data-id');
                         $('#id_items option[value=' + itemID + ']').attr('selected', false);
-                        $(this).removeClass('info success');
-                        $checkbox.prop('checked', false);
+                        var task = $('.task' + $checkbox.val());
+                        task.removeClass('info success');
+                        task.find(':checkbox').prop('checked', false);
                         itemCount();
                     }
                 }
@@ -219,7 +298,7 @@
                         $('#itemModal').modal('show');
                     } else {
                         $('#id_items option[value=' + ids + ']').attr('selected', true);
-                        $('#task' + id).attr('data-id', ids);
+                        $('.task' + id).attr('data-id', ids);
                         itemCount();
                     }
                 },
@@ -335,6 +414,11 @@
 
 
             });
+            var height = window.innerHeight - 300;
+            $('.tab-content').css('max-height', 100 + 'vh');
+            $('#tableDiv').css('height', height + 'px');
+            $('.mainBody').css('height', height + 'px');
+            $('.directoryList').css('height', (height - 50) + 'px');
             itemCount();
             $('#id_items option:selected').each(function () {
                 var id = $(this).val();
@@ -347,8 +431,11 @@
                     },
                     dataType: 'json',
                     success: function (data) {
-                        $('#task' + data.id).addClass('success');
-                        $('#task' + data.id).find(':checkbox').prop('checked', true);
+                        var task = $('.task' + data.id);
+                        task.addClass('success');
+                        task.find(':checkbox').prop('checked', true);
+                        task.attr('data-id', id);
+
                     },
                     error: function (xhr) {
                         alert(xhr.responseText);
@@ -383,6 +470,131 @@
                     }
                 }
             }
+        }
+        $('.directoryList').on('click', '.directory', function (event) {
+            $('.list-group-item').removeClass('active');
+            $(this).addClass('active');
+        });
+        $('.directoryList').on('dblclick', '.directory', function () {
+            var id = $(this).data('id');
+            var name = $(this).text();
+            openDirectory(id, name, false);
+        });
+        $('.breadcrumb').on('click', '.breadcrumb-item', function () {
+            var directory = $(this);
+            if (!directory.hasClass('active')) {
+                var id = directory.data('value');
+                var name = directory.text();
+                openDirectory(id, name, true);
+            }
+        });
+        function openDirectory(id, name, breadcrumbBool) {
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'maths:directoryRoot' %}',
+                data: {
+                    'directory': id
+                },
+                dataType: 'json',
+                success: function (json) {
+                    var sub_directories = json.sub_directories;
+                    var directoryList = $('.directoryList');
+                    directoryList.empty();
+
+                    if (breadcrumbBool) {
+                        var breadCrumbClicked = $(".breadcrumb").find("[data-value='" + id + "']");
+                        breadCrumbClicked.nextAll().remove();
+                        breadCrumbClicked.addClass('active');
+                    } else {
+                        var breadcrumb = $('.breadcrumb');
+                        breadcrumb.find('.active').removeClass('active');
+                        breadcrumb.append('<li data-value="' + id + '" class="breadcrumb-item active">' + name + ' </li>');
+                    }
+                    var breadcrumbHeight = $('.breadcrumb').outerHeight();
+                    var bodyHeight = $('.mainBody').outerHeight();
+                    var listHeight = bodyHeight - breadcrumbHeight - 10;
+                    directoryList.css('max-height', listHeight + 'px');
+                    var dir_arr = [];
+                    if (!sub_directories.length) {
+                        $('.directoryList').append('<div class="well noDirectories text-center">Denne mappen inneholder ingen mapper.</div>')
+                    } else {
+                        $('.noDirectories').remove();
+                    }
+                    $.each(sub_directories, function (i, val) {
+                        dir_arr.push('<a data-id="');
+                        dir_arr.push(val.id);
+                        dir_arr.push('" class="list-group-item context-menu-one directory"><i class="fa fa-folder" aria-hidden="true"></i> ');
+                        dir_arr.push(val.name);
+                        dir_arr.push('</a>');
+                    });
+                    directoryList.append(dir_arr.join(''));
+                    var tasks = json.tasks;
+                    var task_arr = [];
+                    var tbody = $('#tasktable > tbody');
+                    tbody.empty();
+                    if (!tasks.length) {
+                        if (!$('.noTasks').length) {
+                            $('.mainBody').append('<div class="well noTasks text-center">Denne mappen inneholder ingen oppgaver.</div>');
+                        }
+                    } else {
+                        $('.noTasks').remove();
+                    }
+                    $.each(tasks, function (i, val) {
+                        task_arr.push('<tr class="task');
+                        task_arr.push(val.id);
+                        task_arr.push('" style="cursor: pointer" data-variable="');
+                        if (val.variableTask) {
+                            task_arr.push('True');
+                        } else {
+                            task_arr.push('False');
+                        }
+                        task_arr.push('"><td><input type="checkbox" value="');
+                        task_arr.push(val.id);
+                        task_arr.push('"></td><td>');
+                        task_arr.push(val.id);
+                        task_arr.push('</td><td>');
+                        task_arr.push(val.title);
+                        task_arr.push('</td><td>');
+                        task_arr.push(val.categories);
+                        task_arr.push('</td><td>');
+                        if (val.variableTask) {
+                            task_arr.push('Ja');
+                        } else {
+                            task_arr.push('Nei');
+                        }
+                        task_arr.push('</td><td>');
+                        task_arr.push('<button type="button" value="');
+                        task_arr.push(val.id);
+                        task_arr.push('" class="btn btn-info previewtask btn-sm" onclick="previewTask(this)"><span class="glyphicon glyphicon-eye-open"></span> Forhåndsvis </button></div>');
+                        task_arr.push('</td></tr>');
+                    });
+                    tbody.append(task_arr.join(''));
+                    $('#id_items option:selected').each(function () {
+                        var itemID = $(this).val()
+                        var taskID = $('.table > tbody > tr[data-id="' + itemID + '"]').find(':checkbox').val();
+                        $('.task' + taskID).addClass('success').find(':checkbox').prop('checked', true);
+
+                    });
+                    var categories = json.categories;
+                    var selectCategories = $('#selectCategory');
+                    selectCategories.empty();
+                    var cat_arr = []
+                    $.each(categories, function (i, val) {
+                        cat_arr.push('<option id="');
+                        cat_arr.push(val.id);
+                        cat_arr.push(" value=");
+                        cat_arr.push(val.name);
+                        cat_arr.push('">');
+                        cat_arr.push(val.name);
+                        cat_arr.push('</option>');
+                    });
+                    selectCategories.append(cat_arr.join(''));
+                    $("#selectCategory").multiselect('rebuild');
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
         }
 
         function randomRow(val) {
@@ -472,7 +684,7 @@
     <script>
         $('#itemModal').on('hidden.bs.modal', function () {
             var testID = $('#itemTaskID').text();
-            var taskRow = $('#task' + testID);
+            var taskRow = $('.task' + testID);
             if ($('.itemBody .success').length > 0) {
                 taskRow.removeClass('info').addClass('success');
                 taskRow.find(':checkbox').prop('checked', true);

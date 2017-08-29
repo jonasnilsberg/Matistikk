@@ -42,158 +42,154 @@
 {% endblock %}
 
 {% block body %}
-    <div class="panel panel-info">
-        <div class="panel-heading text-center">
-            <h2><span id="taskTitle">{{ task.title }}</span> <i class="fa fa-pencil box updateTitle"
-                                                                style="cursor:pointer;" aria-hidden="true"></i>
-            </h2>
-        </div>
-        <div class="panel-body">
-            <form class="form-horizontal form-margin hidden" action="" method="POST"
-                  enctype="multipart/form-data">
-                {% csrf_token %}
-                {% bootstrap_form form %}
-                <button type="submit" id="submitbutton" class="btn btn-success">
-                    {% bootstrap_icon "check" %} Lagre
-                </button>
-            </form>
-            <div class="col-sm-6 col-md-6" id="extradiv">
-                <input type="hidden" id="hiddenbase64" data-height="{{ geogebra.height }}"
-                       data-width="{{ geogebra.width }}"
-                       value="{{ geogebra.base64 }}">
-                <div id="applet_container"></div>
-            </div>
-
-            <div id="infoDiv" class="col-sm-6 col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading" id="tasktextdiv">
-                        <label for="tasktext" style="margin-top: 10px">Oppgavetekst</label>
-                        <div id="tasktext">{{ task.text | safe }}</div>
-                    </div> <!-- #inner panel-heading -->
-                    <div class="panel-body">
-                        {% if task.category %}
-                            <span id="categorydiv">
+    <form class="form-horizontal form-margin hidden" action="" method="POST"
+          enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" id="submitbutton" class="btn btn-success">
+            {% bootstrap_icon "check" %} Lagre
+        </button>
+    </form>
+    <div id="infoDiv" class="col-sm-6 col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading" id="tasktextdiv">
+                <div class="panel-heading text-center">
+                    <h2><span id="taskTitle">{{ task.title }}</span> <i class="fa fa-pencil box updateTitle"
+                                                                        style="cursor:pointer;"
+                                                                        aria-hidden="true"></i>
+                    </h2>
+                </div>
+                <label for="tasktext" style="margin-top: 10px">Oppgavetekst</label>
+                <div id="tasktext">{{ task.text | safe }}</div>
+            </div> <!-- #inner panel-heading -->
+            <div class="panel-body">
+                {% if task.category %}
+                    <span id="categorydiv">
                                 {% for category in task.category.all %}
                                     <span class="label label-info" id="list{{ category }}">{{ category }}</span>
                                 {% endfor %}
                             </span>
-                            <a class="btn btn-default" data-toggle='modal' href='#changeCategoryModal'><i
-                                    class="fa fa-exchange" aria-hidden="true"
-                                    style="font-size: 1em; display: inline-block"></i> Endre kategorier</a>
-                            <br>
-                        {% endif %}
+                    <a class="btn btn-default" data-toggle='modal' href='#changeCategoryModal'><i
+                            class="fa fa-exchange" aria-hidden="true"
+                            style="font-size: 1em; display: inline-block"></i> Endre kategorier</a>
+                    <br>
+                {% endif %}
 
-                        <label for="accordion" style="margin-top: 15px;">Velg svartype</label>
-                        <div id="accordion" class="panel-group" role="tablist">
-                            <div class="panel panel-default answertype" id="textanswer" style="cursor: pointer">
-                                <div class=" panel-heading" role="tab">
-                                    <h4 class="panel-title">
-                                        <label style="cursor: pointer"><input type="radio" name="answer_type" value="1"
-                                                                              data-parent="#accordion" required
-                                                                              id="textAnswerRadio">
-                                            Tekstsvar</label>
-                                    </h4>
-                                </div>
-                                <div id="collapse5" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        Hvis dette alternativet velges, vil eleven svare med tekst.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="panel panel-default answertype" id="multiplechoiceanswer"
-                                 style="cursor: pointer">
-                                <div class=" panel-heading" role="tab">
-                                    <h4 class="panel-title">
-                                        <label style="cursor: pointer"><input type="radio" name="answer_type" value="2"
-                                                                              data-parent="#accordion" required
-                                                                              id="textMutipleRadio">
-                                            Flervalgstest</label>
-                                    </h4>
-                                </div>
-                                <div id="collapse8" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        Legg til dine flervalgsspørsmål i modalen som åpner seg.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="panel panel-default answertype" id="inputfieldanswer"
-                                 style="cursor: pointer">
-                                <div class=" panel-heading" role="tab">
-                                    <h4 class="panel-title">
-                                        <label style="cursor: pointer"><input type="radio" name="answer_type" value="4"
-                                                                              data-parent="#accordion" required
-                                                                              id="textInputRadio">
-                                            Inputfelt</label>
-                                    </h4>
-                                </div>
-                                <div id="collapse8" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        Legg til dine inputfelt i modalen som åpner seg.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="panel panel-default answertype" id="onlyExtraanswer" style="cursor: pointer">
-                                <div class=" panel-heading" role="tab">
-                                    <p class="panel-title">
-                                        <label style="cursor: pointer"><input type="radio" name="answer_type" value="3"
-                                                                              data-parent="#accordion"> Kun
-                                            tillegg</label>
-                                    </p>
-                                </div>
-                                <div id="collapse7" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        Hvis dette alternativet velges, vil eleven kunne svare kun med tillegg.
-                                    </div>
-                                </div>
+                <label for="accordion" style="margin-top: 15px;">Velg svartype</label>
+                <div id="accordion" class="panel-group" role="tablist">
+                    <div class="panel panel-default answertype" id="textanswer" style="cursor: pointer">
+                        <div class=" panel-heading" role="tab">
+                            <h4 class="panel-title">
+                                <label style="cursor: pointer"><input type="radio" name="answer_type" value="1"
+                                                                      data-parent="#accordion" required
+                                                                      id="textAnswerRadio">
+                                    Tekstsvar</label>
+                            </h4>
+                        </div>
+                        <div id="collapse5" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Hvis dette alternativet velges, vil eleven svare med tekst.
                             </div>
                         </div>
+                    </div>
+                    <div class="panel panel-default answertype" id="multiplechoiceanswer"
+                         style="cursor: pointer">
+                        <div class=" panel-heading" role="tab">
+                            <h4 class="panel-title">
+                                <label style="cursor: pointer"><input type="radio" name="answer_type" value="2"
+                                                                      data-parent="#accordion" required
+                                                                      id="textMutipleRadio">
+                                    Flervalgstest</label>
+                            </h4>
+                        </div>
+                        <div id="collapse8" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Legg til dine flervalgsspørsmål i modalen som åpner seg.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default answertype" id="inputfieldanswer"
+                         style="cursor: pointer">
+                        <div class=" panel-heading" role="tab">
+                            <h4 class="panel-title">
+                                <label style="cursor: pointer"><input type="radio" name="answer_type" value="4"
+                                                                      data-parent="#accordion" required
+                                                                      id="textInputRadio">
+                                    Inputfelt</label>
+                            </h4>
+                        </div>
+                        <div id="collapse8" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Legg til dine inputfelt i modalen som åpner seg.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default answertype" id="onlyExtraanswer" style="cursor: pointer">
+                        <div class=" panel-heading" role="tab">
+                            <p class="panel-title">
+                                <label style="cursor: pointer"><input type="radio" name="answer_type" value="3"
+                                                                      data-parent="#accordion"> Kun
+                                    tillegg</label>
+                            </p>
+                        </div>
+                        <div id="collapse7" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                Hvis dette alternativet velges, vil eleven kunne svare kun med tillegg.
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                Felt for begrunnelse
-                                <div class="material-switch pull-right">
-                                    <input id="reason" name="reasoning1" type="checkbox"/>
-                                    <label for="reason" class="label-success"></label>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                Bruk tillegg (Geogebra, puslespill, rekkefølge etc..)
-                                <div class="material-switch pull-right" id="extraField">
-                                    <input id="extra" name="extra1" type="checkbox"/>
-                                    <label for="extra" class="label-success"></label>
-                                </div>
-                            </li>
-                        </ul>
-                    </div> <!-- #inner panel-body -->
-                    <div class="panel-footer">
-                        <div class="btn-group" role="group" aria-label="...">
-                            <button type="button" onclick="updateTask(true)" class="btn btn-success"
-                                    id="saveAsNewTaskBtn"><span
-                                    class="glyphicon glyphicon-check"
-                                    aria-hidden="true"></span> Lagre som ny oppgave
-                            </button>
-                            {% task_answered task as answered %}
-                            {% if not answered %}
-                                <button type="button" class="btn btn-warning" onclick="updateTask(false)"
-                                        id="updateTaskBtn"><span
-                                        class="glyphicon glyphicon-refresh"
-                                        aria-hidden="true"></span> Oppdater eksisterende
-                                </button>
-                            {% endif %}
-                        </div> <!-- #btn-group -->
-                        <button id="geogebraSettingsBtn"
-                                class="btn btn-primary pull-right {% if not geogebra %}hidden{% endif %}"
-                                data-toggle="modal" href="#geogebraSettings"><i
-                                class="fa fa-sliders"
-                                aria-hidden="true"></i>
-                            </span> Innstillinger for GeoGebra
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        Felt for begrunnelse
+                        <div class="material-switch pull-right">
+                            <input id="reason" name="reasoning1" type="checkbox"/>
+                            <label for="reason" class="label-success"></label>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        Bruk tillegg (Geogebra, puslespill, rekkefølge etc..)
+                        <div class="material-switch pull-right" id="extraField">
+                            <input id="extra" name="extra1" type="checkbox"/>
+                            <label for="extra" class="label-success"></label>
+                        </div>
+                    </li>
+                </ul>
+            </div> <!-- #inner panel-body -->
+            <div class="panel-footer">
+                <div class="btn-group" role="group" aria-label="...">
+                    <button type="button" onclick="updateTask(true)" class="btn btn-success"
+                            id="saveAsNewTaskBtn"><span
+                            class="glyphicon glyphicon-check"
+                            aria-hidden="true"></span> Lagre som ny oppgave
+                    </button>
+                    {% task_answered task as answered %}
+                    {% if not answered %}
+                        <button type="button" class="btn btn-warning" onclick="updateTask(false)"
+                                id="updateTaskBtn"><span
+                                class="glyphicon glyphicon-refresh"
+                                aria-hidden="true"></span> Oppdater eksisterende
                         </button>
-                    </div> <!-- #inner panel-footer -->
-                </div> <!-- #inner panel -->
-            </div>
-        </div> <!-- #panel-body -->
-    </div> <!-- #panel -->
+                    {% endif %}
+                </div> <!-- #btn-group -->
+                <button id="geogebraSettingsBtn"
+                        class="btn btn-primary pull-right {% if not geogebra %}hidden{% endif %}"
+                        data-toggle="modal" href="#geogebraSettings"><i
+                        class="fa fa-sliders"
+                        aria-hidden="true"></i>
+                    </span> Innstillinger for GeoGebra
+                </button>
+            </div> <!-- #inner panel-footer -->
+        </div> <!-- #inner panel -->
+    </div>
+    <div class="col-sm-6 col-md-6" id="extradiv">
+        <input type="hidden" id="hiddenbase64" data-height="{{ geogebra.height }}"
+               data-width="{{ geogebra.width }}"
+               value="{{ geogebra.base64 }}">
+        <div id="applet_container"></div>
+    </div>
 
     <script>
         var viewPortWidth = 1200;
@@ -209,8 +205,8 @@
         var width = geo.data('width');
         var height = geo.data('height');
         if (typeof window.innerWidth != 'undefined') {
-            viewPortWidth = window.innerWidth * 0.49;
-            viewPortHeight = window.innerHeight * 0.7;
+            viewPortWidth = window.innerWidth * 0.5;
+            viewPortHeight = window.innerHeight * 0.93;
         }
         if (height && width) {
             viewPortHeight = height;
@@ -251,8 +247,8 @@
             else {
                 $('#id_base64').val(geobase64);
                 if (window.innerWidth > window.innerHeight) {
-                    var scaledWidth = (window.innerWidth * 0.49) / width;
-                    var scaledHeight = (window.innerHeight * 0.70) / height;
+                    var scaledWidth = (window.innerWidth * 0.50) / width;
+                    var scaledHeight = (window.innerHeight * 0.93) / height;
                 } else {
                     var scaledWidth = (window.innerWidth * 0.49) / width;
                     var scaledHeight = (window.innerHeight * 0.50) / height;
@@ -283,8 +279,8 @@
         window.onresize = function (event) {
             $('.applet_scaler').css('transform-origin', '0% 0% 0px');
             var appletContainerScaler = $('#applet_container .applet_scaler');
-            var scaledWidth = (window.innerWidth * 0.49) / width;
-            var scaledHeight = (window.innerHeight * 0.70) / height;
+            var scaledWidth = (window.innerWidth * 0.5) / width;
+            var scaledHeight = (window.innerHeight * 0.93) / height;
             appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
             appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
             appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
@@ -594,6 +590,7 @@
                 inputfieldanswer.find('.collapse').collapse('toggle');
                 $('.fraction').click();
             }
+            $('.col-md-6').css('height', (window.innerHeight - 70) + 'px');
         });
 
         /**

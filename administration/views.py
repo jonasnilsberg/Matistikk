@@ -786,8 +786,22 @@ class SchoolCreateView(AdministratorCheck, views.AjaxResponseMixin, generic.Crea
             return JsonResponse(data)
         username = person.create_username()
         person.username = username
+        mail = []
+        if email:
+            mail.append(email)
+            password = Person.objects.make_random_password()
+            person.set_password(password)
+            subject = "En bruker på Matistikk har blitt opprettet for deg med følgende informasjon. <br>" + \
+                      "Brukernavn: " + person.username + "<br>" + \
+                      "Passord: " + password + "<br>" + \
+                      "<br><br>" + \
+                      "For å logge inn gå til http://hv-6069.idi.ntnu.no"
+            msg = EmailMessage('Velkommen til Matistikk', subject, 'ntnu.matistikk@gmail.com', mail)
+            msg.content_subtype = "html"
+            msg.send()
+        else:
+            person.set_password('ntnu123')
         person.role = 3
-        person.set_password('ntnu123')
         person.save()
         data = {
             'username': person.username,
@@ -977,6 +991,19 @@ class FileUploadView(generic.FormView):
         for person in persons:
             savedPerson = Person.objects.get(username=person.username)
             savedPerson.grades.add(grade)
+            mail = []
+            if person.email:
+                mail.append(person.email)
+                password = Person.objects.make_random_password()
+                person.set_password(password)
+                subject = "En bruker på Matistikk har blitt opprettet for deg med følgende informasjon. <br>" + \
+                          "Brukernavn: " + person.username + "<br>" + \
+                          "Passord: " + password + "<br>" + \
+                          "<br><br>" + \
+                          "For å logge inn gå til http://hv-6069.idi.ntnu.no"
+                msg = EmailMessage('Velkommen til Matistikk', subject, 'ntnu.matistikk@gmail.com', mail)
+                msg.content_subtype = "html"
+                msg.send()
         messages.success(self.request, str(len(persons)) + " elever ble lagt til!")
         return super().post(request, *args, **kwargs)
 

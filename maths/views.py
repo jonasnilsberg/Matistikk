@@ -4,7 +4,7 @@ from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, \
-    GeogebraAnswer, Item, MultipleChoiceOption, InputFieldTask, InputField
+    GeogebraAnswer, Item, MultipleChoiceOption, InputFieldTask, InputField, Directory
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
@@ -12,7 +12,6 @@ import json
 from django.db.models import Q
 import django_excel as excel
 from administration.views import AdministratorCheck, RoleCheck
-import datetime
 import random
 from django.http import HttpResponseRedirect
 
@@ -157,7 +156,20 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
     login_url = reverse_lazy('login')
     template_name = 'maths/task_form.html'
     form_class = CreateTaskForm
-    success_url = reverse_lazy('maths:taskList')
+    success_url = reverse_lazy('maths:directoryRoot')
+
+    def get_initial(self):
+        if self.kwargs.get('directory_pk'):
+            data = {
+                'directory': self.kwargs.get('directory_pk')
+            }
+            return data
+        else:
+            directory = Directory.objects.get(parent_directory=None)
+            data = {
+                'directory': directory.id
+            }
+            return data
 
     def get_context_data(self, **kwargs):
         """
@@ -181,6 +193,9 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
         :return: calls super with the new form.
         """
         task = form.save(commit=False)
+        self.success_url = reverse_lazy('maths:directoryDetail', kwargs={
+            'directory_pk': task.directory.id
+        })
         task.author = self.request.user
         messages.success(self.request, 'Oppgave med navnet: ' + task.title + " ble opprettet.")
         variable_task = self.request.POST['variables']
@@ -498,7 +513,7 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
     model = Task
     form_class = CreateTaskForm
     pk_url_kwarg = 'task_pk'
-    success_url = reverse_lazy('maths:taskList')
+    success_url = reverse_lazy('maths:directoryRoot')
 
     def get_initial(self):
         """
@@ -544,6 +559,9 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
             :return: calls super with the new form.
         """
         task = form.save(commit=False)
+        self.success_url = reverse_lazy('maths:directoryDetail', kwargs={
+            'directory_pk': task.directory.id
+        })
         if self.request.POST.get('create_new', False):
             task.pk = None
             task.save()
@@ -678,6 +696,9 @@ class TaskCollectionCreateView(AdministratorCheck, views.AjaxResponseMixin, gene
             :return: Returns the updated context
         """
         context = super(TaskCollectionCreateView, self).get_context_data(**kwargs)
+        directory = Directory.objects.get(parent_directory=None)
+        context['directory'] = directory
+        context['sub_directories'] = Directory.objects.filter(parent_directory=directory)
         context['tasks'] = Task.objects.all()
         context['categories'] = Category.objects.all()
         context['update'] = False
@@ -793,7 +814,8 @@ class TaskCollectionDetailView(AdministratorCheck, views.AjaxResponseMixin, gene
         context = super(TaskCollectionDetailView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         context['publishedTests'] = Test.objects.filter(task_collection_id=self.kwargs.get('taskCollection_pk'))
-        context['update'] = Answer.objects.filter(test__task_collection_id=self.kwargs.get('taskCollection_pk')).exists()
+        context['update'] = Answer.objects.filter(
+            test__task_collection_id=self.kwargs.get('taskCollection_pk')).exists()
         return context
 
 
@@ -819,6 +841,9 @@ class TaskCollectionUpdateView(AdministratorCheck, views.AjaxResponseMixin, gene
             :return: Returns the updated context
         """
         context = super(TaskCollectionUpdateView, self).get_context_data(**kwargs)
+        directory = Directory.objects.get(parent_directory=None)
+        context['directory'] = directory
+        context['sub_directories'] = Directory.objects.filter(parent_directory=directory)
         context['tasks'] = Task.objects.all()
         context['categories'] = Category.objects.all()
         context['update'] = True
@@ -1041,7 +1066,10 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
         """
         if test.randomOrder:
             randomtest = sorted(test.task_collection.items.all(), key=lambda x: random.random())
-            context['randomtest'] = randomtest
+            context['items'] = randomtest
+        else:
+            task_order = TaskOrder.objects.filter(test=test)
+            context['items'] = Item.objects.filter(taskorder__in=task_order)
         forms = []
         for z in range(0, len(test.task_collection.items.all())):
             forms.append(CreateAnswerForm(prefix="task" + str(z)))
@@ -1117,7 +1145,7 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
                         score += 1
                     count += 1
                 answer.correct = score
-            answer.date_answered = datetime.datetime.now()
+            answer.date_answered = timezone.now()
             answer.save()
             base64 = request.POST["task" + str(y) + "-base64answer"]
             geogebradata = request.POST["task" + str(y) + "-geogebradata"]
@@ -1247,7 +1275,6 @@ class TestDeleteView(AdministratorCheck, generic.DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
         return super(TestDeleteView, self).delete(request, *args, **kwargs)
-
 
 
 class AnswerListView(AnswerCheck, generic.ListView):
@@ -1596,3 +1623,223 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
         context['tasks'] = Task.objects.all()
         context['items'] = Item.objects.all().order_by('-id')
         return context
+
+
+class DirectoryDetailView(views.AjaxResponseMixin, generic.TemplateView):
+    template_name = 'maths/directory_detail.html'
+
+    def post_ajax(self, request, *args, **kwargs):
+        directory_id = request.POST['id']
+        name = request.POST['name']
+        parent_id = request.POST['parent']
+        if directory_id == "0":
+            directory = Directory(name=name, author=request.user, date_created=timezone.now(),
+                                  parent_directory_id=parent_id)
+            directory.save()
+        else:
+            directory = Directory.objects.get(id=directory_id)
+            directory.name = name
+            directory.save()
+        data = {
+            "id": directory.id
+        }
+        return JsonResponse(data=data)
+
+    def get_ajax(self, request, *args, **kwargs):
+        directory_id = request.GET.get('directory')
+        directory = Directory.objects.get(id=directory_id)
+        sub_directories = Directory.objects.filter(parent_directory=directory)
+        sub_directories_tab = []
+        tasks_tab = []
+        for sub_directory in sub_directories:
+            sub_directory_data = {
+                'id': sub_directory.id,
+                'name': sub_directory.name
+            }
+            sub_directories_tab.append(sub_directory_data)
+        tasks = Task.objects.filter(directory=directory)
+        categories = Category.objects.filter(task__in=tasks).distinct()
+        category_tab = []
+        for category in categories:
+            category_date = {
+                'id': category.id,
+                'name': category.category_title
+            }
+            category_tab.append(category_date)
+        for task in tasks:
+            task_data = {
+                'id': task.id,
+                'title': task.title,
+                'author': task.author.username,
+                'variableTask': task.variableTask,
+            }
+            category_str = ""
+            for category in task.category.all():
+                category_str += category.category_title + " - "
+            category_str = category_str[:-3]
+            task_data['categories'] = category_str
+            tasks_tab.append(task_data)
+        data = {
+            'sub_directories': sub_directories_tab,
+            'tasks': tasks_tab,
+            'categories': category_tab
+        }
+        return JsonResponse(data=data)
+
+    def get_context_data(self, **kwargs):
+        context = super(DirectoryDetailView, self).get_context_data(**kwargs)
+        if self.kwargs.get('directory_pk'):
+            directory = Directory.objects.get(id=self.kwargs.get('directory_pk'))
+            bread = []
+            bread.insert(0, directory)
+            parent = True
+            if directory.parent_directory:
+                parent_directory = directory.parent_directory
+                while parent:
+                    if parent_directory:
+                        bread.insert(0, parent_directory)
+                        parent_directory = parent_directory.parent_directory
+                    else:
+                        parent = False
+            context['breadcrumbs'] = bread
+        else:
+            directory = Directory.objects.get(parent_directory=None)
+        tasks = Task.objects.filter(directory=directory)
+        context['directory'] = directory
+        context['tasks'] = tasks
+        context['sub_directories'] = Directory.objects.filter(parent_directory=directory)
+        context['categories'] = Category.objects.filter(task__in=tasks).distinct()
+        return context
+
+
+class DirectoryDelete(views.AjaxResponseMixin, generic.View):
+    def post_ajax(self, request, *args, **kwargs):
+        directory_id = request.POST['id']
+        directory = Directory.objects.get(id=directory_id)
+        parent_id = "0"
+        if directory.parent_directory:
+            parent_id = directory.parent_directory.id
+        if Task.objects.filter(directory=directory).exists() or \
+                Directory.objects.filter(parent_directory=directory).exists():
+            return JsonResponse(data={
+                'deleted': False
+            })
+        else:
+            directory.delete()
+        return JsonResponse(data={
+            'deleted': True,
+            'parent': parent_id
+        })
+
+
+class DirectoryEdit(views.AjaxResponseMixin, generic.View):
+    def post_ajax(self, request, *args, **kwargs):
+        directory_id = request.POST['id']
+        new_name = request.POST['newName']
+        directory = Directory.objects.get(id=directory_id)
+        directory.name = new_name
+        directory.save()
+        return JsonResponse(data={
+            'id': directory.id
+        })
+
+
+class DirectoryMove(views.AjaxResponseMixin, generic.View):
+    def get_ajax(self, request, *args, **kwargs):
+        get_root = request.GET.get('root')
+        if get_root == "true":
+            root = Directory.objects.get(parent_directory=None)
+            directories = Directory.objects.filter(parent_directory=root)
+            child_directories = []
+            for directory in directories:
+                children = Directory.objects.filter(parent_directory=directory)
+                parent = children.exists()
+                child_of_child = []
+                for child in children:
+                    parent_child = Directory.objects.filter(parent_directory=child).exists()
+                    child_data = {
+                        'id': child.id,
+                        'name': child.name,
+                        'parent': parent_child
+                    }
+                    child_of_child.append(child_data)
+                directory_data = {
+                    'id': directory.id,
+                    'name': directory.name,
+                    'parent': parent,
+                    'child': child_of_child
+                }
+                child_directories.append(directory_data)
+            data = {
+                "root_id": root.id,
+                "root_name": root.name,
+                "directories": child_directories
+            }
+            return JsonResponse(data)
+        else:
+            directory_id = request.GET.get('id')
+            directories = Directory.objects.filter(parent_directory_id=directory_id)
+            child_directories = []
+            for directory in directories:
+                children = Directory.objects.filter(parent_directory=directory)
+                parent = children.exists()
+                child_of_child = []
+                for child in children:
+                    parent_child = Directory.objects.filter(parent_directory=child).exists()
+                    child_data = {
+                        'id': child.id,
+                        'name': child.name,
+                        'parent': parent_child
+                    }
+                    child_of_child.append(child_data)
+                directory_data = {
+                    'id': directory.id,
+                    'name': directory.name,
+                    'parent': parent,
+                    'child': child_of_child
+                }
+                child_directories.append(directory_data)
+            return JsonResponse(data={
+                'directories': child_directories
+            })
+
+    def post_ajax(self, request, *args, **kwargs):
+        destination_id = request.POST['destination']
+        tasks_id = request.POST.get('tasks', False)
+        directories_id = request.POST.get('directories', False)
+        if tasks_id:
+            task_tab = tasks_id.split(',')
+            for task_id in task_tab:
+                task = Task.objects.get(id=task_id)
+                task.directory_id = destination_id
+                task.save()
+        if directories_id:
+            directory_tab = directories_id.split(',')
+            for directory_id in directory_tab:
+                directory = Directory.objects.get(id=directory_id)
+                directory.parent_directory_id = destination_id
+                directory.save()
+        destination = Directory.objects.get(id=destination_id)
+        bread = []
+        parent = True
+        bread.insert(0, {
+            'id': destination.id,
+            'name': destination.name
+        })
+        if destination.parent_directory:
+            parent_directory = destination.parent_directory
+            while parent:
+                if parent_directory:
+                    parent_data = {
+                        'id': parent_directory.id,
+                        'name': parent_directory.name
+                    }
+                    bread.insert(0, parent_data)
+                    parent_directory = parent_directory.parent_directory
+                else:
+                    parent = False
+        return JsonResponse(data={
+            'name': destination.name,
+            'path': destination.__str__(),
+            'breadcrumb': bread
+        })
