@@ -64,13 +64,9 @@
     <nav id="tasknav" class="navbar navbar-default navbar-fixed-bottom hidden">
         <div class="row">
             <div class="col-centered">
-                <button id="prevTaskBtn" class="btn btn-primary btn-lg border-radius" disabled="disabled" type="button"
-                        onclick="previousTask()"><i class="fa fa-arrow-left"
-                                                    aria-hidden="true"></i>
-                    Forrige oppgave
-                </button>
+
                 <ul id="taskBtnList" class="nav navbar-nav scrollbar"
-                    style="white-space: nowrap; overflow-x: auto; max-width: 30vw">
+                    style="white-space: nowrap; overflow-x: auto; max-width: 70vw">
                     {% for item in test.task_collection.items.all %}
                         <li id="liOppgave{{ forloop.counter }}" data-menuanchor="oppgave{{ forloop.counter }}"
                             style="display: inline-block; float: none;">
@@ -82,20 +78,19 @@
                         <a type="button" onclick="checkTest(); goToTask(0)" style="cursor:pointer;">Oppsummering</a>
                     </li>
                 </ul>
-                <button id="nextTaskBtn" class="btn btn-primary btn-lg border-radius" type="button"
-                        onclick="nextTask()"><span
-                        id="nextTaskBtnText">Neste Oppgave</span> <i
-                        class="fa fa-arrow-right"
-                        aria-hidden="true"></i></button>
-                <ul id="endTestNav" class="nav navbar-nav navbar-right">
-                    <button id="sendBtn" class="btn btn-success btn-lg border-radius" type="button"
-                            onclick="submitTask()"
-                            {% if test.strictOrder or request.user.role == 2 or request.user.role == 3 or request.user.role == 4 %}disabled="disabled"{% endif %}>
-                        Send Inn
+
+                <ul id="endTestNav" class="nav navbar-nav navbar-right" style="margin-right: 5px;">
+                    <button id="prevTaskBtn" class="btn btn-primary btn-lg border-radius" disabled="disabled"
+                            type="button"
+                            onclick="previousTask()"><i class="fa fa-arrow-left"
+                                                        aria-hidden="true"></i>
+                        Forrige oppgave
                     </button>
-                    <a class="btn btn-danger btn-lg pull-right border-radius" data-toggle='modal'
-                       data-target='#exitTestModal' style="margin-right: 20px;">Avbryt
-                        Test</a>
+                    <button id="nextTaskBtn" class="btn btn-primary btn-lg border-radius" type="button"
+                            onclick="nextTask()"><span
+                            id="nextTaskBtnText">Neste Oppgave</span> <i
+                            class="fa fa-arrow-right"
+                            aria-hidden="true"></i></button>
                 </ul>
             </div>
 
@@ -132,9 +127,7 @@
             <div id="task{{ forloop.counter }}" class="col-xs-12 col-md-12 col-sm-12 container-fluid"
                  data-itemid="{{ item.id }}">
                 <div class="panel panel-info">
-                    <div class="panel-heading" style="padding-top: 1px;">
-                        <h3 class="text-center">Oppgave {{ forloop.counter }}</h3>
-                    </div>
+
                     {% if forloop.first %}
                         <span id="geocount" hidden>{% get_geogebra_count test %}</span>
                         <span id="taskcount" hidden>{{ test.task_collection.items.all.count }}</span>
@@ -154,13 +147,16 @@
                         </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 splitdiv">
                             <div class="panel panel-default" style="box-shadow: none;">
+                                <div class="panel-heading" style="padding-top: 1px; padding-bottom: 1px; border: none">
+                                    <h3 class="text-center">Oppgave {{ forloop.counter }}</h3>
+                                </div>
                                 <div class="panel-heading" id="tasktextdiv">
                                         <textarea id="tasktext{{ item.id }}" style="cursor:pointer;">
                                             {% if item.task.variableTask %}
                                                 {% insert_params item.task.text item.variables as text %}
-                                                <h4>{{ text | safe }}</h4>
+                                                {{ text | safe }}
                                             {% else %}
-                                                <h4>{{ item.task.text | safe }}</h4>
+                                                {{ item.task.text | safe }}
                                             {% endif %}
                                         </textarea>
                                 </div>
@@ -463,7 +459,9 @@
     jQuery.fn.exists = function () {
         return jQuery(this).length > 0;
     };
+    var role = "{{ request.user.role }}";
     var geocount = document.getElementById('geocount').innerHTML;
+    var submitNow = false;
     var geoFinished = false;
     var onLeave = false;
     var goToNextTask = false;
@@ -564,6 +562,10 @@
                     $('#taskBtnList').scrollTo(document.getElementById("liOppgave" + parseInt(nextIndex - 1)));
                 }
                 if (strictOrder == 'False') {
+                    var btn = $('#nextTaskBtn');
+                    btn.removeClass('btn-success');
+                    btn.addClass('btn-primary');
+                    submitNow = false;
                     if (nextIndex == tasksnr) {
                         if (tasksnr == 2) {
                             $('#prevTaskBtn').attr('disabled', 'disabled');
@@ -578,20 +580,22 @@
                         $('#nextTaskBtnText').text('Neste Oppgave');
                     } else if (nextIndex == summary) {
                         checkTest();
-                        $('#nextTaskBtn').attr('disabled', 'disabled');
                         $('#prevTaskBtn').attr('disabled', false);
-                        $('#nextTaskBtnText').text('Oppsummering');
+                        var btn = $('#nextTaskBtn');
+                        $('#nextTaskBtnText').text('Send inn');
+                        btn.removeClass('btn-primary');
+                        btn.addClass('btn-success');
+                        submitNow = true;
+                        if (role !== "1") {
+                            btn.attr('disabled', true);
+                        }
                     } else {
                         $('#nextTaskBtn').attr('disabled', false);
                         $('#nextTaskBtnText').text('Neste Oppgave');
                         $('#prevTaskBtn').attr('disabled', false);
                     }
                 } else {
-                    if (nextIndex == tasksnr) {
-                        $('#nextTaskBtnText').text('Oppsummering');
-                    } else if (nextIndex == summary) {
-                        $('#sendBtn').attr('disabled', false);
-                    }
+                    submitNow = false;
                     var nextTask = index + 1;
                     if (direction == 'Up') {
                         return false;
@@ -609,6 +613,7 @@
                                 backdrop: true
                             });
                         }
+                        alert('check');
                         return false;
                     } else if (index > 1) {
                         if (!goToNextTask) {
@@ -642,6 +647,16 @@
                                         if (result) {
                                             goToNextTask = true;
                                             goToTask(index);
+                                            if (nextIndex == tasksnr) {
+                                                $('#nextTaskBtnText').text('Oppsummering');
+                                            } else if (nextIndex == summary) {
+                                                $('#sendBtn').attr('disabled', false);
+                                                var btn = $('#nextTaskBtn');
+                                                $('#nextTaskBtnText').text('Send inn');
+                                                btn.removeClass('btn-primary');
+                                                btn.addClass('btn-success');
+                                                submitNow = true;
+                                            }
                                         }
                                     }
                                 });
@@ -683,7 +698,11 @@
      * This function changes the fullpage.js-section to the section below the current one.
      */
     function nextTask() {
-        $('#fullpage').fullpage.moveSectionDown();
+        if (submitNow) {
+            submitTask();
+        } else {
+            $('#fullpage').fullpage.moveSectionDown();
+        }
     }
 
     /**
@@ -742,7 +761,7 @@
 
     if (typeof window.innerWidth != 'undefined' && window.innerWidth > 1000) {
         viewPortWidth = window.innerWidth * 0.5;
-        viewPortHeight = window.innerHeight * 0.8;
+        viewPortHeight = window.innerHeight * 0.9;
     }
 
     var applet = [];
@@ -892,10 +911,15 @@
                 height = geo.data('height');
                 if (window.innerWidth > window.innerHeight) {
                     var scaledWidth = (window.innerWidth * 0.5) / width;
-                    var scaledHeight = (window.innerHeight * 0.80) / height;
+                    var scaledHeight = (window.innerHeight * 0.93) / height;
                 } else {
                     var scaledWidth = (window.innerWidth * 0.49) / width;
                     var scaledHeight = (window.innerHeight * 0.50) / height;
+                }
+                if (scaledWidth < scaledHeight) {
+                    scaledHeight = scaledWidth;
+                } else {
+                    scaledWidth = scaledHeight;
                 }
                 var appletContainerScaler = $('#applet_container' + i + ' .applet_scaler');
                 appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
@@ -907,7 +931,7 @@
         }
         var panelHeight = $('.panel-heading').height();
         var navbarHeight = 50;
-        var colHeight = window.innerHeight - panelHeight - navbarHeight;
+        var colHeight = window.innerHeight - panelHeight;
         $('.fulldiv').css('height', colHeight + 'px');
         $('.splitdiv').css('height', colHeight + 'px');
     }
@@ -920,8 +944,13 @@
                 var geo = $('#base64' + i);
                 width = geo.data('width');
                 height = geo.data('height');
-                var scaledWidth = (window.innerWidth * 0.49) / width;
-                var scaledHeight = (window.innerHeight * 0.70) / height;
+                var scaledWidth = (window.innerWidth * 0.5) / width;
+                var scaledHeight = (window.innerHeight * 0.93) / height;
+                if (scaledWidth < scaledHeight) {
+                    scaledHeight = scaledWidth;
+                } else {
+                    scaledWidth = scaledHeight;
+                }
                 appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
                 appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
                 appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
@@ -1198,7 +1227,11 @@
                 }
             }
             geogebradata.value = geolistener.value;
-            timespent2.value = parseFloat(timespent);
+            if (timespent) {
+                timespent2.value = parseFloat(timespent);
+            } else {
+                timespent2.value = 0;
+            }
             if (typeof textanswer !== 'undefined') {
                 textanswer2.value = textanswer;
             }

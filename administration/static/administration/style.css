@@ -376,7 +376,7 @@ html, body {
 }
 
 #tasktextdiv {
-    height: 25%;
+    height: 30%;
 }
 
 .orderinfo {
@@ -440,7 +440,7 @@ ul.scrollbar::-webkit-scrollbar {
 }
 
 .answerbody {
-    max-height: 75%;
+    max-height: 62%;
     overflow: auto;
 }
 
