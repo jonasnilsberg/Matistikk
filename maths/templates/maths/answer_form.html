@@ -143,10 +143,10 @@
                                data-enableShiftDragZoom="{{ geogebratask.enableShiftDragZoom }}"
                                data-enableRightClick="{{ geogebratask.enableRightClick }}"
                                value="{{ geogebratask.base64 }}" hidden>
-                        <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 splitdiv">
+                        <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
                             <div id="applet_container{{ forloop.counter }}"></div>
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 splitdiv">
+                        <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading" style="padding-top: 1px; padding-bottom: 1px;">
                                     <h4 class="text-center tasktitle">Oppgave {{ forloop.counter }}</h4>
@@ -938,11 +938,6 @@
                 document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
             }
         }
-        var panelHeight = $('.panel-heading').height();
-        var navbarHeight = 50;
-        var colHeight = window.innerHeight - panelHeight;
-        $('.fulldiv').css('height', colHeight + 'px');
-        $('.splitdiv').css('height', colHeight + 'px');
     }
 
     window.onresize = function (event) {
