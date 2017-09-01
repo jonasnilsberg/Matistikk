@@ -374,11 +374,6 @@ html, body {
     background-color: darkgray; /* make this whatever you want */
     cursor: pointer;
 }
-
-#tasktextdiv {
-    height: 30%;
-}
-
 .orderinfo {
     border-radius: 10px !important;
     height: 42px;
@@ -437,11 +432,6 @@ ul.scrollbar::-webkit-scrollbar {
     height: calc(100% - 55px);
     height: -webkit-calc(100% - 55px); /* google, safari */
     height: -moz-calc(100% - 55px); /* firefox */
-}
-
-.answerbody {
-    max-height: 62%;
-    overflow: auto;
 }
 
 .tasktable tbody:before {
@@ -560,4 +550,9 @@ ul.scrollbar::-webkit-scrollbar {
 .taskcollectionbar {
     margin-top: 3px;
     margin-bottom: 7px;
+}
+
+.tasktitle {
+    margin-top: 20px;
+    margin-bottom: 12px;
 }
