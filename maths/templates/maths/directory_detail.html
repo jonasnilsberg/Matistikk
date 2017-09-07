@@ -155,6 +155,12 @@
                                             onclick="previewTask(this)"><span
                                             class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
                                     </button>
+                                    <button type="button" value="{{ task.id }}"
+                                            class="btn taskLog {% if task.approved %}btn-success{% else %}btn-warning{% endif %}">
+                                        <i
+                                                class="fa fa-comment" aria-hidden="true"></i>
+                                        Logg
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -396,6 +402,7 @@
                     }
                 });
             });
+
             /**
              * Sets up the multiselect widget for the category filtering.
              */
@@ -787,8 +794,17 @@
                         task_arr.push("{% url 'maths:taskUpdate' 12345 %}".replace(/12345/, val.id));
                         task_arr.push('"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater </a><button type="button" value="');
                         task_arr.push(val.id);
-                        task_arr.push('" class="btn btn-info previewtask" onclick="previewTask(this)"><span class="glyphicon glyphicon-eye-open"></span> Forhåndsvis </button></div>');
-                        task_arr.push('</td></tr>');
+                        task_arr.push('" class="btn btn-info previewtask" onclick="previewTask(this)"><span class="glyphicon glyphicon-eye-open"></span> Forhåndsvis </button>');
+                        task_arr.push('<button type="button" value="');
+                        task_arr.push(val.id);
+                        task_arr.push('" class="btn taskLog ');
+                        if (val.approved) {
+                            task_arr.push('btn-success');
+                        } else {
+                            task_arr.push('btn-warning');
+                        }
+                        task_arr.push('"><i class="fa fa-comment" aria-hidden="true"></i> Logg </button>');
+                        task_arr.push('</div></td></tr>');
                     });
                     tbody.append(task_arr.join(''));
                     var categories = json.categories;
@@ -847,12 +863,14 @@
                 }
             }
         }
+
     </script>
 
 {% endblock %}
 
 {% block modal %}
     {% include 'matistikk/previewTask.html' %}
+    {% include 'matistikk/taskLog.html' with form=form %}
     <div class="modal fade" id="deleteDirectoryModal" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -898,7 +916,7 @@
 
                     </div>
                 </div>
-                <div class="modal-footer delete">
+                <div class="modal-footer logFooter">
 
                     <button type="button" class="btn btn-success pull-left moveBtn"><i class="fa fa-arrows"
                                                                                        aria-hidden="true"></i> Flytt
@@ -914,8 +932,8 @@
             </div>
         </div>
     </div>
-    <script>
 
+    <script>
         $('.createFolderMove').click(function () {
             bootbox.prompt({
                 size: 'small',

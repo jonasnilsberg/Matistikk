@@ -1,5 +1,5 @@
 from django import forms
-from .models import Task, Category, MultipleChoiceTask, GeogebraTask, Test, Answer
+from .models import Task, Category, MultipleChoiceTask, GeogebraTask, Test, Answer, TaskLog
 from administration.models import Person, Grade, School, Gruppe
 from django.forms import inlineformset_factory
 
@@ -72,6 +72,13 @@ class CreateCategoryForm(forms.ModelForm):
         """
         model = Category
         fields = ['category_title']
+
+
+class CreateTaskLog(forms.ModelForm):
+
+    class Meta:
+        model = TaskLog
+        fields = ['text']
 
 
 class CreateTestForm(forms.ModelForm):

@@ -70,38 +70,39 @@
                     {% if geogebra %}
                         {% for geo in geogebra %}
                             {% get_geogebra_task geo.answer.item.task as geoTask %}
-                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 geogebra splitdiv">
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 geogebra">
                                 <input id="base64{{ forloop.parentloop.counter }}" type="text"
                                        value="{{ geo.base64 }}" hidden data-variables="{{ answer.item.variables }}"
                                        data-height="{{ geoTask.height }}" data-width="{{ geoTask.width }}">
                                 <div id="applet_container{{ forloop.parentloop.counter }}"></div>
                             </div>
-                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 splitdiv">
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" style="padding-top: 1px; padding-bottom: 1px;">
-                                        <h3 class="text-center">Oppgave {{ forloop.counter }}
+                                        <h4 class="text-center tasktitle">Oppgave {{ forloop.counter }}
                                             - {{ answer.timespent|floatformat:"0" }}
-                                            Sekunder</h3>
+                                            Sekunder</h4>
                                     </div>
-                                    <div class="panel-heading" id="tasktextdiv">
-                                        <textarea id="tasktext{{ answer.item.id }}">
-                                             {% if answer.item.task.variableTask %}
-                                                 {% insert_params answer.item.task.text answer.item.variables as text %}
-                                                 <h4>{{ text | safe }}</h4>
-                                             {% else %}
-                                                 <h4>{{ answer.item.task.text | safe }}</h4>
-                                             {% endif %}
-                                        </textarea>
-                                    </div>
-                                    <div class="panel-body" style="padding: 10px 0px 0px 0px;">
-                                        <ul class="nav nav-tabs">
+                                    <div class="panel-body">
+                                        <div class="" id="tasktextdiv">
+                                            <textarea id="tasktext{{ answer.item.id }}">
+                                                 {% if answer.item.task.variableTask %}
+                                                     {% insert_params answer.item.task.text answer.item.variables as text %}
+                                                     <h4>{{ text | safe }}</h4>
+                                                 {% else %}
+                                                     <h4>{{ answer.item.task.text | safe }}</h4>
+                                                 {% endif %}
+                                            </textarea>
+                                        </div>
+                                        <ul class="nav nav-tabs" style="padding-top: 10px;">
                                             <li class="nav active"><a href="#answer{{ forloop.parentloop.counter }}"
                                                                       data-toggle="tab">Besvarelse</a>
                                             </li>
                                             <li class="nav"><a href="#approach{{ forloop.parentloop.counter }}"
                                                                data-toggle="tab">Fremgangsmåte</a></li>
                                         </ul>
-                                        <div class="tab-content answerListBody" style="padding-left: 15px;">
+                                        <div id="answerdiv{{ answer.item.id }}" class="tab-content"
+                                             style="padding-top: 10px;">
                                             <div class="tab-pane fade in active"
                                                  id="answer{{ forloop.parentloop.counter }}">
                                                 {% if answer.item.task.answertype == 1 %}
@@ -225,7 +226,10 @@
                                                 {% endif %}
                                                 {% if answer.item.task.reasoning %}
                                                     <div id="reasoningdiv">
-                                                        <label for="reasoning{{ answer.item.id }}">Begrunnelse</label>
+                                                        <label for="reasoning{{ answer.item.id }}">
+                                                            {% if answer.item.task.reasoningText %}
+                                                                {{ answer.item.task.reasoningText }}{% else %}
+                                                                Begrunnelse{% endif %}</label>
                                                         <textarea readonly class="form-control"
                                                                   id="reasoning{{ answer.item.id }}"
                                                                   rows="6"
@@ -455,24 +459,22 @@
      * Adds tinymce to the textareas.
      */
     var taskcount = document.getElementById('taskcount').innerHTML;
-    var divheight = document.getElementById('tasktextdiv').clientHeight;
-    if (divheight > 170) {
-        var divheightPrc = (divheight / 100) * 25;
-    } else {
-        var divheightPrc = (divheight / 100) * 30;
-    }
+    var panelheight = $('.panel-heading').outerHeight();
+    var navheight = 50;
+    var maxTaskHeight = (window.innerHeight - panelheight - navheight );
     for (var i = 0; i < taskcount; i++) {
         var div = $('#task' + (i + 1));
         var itemid = div.data('itemid');
-
+        var tasktextPercent = 0.5;
         tinymce.init({
             selector: '#tasktext' + itemid,
-            plugins: 'placeholder',
+            plugins: 'placeholder autoresize',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
             toolbar: false,
             menubar: false,
             statusbar: false,
-            height: '' + (divheight - divheightPrc),
+            autoresize_max_height: maxTaskHeight * tasktextPercent,
+            autoresize_bottom_margin: 0,
             readonly: 1,
             body_id: 'tasktextID'
         });
@@ -563,10 +565,14 @@
 
     function addVariables() {
         $('.applet_scaler').css('transform-origin', '0% 0% 0px');
+        var navHeight = $('.nav-tabs').outerHeight();
         for (var i = 1; i <= taskcount; i++) {
             var div = $('#task' + i);
             var geo = $('#base64' + i);
             var itemid = div.data('itemid');
+            var tasktextHeight = div.find('#tasktextdiv').outerHeight();
+            var answerHeight = maxTaskHeight - tasktextHeight - navHeight - 20;
+            $('#answerdiv' + itemid).css('height', answerHeight + 'px');
             var variables = geo.data('variables');
             if (variables) {
                 var variableCount = window["ggbApplet" + i].getValue('matistikkAntall');
@@ -618,17 +624,6 @@
                 document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
             }
         }
-        var panelHeight = 68;
-        var navbarHeight = 46;
-        var colHeight = window.innerHeight - panelHeight - navbarHeight;
-        var answerheight = (colHeight * 0.75 ) - 90;
-        $('.col-md-6').css('height', colHeight + 'px');
-        $('.fulldiv').css('height', colHeight + 'px');
-        $('.splitdiv').css('height', colHeight + 'px');
-        $('.answerListBody').css('height', answerheight + 'px');
-        $('.answerListBody').css('max-height', answerheight + 'px');
-
-
     }
 
     window.onresize = function (event) {

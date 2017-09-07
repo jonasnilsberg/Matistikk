@@ -2,9 +2,9 @@ from django.views import generic
 from django.contrib import messages
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
-from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm
+from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm, CreateTaskLog
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, \
-    GeogebraAnswer, Item, MultipleChoiceOption, InputFieldTask, InputField, Directory
+    GeogebraAnswer, Item, MultipleChoiceOption, InputFieldTask, InputField, Directory, TaskLog
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
@@ -432,6 +432,7 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
         context = super(TaskListView, self).get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         context['geogebratask'] = GeogebraTask.objects.all()
+        context['form'] = CreateTaskLog()
         return context
 
 
@@ -1672,6 +1673,7 @@ class DirectoryDetailView(views.AjaxResponseMixin, generic.TemplateView):
                 'title': task.title,
                 'author': task.author.username,
                 'variableTask': task.variableTask,
+                'approved': task.approved
             }
             category_str = ""
             for category in task.category.all():
@@ -1709,6 +1711,7 @@ class DirectoryDetailView(views.AjaxResponseMixin, generic.TemplateView):
         context['tasks'] = tasks
         context['sub_directories'] = Directory.objects.filter(parent_directory=directory)
         context['categories'] = Category.objects.filter(task__in=tasks).distinct()
+        context['form'] = CreateTaskLog()
         return context
 
 
@@ -1843,3 +1846,44 @@ class DirectoryMove(views.AjaxResponseMixin, generic.View):
             'path': destination.__str__(),
             'breadcrumb': bread
         })
+
+
+class TaskLogView(views.AjaxResponseMixin, generic.View):
+    def get_ajax(self, request, *args, **kwargs):
+        task_id = request.GET.get('task_id')
+        task = Task.objects.get(id=task_id)
+        taskLogs = TaskLog.objects.filter(task=task).order_by('-id')
+        tasklog_list = []
+        for tasklog in taskLogs:
+            tasklog_dir = {
+                'comment': tasklog.text,
+                'author': tasklog.author.get_full_name(),
+                'date': formats.date_format(timezone.localtime(tasklog.date), "SHORT_DATETIME_FORMAT"),
+            }
+            tasklog_list.append(tasklog_dir)
+        return JsonResponse(data={
+            'name': task.title,
+            'logs': tasklog_list
+        })
+
+    def post_ajax(self, request, *args, **kwargs):
+        task_id = request.POST.get('task_id', False)
+        text = request.POST.get('comment', False)
+        approved = request.POST.get('approved', False)
+        task = Task.objects.get(id=task_id)
+        if text == 'approved':
+            if approved == 'true':
+                text = 'Oppgaven er satt som godkjent!'
+                task.approved = True
+            else:
+                text = 'Oppgaven er satt som ikke godkjent!'
+                task.approved = False
+        taskLog = TaskLog(text=text, author=request.user, task=task, date=timezone.now())
+        taskLog.save()
+        task.save()
+        return JsonResponse(data={
+            'author': taskLog.author.get_full_name(),
+            'comment': taskLog.text,
+            'date': formats.date_format(timezone.localtime(taskLog.date), "SHORT_DATETIME_FORMAT"),
+        })
+

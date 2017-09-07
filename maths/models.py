@@ -74,12 +74,20 @@ class Task(models.Model):
     author = models.ForeignKey(Person)
     category = models.ManyToManyField(Category)
     directory = models.ForeignKey(Directory)
+    approved = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-id']
 
     def __str__(self):
         return str(self.id) + " - " + self.title
+
+
+class TaskLog(models.Model):
+    text = models.TextField(max_length=1000, verbose_name='Kommentar...')
+    task = models.ForeignKey(Task)
+    author = models.ForeignKey(Person)
+    date = models.DateTimeField()
 
 
 class Item(models.Model):
