@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'oppgaver/mapper/slett/$', views.DirectoryDelete.as_view(), name='directoryDelete'),
     url(r'oppgaver/mapper/endre/$', views.DirectoryEdit.as_view(), name='directoryEdit'),
     url(r'oppgaver/mapper/flytt/$', views.DirectoryMove.as_view(), name='directoryMove'),
-    url('r/oppgaver/logg/$', views.TaskLogView.as_view(), name='taskLog')
+    url('r/oppgaver/logg/$', views.TaskLogView.as_view(), name='taskLog'),
+    url('r/oppgaver/logg/slett/$', views.TaskLogDeleteView.as_view(), name='taskLogDelete'),
 
 ]

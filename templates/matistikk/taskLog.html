@@ -85,11 +85,15 @@
             success: function (json) {
                 $('.noComments').addClass('hidden');
                 var arr = [];
-                arr.push('<div class="panel panel-success"><div class="panel-heading"><strong>');
+                arr.push('<div id="comment');
+                arr.push(json.id);
+                arr.push('" class="panel panel-success"><div class="panel-heading"><strong>');
                 arr.push(json.author);
                 arr.push('</strong><span class="pull-right">');
                 arr.push(json.date);
-                arr.push('</span></div><div class="panel-body comment">');
+                arr.push('<button style="margin-left: 15px;" type="button" value="');
+                arr.push(json.id);
+                arr.push('" class="deleteComment close">&times;</button></span></div><div class="panel-body comment">');
                 arr.push(json.comment);
                 arr.push('</div></div>');
                 $('.commentSection').prepend(arr.join(''));
@@ -133,11 +137,15 @@
                 }
                 $('.commentSection').empty();
                 $.each(json.logs, function (i, key) {
-                    arr.push('<div class="panel panel-default"><div class="panel-heading"><strong>');
+                    arr.push('<div id="comment');
+                    arr.push(key.id);
+                    arr.push('" class="panel panel-default"><div class="panel-heading"><strong>');
                     arr.push(key.author);
                     arr.push('</strong><span class="pull-right">');
                     arr.push(key.date);
-                    arr.push('</span></div><div class="panel-body comment">');
+                    arr.push('<button style="margin-left: 15px;" type="button" value="');
+                    arr.push(key.id);
+                    arr.push('" class="deleteComment close">&times;</button></span></div><div class="panel-body comment">');
                     arr.push(key.comment);
                     arr.push('</div></div>');
                 });
@@ -148,6 +156,48 @@
                 alert(xhr.responseText);
             }
         });
+    });
+
+    $('.commentSection').on('click', '.deleteComment', function () {
+        var id = $(this).val();
+        var height = (window.innerHeight / 4);
+        bootbox.confirm({
+            message: "Er du sikker på at du vil slette denne kommentaren?",
+            buttons: {
+                cancel: {
+                    label: 'Nei',
+                    className: 'btn-danger'
+                },
+                confirm: {
+                    label: 'Ja',
+                    className: 'btn-success'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{% url 'maths:taskLogDelete' %}',
+                        data: {
+                            'comment_id': id,
+                            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+
+                        },
+                        dataType: 'json',
+                        success: function (json) {
+                            $('#comment' + json.id).remove();
+                            if(!$('.commentSection .panel').length){
+                                $('.noComments').removeClass('hidden');
+                            }
+                        },
+                        error: function (xhr) {
+                            alert(xhr.responseText);
+                        }
+                    });
+                }
+            }
+        });
+        $('.bootbox .modal-dialog').css('margin-top', height + 'px');
     });
 
     $('.approveBtn').on('click', function () {

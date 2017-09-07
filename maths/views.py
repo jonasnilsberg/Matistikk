@@ -1856,6 +1856,7 @@ class TaskLogView(views.AjaxResponseMixin, generic.View):
         tasklog_list = []
         for tasklog in taskLogs:
             tasklog_dir = {
+                'id': tasklog.id,
                 'comment': tasklog.text,
                 'author': tasklog.author.get_full_name(),
                 'date': formats.date_format(timezone.localtime(tasklog.date), "SHORT_DATETIME_FORMAT"),
@@ -1882,8 +1883,18 @@ class TaskLogView(views.AjaxResponseMixin, generic.View):
         taskLog.save()
         task.save()
         return JsonResponse(data={
+            'id': taskLog.id,
             'author': taskLog.author.get_full_name(),
             'comment': taskLog.text,
             'date': formats.date_format(timezone.localtime(taskLog.date), "SHORT_DATETIME_FORMAT"),
         })
 
+
+class TaskLogDeleteView(views.AjaxResponseMixin, generic.View):
+    def post_ajax(self, request, *args, **kwargs):
+        log_id = request.POST.get('comment_id', False)
+        log = TaskLog.objects.get(id=log_id)
+        log.delete()
+        return JsonResponse(data={
+            'id': log_id
+        })
