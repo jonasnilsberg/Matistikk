@@ -24,7 +24,6 @@
     <script>
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
-
     </script>
 {% endblock %}
 {% block body %}
@@ -66,7 +65,7 @@
                 </tr>
 
                 </thead>
-                <tbody>
+                <tbody class="tasktablebody">
                 {% for task in object_list %}
                     <tr id="task{{ task.id }}">
                         <td>{{ task.id }}</td>
@@ -97,6 +96,12 @@
                                         onclick="previewTask(this)"
                                         id="preview{{ task.id }}"><span
                                         class="glyphicon glyphicon-eye-open"></span> Forhåndsvis
+                                </button>
+                                <button type="button" value="{{ task.id }}"
+                                        class="btn taskLog {% if task.approved %}btn-success{% else %}btn-warning{% endif %}">
+                                    <i
+                                            class="fa fa-comment" aria-hidden="true"></i>
+                                    Logg
                                 </button>
                             </div>
                         </td>
@@ -171,6 +176,13 @@
                     }
                 }
             });
+            var headerHeight = $('.panel-heading').outerHeight();
+            var navbarHeight = $('.navbar').outerHeight();
+            var footerHeight = $('.panel-footer').outerHeight();
+            var totalHeight = headerHeight + navbarHeight + footerHeight;
+            var screenHeight = window.innerHeight;
+            var bodyHeight = screenHeight - totalHeight - 30;
+            $('#tableCont').css('max-height', bodyHeight + 'px');
             $(".alert-success").fadeTo(5000, 500).slideUp(500, function () {
                 $('.alert-success').slideUp(500);
             });
@@ -211,12 +223,11 @@
             }
         }
 
-
-
     </script>
 {% endblock %}
 
 {% block modal %}
-   {% include 'matistikk/previewTask.html' %}
+    {% include 'matistikk/previewTask.html' %}
+    {% include 'matistikk/taskLog.html' %}
 {% endblock %}
 

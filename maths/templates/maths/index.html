@@ -1,57 +1,17 @@
 {% extends 'matistikk/base.html' %}
 {% load maths_extras %}
+{% load static %}
+{% load staticfiles %}
 {% block head %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <script src="{% static 'maths/js/sweetalert/sweetalert.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'maths/css/sweetalert/sweetalert.css' %}">
+
 {% endblock %}
 {% block body %}
     <!-- Source http://codepen.io/rudyvalencia/details/JmowD. The admin panel is inspired by this codepen.-->
     <style>
-        .circle-tile {
-            margin-bottom: 15px;
-            text-align: center;
-        }
 
-        .circle-tile-heading {
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 100%;
-            color: #FFFFFF;
-            height: 80px;
-            margin: 0 auto -40px;
-            position: relative;
-            transition: all 0.3s ease-in-out 0s;
-            width: 80px;
-        }
-
-        .circle-tile-heading .fa {
-            line-height: 80px;
-        }
-
-        .circle-tile-content {
-            padding-top: 50px;
-        }
-
-        .circle-tile-number {
-            font-size: 26px;
-            font-weight: 700;
-            line-height: 1;
-            padding: 5px 0 15px;
-        }
-
-        .circle-tile-description {
-            text-transform: uppercase;
-        }
-
-        .circle-tile-heading.dark-blue:hover {
-            background-color: #0e84b5;
-        }
-
-        .dark-blue {
-            background-color: #34495E;
-        }
-
-        .text-faded {
-            color: rgba(255, 255, 255, 0.7);
-        }
     </style>
 
     {% if request.user.role == 4 %}
@@ -61,7 +21,8 @@
                 <div class="col-sm-2">
                     <div class="circle-tile">
                         <a href="{% url 'administration:personList' %}">
-                            <div class="circle-tile-heading dark-blue border-radius"><i class="fa fa-user fa-fw fa-3x"></i></div>
+                            <div class="circle-tile-heading dark-blue border-radius"><i
+                                    class="fa fa-user fa-fw fa-3x"></i></div>
                         </a>
                         <div class="circle-tile-content dark-blue">
                             <div class="circle-tile-description text-faded"> Antall Brukere</div>
@@ -72,7 +33,8 @@
                 <div class="col-sm-2">
                     <div class="circle-tile ">
                         <a href="{% url 'administration:schoolList' %}">
-                            <div class="circle-tile-heading dark-blue border-radius"><i class="fa fa-home fa-fw fa-3x"></i></div>
+                            <div class="circle-tile-heading dark-blue border-radius"><i
+                                    class="fa fa-home fa-fw fa-3x"></i></div>
                         </a>
                         <div class="circle-tile-content dark-blue">
                             <div class="circle-tile-description text-faded"> Antall Skoler</div>
@@ -83,7 +45,8 @@
                 <div class="col-sm-2">
                     <div class="circle-tile ">
                         <a href="{% url 'administration:schoolList' %}">
-                            <div class="circle-tile-heading dark-blue border-radius"><i class="fa fa-graduation-cap fa-fw fa-3x"></i>
+                            <div class="circle-tile-heading dark-blue border-radius"><i
+                                    class="fa fa-graduation-cap fa-fw fa-3x"></i>
                             </div>
                         </a>
                         <div class="circle-tile-content dark-blue border-radius">
@@ -95,7 +58,8 @@
                 <div class="col-sm-2">
                     <div class="circle-tile ">
                         <a href="{% url 'administration:groupList' %}">
-                            <div class="circle-tile-heading dark-blue border-radius"><i class="fa fa-users fa-fw fa-3x"></i></div>
+                            <div class="circle-tile-heading dark-blue border-radius"><i
+                                    class="fa fa-users fa-fw fa-3x"></i></div>
                         </a>
                         <div class="circle-tile-content dark-blue">
                             <div class="circle-tile-description text-faded"> Antall Grupper</div>
@@ -106,7 +70,8 @@
                 <div class="col-sm-2">
                     <div class="circle-tile ">
                         <a href="{% url 'maths:taskList' %}">
-                            <div class="circle-tile-heading dark-blue border-radius"><i class="fa fa-pencil fa-fw fa-3x"></i></div>
+                            <div class="circle-tile-heading dark-blue border-radius"><i
+                                    class="fa fa-pencil fa-fw fa-3x"></i></div>
                         </a>
                         <div class="circle-tile-content dark-blue">
                             <div class="circle-tile-description text-faded"> Antall Svar</div>
@@ -117,7 +82,8 @@
                 <div class="col-sm-2">
                     <div class="circle-tile ">
                         <a href="{% url 'maths:taskCollectionList' %}">
-                            <div class="circle-tile-heading dark-blue border-radius"><i class="fa fa-tasks fa-fw fa-3x"></i></div>
+                            <div class="circle-tile-heading dark-blue border-radius"><i
+                                    class="fa fa-tasks fa-fw fa-3x"></i></div>
                         </a>
                         <div class="circle-tile-content dark-blue">
                             <div class="circle-tile-description text-faded"> Antall Tester</div>
@@ -503,12 +469,11 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="panel panel-info">
-                    <div class="panel-heading">
+                    <div class="panel-heading text-center">
                         <h4>Tilgjengelige tester ({{ notanswered|length }})</h4>
                     </div>
-                    <div class="panel-body">
-                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true"
-                             style="max-height: 75vh; overflow: auto">
+                    <div class="panel-body taskList" style="overflow: auto">
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             {% for test in notanswered %}
                                 <div id="panel{{ forloop.counter }}" class="panel panel-default">
                                     <div class="panel-heading box" role="tab" id="heading{{ forloop.counter }}"
@@ -516,7 +481,8 @@
                                          href="#collapse{{ forloop.counter }}" style="cursor: pointer">
                                         <h4 class="panel-title">
                                             <a role="button"
-                                               aria-expanded="true" aria-controls="collapse{{ forloop.counter }}" id="{{ test.task_collection.test_name }}">
+                                               aria-expanded="true" aria-controls="collapse{{ forloop.counter }}"
+                                               id="{{ test.task_collection.test_name }}">
                                                 {{ test }}
                                                 <p id="testpanel{{ forloop.counter }}" class="pull-right"></p>
                                                 <input id="date{{ forloop.counter }}" type="datetime"
@@ -559,12 +525,11 @@
             </div>
             <div class="col-sm-6">
                 <div class="panel panel-success" style="border-left: 1px solid">
-                    <div class="panel-heading">
-                        <h4>Gjennomførte aktiviteter</h4>
+                    <div class="panel-heading text-center">
+                        <h4>Gjennomførte tester ({{ answered|length }})</h4>
                     </div>
-                    <div class="panel-body">
-                        <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true"
-                             style="max-height: 75vh; overflow: auto">
+                    <div class="panel-body taskList" style="overflow: auto">
+                        <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
                             {% for test in answered %}
                                 <div id="donepanel{{ forloop.counter }}" class="panel panel-default">
                                     <div class="panel-heading box" role="tab" id="doneheading{{ forloop.counter }}"
@@ -572,7 +537,8 @@
                                          href="#donecollapse{{ forloop.counter }}">
                                         <h4 class="panel-title">
                                             <a role="button"
-                                               aria-expanded="true" aria-controls="donecollapse{{ forloop.counter }}" id="{{test.task_collection.test_name }}">
+                                               aria-expanded="true" aria-controls="donecollapse{{ forloop.counter }}"
+                                               id="{{ test.task_collection.test_name }}">
                                                 {{ test }}
                                             </a>
                                         </h4>
@@ -618,6 +584,7 @@
     {% endif %}
 
     <script>
+        var role = "{{ request.user.role }}";
         /**
          * Function that runs when the page is fully loaded. Calculates the time left to the duedate on the available
          * tasks.
@@ -667,6 +634,14 @@
 
 
         jQuery(document).ready(function ($) {
+            //swal("Fullført!", "Testen ble levert", "success");
+            if (role === "1") {
+                var windowHeight = window.innerHeight;
+                var navHeight = 50;
+                var panelHeaderHeight = $('.panel-heading').outerHeight();
+                var listHeight = windowHeight - navHeight - panelHeaderHeight - 2;
+                $('.taskList').css('height', listHeight + 'px');
+            }
             /**
              * This function makes the rows of the user-, student-, teacher- and admintable clickable
              */
