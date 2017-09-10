@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="{% static 'maths/css/bootstrap-multiselect.css' %}" type="text/css"/>
     <!--Imports tinymce-->
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'maths/js/cookie.js' %}"></script>
     <!--Imports mathquill-->
     <script type="text/javascript"
             src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
@@ -186,6 +188,10 @@
             $(".alert-success").fadeTo(5000, 500).slideUp(500, function () {
                 $('.alert-success').slideUp(500);
             });
+            var cookie_scroll = Cookies.get('list_scroll');
+            if (cookie_scroll) {
+                $('#tableCont').scrollTop(cookie_scroll);
+            }
         });
 
         $('.items').click(function () {
@@ -222,7 +228,9 @@
                 }
             }
         }
-
+        $('#tableCont').on("scroll", function () {
+            Cookies.set('list_scroll', $('#tableCont').scrollTop());
+        });
     </script>
 {% endblock %}
 

@@ -1153,7 +1153,8 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             if item.task.extra:
                 geogebraanswer = GeogebraAnswer(answer=answer, base64=base64, data=geogebradata)
                 geogebraanswer.save()
-
+        success_message = 'Dine svar ble levert!'
+        messages.success(self.request, success_message)
         return HttpResponseRedirect(url)
 
 
