@@ -4,8 +4,9 @@
 {% load staticfiles %}
 {% block head %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
-    <script src="{% static 'maths/js/sweetalert/sweetalert.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'maths/css/sweetalert/sweetalert.css' %}">
+    <script src="{% static 'maths/js/sweetalert/sweetalert.min.js' %}"></script>
+
 
 {% endblock %}
 {% block body %}
@@ -582,6 +583,16 @@
             </div>
         </div>
     {% endif %}
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                var message = "{{ message }}";
+                jQuery(document).ready(function ($) {
+                    swal("Fullført!", message, 'success');
+                });
+            </script>
+        {% endfor %}
+    {% endif %}
 
     <script>
         var role = "{{ request.user.role }}";
@@ -632,9 +643,7 @@
 
         };
 
-
         jQuery(document).ready(function ($) {
-            //swal("Fullført!", "Testen ble levert", "success");
             if (role === "1") {
                 var windowHeight = window.innerHeight;
                 var navHeight = 50;

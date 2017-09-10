@@ -83,23 +83,29 @@
                                             - {{ answer.timespent|floatformat:"0" }}
                                             Sekunder</h4>
                                     </div>
-                                    <div class="panel-body">
+                                    <div class="panel-body" style="padding: 10px;">
                                         <div class="" id="tasktextdiv">
                                             <textarea id="tasktext{{ answer.item.id }}">
                                                  {% if answer.item.task.variableTask %}
                                                      {% insert_params answer.item.task.text answer.item.variables as text %}
-                                                     <h4>{{ text | safe }}</h4>
+                                                     <h4>{{ text }}</h4>
                                                  {% else %}
-                                                     <h4>{{ answer.item.task.text | safe }}</h4>
+                                                     <h4>{{ answer.item.task.text }}</h4>
                                                  {% endif %}
                                             </textarea>
                                         </div>
                                         <ul class="nav nav-tabs" style="padding-top: 10px;">
-                                            <li class="nav active"><a href="#answer{{ forloop.parentloop.counter }}"
-                                                                      data-toggle="tab">Besvarelse</a>
-                                            </li>
-                                            <li class="nav"><a href="#approach{{ forloop.parentloop.counter }}"
-                                                               data-toggle="tab">Fremgangsmåte</a></li>
+                                            {% if answer.item.task.answertype != 3 and not answer.item.task.reasoning %}
+                                                <li class="nav active"><a href="#answer{{ forloop.parentloop.counter }}"
+                                                                          data-toggle="tab">Besvarelse</a>
+                                                </li>
+                                                <li class="nav"><a href="#approach{{ forloop.parentloop.counter }}"
+                                                                   data-toggle="tab">Fremgangsmåte</a></li>
+                                            {% else %}
+                                                <li class="nav active"><a
+                                                        href="#approach{{ forloop.parentloop.counter }}"
+                                                        data-toggle="tab">Fremgangsmåte</a></li>
+                                            {% endif %}
                                         </ul>
                                         <div id="answerdiv{{ answer.item.id }}" class="tab-content"
                                              style="padding-top: 10px;">
@@ -238,7 +244,8 @@
                                                 {% endif %}
 
                                             </div>
-                                            <div class="tab-pane fade" id="approach{{ forloop.parentloop.counter }}">
+                                            <div class="tab-pane fade {% if answer.item.task.answertype == 3 and not answer.item.task.reasoning %}in active{% endif %}"
+                                                 id="approach{{ forloop.parentloop.counter }}">
                                                 {% if geo.data %}
                                                     <table class="table table-hover">
                                                         <thead>

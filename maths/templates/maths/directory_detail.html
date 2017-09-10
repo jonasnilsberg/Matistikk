@@ -18,6 +18,10 @@
     <link rel="stylesheet" href="{% static 'maths/css/bootstrap-multiselect.css' %}" type="text/css"/>
     <!--Imports bootbox-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'maths/css/sweetalert/sweetalert.css' %}">
+     <script type="text/javascript"
+            src="{% static 'maths/js/cookie.js' %}"></script>
+    <script src="{% static 'maths/js/sweetalert/sweetalert.min.js' %}"></script>
     <!--Imports tinymce-->
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
     <!--Imports mathquill-->
@@ -77,7 +81,6 @@
             </div>
         </div>
         <div class="panel-body">
-            {% bootstrap_messages %}
             <div class="col-md-3">
                 <ol class="breadcrumb" style="margin-bottom: 10px">
                     {% if  breadcrumbs %}
@@ -189,6 +192,17 @@
         {% csrf_token %}
         <input type="text">
     </form>
+
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                var message = "{{ message }}";
+                jQuery(document).ready(function ($) {
+                    swal("Fullført!", message, 'success');
+                });
+            </script>
+        {% endfor %}
+    {% endif %}
 
     <script>
         /**
@@ -454,6 +468,10 @@
             $('#moveModal .modal-content').css('max-height', height + "px");
             var bodyHeight = height - 55 - 64;
             $('#moveModal .modal-body').css('max-height', bodyHeight + "px");
+            var cookie_scroll = Cookies.get('scroll');
+            if(cookie_scroll){
+                $('.mainBody').scrollTop(cookie_scroll);
+            }
         });
         $('.directoryList').on('contextmenu', '.context-menu-one', function () {
             $('.context-menu-two').removeClass('active');
@@ -863,6 +881,10 @@
                 }
             }
         }
+
+        $('.mainBody').on("scroll", function () {
+            Cookies.set('scroll', $('.mainBody').scrollTop());
+        });
 
     </script>
 
