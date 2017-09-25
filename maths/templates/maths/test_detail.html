@@ -94,7 +94,7 @@
 
                     <div {% if test.public %}style="background-color: lightgreen" class="well well-sm"
                          {% else %}style="background-color: #FF7A7A" class="well well-sm disabledLink"{% endif %}>
-                        http://127.0.0.1:8000/matistikk/test/{{ test.id }}/svar/
+                        http://hv-6069.idi.ntnu.no/matistikk/test/{{ test.id }}/svar/
                         <label class="checkbox-inline pull-right"><input type="checkbox" class="public"
                                                                          value="{{ test.id }}"
                                                                          {% if test.public %}checked{% endif %}>Aktiv</label>

@@ -126,7 +126,7 @@
         <div class="section" data-anchor="oppgave{{ forloop.counter }}">
             <div id="task{{ forloop.counter }}" class="col-xs-12 col-md-12 col-sm-12 container-fluid"
                  data-itemid="{{ item.id }}" data-answertype="{{ item.task.answertype }}"
-                                    data-reasoning="{{ item.task.reasoning }}">
+                 data-reasoning="{{ item.task.reasoning }}">
                 <div class="panel panel-info">
 
                     {% if forloop.first %}
@@ -143,9 +143,6 @@
                                data-enableShiftDragZoom="{{ geogebratask.enableShiftDragZoom }}"
                                data-enableRightClick="{{ geogebratask.enableRightClick }}"
                                value="{{ geogebratask.base64 }}" hidden>
-                        <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
-                            <div id="applet_container{{ forloop.counter }}"></div>
-                        </div>
                         <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading" style="padding-top: 1px; padding-bottom: 1px;">
@@ -272,6 +269,9 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
+                            <div id="applet_container{{ forloop.counter }}"></div>
+                        </div>
                     {% else %}
                         <div class="col-md-2 fulldiv"></div>
                         <div class="col-md-8 col-sm-12 col-xs-12 fulldiv">
@@ -292,10 +292,10 @@
                                         {% if item.task.answertype == 1 %}
                                             <div id="textanswerdiv{{ item.id }}" style="padding-top: 10px;">
                                                 <label for="textanswer{{ item.id }}">Tekstsvar</label>
-                                            <textarea class="form-control" id="textanswer{{ item.id }}"
-                                                      rows="6"
-                                                      style="resize:vertical"
-                                                      placeholder="Skriv svaret ditt her..."></textarea>
+                                                <textarea class="form-control" id="textanswer{{ item.id }}"
+                                                          rows="6"
+                                                          style="resize:vertical"
+                                                          placeholder="Skriv svaret ditt her..."></textarea>
                                             </div>
                                         {% elif item.task.answertype == 2 %}
                                             <div id="optionsdiv{{ item.id }}" style="padding-top: 10px;">
@@ -380,24 +380,24 @@
                                                 {% endfor %}
                                             </div>
                                         {% endif %}
-                                    {% if item.task.reasoning %}
-                                        <div id="reasoningdiv{{ item.id }}">
-                                            <label for="reasoning">{% if item.task.reasoningText %}
-                                                {{ item.task.reasoningText }}{% else %}
-                                                Begrunnelse{% endif %}</label>
-                                            <textarea class="form-control" id="reasoning{{ item.id }}"
-                                                      rows="6"
-                                                      style="resize:vertical"
-                                                      placeholder="Begrunn svaret ditt..."></textarea>
-                                        </div>
-                                    {% endif %}
+                                        {% if item.task.reasoning %}
+                                            <div id="reasoningdiv{{ item.id }}">
+                                                <label for="reasoning">{% if item.task.reasoningText %}
+                                                    {{ item.task.reasoningText }}{% else %}
+                                                    Begrunnelse{% endif %}</label>
+                                                <textarea class="form-control" id="reasoning{{ item.id }}"
+                                                          rows="6"
+                                                          style="resize:vertical"
+                                                          placeholder="Begrunn svaret ditt..."></textarea>
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        </div>
                     {% endif %}
+                </div>
             </div>
-        </div>
         </div>
         {% if forloop.last %}
             <div class="section" data-anchor="summary2">
@@ -486,7 +486,7 @@
         var tasktextPercent = 0.6;
         var reasoning = div.data('reasoning');
         var answertype = div.data('answertype');
-        if(reasoning === 'False' && answertype === 3){
+        if (reasoning === 'False' && answertype === 3) {
             tasktextPercent = 0.95;
         }
         var itemid = div.data('itemid');
@@ -606,7 +606,7 @@
                         btn.removeClass('btn-primary');
                         btn.addClass('btn-success');
                         submitNow = true;
-                        if (role !== "1") {
+                        if (role === "2" || role === "3" || role === "4") {
                             btn.attr('disabled', true);
                         }
                     } else {
@@ -671,6 +671,9 @@
                                             } else if (nextIndex == summary) {
                                                 $('#sendBtn').attr('disabled', false);
                                                 var btn = $('#nextTaskBtn');
+                                                if (role === "2" || role === "3" || role === "4") {
+                                                    btn.attr('disabled', true);
+                                                }
                                                 $('#nextTaskBtnText').text('Send inn');
                                                 btn.removeClass('btn-primary');
                                                 btn.addClass('btn-success');
