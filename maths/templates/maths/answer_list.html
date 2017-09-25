@@ -70,12 +70,7 @@
                     {% if geogebra %}
                         {% for geo in geogebra %}
                             {% get_geogebra_task geo.answer.item.task as geoTask %}
-                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 geogebra">
-                                <input id="base64{{ forloop.parentloop.counter }}" type="text"
-                                       value="{{ geo.base64 }}" hidden data-variables="{{ answer.item.variables }}"
-                                       data-height="{{ geoTask.height }}" data-width="{{ geoTask.width }}">
-                                <div id="applet_container{{ forloop.parentloop.counter }}"></div>
-                            </div>
+
                             <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" style="padding-top: 1px; padding-bottom: 1px;">
@@ -280,6 +275,12 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 geogebra">
+                                <input id="base64{{ forloop.parentloop.counter }}" type="text"
+                                       value="{{ geo.base64 }}" hidden data-variables="{{ answer.item.variables }}"
+                                       data-height="{{ geoTask.height }}" data-width="{{ geoTask.width }}">
+                                <div id="applet_container{{ forloop.parentloop.counter }}"></div>
                             </div>
                         {% endfor %}
                     {% else %}
