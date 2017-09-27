@@ -35,6 +35,9 @@
     <script type="text/javascript" src="{% static 'maths/js/deployggb.js' %}"></script>
     <!--Imports fullpage-->
     <script type="text/javascript" src="{% static 'maths/js/jquery.fullPage.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'maths/js/jquery.lockscroll.min.js' %}"></script>
+
     <!--Imports bootbox-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <!--Imports tinymce-->
@@ -466,7 +469,7 @@
 </div>
 
 <script>
-
+    //$('body').lockscroll(true);
     jQuery.fn.exists = function () {
         return jQuery(this).length > 0;
     };
@@ -541,14 +544,17 @@
         var notGeo = parseInt(taskcount - geocount);
         var percent = ((geoloaded + notGeo) / taskcount) * 100;
         $('#progressbar').css('width', percent + '%');
-
+        var scrollbar = false;
+        if(window.chrome){
+            scrollbar = true;
+        }
         $('#fullpage').fullpage({
             menu: '#taskBtnList',
             loopBottom: false,
             lockAnchors: true,
             loopTop: false,
             scrollingSpeed: 1,
-            scrollBar: true,
+            scrollBar: scrollbar,
             afterLoad: function (anchorLink, index) {
                 if (index > 1) {
                     taskTimerStart = Date.now();
@@ -774,10 +780,10 @@
     /**
      * Keeps the page from scrolling to focus the geogebra applet. Only in google chrome browser.
      */
-    $(window).scroll(function () {
+    $(window).scroll(function (event) {
         if (window.chrome) {
-            if (onLeave == false) {
-                scrollTo(0, 10);
+            if (onLeave === false) {
+                scrollTo(0, 2);
             }
         }
     });
@@ -833,6 +839,8 @@
                 "enableLabelDrags": enableLabelDrags,
                 "enableShiftDragZoom": enableLabelDrags,
                 "enableRightClick": enableRightClick,
+                "enable3d": false,
+                "enableCAS": false,
                 "capturingThreshold": null,
                 "showToolBarHelp": false,
                 "errorDialogsActive": true,
@@ -840,7 +848,7 @@
                 "showLogging": false,
                 "preventFocus": true,
                 "useBrowserForJS": false,
-                "ggbBase64": base64,
+                "ggbBase64": base64
             };
             parameters.appletOnLoad = function () {
                 geoloaded += 1;
@@ -957,6 +965,12 @@
                 appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
                 appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
                 appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                //Prøv å skalere oppgave header --------------------------------------------------------------------->
+                /*$('.panel-heading').css('transform-origin', '0% 0% 0px');
+                $('.panel-heading').css('transform', 'scale(1,' + scaledHeight + ')');
+                $('.panel-heading').css('-webkit-transform', 'scale(1,' + scaledHeight + ')');
+                $('.panel-heading').css('-ms-transform', 'scale(1,' + scaledHeight + ')');*/
+                //--------------------------------------------------------------------------------------------------->
                 document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
                 document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
             }
