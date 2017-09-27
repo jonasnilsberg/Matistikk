@@ -39,6 +39,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <!--Imports tinymce-->
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'maths/css/sweetalert/sweetalert.css' %}">
+    <script src="{% static 'maths/js/sweetalert/sweetalert.min.js' %}"></script>
     <!--Imports mathquill-->
     <script type="text/javascript"
             src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
@@ -1100,6 +1102,7 @@
         var reasoningbool = false;
         var multiplechoicebool = false;
         var inputfieldbool = false;
+        var filled = true;
         if ($(('#textanswer' + itemid)).exists()) {
             textanswerbool = true;
             var textanswer = tinyMCE.get('textanswer' + itemid).getContent();
@@ -1117,12 +1120,12 @@
 
         if (textanswerbool) {
             if (textanswer == '' || textanswer == null || textanswer == '<div>&nbsp;</div>') {
-                return false;
+                filled = false;
             }
         }
         if (reasoningbool) {
             if (reasoning == '' || reasoning == null || reasoning == '<div>&nbsp;</div>') {
-                return false;
+                filled = false;
             }
         }
         if (multiplechoicebool) {
@@ -1135,7 +1138,7 @@
                 }
             }
             if (!complete) {
-                return false;
+                filled = false;
             }
 
         }
@@ -1147,10 +1150,14 @@
                 }
             });
             if (!complete) {
-                return false
+                filled = false
             }
         }
-        return true;
+        if (filled) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -1167,6 +1174,10 @@
         var flag = checkTest();
         if (!flag) {
             goToTask(0);
+            var message = "Vennligst svar på alle oppgavene før du sender inn dit svar.";
+            jQuery(document).ready(function ($) {
+                swal("", message, 'warning');
+            });
             return 0;
         }
         goToTask(0);
@@ -1271,7 +1282,6 @@
                 base642.value = base64;
             }
         }
-
         $('#submitbutton').click();
         submit = true;
     }
