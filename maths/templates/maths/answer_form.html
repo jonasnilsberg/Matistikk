@@ -548,7 +548,6 @@
             lockAnchors: true,
             loopTop: false,
             scrollingSpeed: 1,
-            scrollBar: true,
             afterLoad: function (anchorLink, index) {
                 if (index > 1) {
                     taskTimerStart = Date.now();
@@ -838,9 +837,9 @@
                 "errorDialogsActive": true,
                 "showTutorialLink": false,
                 "showLogging": false,
-                "preventFocus": true,
+                "preventFocus": false,
                 "useBrowserForJS": false,
-                "ggbBase64": base64
+                "ggbBase64": base64,
             };
             parameters.appletOnLoad = function () {
                 geoloaded += 1;
@@ -936,9 +935,9 @@
                 tinymce.get('tasktext' + itemid).setContent(text);
             }
             if (document.getElementById('base64' + i)) {
-                window["ggbApplet" + i].registerAddListener("addListener" + i);
-                window["ggbApplet" + i].registerRemoveListener("removeListener" + i);
-                window["ggbApplet" + i].registerUpdateListener("updateListener" + i);
+                //window["ggbApplet" + i].registerAddListener("addListener" + i);
+                //window["ggbApplet" + i].registerRemoveListener("removeListener" + i);
+                //window["ggbApplet" + i].registerUpdateListener("updateListener" + i);
                 width = geo.data('width');
                 height = geo.data('height');
                 if (window.innerWidth > window.innerHeight) {
