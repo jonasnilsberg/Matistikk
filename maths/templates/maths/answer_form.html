@@ -584,8 +584,11 @@
                 var summary = parseInt(taskcount) + 2;
                 var tasksnr = parseInt(taskcount) + 1;
                 if (strictOrder === 'True') {
+                    var nextTask = index + 1;
                     if (direction === 'up') {
-                        return false
+                        return false;
+                    } else if(nextTask !== nextIndex){
+                        return false;
                     } else {
                         $('#liOppgave' + parseInt(index - 1)).find('a').css('cursor', 'not-allowed');
                     }
