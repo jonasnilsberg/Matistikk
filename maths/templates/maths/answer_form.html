@@ -425,7 +425,9 @@
                                     <tr id="summarytask{{ item_summary.id }}">
                                         <td>Oppgave {{ forloop.counter }}</td>
                                         <td id="status{{ item_summary.id }}">Status</td>
-                                        <td><a class="btn btn-default" onclick="goToTask({{ forloop.counter }})"><i
+                                        <td><a class="btn btn-default" onclick="goToTask({{ forloop.counter }})"
+                                               {% if test.strictOrder %}style="cursor: not-allowed";
+                                               {% endif %}><i
                                                 class="fa fa-arrow-right" aria-hidden="true"></i> Gå til
                                             oppgave</a>
                                         </td>
@@ -469,7 +471,6 @@
 </div>
 
 <script>
-    //$('body').lockscroll(true);
     jQuery.fn.exists = function () {
         return jQuery(this).length > 0;
     };
@@ -545,7 +546,7 @@
         var percent = ((geoloaded + notGeo) / taskcount) * 100;
         $('#progressbar').css('width', percent + '%');
         var scrollbar = false;
-        if(window.chrome){
+        if (window.chrome) {
             scrollbar = true;
         }
         $('#fullpage').fullpage({
@@ -589,120 +590,53 @@
                 } else {
                     $('#taskBtnList').scrollTo(document.getElementById("liOppgave" + parseInt(nextIndex - 1)));
                 }
-                if (strictOrder == 'False') {
-                    var btn = $('#nextTaskBtn');
-                    btn.removeClass('btn-success');
-                    btn.addClass('btn-primary');
-                    submitNow = false;
-                    if (nextIndex == tasksnr) {
-                        if (tasksnr == 2) {
-                            $('#prevTaskBtn').attr('disabled', 'disabled');
-                        } else {
+                if (strictOrder === 'True') {
+                    if (direction === 'up') {
+                        return false
+                    } else {
+                        $('#liOppgave' + parseInt(index - 1)).find('a').css('cursor', 'not-allowed');
+                    }
+                }
+                //if (strictOrder == 'False') {
+                var btn = $('#nextTaskBtn');
+                btn.removeClass('btn-success');
+                btn.addClass('btn-primary');
+                submitNow = false;
+                if (nextIndex == tasksnr) {
+                    if (tasksnr == 2) {
+                        $('#prevTaskBtn').attr('disabled', 'disabled');
+                    } else {
+                        if (strictOrder === 'False') {
                             $('#prevTaskBtn').attr('disabled', false);
                         }
-                        $('#nextTaskBtnText').text('Oppsummering');
-                        $('#nextTaskBtn').attr('disabled', false);
-                    } else if (nextIndex == 2) {
-                        $('#prevTaskBtn').attr('disabled', 'disabled');
-                        $('#nextTaskBtn').attr('disabled', false);
-                        $('#nextTaskBtnText').text('Neste Oppgave');
-                    } else if (nextIndex == summary) {
-                        checkTest();
+                    }
+                    $('#nextTaskBtnText').text('Oppsummering');
+                    $('#nextTaskBtn').attr('disabled', false);
+                } else if (nextIndex == 2) {
+                    if (strictOrder === 'False') {
                         $('#prevTaskBtn').attr('disabled', false);
-                        var btn = $('#nextTaskBtn');
-                        $('#nextTaskBtnText').text('Send inn');
-                        btn.removeClass('btn-primary');
-                        btn.addClass('btn-success');
-                        submitNow = true;
-                        if (role === "2" || role === "3" || role === "4") {
-                            btn.attr('disabled', true);
-                        }
-                    } else {
-                        $('#nextTaskBtn').attr('disabled', false);
-                        $('#nextTaskBtnText').text('Neste Oppgave');
+                    }
+                    $('#nextTaskBtn').attr('disabled', false);
+                    $('#nextTaskBtnText').text('Neste Oppgave');
+                } else if (nextIndex == summary) {
+                    checkTest();
+                    if (strictOrder === 'False') {
                         $('#prevTaskBtn').attr('disabled', false);
+                    }
+                    var btn = $('#nextTaskBtn');
+                    $('#nextTaskBtnText').text('Send inn');
+                    btn.removeClass('btn-primary');
+                    btn.addClass('btn-success');
+                    submitNow = true;
+                    if (role === "2" || role === "3" || role === "4") {
+                        btn.attr('disabled', true);
                     }
                 } else {
-                    submitNow = false;
-                    var nextTask = index + 1;
-                    if (direction == 'Up') {
-                        return false;
-                    } else if (nextTask != nextIndex) {
-                        if (nextTask < nextIndex) {
-                            bootbox.alert({
-                                title: "Låst rekkefølge!",
-                                message: "Denne testen har låst rekkefølge, vennligst gjør ferdig oppgaven for å gå videre til neste.",
-                                backdrop: true
-                            });
-                        } else {
-                            bootbox.alert({
-                                title: "Låst rekkefølge!",
-                                message: "Denne testen har låst rekkefølge, det er derfor ikke mulig å gå tilbake.",
-                                backdrop: true
-                            });
-                        }
-                        return false;
-                    } else if (index > 1) {
-                        if (!goToNextTask) {
-                            var checkTaskValue = checkTask((parseInt(index) - 1));
-                            if (checkTaskValue) {
-                                var confirmBtnText = "Gå til neste oppgave";
-                                var confirmText = "Denne testen har låst rekkefølge. Det vil si at du ikke kan gå tilbake til tidligere oppgaver. Gjør deg derfor helt ferdig før du går videre til neste oppgave.";
-                                if (nextIndex == summary) {
-                                    if (goToNextTask) {
-                                        $('#nextTaskBtn').attr('disabled', 'disabled');
-                                    }
-                                    checkTest();
-                                    confirmBtnText = "Gå til oppsummering";
-                                    confirmText = "Dette var den siste oppgave i denne testen. Gå videre til oppsummeringen for å levere.";
-                                }
-                                bootbox.confirm({
-                                    size: "medium",
-                                    title: confirmBtnText + "?",
-                                    message: confirmText,
-                                    backdrop: true,
-                                    buttons: {
-                                        cancel: {
-                                            label: '<i class="fa fa-times"></i> Avbryt'
-                                        },
-                                        confirm: {
-                                            label: '<i class="fa fa-check"></i> ' + confirmBtnText,
-                                            className: 'btn-success'
-                                        }
-                                    },
-                                    callback: function (result) {
-                                        if (result) {
-                                            goToNextTask = true;
-                                            goToTask(index);
-                                            if (nextIndex == tasksnr) {
-                                                $('#nextTaskBtnText').text('Oppsummering');
-                                            } else if (nextIndex == summary) {
-                                                $('#sendBtn').attr('disabled', false);
-                                                var btn = $('#nextTaskBtn');
-                                                if (role === "2" || role === "3" || role === "4") {
-                                                    btn.attr('disabled', true);
-                                                }
-                                                $('#nextTaskBtnText').text('Send inn');
-                                                btn.removeClass('btn-primary');
-                                                btn.addClass('btn-success');
-                                                submitNow = true;
-                                            }
-                                        }
-                                    }
-                                });
-                            } else {
-                                bootbox.alert({
-                                    title: "Fyll ut alle svarfelter!",
-                                    message: "Vennligst fyll ut alle svarfelter før du går videre til neste oppgave.",
-                                    backdrop: true
-                                });
-                            }
-
-                            return false;
-                        }
-                        goToNextTask = false;
+                    $('#nextTaskBtn').attr('disabled', false);
+                    $('#nextTaskBtnText').text('Neste Oppgave');
+                    if (strictOrder === 'False') {
+                        $('#prevTaskBtn').attr('disabled', false);
                     }
-
                 }
             }
         });
@@ -878,7 +812,12 @@
                         goToTask(1);
                         $(".sk-cube-grid").remove();
                         $('#tasknav').removeClass('hidden');
+                        if (strictOrder === 'True') {
+                            var message = "Denne testen har låst rekkefølge. Det vil si at du ikke kan gå tilbake til tidligere oppgaver. Gjør deg derfor helt ferdig før du går videre til neste oppgave.";
+                            swal("Låst rekkefølge", message, 'info');
+                        }
                     }, 500);
+
                 }
             };
         }
@@ -967,9 +906,9 @@
                 appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
                 //Prøv å skalere oppgave header --------------------------------------------------------------------->
                 /*$('.panel-heading').css('transform-origin', '0% 0% 0px');
-                $('.panel-heading').css('transform', 'scale(1,' + scaledHeight + ')');
-                $('.panel-heading').css('-webkit-transform', 'scale(1,' + scaledHeight + ')');
-                $('.panel-heading').css('-ms-transform', 'scale(1,' + scaledHeight + ')');*/
+                 $('.panel-heading').css('transform', 'scale(1,' + scaledHeight + ')');
+                 $('.panel-heading').css('-webkit-transform', 'scale(1,' + scaledHeight + ')');
+                 $('.panel-heading').css('-ms-transform', 'scale(1,' + scaledHeight + ')');*/
                 //--------------------------------------------------------------------------------------------------->
                 document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
                 document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
@@ -1109,70 +1048,70 @@
      * This function checks if a specific task is finished. That means that all inputs are filled out.
      * @param task - the task to check.
      */
-    function checkTask(task) {
-        var div = $('#task' + task);
-        var itemid = div.data('itemid');
-        var textanswerbool = false;
-        var reasoningbool = false;
-        var multiplechoicebool = false;
-        var inputfieldbool = false;
-        var filled = true;
-        if ($(('#textanswer' + itemid)).exists()) {
-            textanswerbool = true;
-            var textanswer = tinyMCE.get('textanswer' + itemid).getContent();
-        }
-        if ($(('#reasoning' + itemid)).exists()) {
-            reasoningbool = true;
-            var reasoning = tinyMCE.get('reasoning' + itemid).getContent();
-        }
-        if ($('#optionsdiv' + itemid).exists()) {
-            multiplechoicebool = true;
-        }
-        if ($('#inputfieldsdiv' + itemid).exists()) {
-            inputfieldbool = true
-        }
+    /*function checkTask(task) {
+     var div = $('#task' + task);
+     var itemid = div.data('itemid');
+     var textanswerbool = false;
+     var reasoningbool = false;
+     var multiplechoicebool = false;
+     var inputfieldbool = false;
+     var filled = true;
+     if ($(('#textanswer' + itemid)).exists()) {
+     textanswerbool = true;
+     var textanswer = tinyMCE.get('textanswer' + itemid).getContent();
+     }
+     if ($(('#reasoning' + itemid)).exists()) {
+     reasoningbool = true;
+     var reasoning = tinyMCE.get('reasoning' + itemid).getContent();
+     }
+     if ($('#optionsdiv' + itemid).exists()) {
+     multiplechoicebool = true;
+     }
+     if ($('#inputfieldsdiv' + itemid).exists()) {
+     inputfieldbool = true
+     }
 
-        if (textanswerbool) {
-            if (textanswer == '' || textanswer == null || textanswer == '<div>&nbsp;</div>') {
-                filled = false;
-            }
-        }
-        if (reasoningbool) {
-            if (reasoning == '' || reasoning == null || reasoning == '<div>&nbsp;</div>') {
-                filled = false;
-            }
-        }
-        if (multiplechoicebool) {
-            var length = $('.multipleChoiceAlt' + itemid).length;
-            var complete = true;
-            for (var x = 1; x <= length; x++) {
-                var checkedCount = $('#' + itemid + 'multipleChoiceAlt' + x + ' :input:checked').length;
-                if (checkedCount < 1) {
-                    complete = false;
-                }
-            }
-            if (!complete) {
-                filled = false;
-            }
+     if (textanswerbool) {
+     if (textanswer == '' || textanswer == null || textanswer == '<div>&nbsp;</div>') {
+     filled = false;
+     }
+     }
+     if (reasoningbool) {
+     if (reasoning == '' || reasoning == null || reasoning == '<div>&nbsp;</div>') {
+     filled = false;
+     }
+     }
+     if (multiplechoicebool) {
+     var length = $('.multipleChoiceAlt' + itemid).length;
+     var complete = true;
+     for (var x = 1; x <= length; x++) {
+     var checkedCount = $('#' + itemid + 'multipleChoiceAlt' + x + ' :input:checked').length;
+     if (checkedCount < 1) {
+     complete = false;
+     }
+     }
+     if (!complete) {
+     filled = false;
+     }
 
-        }
-        if (inputfieldbool) {
-            var complete = true;
-            $('#inputfieldsdiv' + itemid + ' input[type=number]').each(function () {
-                if (!$(this).val()) {
-                    complete = false;
-                }
-            });
-            if (!complete) {
-                filled = false
-            }
-        }
-        if (filled) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+     }
+     if (inputfieldbool) {
+     var complete = true;
+     $('#inputfieldsdiv' + itemid + ' input[type=number]').each(function () {
+     if (!$(this).val()) {
+     complete = false;
+     }
+     });
+     if (!complete) {
+     filled = false
+     }
+     }
+     if (filled) {
+     return true;
+     } else {
+     return false;
+     }
+     }*/
 
     /**
      * This function loops through every task and copy the value from the input fields that the user sees into the hidden django form.
@@ -1185,15 +1124,15 @@
         if (submit) {
             return 0;
         }
-        var flag = checkTest();
-        if (!flag) {
-            goToTask(0);
-            var message = "Vennligst svar på alle oppgavene før du sender inn dit svar.";
-            jQuery(document).ready(function ($) {
-                swal("", message, 'warning');
-            });
-            return 0;
-        }
+        /*var flag = checkTest();
+         if (!flag) {
+         goToTask(0);
+         var message = "Vennligst svar på alle oppgavene før du sender inn dit svar.";
+         jQuery(document).ready(function ($) {
+         swal("", message, 'warning');
+         });
+         return 0;
+         }*/
         goToTask(0);
         for (var i = 0; i < taskcount; i++) {
             var textanswer = undefined;
