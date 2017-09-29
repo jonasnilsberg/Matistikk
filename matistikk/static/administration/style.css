@@ -1,5 +1,6 @@
 .tab-content {
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     max-height: 60vh;
     min-height: 40vh;
 }
@@ -374,10 +375,6 @@ html, body {
     cursor: pointer;
 }
 
-#tasktextdiv {
-    height: 25%;
-}
-
 .orderinfo {
     border-radius: 10px !important;
     height: 42px;
@@ -437,7 +434,181 @@ ul.scrollbar::-webkit-scrollbar {
     height: -webkit-calc(100% - 55px); /* google, safari */
     height: -moz-calc(100% - 55px); /* firefox */
 }
-.answerbody {
-    max-height: 75%;
+
+.tasktable tbody:before {
+    content: "-";
+    display: block;
+    line-height: 10px;
+    color: transparent;
+}
+
+.zeroMargin {
+    margin: 0px;
+}
+
+.directory {
+    cursor: pointer;
+}
+
+.breadcrumb-item {
+    cursor: pointer;
+}
+
+.breadcrumb-item:hover {
+    color: black;
+}
+
+.mainBody {
     overflow: auto;
+}
+
+.table > tbody > tr.active > td {
+    background: #337ab7;
+    color: #fff;
+}
+
+/* Flytte fil modal */
+
+.list-group.list-group-root {
+    padding: 0;
+    overflow: hidden;
+}
+
+.list-group.list-group-root .list-group {
+    margin-bottom: 0;
+}
+
+.list-group.list-group-root .list-group-item {
+    border-radius: 0;
+    border-width: 1px 0 0 0;
+}
+
+.list-group.list-group-root > .list-group-item:first-child {
+    border-top-width: 0;
+}
+
+.list-group.list-group-root > .list-group > .list-group-item {
+    padding-left: 30px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group-item {
+    padding-left: 50px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 70px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 90px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 110px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 130px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 150px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 170px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 190px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 210px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 230px;
+}
+
+.list-group.list-group-root > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group > .list-group-item {
+    padding-left: 230px;
+}
+
+.list-group-item .glyphicon {
+    margin-right: 5px;
+}
+
+/* Flytte fil modal slutt */
+
+.not-active {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.6;
+
+}
+
+.taskcollectionbar {
+    margin-top: 3px;
+    margin-bottom: 7px;
+}
+
+.tasktitle {
+    margin-top: 20px;
+    margin-bottom: 12px;
+}
+
+.circle-tile {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.circle-tile-heading {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 100%;
+    color: #FFFFFF;
+    height: 80px;
+    margin: 0 auto -40px;
+    position: relative;
+    transition: all 0.3s ease-in-out 0s;
+    width: 80px;
+}
+
+.circle-tile-heading .fa {
+    line-height: 80px;
+}
+
+.circle-tile-content {
+    padding-top: 50px;
+}
+
+.circle-tile-number {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+    padding: 5px 0 15px;
+}
+
+.circle-tile-description {
+    text-transform: uppercase;
+}
+
+.circle-tile-heading.dark-blue:hover {
+    background-color: #0e84b5;
+}
+
+.dark-blue {
+    background-color: #34495E;
+}
+
+.text-faded {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.comment {
+    border: #ddd;
+    border-style: solid;
+    border-top: none;
+    border-width: 1px;
+    margin-bottom: 15px;
 }

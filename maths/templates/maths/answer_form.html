@@ -169,7 +169,9 @@
                                     <div id="answerdiv{{ item.id }}" style="overflow: auto">
                                         {% if item.task.answertype == 1 %}
                                             <div id="textanswerdiv{{ item.id }}" style="padding-top: 10px;">
-                                                <label for="textanswer{{ item.id }}">{% if item.task.answerText %}{{ item.task.answerText }}{% else %}Tekstsvar{% endif %}</label>
+                                                <label for="textanswer{{ item.id }}">
+                                                    {% if item.task.answerText %}{{ item.task.answerText }}{% else %}
+                                                        Tekstsvar{% endif %}</label>
                                                 <textarea class="form-control" id="textanswer{{ item.id }}"
                                                           rows="6"
                                                           style="resize:vertical"
@@ -296,7 +298,9 @@
 
                                         {% if item.task.answertype == 1 %}
                                             <div id="textanswerdiv{{ item.id }}" style="padding-top: 10px;">
-                                                <label for="textanswer{{ item.id }}">{% if item.task.answerText %}{{ item.task.answerText }}{% else %}Tekstsvar{% endif %}</label>
+                                                <label for="textanswer{{ item.id }}">
+                                                    {% if item.task.answerText %}{{ item.task.answerText }}{% else %}
+                                                        Tekstsvar{% endif %}</label>
                                                 <textarea class="form-control" id="textanswer{{ item.id }}"
                                                           rows="6"
                                                           style="resize:vertical"
@@ -587,7 +591,7 @@
                     var nextTask = index + 1;
                     if (direction === 'up') {
                         return false;
-                    } else if(nextTask !== nextIndex){
+                    } else if (nextTask !== nextIndex) {
                         return false;
                     } else {
                         $('#liOppgave' + parseInt(index - 1)).find('a').css('cursor', 'not-allowed');
@@ -604,8 +608,8 @@
                 btn.removeClass('btn-success');
                 btn.addClass('btn-primary');
                 submitNow = false;
-                if (nextIndex == tasksnr) {
-                    if (tasksnr == 2) {
+                if (nextIndex === tasksnr) {
+                    if (tasksnr === 2) {
                         $('#prevTaskBtn').attr('disabled', 'disabled');
                     } else {
                         if (strictOrder === 'False') {
@@ -615,9 +619,7 @@
                     $('#nextTaskBtnText').text('Oppsummering');
                     $('#nextTaskBtn').attr('disabled', false);
                 } else if (nextIndex == 2) {
-                    if (strictOrder === 'False') {
-                        $('#prevTaskBtn').attr('disabled', false);
-                    }
+                    $('#prevTaskBtn').attr('disabled', true);
                     $('#nextTaskBtn').attr('disabled', false);
                     $('#nextTaskBtnText').text('Neste Oppgave');
                 } else if (nextIndex == summary) {
