@@ -97,10 +97,11 @@
         $('#previewTaskModal').modal('show');
         var id = e.value;
         $('#geogebradiv').hide();
-        $('#textanswerdiv').hide();
+        var textanswerdiv = $('#textanswerdiv');
         $('#reasoningdiv').hide();
         $('#multiplechoicediv').hide();
         $('#inputfielddiv').hide();
+        textanswerdiv.hide();
         $.ajax({
             type: 'GET',
             url: '{% url 'maths:taskList' %}',
@@ -127,6 +128,11 @@
                 tinyMCE.get('tasktext').setContent(task.task_text);
                 var answertype = (task.task_answertype);
                 if (answertype == 1) {
+                    if(json.answer_text){
+                        textanswerdiv.find('label').text(json.answer_text);
+                    } else {
+                        textanswerdiv.find('label').text('Tekstsvar');
+                    }
                     $('#textanswerdiv').show();
                 }
 

@@ -120,6 +120,10 @@
                         <div id="collapse5" class="panel-collapse collapse in">
                             <div class="panel-body">
                                 Hvis dette alternativet velges, vil eleven svare med tekst.
+                                <button class="pull-right btn btn-primary addTaskTitle"><i class="fa fa-font"
+                                                                                           aria-hidden="true"></i>
+                                    Tittel
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -675,6 +679,26 @@
                 });
             }
         });
+
+        $('.addTaskTitle').click(function () {
+            var taskTextField = $('#id_answerText');
+            bootbox.prompt({
+                title: "Skriv inn tittel for tekstfeltet.",
+                placeholder: 'Tittel for tekstfeltet',
+                value: taskTextField.val(),
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Avbryt'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Lagre'
+                    }
+                },
+                callback: function (result) {
+                    taskTextField.val(result);
+                }
+            });
+        });
     </script>
 
     <script>
@@ -1093,10 +1117,11 @@
          */
         $('#previewTaskModal').on('show.bs.modal', function () {
             $('#geogebradiv').hide();
-            $('#textanswerdiv').hide();
+            var textfield = $('#textanswerdiv');
             $('#reasoningdiv').hide();
             $('#multiplechoicediv').hide();
             $('#inputfielddiv').hide();
+            textfield.hide();
             var notGeo = $('#notGeogebraDiv');
             var answertype = $("input[type='radio'][name='answer_type']:checked").val();
             var previewtext = tinyMCE.get('tasktext').getContent();
@@ -1117,7 +1142,13 @@
             }
 
             if (answertype == 1) {
-                $('#textanswerdiv').show();
+                var textfieldText = $('#id_answerText').val();
+                if (textfieldText) {
+                    textfield.find('label').text(textfieldText);
+                } else {
+                    textfield.find('label').text('Tekstsvar');
+                }
+                textfield.show();
             }
             else if (answertype == 2) {
                 var div = $('#multiplechoicediv');

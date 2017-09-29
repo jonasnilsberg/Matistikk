@@ -108,7 +108,7 @@
                                                  id="answer{{ forloop.parentloop.counter }}">
                                                 {% if answer.item.task.answertype == 1 %}
                                                     <div id="textanswerdiv">
-                                                        <label for="taxtanswer{{ answer.item.id }}">Tekstsvar</label>
+                                                        <label for="taxtanswer{{ answer.item.id }}">{% if item.task.answerText %}{{ item.task.answerText }}{% else %}Tekstsvar{% endif %}</label>
                                                         <textarea readonly class="form-control"
                                                                   id="textanswer{{ answer.item.id }}"
                                                                   rows="6"
@@ -294,7 +294,7 @@
                                 <div class="panel-body answerbody">
                                     {% if answer.item.task.answertype == 1 %}
                                         <div id="textanswerdiv">
-                                            <label for="textanswer{{ answer.item.id }}">Tekstsvar</label>
+                                            <label for="textanswer{{ answer.item.id }}">{% if item.task.answerText %}{{ item.task.answerText }}{% else %}Tekstsvar{% endif %}</label>
                                             <textarea readonly class="form-control"
                                                       id="textanswer{{ answer.item.id }}"
                                                       rows="6"

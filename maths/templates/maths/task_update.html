@@ -28,11 +28,12 @@
 
         tinymce.init({
             selector: '#tasktext',
-            plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table media image autoresize',
+            plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table media image autoresize imagetools',
             content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
             toolbar: [
-                'bold italic underline fontsizeselect | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen | media image'
+                'bold italic underline fontsizeselect | alignleft aligncenter alignright alignjustify | forecolor bullist numlist | subscript superscript equationeditor link | media image'
             ],
+            autoresize_min_height: 100,
             statusbar: false,
             fontsize_formats: '8pt 10pt 12pt 14pt 18pt',
             menubar: false,
@@ -93,6 +94,10 @@
                         <div id="collapse5" class="panel-collapse collapse">
                             <div class="panel-body">
                                 Hvis dette alternativet velges, vil eleven svare med tekst.
+                                <button class="pull-right btn btn-primary addTaskTitle"><i class="fa fa-font"
+                                                                                           aria-hidden="true"></i>
+                                    Tittel
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -370,6 +375,26 @@
                 }
             }
 
+        });
+
+        $('.addTaskTitle').click(function () {
+            var taskTextField = $('#id_answerText');
+            bootbox.prompt({
+                title: "Skriv inn tittel for tekstfeltet.",
+                placeholder: 'Tittel for tekstfeltet',
+                value: taskTextField.val(),
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Avbryt'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Lagre'
+                    }
+                },
+                callback: function (result) {
+                    taskTextField.val(result);
+                }
+            });
         });
 
         /**

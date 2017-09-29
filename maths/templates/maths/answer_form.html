@@ -169,7 +169,7 @@
                                     <div id="answerdiv{{ item.id }}" style="overflow: auto">
                                         {% if item.task.answertype == 1 %}
                                             <div id="textanswerdiv{{ item.id }}" style="padding-top: 10px;">
-                                                <label for="textanswer{{ item.id }}">Tekstsvar</label>
+                                                <label for="textanswer{{ item.id }}">{% if item.task.answerText %}{{ item.task.answerText }}{% else %}Tekstsvar{% endif %}</label>
                                                 <textarea class="form-control" id="textanswer{{ item.id }}"
                                                           rows="6"
                                                           style="resize:vertical"
@@ -296,7 +296,7 @@
 
                                         {% if item.task.answertype == 1 %}
                                             <div id="textanswerdiv{{ item.id }}" style="padding-top: 10px;">
-                                                <label for="textanswer{{ item.id }}">Tekstsvar</label>
+                                                <label for="textanswer{{ item.id }}">{% if item.task.answerText %}{{ item.task.answerText }}{% else %}Tekstsvar{% endif %}</label>
                                                 <textarea class="form-control" id="textanswer{{ item.id }}"
                                                           rows="6"
                                                           style="resize:vertical"

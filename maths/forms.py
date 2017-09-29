@@ -56,7 +56,7 @@ class CreateTaskForm(forms.ModelForm):
         """
         model = Task
         fields = ['title', 'text', 'answertype', 'extra', 'reasoning', 'category', 'variableDescription',
-                  'reasoningText', 'directory']
+                  'reasoningText', 'directory', 'answerText']
 
 
 class CreateCategoryForm(forms.ModelForm):

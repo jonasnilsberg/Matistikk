@@ -65,6 +65,7 @@ class Task(models.Model):
     """
     title = models.CharField(max_length=100, default="")
     text = models.TextField(max_length=15000, blank=True)
+    answerText = models.CharField(max_length=200, null=True)
     answertype = models.IntegerField()
     reasoning = models.BooleanField()
     reasoningText = models.CharField(max_length=1000, blank=True)

@@ -381,6 +381,7 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
         data = {
             'task_title': task.title,
             'task_text': task.text,
+            'answer_text': task.answerText,
             'task_reasoning': task.reasoning,
             'task_reasoningText': task.reasoningText,
             'task_extra': task.extra,
