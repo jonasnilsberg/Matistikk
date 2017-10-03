@@ -13,9 +13,11 @@
     <script type="text/javascript" src="{% static 'administration/../../static/maths/js/deployggb.js' %}"></script>
     <!--Imports Tinymce-->
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
-    <!--Imports mathquill-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <script type="text/javascript"
             src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'maths/css/sweetalert/sweetalert.css' %}">
+    <script src="{% static 'maths/js/sweetalert/sweetalert.min.js' %}"></script>
     <script>
         var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
         tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
@@ -36,11 +38,11 @@
 {% endblock %}
 
 {% block body %}
-    <div class="col-md-6 variableList" style="overflow: auto">
+    <div class="col-md-6 variableList">
         <div class="panel panel-default">
             <div class="panel-heading"><h4 class="text-center">{{ task.title }} - items</h4></div>
             <div class="panel-body">
-                <div class="row">
+                <div class="row itemtab" style="overflow: auto;">
                     <div class="list-group">
                         {% get_variable_count items.first as variable_count %}
                         <table class="table table-striped table-responsive table-hover">
@@ -54,7 +56,7 @@
                             </thead>
                             <tbody>
                             {% for item in items %}
-                                <tr class="itemrow" id="item{{ item.id }}">
+                                <tr class="itemrow" id="item{{ item.id }}" data-id="{{ item.id }}">
                                     <td><input type="radio" name="itemradio"></td>
                                     {% get_variable_count item as variables %}
                                     {% for variable in variables %}
@@ -76,6 +78,9 @@
             <button class="btn btn-primary variableDescription" data-toggle="modal" data-target="#descriptionModal">
                 <i class="fa fa-info-circle" aria-hidden="true"></i> Beskrivelse av Variable
             </button>
+            <button class="btn btn-danger pull-right" data-toggle="modal" data-target="#deleteItemModal">
+                <i class="fa fa-trash" aria-hidden="true"></i> Slett item
+            </button>
         </div>
     </div>
     <div class="col-md-6">
@@ -93,9 +98,6 @@
         if (typeof window.innerWidth != 'undefined') {
             viewPortWidth = window.innerWidth * 0.55;
             viewPortHeight = window.innerHeight * 0.75;
-            var listHeight = height * listScaleHeight;
-            $('.variableList').css('height', listHeight);
-            $('.variableList').css('max-height', listHeight);
         }
         if (height && width) {
             viewPortHeight = height;
@@ -197,7 +199,12 @@
         };
         $(document).ready(function () {
             $("tr").eq(1).addClass('success').find(':radio').prop('checked', true);
-            $('.col-md-6').css('height', (window.innerHeight - 70) + 'px');
+            var navbarHeight = 55;
+            var headingHeight = $('.panel-heading').outerHeight();
+            var footerHeight = $('.panel-footer').outerHeight();
+            var height = window.innerHeight - navbarHeight - headingHeight - footerHeight;
+            $('.col-md-6').css('height', (window.innerHeight - navbarHeight) + 'px');
+            $('.panel-body').css('height', (height) + 'px');
 
             $('#variabelForm').submit(function (e) {
                 e.preventDefault();
@@ -228,7 +235,7 @@
                     dataType: 'json',
                     success: function (data) {
                         if ($('#item' + data.id).length == 0) {
-                            $("table > tbody").append("<tr id='item" + data.id + "'></tr>");
+                            $("table > tbody").append("<tr id='item" + data.id + "' data-id='" + data.id + "'></tr>");
                             $('#item' + data.id).append("<td><input type='radio' name='itemradio'></td>");
                             for (var i = 0; i < variableTable.length; i++) {
                                 $('#item' + data.id).append("<td>" + variableTable[i] + "</td>");
@@ -388,4 +395,57 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="deleteItemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: whitesmoke">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title text-center">Slett item</h3>
+                </div>
+                <div class="modal-body">
+                    <form action=""
+                          method="post">{% csrf_token %}
+                        <p>Er du sikker på at du vil slette det markerte itemet?</p>
+                        <input id="deleteTestBtn" class="btn btn-danger hidden" type="submit" value="Slett"/>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger itemDelete"><i class="fa fa-trash"
+                                                                               aria-hidden="true"></i> Slett
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('.itemDelete').click(function () {
+            var task_id = "{{ task.id }}";
+            var itemrow = $('.itemrow.success');
+            var item_id = itemrow.data('id');
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'maths:itemDelete' task_pk=1234 item_pk=5678 %}'.replace(/1234/, task_id).replace(/5678/, item_id),
+                data: {
+                    'id': item_id,
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#deleteItemModal').modal('hide');
+                    if (data.deleted === "False") {
+                        swal("Itemet ble ikke slettet", "Dette itemet har allerede blitt besvart eller er det eneste itemet for denne oppgaven.", 'info');
+                    } else {
+                        swal("Itemet ble slettet", "", 'success');
+                        itemrow.remove();
+                        $(".table>tbody>tr:first").trigger('click');
+                    }
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        });
+    </script>
 {% endblock %}

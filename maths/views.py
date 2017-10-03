@@ -1900,3 +1900,18 @@ class TaskLogDeleteView(views.AjaxResponseMixin, generic.View):
         return JsonResponse(data={
             'id': log_id
         })
+
+
+class ItemDeleteView(AdministratorCheck, views.AjaxResponseMixin,  generic.View):
+    def post_ajax(self, request, *args, **kwargs):
+        item_id = request.POST.get('id', False)
+        item = Item.objects.get(id=item_id)
+        if item.answer_set.exists() or item.task.item_set.count() < 2:
+            return JsonResponse(data={
+                'deleted': "False"
+            })
+        else:
+            item.delete()
+            return JsonResponse(data={
+                'deleted': True
+            })
