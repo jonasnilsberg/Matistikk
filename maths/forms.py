@@ -42,6 +42,7 @@ class CreateTaskForm(forms.ModelForm):
     inputLength = forms.CharField(max_length=500, required=False)
     inputCorrect = forms.CharField(max_length=500, required=False)
     inputFraction = forms.CharField(max_length=500, required=False)
+    inputScore = forms.CharField(max_length=500, required=False)
     height = forms.CharField(max_length=100, required=False)
     width = forms.CharField(max_length=100, required=False)
     showMenuBar = forms.BooleanField(initial=False, required=False)

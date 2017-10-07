@@ -151,7 +151,15 @@
                         <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading" style="padding-top: 1px; padding-bottom: 1px;">
-                                    <h4 class="text-center tasktitle">Oppgave {{ forloop.counter }}</h4>
+                                    <div class="row">
+                                        <div class="col-md-1" style="height: inherit; margin-top: 12px;">
+                                            <button class="btn btn-sm btn-warning exitTest"><i class="fa fa-arrow-left"
+                                                                                               aria-hidden="true"></i>
+                                                Avbryt test
+                                            </button>
+                                        </div>
+                                        <h4 class="text-center tasktitle">Oppgave {{ forloop.counter }}</h4>
+                                    </div>
                                 </div>
                                 <div class="panel-body" style="padding: 10px">
                                     <div class="" id="tasktextdiv">
@@ -284,7 +292,15 @@
                         <div class="col-md-8 col-sm-12 col-xs-12 fulldiv">
                             <div class="panel panel-default" style="box-shadow: none;">
                                 <div class="panel-heading" style="padding-top: 1px; padding-bottom: 1px;">
-                                    <h4 class="text-center tasktitle">Oppgave {{ forloop.counter }}</h4>
+                                    <div class="row">
+                                        <div class="col-md-1" style="height: inherit; margin-top: 12px;">
+                                            <button class="btn btn-sm btn-warning exitTest"><i class="fa fa-arrow-left"
+                                                                                               aria-hidden="true"></i>
+                                                Avbryt test
+                                            </button>
+                                        </div>
+                                        <h4 class="text-center tasktitle">Oppgave {{ forloop.counter }}</h4>
+                                    </div>
                                 </div>
                                 <div class="panel-body" style="padding: 10px">
                                     <div id="tasktextdiv">
@@ -413,7 +429,15 @@
                 <div id="summary" class="col-xs-12 container-fluid">
                     <div class="panel panel-info">
                         <div class="panel-heading" style="padding-top: 1px">
-                            <h3 class="text-center">Oppsummering</h3>
+                            <div class="row">
+                                <div class="col-md-1" style="height: inherit; margin-top: 16px;">
+                                    <button class="btn btn-warning exitTest"><i class="fa fa-arrow-left"
+                                                                                       aria-hidden="true"></i> Avbryt
+                                        test
+                                    </button>
+                                </div>
+                                <h3 class="text-center">Oppsummering</h3>
+                            </div>
                         </div>
                         <div class="panel-body" style="max-height: 80vh; overflow: auto">
                             <table class="table table-hover table-striped table-responsive" id="summarytable">
@@ -724,6 +748,10 @@
                 scrollTo(0, 2);
             }
         }
+    });
+
+    $('.exitTest').click(function () {
+        $('#exitTestModal').modal('show');
     });
 
     var viewPortWidth = 1200;

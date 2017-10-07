@@ -65,7 +65,7 @@ class Task(models.Model):
     """
     title = models.CharField(max_length=100, default="")
     text = models.TextField(max_length=15000, blank=True)
-    answerText = models.CharField(max_length=200, null=True)
+    answerText = models.CharField(max_length=200, null=True, blank=True)
     answertype = models.IntegerField()
     reasoning = models.BooleanField()
     reasoningText = models.CharField(max_length=1000, blank=True)
@@ -123,6 +123,7 @@ class InputField(models.Model):
     inputnr = models.IntegerField(null=True)
     inputlength = models.IntegerField(default=10)
     correct = models.CharField(max_length=100, null=True, blank=True)
+    score = models.IntegerField(default=1)
     fraction = models.BooleanField(default=False)
 
     def __str__(self):
