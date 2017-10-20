@@ -432,7 +432,7 @@
                             <div class="row">
                                 <div class="col-md-1" style="height: inherit; margin-top: 16px;">
                                     <button class="btn btn-warning exitTest"><i class="fa fa-arrow-left"
-                                                                                       aria-hidden="true"></i> Avbryt
+                                                                                aria-hidden="true"></i> Avbryt
                                         test
                                     </button>
                                 </div>
@@ -569,10 +569,10 @@
      * This function runs when the document is ready.
      */
     $(document).ready(function () {
+
         start = Date.now();
         var notGeo = parseInt(taskcount - geocount);
         var percent = ((geoloaded + notGeo) / taskcount) * 100;
-        $('#progressbar').css('width', percent + '%');
         var scrollbar = false;
         if (window.chrome) {
             scrollbar = true;
@@ -670,9 +670,16 @@
         });
         if (geocount == 0) {
             geoFinished = true;
-            goToTask(1);
-            $(".sk-cube-grid").remove();
-            $('#tasknav').removeClass('hidden');
+            if (percent === 100) {
+                $('#progressbar').animate({width: '100%'}, 1500);
+            }
+            setTimeout(function () {
+                scaleBody();
+                goToTask(1);
+                $(".sk-cube-grid").remove();
+                $('#tasknav').removeClass('hidden');
+            }, 3000);
+
         }
         for (var k = 0; k < taskcount; k++) {
             if (document.getElementById('applet_container' + (k + 1)) != null) {
@@ -856,6 +863,16 @@
         var app = new GGBApplet(parameters, '5.0', 'applet_container' + (i + 1));
         app.setPreviewImage('http://bildr.no/image/cEtUd3R6.jpeg', 'https://www.geogebra.org/images/GeoGebra_loading.png?v=1490705653', 'https://www.geogebra.org/images/applet_play.png?v=1490705653');
         applet.push(app);
+    }
+
+    function scaleBody() {
+        for (var i = 1; i <= taskcount; i++) {
+            var div = $('#task' + i);
+            var itemid = div.data('itemid');
+            var tasktextHeight = div.find('#tasktextdiv').outerHeight();
+            var answerHeight = maxTaskHeight - tasktextHeight - 12;
+            $('#answerdiv' + itemid).css('max-height', answerHeight + 'px');
+        }
     }
 
 
