@@ -423,9 +423,11 @@
             var inputform = $('#inputFields' + num);
             inputform.append('<div class="col-md-12 inputrow' + num + '"><div class="col-md-4"><form class="form-inline inputform' + num + '"> <div class="form-group">' +
                 '<input type="text" placeholder="Titel for inputfelt" class="form-control">' +
-                '<strong> : </strong><input type="number" class="form-control"></div></form></div><div class="col-md-2 pull-right answerform' + num + '">' +
-                '<input type="number" class="form-control" placeholder="Skriv inn rett svar"></div>' +
-                '<div class="col-md-2 pull-right selectform' + num + '"><div class="form-group"><select class="form-control"><option value="10" disabled selected>Lengden av inputfeltet</option>' +
+                '<strong> : </strong><input type="number" class="form-control"></div></form></div><div class="col-md-1 pull-right pointform' + num + '">' +
+                '<input type="number" class="form-control" placeholder="Poeng"></div>' +
+                '<div class="col-md-1 pull-right answerform' + num + '">' +
+                '<input type="number" class="form-control" placeholder="Rett svar"></div>' +
+                '<div class="col-md-1 pull-right selectform' + num + '"><div class="form-group"><select class="form-control"><option value="10" disabled selected>Lengden</option>' +
                 '<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>' +
                 '<option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></div></div>' +
                 '<div class="col-md-2 pull-right fractionform' + num + '"><button class="btn btn-primary pull-right" style="margin-right: 5px" ' +
@@ -1055,13 +1057,16 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="col-md-2 pull-right answerform1">
-                                    <input type="number" class="form-control" placeholder="Skriv inn rett svar">
+                                <div class="col-md-1 pull-right pointform1">
+                                    <input type="number" class="form-control" placeholder="Poeng">
                                 </div>
-                                <div class="col-md-2 pull-right selectform1">
+                                <div class="col-md-1 pull-right answerform1">
+                                    <input type="number" class="form-control" placeholder="Rett svar">
+                                </div>
+                                <div class="col-md-1 pull-right selectform1">
                                     <div class="form-group">
                                         <select class="form-control">
-                                            <option value="10" disabled selected>Lengden av inputfeltet</option>
+                                            <option value="10" disabled selected>Lengden</option>
                                             {% for x in "xxxxxxxxxx" %}
                                                 <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
                                             {% endfor %}

@@ -698,8 +698,23 @@
      */
     function nextTask() {
         if (submitNow) {
-            alert('nextTask');
-            submitTask();
+            bootbox.confirm({
+                title: "Send inn?",
+                message: "Er du sikker på at du vil sende inn din besvarelse?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Cancel'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirm'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        submitTask();
+                    }
+                }
+            });
         } else {
             $('#fullpage').fullpage.moveSectionDown();
         }
@@ -709,7 +724,6 @@
      * This function changes the fullpage.js-section to the section above the current one.
      */
     function previousTask() {
-        alert('prevTask');
         $('#fullpage').fullpage.moveSectionUp();
     }
 
