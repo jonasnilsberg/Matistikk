@@ -1122,7 +1122,7 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
                 x = 0
                 score = 0
                 score_tasks = False
-                if input_answer:
+                if input_answers:
                     for inputfield_task in inputfield_tasks:
                         inputfields = InputField.objects.filter(inputFieldTask=inputfield_task)
                         for inputfield in inputfields:
