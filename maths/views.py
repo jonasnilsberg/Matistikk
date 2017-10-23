@@ -1122,18 +1122,18 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
                 x = 0
                 score = 0
                 score_tasks = False
-                if len(input_answers) > 0:
-                    for inputfield_task in inputfield_tasks:
-                        inputfields = InputField.objects.filter(inputFieldTask=inputfield_task)
-                        for inputfield in inputfields:
-                            if inputfield.correct:
-                                input_answer = input_answers[x].strip()
-                                score_tasks = True
+                for inputfield_task in inputfield_tasks:
+                    inputfields = InputField.objects.filter(inputFieldTask=inputfield_task)
+                    for inputfield in inputfields:
+                        if inputfield.correct:
+                            input_answer = input_answers[x].strip()
+                            score_tasks = True
+                            if input_answer:
                                 if float(input_answer) == float(inputfield.correct):
                                     score += 1
-                            x += 1
-                    if score_tasks:
-                        answer.correct = score
+                        x += 1
+                if score_tasks:
+                    answer.correct = score
             if answer.item.task.answertype == 2:
                 score = 0
                 multiplechoice_answer = text.split('<--|-->')
