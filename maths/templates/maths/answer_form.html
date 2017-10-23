@@ -703,10 +703,10 @@
                 message: "Er du sikker på at du vil sende inn din besvarelse?",
                 buttons: {
                     cancel: {
-                        label: '<i class="fa fa-times"></i> Cancel'
+                        label: '<i class="fa fa-times"></i> Avbryt'
                     },
                     confirm: {
-                        label: '<i class="fa fa-check"></i> Confirm'
+                        label: '<i class="fa fa-check"></i> Send inn'
                     }
                 },
                 callback: function (result) {
@@ -1186,7 +1186,6 @@
      */
     var submit = false;
     function submitTask() {
-        alert('test');
         if (submit) {
             return 0;
         }
