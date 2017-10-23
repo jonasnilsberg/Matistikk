@@ -698,6 +698,7 @@
      */
     function nextTask() {
         if (submitNow) {
+            alert('nextTask');
             submitTask();
         } else {
             $('#fullpage').fullpage.moveSectionDown();
@@ -708,6 +709,7 @@
      * This function changes the fullpage.js-section to the section above the current one.
      */
     function previousTask() {
+        alert('prevTask');
         $('#fullpage').fullpage.moveSectionUp();
     }
 
@@ -1170,6 +1172,7 @@
      */
     var submit = false;
     function submitTask() {
+        alert('test');
         if (submit) {
             return 0;
         }
