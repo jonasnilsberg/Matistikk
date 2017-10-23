@@ -1128,7 +1128,7 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
                         if inputfield.correct:
                             input_answer = input_answers[x].strip()
                             score_tasks = True
-                            if str(input_answer) == inputfield.correct:
+                            if str(input_answer) == str(inputfield.correct):
                                 score += 1
                         x += 1
                 if score_tasks:
