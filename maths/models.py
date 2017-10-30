@@ -282,6 +282,7 @@ class GeogebraAnswer(models.Model):
     :data: How the user used geogebra to solve the task. (Data from listeners)
     """
     answer = models.ForeignKey(Answer)
+    matistikkAnswer = models.CharField(max_length=500, null=True)
     base64 = models.TextField()
     data = models.TextField(null=True)
 

@@ -1152,8 +1152,10 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             answer.save()
             base64 = request.POST["task" + str(y) + "-base64answer"]
             geogebradata = request.POST["task" + str(y) + "-geogebradata"]
+            matistikkAnswer = request.POST["task" + str(y) + "-matistikkAnswer"]
             if item.task.extra:
-                geogebraanswer = GeogebraAnswer(answer=answer, base64=base64, data=geogebradata)
+                geogebraanswer = GeogebraAnswer(answer=answer, base64=base64, data=geogebradata,
+                                                matistikkAnswer=matistikkAnswer)
                 geogebraanswer.save()
         success_message = 'Dine svar ble levert!'
         messages.success(self.request, success_message)
@@ -1356,13 +1358,16 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                     answers = Answer.objects.filter(user=user).order_by('-id')
                     for answer in answers:
                         if GeogebraAnswer.objects.filter(answer=answer).exists():
-                            geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
+                            geogebraAnswer = GeogebraAnswer.objects.get(answer=answer)
+                            geogebra_data = geogebraAnswer.data
+                            matistikk_answer = geogebraAnswer.matistikkAnswer
                         else:
                             geogebra_data = ""
+                            matistikk_answer = ""
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered),
                                                             "SHORT_DATETIME_FORMAT")
                         answer_tab = [user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
+                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer, date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_grades:
                 grade_table = rq_grades.split(',')
@@ -1372,13 +1377,17 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                     answers = Answer.objects.filter(test__in=tests, user__in=grade.person_set.all())
                     for answer in answers:
                         if GeogebraAnswer.objects.filter(answer=answer).exists():
-                            geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
+                            geogebraAnswer = GeogebraAnswer.objects.get(answer=answer)
+                            geogebra_data = geogebraAnswer.data
+                            matistikk_answer = geogebraAnswer.matistikkAnswer
                         else:
                             geogebra_data = ""
+                            matistikk_answer = ""
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered),
                                                             "SHORT_DATETIME_FORMAT")
                         answer_tab = [answer.user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
+                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer,
+                                      date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_groups:
                 group_table = rq_groups.split(',')
@@ -1388,13 +1397,16 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                     answers = Answer.objects.filter(test__in=tests, user__in=group.persons.all()).order_by('-id')
                     for answer in answers:
                         if GeogebraAnswer.objects.filter(answer=answer).exists():
-                            geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
+                            geogebraAnswer = GeogebraAnswer.objects.get(answer=answer)
+                            geogebra_data = geogebraAnswer.data
+                            matistikk_answer = geogebraAnswer.matistikkAnswer
                         else:
                             geogebra_data = ""
+                            matistikk_answer = ""
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered),
                                                             "SHORT_DATETIME_FORMAT")
                         answer_tab = [answer.user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
+                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer,  date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_tests:
                 test_table = rq_tests.split(',')
@@ -1403,9 +1415,12 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                     answers = Answer.objects.filter(test=test).order_by('-id')
                     for answer in answers:
                         if GeogebraAnswer.objects.filter(answer=answer).exists():
-                            geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
+                            geogebraAnswer = GeogebraAnswer.objects.get(answer=answer)
+                            geogebra_data = geogebraAnswer.data
+                            matistikk_answer = geogebraAnswer.matistikkAnswer
                         else:
                             geogebra_data = ""
+                            matistikk_answer = ""
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered),
                                                             "SHORT_DATETIME_FORMAT")
                         if answer.user:
@@ -1413,7 +1428,7 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                         else:
                             username = "Anonym  - " + str(answer.anonymous_user)
                         answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
+                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer, date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_tasks:
                 task_table = rq_tasks.split(',')
@@ -1424,15 +1439,18 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered),
                                                             "SHORT_DATETIME_FORMAT")
                         if GeogebraAnswer.objects.filter(answer=answer).exists():
-                            geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
+                            geogebraAnswer = GeogebraAnswer.objects.get(answer=answer)
+                            geogebra_data = geogebraAnswer.data
+                            matistikk_answer = geogebraAnswer.matistikkAnswer
                         else:
                             geogebra_data = ""
+                            matistikk_answer = ""
                         if answer.user:
                             username = answer.user.username
                         else:
                             username = "Anonym  - " + str(answer.anonymous_user)
                         answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
+                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer, date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_items:
                 item_table = rq_items.split(',')
@@ -1443,15 +1461,18 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered),
                                                             "SHORT_DATETIME_FORMAT")
                         if GeogebraAnswer.objects.filter(answer=answer).exists():
-                            geogebra_data = GeogebraAnswer.objects.get(answer=answer).data
+                            geogebraAnswer = GeogebraAnswer.objects.get(answer=answer)
+                            geogebra_data = geogebraAnswer.data
+                            matistikk_answer = geogebraAnswer.matistikkAnswer
                         else:
                             geogebra_data = ""
+                            matistikk_answer = ""
                         if answer.user:
                             username = answer.user.username
                         else:
                             username = "Anonym  - " + str(answer.anonymous_user)
                         answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, date_answered, geogebra_data]
+                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer, date_answered, geogebra_data]
                         data.append(answer_tab)
         elif info_js == 'true' and rq_students or rq_grades or rq_groups:
             if rq_students:
@@ -1903,7 +1924,7 @@ class TaskLogDeleteView(views.AjaxResponseMixin, generic.View):
         })
 
 
-class ItemDeleteView(AdministratorCheck, views.AjaxResponseMixin,  generic.View):
+class ItemDeleteView(AdministratorCheck, views.AjaxResponseMixin, generic.View):
     def post_ajax(self, request, *args, **kwargs):
         item_id = request.POST.get('id', False)
         item = Item.objects.get(id=item_id)

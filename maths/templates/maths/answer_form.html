@@ -1244,6 +1244,12 @@
                     var correct = document.getElementById('id_task' + i + '-correct');
                     correct.value = score;
                 }
+                var matistikkAnswerCount = window["ggbApplet" + (i + 1)].getValue('matistikkAntallSvar');
+                var matistikkAnswer = document.getElementById('id_task' + i + '-matistikkAnswer');
+                for(var x = 1; x <= matistikkAnswerCount; x++){
+                    matistikkAnswer.value += window["ggbApplet" + (i + 1)].getValue('matistikkSvar' + x) + "||||";
+                }
+                matistikkAnswer.value = matistikkAnswer.value.slice(0, -4);
             }
             var base642 = document.getElementById('id_task' + i + '-base64answer');
             var multiplechoiceanswer = $("input[name=multiplechoice" + itemid + "]:checked").text();

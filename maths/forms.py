@@ -123,6 +123,7 @@ class CreateAnswerForm(forms.ModelForm):
     geogebradata = forms.CharField(max_length=500000, required=False)
     correct = forms.CharField(max_length=100, required=False)
     variables = forms.CharField(max_length=1000, required=False)
+    matistikkAnswer = forms.CharField(max_length=500, required=False)
 
     class Meta:
         model = Answer
