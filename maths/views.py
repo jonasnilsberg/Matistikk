@@ -14,6 +14,7 @@ import django_excel as excel
 from administration.views import AdministratorCheck, RoleCheck
 import random
 from django.http import HttpResponseRedirect
+from django.conf import settings
 
 from django.utils import formats
 from django.utils import timezone
@@ -67,7 +68,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
     **TemplateView:**
         Inherits generic.Template that makes a page representing a specific template.
     """
-    login_url = '/login/'
+    login_url = settings.LOGIN_URL
     template_name = 'maths/index.html'
 
     def get_context_data(self, **kwargs):
