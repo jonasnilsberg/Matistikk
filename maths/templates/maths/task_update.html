@@ -195,7 +195,9 @@
     </div>
     <div class="col-sm-6 col-md-6" id="extradiv">
         <input type="hidden" id="hiddenbase64" data-height="{{ geogebra.height }}"
-               data-width="{{ geogebra.width }}"
+               data-width="{{ geogebra.width }}" data-xmin="{{ geogebra.xmin }}" data-xmax="{{ geogebra.xmax }}"
+               data-ymin="{{ geogebra.ymin }}" data-ymax="{{ geogebra.ymax }}"
+               data-yratio="{{ geogebra.yratio }}" data-xstep="{{ geogebra.xstep }}" data-ystep="{{ geogebra.ystep }}"
                value="{{ geogebra.base64 }}">
         <div id="applet_container"></div>
     </div>
@@ -213,14 +215,18 @@
         var geo = $('#hiddenbase64');
         var width = geo.data('width');
         var height = geo.data('height');
+        var xmin = parseFloat(geo.data('xmin').replace(",", "."));
+        var xmax = parseFloat(geo.data('xmax').replace(",", "."));
+        var ymin = parseFloat(geo.data('ymin').replace(",", "."));
+        var ymax = parseFloat(geo.data('ymax').replace(",", "."));
         if (typeof window.innerWidth != 'undefined') {
-            viewPortWidth = window.innerWidth * 0.5;
-            viewPortHeight = window.innerHeight * 0.93;
+            viewPortWidth = (window.innerWidth * 0.5) - 30;
+            viewPortHeight = window.innerHeight - 55;
         }
-        if (height && width) {
-            viewPortHeight = height;
-            viewPortWidth = width;
-        }
+        /*if (height && width) {
+         viewPortHeight = height;
+         viewPortWidth = width;
+         }*/
         var parameters = {
             "id": "ggbApplet",
             "width": viewPortWidth,
@@ -254,21 +260,36 @@
                 $('#infoDiv').addClass('col-sm-8 col-md-8');
             }
             else {
-                $('#id_base64').val(geobase64);
-                if (window.innerWidth > window.innerHeight) {
-                    var scaledWidth = (window.innerWidth * 0.50) / width;
-                    var scaledHeight = (window.innerHeight * 0.93) / height;
-                } else {
-                    var scaledWidth = (window.innerWidth * 0.49) / width;
-                    var scaledHeight = (window.innerHeight * 0.50) / height;
-                }
-                $('.applet_scaler').css('transform-origin', '0% 0% 0px');
-                var appletContainerScaler = $('#applet_container .applet_scaler');
-                appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                document.getElementById('ggbApplet').setAttribute('data-scalex', scaledWidth);
-                document.getElementById('ggbApplet').setAttribute('data-scaley', scaledHeight);
+                var geo = $('#hiddenbase64');
+                var yratio = parseFloat(geo.data('yratio').replace(",", "."));
+                var xstep = parseFloat(geo.data('xstep').replace(",", "."));
+                var ystep = parseFloat(geo.data('ystep').replace(",", "."));
+                ggbApplet.setCoordSystem(xmin, xmax, ymin, ymax);
+                ggbApplet.evalCommand("SetAxesRatio(1," + yratio + ")");
+                ggbApplet.setAxisSteps(1, xstep, ystep, 1);
+                ggbApplet.evalCommand("matistikk_c1 = Corner(1)");
+                ggbApplet.evalCommand("matistikk_c3 = Corner(3)");
+
+                /*$('#id_base64').val(geobase64);
+                 if (window.innerWidth > window.innerHeight) {
+                 var scaledWidth = (window.innerWidth * 0.50) / width;
+                 var scaledHeight = (window.innerHeight * 0.93) / height;
+                 } else {
+                 var scaledWidth = (window.innerWidth * 0.49) / width;
+                 var scaledHeight = (window.innerHeight * 0.50) / height;
+                 }
+                 $('.applet_scaler').css('transform-origin', '0% 0% 0px');
+                 if (scaledWidth < scaledHeight) {
+                 scaledHeight = scaledWidth;
+                 } else {
+                 scaledWidth = scaledHeight;
+                 }
+                 var appletContainerScaler = $('#applet_container .applet_scaler');
+                 appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                 appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                 appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                 document.getElementById('ggbApplet').setAttribute('data-scalex', scaledWidth);
+                 document.getElementById('ggbApplet').setAttribute('data-scaley', scaledHeight);*/
             }
 
         };
@@ -286,16 +307,23 @@
         };
 
         window.onresize = function (event) {
-            $('.applet_scaler').css('transform-origin', '0% 0% 0px');
-            var appletContainerScaler = $('#applet_container .applet_scaler');
-            var scaledWidth = (window.innerWidth * 0.5) / width;
-            var scaledHeight = (window.innerHeight * 0.93) / height;
-            appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-            appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-            appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-            document.getElementById('ggbApplet').setAttribute('data-scalex', scaledWidth);
-            document.getElementById('ggbApplet').setAttribute('data-scaley', scaledHeight);
+            /*$('.applet_scaler').css('transform-origin', '0% 0% 0px');
+             var appletContainerScaler = $('#applet_container .applet_scaler');
+             var scaledWidth = (window.innerWidth * 0.5) / width;
+             var scaledHeight = (window.innerHeight * 0.93) / height;
+             appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+             appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+             appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+             document.getElementById('ggbApplet').setAttribute('data-scalex', scaledWidth);
+             document.getElementById('ggbApplet').setAttribute('data-scaley', scaledHeight);*/
         };
+
+        function zoomOut() {
+            var appletXmin = (ggbApplet.getXcoord("matistikk_c1"));
+            var appletXmax = (ggbApplet.getXcoord("matistikk_c3"));
+            var appletYmin = (ggbApplet.getYcoord("matistikk_c1"));
+            var appletYmax = (ggbApplet.getYcoord("matistikk_c3"));
+        }
 
     </script>
     <script>
@@ -445,6 +473,28 @@
                     width.value = (viewPortWidth);
                     height.value = (viewPortHeight);
                 }
+                ggbApplet.evalCommand("matistikk_c1 = Corner(1)");
+                ggbApplet.evalCommand("matistikk_c2 = Corner(2)");
+                ggbApplet.evalCommand("matistikk_c3 = Corner(3)");
+                ggbApplet.evalCommand("matistikk_c5 = Corner(5)");
+                ggbApplet.evalCommand("matistikk_ratio =  (x(matistikk_c5)/(Distance[matistikk_c1,matistikk_c2])) / (y(matistikk_c5)/(Distance[matistikk_c2,matistikk_c3]))");
+                ggbApplet.evalCommand("matistikk_xstep = AxisStepX[]");
+                ggbApplet.evalCommand("matistikk_ystep = AxisStepY[]");
+                var ratio = ggbApplet.getValue("matistikk_ratio");
+                $('#id_yratio').val(ratio);
+                $('#id_xmin').val(ggbApplet.getXcoord("matistikk_c1"));
+                $('#id_xmax').val(ggbApplet.getXcoord("matistikk_c3"));
+                $('#id_ymin').val(ggbApplet.getYcoord("matistikk_c1"));
+                $('#id_ymax').val(ggbApplet.getYcoord("matistikk_c3"));
+                $('#id_xstep').val(ggbApplet.getValue("matistikk_xstep"));
+                $('#id_ystep').val(ggbApplet.getValue("matistikk_ystep"));
+                ggbApplet.deleteObject("matistikk_c1");
+                ggbApplet.deleteObject("matistikk_c2");
+                ggbApplet.deleteObject("matistikk_c3");
+                ggbApplet.deleteObject("matistikk_c5");
+                ggbApplet.deleteObject("matistikk_ratio");
+                ggbApplet.deleteObject("matistikk_xstep");
+                ggbApplet.deleteObject("matistikk_ystep");
             }
             else {
                 extra2.checked = false;
@@ -626,7 +676,7 @@
             var footer = $('#taskFooter').outerHeight();
             var height = windowHeight - navbar - header - footer - 5;
             $('.taskBody').css('height', height + 'px');
-            $('.col-md-6').css('height', (windowHeight - 70) + 'px');
+            //$('.col-md-6').css('height', (windowHeight - 50) + 'px');
             $('body').css('overflow', 'hidden');
 
         });

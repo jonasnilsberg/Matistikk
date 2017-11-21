@@ -266,13 +266,22 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
             preview = self.request.POST['preview']
             height = self.request.POST['height']
             width = self.request.POST['width']
+            xmin = self.request.POST['xmin']
+            xmax = self.request.POST['xmax']
+            ymin = self.request.POST['ymin']
+            ymax = self.request.POST['ymax']
+            yratio = self.request.POST['yratio']
+            xstep = self.request.POST['xstep']
+            ystep = self.request.POST['ystep']
             show_menu_bar = form.cleaned_data['showMenuBar']
             enable_label_drags = form.cleaned_data['enableLabelDrags']
             enable_shift_drag_zoom = form.cleaned_data['enableShiftDragZoom']
             enable_right_click = form.cleaned_data['enableRightClick']
             geogebratask = GeogebraTask(base64=base64, preview=preview, task=task, height=height, width=width,
                                         showMenuBar=show_menu_bar, enableLabelDrags=enable_label_drags,
-                                        enableShiftDragZoom=enable_shift_drag_zoom, enableRightClick=enable_right_click)
+                                        enableShiftDragZoom=enable_shift_drag_zoom, enableRightClick=enable_right_click,
+                                        xmax=xmax, xmin=xmin, ymax=ymax, ymin=ymin, yratio=yratio, xstep=xstep,
+                                        ystep=ystep)
             geogebratask.save()
         return super(TaskCreateView, self).form_valid(form)
 
@@ -579,6 +588,13 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
             enableLabelDrags = form.cleaned_data['enableLabelDrags']
             enableShiftDragZoom = form.cleaned_data['enableShiftDragZoom']
             enableRightClick = form.cleaned_data['enableRightClick']
+            xmin = form.cleaned_data['xmin']
+            xmax = form.cleaned_data['xmax']
+            ymin = form.cleaned_data['ymin']
+            ymax = form.cleaned_data['ymax']
+            yratio = form.cleaned_data['yratio']
+            xstep = form.cleaned_data['xstep']
+            ystep = form.cleaned_data['ystep']
             geotask = GeogebraTask.objects.filter(task=task)
             if geotask.count() > 0:
                 geogebratask = GeogebraTask.objects.get(task=task)
@@ -588,12 +604,20 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
                 geogebratask.enableLabelDrags = enableLabelDrags
                 geogebratask.enableShiftDragZoom = enableShiftDragZoom
                 geogebratask.enableRightClick = enableRightClick
+                geogebratask.xmin = xmin
+                geogebratask.xmax = xmax
+                geogebratask.ymin = ymin
+                geogebratask.ymax = ymax
+                geogebratask.yratio = yratio
+                geogebratask.xstep = xstep
+                geogebratask.ystep = ystep
                 geogebratask.save()
             else:
                 height = form.cleaned_data['height']
                 width = form.cleaned_data['width']
                 geogebratask = GeogebraTask(task=task, base64=base64, preview=preview, height=height, width=width,
-                                            showMenuBar=showMenuBar, enableLabelDrags=enableLabelDrags,
+                                            xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, yratio=yratio, xstep=xstep,
+                                            ystep=ystep,showMenuBar=showMenuBar, enableLabelDrags=enableLabelDrags,
                                             enableShiftDragZoom=enableShiftDragZoom, enableRightClick=enableRightClick)
                 geogebratask.save()
         if task.answertype == 2:

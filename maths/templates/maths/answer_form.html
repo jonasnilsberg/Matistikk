@@ -142,11 +142,13 @@
                         {% get_geogebra_task item.task as geogebratask %}
                         <input id="base64{{ forloop.counter }}" type="text"
                                data-variables="{{ item.variables }}"
-                               data-height="{{ geogebratask.height }}" data-width="{{ geogebratask.width }}"
-                               data-showMenuBar="{{ geogebratask.showMenuBar }}"
+                               data-xmin="{{ geogebratask.xmin }}" data-xmax="{{ geogebratask.xmax }}"
+                               data-ymin="{{ geogebratask.ymin }}" data-ymax="{{ geogebratask.ymax }}"
+                               data-yratio="{{ geogebratask.yratio }}" data-showMenuBar="{{ geogebratask.showMenuBar }}"
                                data-enableLabelDrags="{{ geogebratask.enableLabelDrags }}"
                                data-enableShiftDragZoom="{{ geogebratask.enableShiftDragZoom }}"
-                               data-enableRightClick="{{ geogebratask.enableRightClick }}"
+                               data-enableRightClick="{{ geogebratask.enableRightClick }}" data-xstep="{{ geogebratask.xstep }}"
+                               data-ystep="{{ geogebratask.ystep }}"
                                value="{{ geogebratask.base64 }}" hidden>
                         <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
                             <div class="panel panel-default">
@@ -284,7 +286,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
+                        <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6" style="overflow-y: hidden">
                             <div id="applet_container{{ forloop.counter }}"></div>
                         </div>
                     {% else %}
@@ -785,7 +787,7 @@
 
     if (typeof window.innerWidth != 'undefined' && window.innerWidth > 1000) {
         viewPortWidth = window.innerWidth * 0.5;
-        viewPortHeight = window.innerHeight * 0.9;
+        viewPortHeight = window.innerHeight * 0.94;
     }
 
     var applet = [];
@@ -815,14 +817,27 @@
                 viewPortHeight = height;
                 viewPortWidth = width;
             }
+            if (window.innerWidth > window.innerHeight) {
+                var scaledWidth = (window.innerWidth * 0.5) / width;
+                var scaledHeight = (window.innerHeight * 0.93) / height;
+            } else {
+                var scaledWidth = (window.innerWidth * 0.49) / width;
+                var scaledHeight = (window.innerHeight * 0.50) / height;
+            }
+            if (scaledWidth < scaledHeight) {
+                scaledHeight = scaledWidth;
+            } else {
+                scaledWidth = scaledHeight;
+            }
             parameters = {
                 "id": "ggbApplet" + (i + 1),
-                "width": viewPortWidth,
-                "height": viewPortHeight,
+                "width": (window.innerWidth * 0.5) - 30,
+                "height": window.innerHeight - 55,
                 "language": "nb",
                 "showToolBar": true,
                 "borderColor": null,
-                "showMenuBar": showMenuBar,
+                //"showMenuBar": showMenuBar,
+                "showMenuBar": true,
                 "showAlgebraInput": false,
                 "allowStyleBar": false,
                 "enableLabelDrags": enableLabelDrags,
@@ -948,66 +963,22 @@
                 tinymce.get('tasktext' + itemid).setContent(text);
             }
             if (document.getElementById('base64' + i)) {
-                //window["ggbApplet" + i].registerAddListener("addListener" + i);
-                //window["ggbApplet" + i].registerRemoveListener("removeListener" + i);
-                //window["ggbApplet" + i].registerUpdateListener("updateListener" + i);
-                width = geo.data('width');
+                width = parseFloat(geo.data('width'));
                 height = geo.data('height');
-                if (window.innerWidth > window.innerHeight) {
-                    var scaledWidth = (window.innerWidth * 0.5) / width;
-                    var scaledHeight = (window.innerHeight * 0.93) / height;
-                } else {
-                    var scaledWidth = (window.innerWidth * 0.49) / width;
-                    var scaledHeight = (window.innerHeight * 0.50) / height;
-                }
-                if (scaledWidth < scaledHeight) {
-                    scaledHeight = scaledWidth;
-                } else {
-                    scaledWidth = scaledHeight;
-                }
-                var appletContainerScaler = $('#applet_container' + i + ' .applet_scaler');
-                appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                //Prøv å skalere oppgave header --------------------------------------------------------------------->
-                /*$('.panel-heading').css('transform-origin', '0% 0% 0px');
-                 $('.panel-heading').css('transform', 'scale(1,' + scaledHeight + ')');
-                 $('.panel-heading').css('-webkit-transform', 'scale(1,' + scaledHeight + ')');
-                 $('.panel-heading').css('-ms-transform', 'scale(1,' + scaledHeight + ')');*/
-                //--------------------------------------------------------------------------------------------------->
-                document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
-                document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
+                var xmin = parseFloat(geo.data('xmin').replace(",", "."));
+                var xmax = parseFloat(geo.data('xmax').replace(",", "."));
+                var ymin = parseFloat(geo.data('ymin').replace(",", "."));
+                var ymax = parseFloat(geo.data('ymax').replace(",", "."));
+                var yratio = parseFloat(geo.data('yratio').replace(",", "."));
+                var xstep = parseFloat(geo.data('xstep').replace(",", "."));
+                var ystep = parseFloat(geo.data('ystep').replace(",", "."));
+                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin, ymax);
+                window["ggbApplet" + i].evalCommand("SetAxesRatio(1," + yratio + ")");
+                    window["ggbApplet" + i].setAxisSteps(1, xstep,ystep,1);
             }
         }
     }
 
-    window.onresize = function (event) {
-        $('.applet_scaler').css('transform-origin', '0% 0% 0px');
-        for (var i = 1; i <= taskcount; i++) {
-            if (document.getElementById('base64' + i)) {
-                var appletContainerScaler = $('#applet_container' + i + ' .applet_scaler');
-                var geo = $('#base64' + i);
-                width = geo.data('width');
-                height = geo.data('height');
-                var scaledWidth = (window.innerWidth * 0.5) / width;
-                var scaledHeight = (window.innerHeight * 0.93) / height;
-                if (scaledWidth < scaledHeight) {
-                    scaledHeight = scaledWidth;
-                } else {
-                    scaledWidth = scaledHeight;
-                }
-                appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
-                document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
-            }
-        }
-        var panelHeight = $('.panel-heading').height();
-        var navbarHeight = 50;
-        var colHeight = window.innerHeight - panelHeight - navbarHeight;
-        $('.col-md-6').css('height', colHeight + 'px');
-    };
 
     $('.inputs').change(function () {
         var input = $(this);
@@ -1246,7 +1217,7 @@
                 }
                 var matistikkAnswerCount = window["ggbApplet" + (i + 1)].getValue('matistikkAntallSvar');
                 var matistikkAnswer = document.getElementById('id_task' + i + '-matistikkAnswer');
-                for(var x = 1; x <= matistikkAnswerCount; x++){
+                for (var x = 1; x <= matistikkAnswerCount; x++) {
                     matistikkAnswer.value += window["ggbApplet" + (i + 1)].getValue('matistikkSvar' + x) + "||||";
                 }
                 matistikkAnswer.value = matistikkAnswer.value.slice(0, -4);

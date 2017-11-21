@@ -244,10 +244,11 @@
             </div>
 
         </div>
+        <div id="extradiv" class="col-md-6 pull-right">
+            <div id="applet_container"></div>
+        </div>
     </div>
-    <div class="col-md-6" id="extradiv" style="padding-top: 2px;">
-        <div id="applet_container"></div>
-    </div>
+
     </div>
 
     <script>
@@ -255,8 +256,8 @@
         var viewPortWidth = 1200;
         var viewPortHeight = 750;
         if (typeof window.innerWidth != 'undefined' && window.innerWidth > 1000) {
-            viewPortWidth = window.innerWidth * 0.5;
-            viewPortHeight = window.innerHeight * 0.93;
+            viewPortWidth = (window.innerWidth * 0.5) - 30;
+            viewPortHeight = window.innerHeight - 55;
         }
         var parameters = {
             "id": "ggbApplet",
@@ -274,8 +275,7 @@
             "capturingThreshold": null,
             "showToolBarHelp": true,
             "errorDialogsActive": true,
-            "useBrowserForJS": false,
-            "scaleContainerClass": 'col-md-6'
+            "useBrowserForJS": false
         };
 
         // Applet som inneholder GeoGebra-vinduet som lastes inn i createfunctiontask.jsp
@@ -541,6 +541,27 @@
                 preview.value = ggbApplet.getPNGBase64(1, false);
                 $('#id_height').val(viewPortHeight);
                 $('#id_width').val(viewPortWidth);
+                ggbApplet.evalCommand("matistikk_c1 = Corner(1)");
+                ggbApplet.evalCommand("matistikk_c2 = Corner(2)");
+                ggbApplet.evalCommand("matistikk_c3 = Corner(3)");
+                ggbApplet.evalCommand("matistikk_c5 = Corner(5)");
+                ggbApplet.evalCommand("matistikk_ratio =  (x(matistikk_c5)/(Distance[matistikk_c1,matistikk_c2])) / (y(matistikk_c5)/(Distance[matistikk_c2,matistikk_c3]))");
+                ggbApplet.evalCommand("matistikk_xstep = AxisStepX[]");
+                ggbApplet.evalCommand("matistikk_ystep = AxisStepY[]");
+                var ratio = ggbApplet.getValue("matistikk_ratio");
+                $('#id_yratio').val(ratio);
+                $('#id_xmin').val(ggbApplet.getXcoord("matistikk_c1"));
+                $('#id_xmax').val(ggbApplet.getXcoord("matistikk_c3"));
+                $('#id_ymin').val(ggbApplet.getYcoord("matistikk_c1"));
+                $('#id_ymax').val(ggbApplet.getYcoord("matistikk_c3"));
+                $('#id_xstep').val(ggbApplet.getValue("matistikk_xstep"));
+                $('#id_ystep').val(ggbApplet.getValue("matistikk_ystep"));
+                ggbApplet.deleteObject("matistikk_c2");
+                ggbApplet.deleteObject("matistikk_c5");
+                ggbApplet.deleteObject("matistikk_ratio");
+                ggbApplet.deleteObject("matistikk_xstep");
+                ggbApplet.deleteObject("matistikk_ystep");
+
             }
             else {
                 extra2.checked = false;
@@ -927,9 +948,6 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-3 hidden" id="notGeogebraDiv"></div>
-                        <div class="col-md-6" id="geogebradiv">
-                            <img id='previewbilde' alt='' width="100%"/>
-                        </div>
                         <div class="col-md-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -959,6 +977,9 @@
                                     <button type="button" class="btn btn-success">Svar</button>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-6" id="geogebradiv">
+                            <img id='previewbilde' alt='' width="100%"/>
                         </div>
                     </div>
                 </div>

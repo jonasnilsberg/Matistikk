@@ -847,7 +847,8 @@
             });
         }
 
-        $('.items').click(function () {
+        $('.tasktablebody').on("click", ".items", function () {
+            alert('test');
             var id = $(this).val();
             var url = "{% url 'maths:taskDetail' task_pk=1234 %}".replace(/1234/, id);
             window.location.href = url;

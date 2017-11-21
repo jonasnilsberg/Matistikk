@@ -15,9 +15,6 @@
                      style="display:none"/>
                 <div id="previewBody" class="row hidden">
                     <div class="col-md-3 hidden" id="notgeogebradiv"></div>
-                    <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
-                        <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
-                    </div>
                     <div class="col-md-6" style="padding-left: 10px">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -49,6 +46,9 @@
                                 <button type="button" class="btn btn-success">Svar</button>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
+                        <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
                     </div>
                 </div>
             </div>
@@ -128,7 +128,7 @@
                 tinyMCE.get('tasktext').setContent(task.task_text);
                 var answertype = (task.task_answertype);
                 if (answertype == 1) {
-                    if(json.answer_text){
+                    if (json.answer_text) {
                         textanswerdiv.find('label').text(json.answer_text);
                     } else {
                         textanswerdiv.find('label').text('Tekstsvar');
