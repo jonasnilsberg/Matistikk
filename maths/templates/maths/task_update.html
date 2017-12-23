@@ -56,12 +56,12 @@
     <div id="infoDiv" class="col-sm-6 col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading" id="tasktextdiv">
-                <h3 class="text-center" style="margin-top: 5px; margin-bottom: 2px"><span
+                <h4 class="text-center geogebraHeader"><span
                         id="taskTitle">{{ task.title }}</span> <i
                         class="fa fa-pencil box updateTitle"
                         style="cursor:pointer;"
                         aria-hidden="true"></i>
-                </h3>
+                </h4>
 
             </div> <!-- #inner panel-heading -->
             <div class="panel-body taskBody" style="overflow: auto">
@@ -260,36 +260,53 @@
                 $('#infoDiv').addClass('col-sm-8 col-md-8');
             }
             else {
-                var geo = $('#hiddenbase64');
-                var yratio = parseFloat(geo.data('yratio').replace(",", "."));
-                var xstep = parseFloat(geo.data('xstep').replace(",", "."));
-                var ystep = parseFloat(geo.data('ystep').replace(",", "."));
-                ggbApplet.setCoordSystem(xmin, xmax, ymin, ymax);
-                ggbApplet.evalCommand("SetAxesRatio(1," + yratio + ")");
-                ggbApplet.setAxisSteps(1, xstep, ystep, 1);
-                ggbApplet.evalCommand("matistikk_c1 = Corner(1)");
-                ggbApplet.evalCommand("matistikk_c3 = Corner(3)");
-
-                /*$('#id_base64').val(geobase64);
-                 if (window.innerWidth > window.innerHeight) {
-                 var scaledWidth = (window.innerWidth * 0.50) / width;
-                 var scaledHeight = (window.innerHeight * 0.93) / height;
-                 } else {
-                 var scaledWidth = (window.innerWidth * 0.49) / width;
-                 var scaledHeight = (window.innerHeight * 0.50) / height;
-                 }
-                 $('.applet_scaler').css('transform-origin', '0% 0% 0px');
-                 if (scaledWidth < scaledHeight) {
-                 scaledHeight = scaledWidth;
-                 } else {
-                 scaledWidth = scaledHeight;
-                 }
-                 var appletContainerScaler = $('#applet_container .applet_scaler');
-                 appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                 appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                 appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                 document.getElementById('ggbApplet').setAttribute('data-scalex', scaledWidth);
-                 document.getElementById('ggbApplet').setAttribute('data-scaley', scaledHeight);*/
+                if (xmin) {
+                    var geo = $('#hiddenbase64');
+                    var yratio = parseFloat(geo.data('yratio').replace(",", "."));
+                    var xstep = parseFloat(geo.data('xstep').replace(",", "."));
+                    var ystep = parseFloat(geo.data('ystep').replace(",", "."));
+                    ggbApplet.evalCommand("matistikk_c1 = Corner(1)");
+                    ggbApplet.evalCommand("matistikk_c2 = Corner(2)");
+                    ggbApplet.evalCommand("matistikk_c3 = Corner(3)");
+                    ggbApplet.evalCommand("matistikk_c5 = Corner(5)");
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin, ymax);
+                    ggbApplet.evalCommand("matistikk_ratio =  (x(matistikk_c5)/(Distance[matistikk_c1,matistikk_c2])) / (y(matistikk_c5)/(Distance[matistikk_c2,matistikk_c3]))");
+                    if (yratio < 1) {
+                        var ratio = 1 / yratio;
+                        var geoRatio = ggbApplet.getValue("matistikk_ratio") * ratio;
+                        ggbApplet.setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                    } else {
+                        var ratio = yratio;
+                        var geoRatio = ratio / ggbApplet.getValue("matistikk_ratio");
+                        ggbApplet.setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                    }
+                    ggbApplet.deleteObject("matistikk_c2");
+                    ggbApplet.deleteObject("matistikk_c5");
+                    ggbApplet.deleteObject("matistikk_ratio");
+                    //ggbApplet.evalCommand("SetAxesRatio(1," + yratio + ")");
+                    ggbApplet.setAxisSteps(1, xstep, ystep, 1);
+                } else {
+                    alert('old');
+                    if (window.innerWidth > window.innerHeight) {
+                        var scaledWidth = (window.innerWidth * 0.50) / width;
+                        var scaledHeight = (window.innerHeight * 0.93) / height;
+                    } else {
+                        var scaledWidth = (window.innerWidth * 0.49) / width;
+                        var scaledHeight = (window.innerHeight * 0.50) / height;
+                    }
+                    $('.applet_scaler').css('transform-origin', '0% 0% 0px');
+                    if (scaledWidth < scaledHeight) {
+                        scaledHeight = scaledWidth;
+                    } else {
+                        scaledWidth = scaledHeight;
+                    }
+                    var appletContainerScaler = $('#applet_container .applet_scaler');
+                    appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                    appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                    appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                    document.getElementById('ggbApplet').setAttribute('data-scalex', scaledWidth);
+                    document.getElementById('ggbApplet').setAttribute('data-scaley', scaledHeight);
+                }
             }
 
         };
@@ -317,13 +334,6 @@
              document.getElementById('ggbApplet').setAttribute('data-scalex', scaledWidth);
              document.getElementById('ggbApplet').setAttribute('data-scaley', scaledHeight);*/
         };
-
-        function zoomOut() {
-            var appletXmin = (ggbApplet.getXcoord("matistikk_c1"));
-            var appletXmax = (ggbApplet.getXcoord("matistikk_c3"));
-            var appletYmin = (ggbApplet.getYcoord("matistikk_c1"));
-            var appletYmax = (ggbApplet.getYcoord("matistikk_c3"));
-        }
 
     </script>
     <script>

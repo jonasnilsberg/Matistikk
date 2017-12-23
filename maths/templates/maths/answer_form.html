@@ -147,7 +147,8 @@
                                data-yratio="{{ geogebratask.yratio }}" data-showMenuBar="{{ geogebratask.showMenuBar }}"
                                data-enableLabelDrags="{{ geogebratask.enableLabelDrags }}"
                                data-enableShiftDragZoom="{{ geogebratask.enableShiftDragZoom }}"
-                               data-enableRightClick="{{ geogebratask.enableRightClick }}" data-xstep="{{ geogebratask.xstep }}"
+                               data-enableRightClick="{{ geogebratask.enableRightClick }}"
+                               data-xstep="{{ geogebratask.xstep }}"
                                data-ystep="{{ geogebratask.ystep }}"
                                value="{{ geogebratask.base64 }}" hidden>
                         <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
@@ -972,9 +973,32 @@
                 var yratio = parseFloat(geo.data('yratio').replace(",", "."));
                 var xstep = parseFloat(geo.data('xstep').replace(",", "."));
                 var ystep = parseFloat(geo.data('ystep').replace(",", "."));
+
+                window["ggbApplet" + i].evalCommand("matistikk_c1 = Corner(1)");
+                window["ggbApplet" + i].evalCommand("matistikk_c2 = Corner(2)");
+                window["ggbApplet" + i].evalCommand("matistikk_c3 = Corner(3)");
+                window["ggbApplet" + i].evalCommand("matistikk_c5 = Corner(5)");
                 window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin, ymax);
-                window["ggbApplet" + i].evalCommand("SetAxesRatio(1," + yratio + ")");
-                    window["ggbApplet" + i].setAxisSteps(1, xstep,ystep,1);
+                window["ggbApplet" + i].evalCommand("matistikk_ratio =  (x(matistikk_c5)/(Distance[matistikk_c1,matistikk_c2])) / (y(matistikk_c5)/(Distance[matistikk_c2,matistikk_c3]))");
+                if (yratio < 1) {
+                    var ratio = 1 / yratio;
+                    var geoRatio = window["ggbApplet" + i].getValue("matistikk_ratio") * ratio;
+                    if (geoRatio < 1) {
+                        geoRatio = 1 / geoRatio;
+                        window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                    } else {
+                        window["ggbApplet" + i].setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                    }
+                } else {
+                    var ratio = yratio;
+                    var appletRatio = window["ggbApplet" + i].getValue("matistikk_ratio");
+                    var geoRatio = ratio / appletRatio;
+                    window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                }
+                window["ggbApplet" + i].deleteObject("matistikk_c2");
+                window["ggbApplet" + i].deleteObject("matistikk_c5");
+                window["ggbApplet" + i].deleteObject("matistikk_ratio");
+                window["ggbApplet" + i].setAxisSteps(1, xstep, ystep, 1);
             }
         }
     }

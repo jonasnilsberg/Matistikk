@@ -40,7 +40,7 @@
 {% block body %}
     <div class="col-md-6 variableList">
         <div class="panel panel-default">
-            <div class="panel-heading"><h4 class="text-center">{{ task.title }} - items</h4></div>
+            <div class="panel-heading"><h4 class="text-center geogebraHeader">{{ task.title }} - items</h4></div>
             <div class="panel-body">
                 <div class="row itemtab" style="overflow: auto;">
                     <div class="list-group">
@@ -83,7 +83,11 @@
             </button>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 geo" data-height="{{ geogebra.height }}"
+         data-width="{{ geogebra.width }}" data-xmin="{{ geogebra.xmin }}" data-xmax="{{ geogebra.xmax }}"
+         data-ymin="{{ geogebra.ymin }}" data-ymax="{{ geogebra.ymax }}"
+         data-yratio="{{ geogebra.yratio }}" data-xstep="{{ geogebra.xstep }}" data-ystep="{{ geogebra.ystep }}"
+         data-base64="{{ geogebra.base64 }}">
         <div id="applet_container"></div>
     </div>
 
@@ -91,15 +95,20 @@
         var variableCount = $("table > tbody > tr:first > td").length - 1;
         var viewPortWidth = 1200;
         var viewPortHeight = 750;
-        var base64 = "{{ geogebra.base64 }}";
-        var height = "{{ geogebra.height }}";
-        var width = "{{ geogebra.width }}";
-        var listScaleHeight = (window.innerHeight * 0.70) / height;
+        var geo = $('.geo');
+        var base64 = geo.data('base64');
+        var height = geo.data('height');
+        var width = geo.data('width');
+        var xmin = parseFloat(geo.data('xmin').replace(",", "."));
+        var xmax = parseFloat(geo.data('xmax').replace(",", "."));
+        var ymin = parseFloat(geo.data('ymin').replace(",", "."));
+        var ymax = parseFloat(geo.data('ymax').replace(",", "."));
         if (typeof window.innerWidth != 'undefined') {
-            viewPortWidth = window.innerWidth * 0.55;
-            viewPortHeight = window.innerHeight * 0.75;
+            viewPortWidth = (window.innerWidth * 0.5) - 30;
+            viewPortHeight = window.innerHeight - 55;
         }
-        if (height && width) {
+
+        if ((height && width) && !xmin) {
             viewPortHeight = height;
             viewPortWidth = width;
         }
@@ -141,6 +150,31 @@
                         param = (x * increment);
                     }
                 }
+            }
+            if (xmin) {
+                var yratio = parseFloat(geo.data('yratio').replace(",", "."));
+                var xstep = parseFloat(geo.data('xstep').replace(",", "."));
+                var ystep = parseFloat(geo.data('ystep').replace(",", "."));
+                ggbApplet.evalCommand("matistikk_c1 = Corner(1)");
+                ggbApplet.evalCommand("matistikk_c2 = Corner(2)");
+                ggbApplet.evalCommand("matistikk_c3 = Corner(3)");
+                ggbApplet.evalCommand("matistikk_c5 = Corner(5)");
+                ggbApplet.setCoordSystem(xmin, xmax, ymin, ymax);
+                ggbApplet.evalCommand("matistikk_ratio =  (x(matistikk_c5)/(Distance[matistikk_c1,matistikk_c2])) / (y(matistikk_c5)/(Distance[matistikk_c2,matistikk_c3]))");
+                if (yratio < 1) {
+                    var ratio = 1 / yratio;
+                    var geoRatio = ggbApplet.getValue("matistikk_ratio") * ratio;
+                    ggbApplet.setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                } else {
+                    var ratio = yratio;
+                    var geoRatio = ratio / ggbApplet.getValue("matistikk_ratio");
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                }
+                ggbApplet.deleteObject("matistikk_c2");
+                ggbApplet.deleteObject("matistikk_c5");
+                ggbApplet.deleteObject("matistikk_ratio");
+                ggbApplet.setAxisSteps(1, xstep, ystep, 1);
+            } else {
                 ggbApplet.setValue('matistikkParameter' + i, param);
                 if (window.innerWidth > window.innerHeight) {
                     var scaledWidth = (window.innerWidth * 0.5) / width;
