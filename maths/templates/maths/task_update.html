@@ -271,19 +271,78 @@
                     ggbApplet.evalCommand("matistikk_c5 = Corner(5)");
                     ggbApplet.setCoordSystem(xmin, xmax, ymin, ymax);
                     ggbApplet.evalCommand("matistikk_ratio =  (x(matistikk_c5)/(Distance[matistikk_c1,matistikk_c2])) / (y(matistikk_c5)/(Distance[matistikk_c2,matistikk_c3]))");
+                    // Y-akse er lengre enn x akse ------ f.eks. 1:0.5 = 2:1
                     if (yratio < 1) {
                         var ratio = 1 / yratio;
                         var geoRatio = ggbApplet.getValue("matistikk_ratio") * ratio;
-                        ggbApplet.setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                        if (geoRatio < 1) {
+                            geoRatio = 1 / geoRatio;
+                            if (ymin > 0) {
+                                var deltaY = ymax - ymin;
+                                var newDeltaY = deltaY * geoRatio;
+                                var diff = (newDeltaY - deltaY) / 2;
+                                ggbApplet.setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                            } else if (ymax < 0) {
+                                var deltaY = Math.abs(ymin) - Math.abs(ymax);
+                                var newDeltaY = deltaY * geoRatio;
+                                var diff = (newDeltaY - deltaY) / 2;
+                                ggbApplet.setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                            } else {
+                                ggbApplet.setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                            }
+                        } else {
+                            if (xmin > 0) {
+                                var deltaX = xmax - xmin;
+                                var newDeltaX = deltaX * geoRatio;
+                                var diff = (newDeltaX - deltaX) / 2;
+                                ggbApplet.setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                            } else if (xmax < 0) {
+                                var deltaX = Math.abs(xmin) - Math.abs(xmax);
+                                var newDeltaX = deltaX * geoRatio;
+                                var diff = (newDeltaX - deltaX) / 2;
+                                ggbApplet.setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                            } else {
+                                ggbApplet.setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                            }
+                        }
+                        // X-akse er lengre enn y-akse ------ f.eks. 1:2
                     } else {
                         var ratio = yratio;
                         var geoRatio = ratio / ggbApplet.getValue("matistikk_ratio");
-                        ggbApplet.setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                        if (geoRatio < 1) {
+                            geoRatio = 1 / geoRatio;
+                            if (xmin > 0) {
+                                var deltaX = xmax - xmin;
+                                var newDeltaX = deltaX * geoRatio;
+                                var diff = (newDeltaX - deltaX) / 2;
+                                ggbApplet.setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                            } else if (xmax < 0) {
+                                var deltaX = Math.abs(xmin) - Math.abs(xmax);
+                                var newDeltaX = deltaX * geoRatio;
+                                var diff = (newDeltaX - deltaX) / 2;
+                                ggbApplet.setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                            } else {
+                                ggbApplet.setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                            }
+                        } else {
+                            if (ymin > 0) {
+                                var deltaY = ymax - ymin;
+                                var newDeltaY = deltaY * geoRatio;
+                                var diff = (newDeltaY - deltaY) / 2;
+                                ggbApplet.setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                            } else if (ymax < 0) {
+                                var deltaY = Math.abs(ymin) - Math.abs(ymax);
+                                var newDeltaY = deltaY * geoRatio;
+                                var diff = (newDeltaY - deltaY) / 2;
+                                ggbApplet.setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                            } else {
+                                ggbApplet.setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                            }
+                        }
                     }
                     ggbApplet.deleteObject("matistikk_c2");
                     ggbApplet.deleteObject("matistikk_c5");
                     ggbApplet.deleteObject("matistikk_ratio");
-                    //ggbApplet.evalCommand("SetAxesRatio(1," + yratio + ")");
                     ggbApplet.setAxisSteps(1, xstep, ystep, 1);
                 } else {
                     alert('old');
