@@ -73,6 +73,11 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
+        alterExtraTasks = Task.objects.all()
+        for alterTask in alterExtraTasks:
+            if not alterTask.extra:
+                alterTask.extraNew = 4
+                alterTask.save()
         if self.request.user.role == 2:
             user = Person.objects.get(username=self.request.user.username)
             tests = Test.objects.filter(person=user)

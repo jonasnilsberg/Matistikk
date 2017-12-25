@@ -69,7 +69,14 @@ class Task(models.Model):
     answertype = models.IntegerField()
     reasoning = models.BooleanField()
     reasoningText = models.CharField(max_length=1000, blank=True)
+    EXTRA = [
+        (1, "GeoGebra"),
+        (2, 'Bildeopplastning'),
+        (3, 'Filopplastning'),
+        (4, 'Ingen tillegg'),
+    ]
     extra = models.BooleanField()
+    extraNew = models.IntegerField(choices=EXTRA, default=1)
     variableTask = models.BooleanField(default=False)
     variableDescription = models.CharField(max_length=10000, null=True, blank=True)
     author = models.ForeignKey(Person)

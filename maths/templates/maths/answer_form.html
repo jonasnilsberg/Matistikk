@@ -140,7 +140,7 @@
                     {% endif %}
                     {% if item.task.extra %}
                         {% get_geogebra_task item.task as geogebratask %}
-                        <input id="base64{{ forloop.counter }}" type="text"
+                        <input id="base64{{ forloop.counter }}" type="text" data-height="{{ geogebratask.height }}" data-width="{{ geogebratask.width }}"
                                data-variables="{{ item.variables }}"
                                data-xmin="{{ geogebratask.xmin }}" data-xmax="{{ geogebratask.xmax }}"
                                data-ymin="{{ geogebratask.ymin }}" data-ymax="{{ geogebratask.ymax }}"
@@ -837,8 +837,7 @@
                 "language": "nb",
                 "showToolBar": true,
                 "borderColor": null,
-                //"showMenuBar": showMenuBar,
-                "showMenuBar": true,
+                "showMenuBar": showMenuBar,
                 "showAlgebraInput": false,
                 "allowStyleBar": false,
                 "enableLabelDrags": enableLabelDrags,
@@ -964,7 +963,7 @@
                 tinymce.get('tasktext' + itemid).setContent(text);
             }
             if (document.getElementById('base64' + i)) {
-                width = parseFloat(geo.data('width'));
+                width = geo.data('width');
                 height = geo.data('height');
                 var xmin = parseFloat(geo.data('xmin').replace(",", "."));
                 var xmax = parseFloat(geo.data('xmax').replace(",", "."));
@@ -973,32 +972,106 @@
                 var yratio = parseFloat(geo.data('yratio').replace(",", "."));
                 var xstep = parseFloat(geo.data('xstep').replace(",", "."));
                 var ystep = parseFloat(geo.data('ystep').replace(",", "."));
-
-                window["ggbApplet" + i].evalCommand("matistikk_c1 = Corner(1)");
-                window["ggbApplet" + i].evalCommand("matistikk_c2 = Corner(2)");
-                window["ggbApplet" + i].evalCommand("matistikk_c3 = Corner(3)");
-                window["ggbApplet" + i].evalCommand("matistikk_c5 = Corner(5)");
-                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin, ymax);
-                window["ggbApplet" + i].evalCommand("matistikk_ratio =  (x(matistikk_c5)/(Distance[matistikk_c1,matistikk_c2])) / (y(matistikk_c5)/(Distance[matistikk_c2,matistikk_c3]))");
-                if (yratio < 1) {
-                    var ratio = 1 / yratio;
-                    var geoRatio = window["ggbApplet" + i].getValue("matistikk_ratio") * ratio;
-                    if (geoRatio < 1) {
-                        geoRatio = 1 / geoRatio;
-                        window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                if (xmin) {
+                    window["ggbApplet" + i].evalCommand("matistikk_c1 = Corner(1)");
+                    window["ggbApplet" + i].evalCommand("matistikk_c2 = Corner(2)");
+                    window["ggbApplet" + i].evalCommand("matistikk_c3 = Corner(3)");
+                    window["ggbApplet" + i].evalCommand("matistikk_c5 = Corner(5)");
+                    window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin, ymax);
+                    window["ggbApplet" + i].evalCommand("matistikk_ratio =  (x(matistikk_c5)/(Distance[matistikk_c1,matistikk_c2])) / (y(matistikk_c5)/(Distance[matistikk_c2,matistikk_c3]))");
+                    if (yratio < 1) {
+                        var ratio = 1 / yratio;
+                        var geoRatio = window["ggbApplet" + i].getValue("matistikk_ratio") * ratio;
+                        if (geoRatio < 1) {
+                            geoRatio = 1 / geoRatio;
+                            if (ymin > 0) {
+                                var deltaY = ymax - ymin;
+                                var newDeltaY = deltaY * geoRatio;
+                                var diff = (newDeltaY - deltaY) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                            } else if (ymax < 0) {
+                                var deltaY = Math.abs(ymin) - Math.abs(ymax);
+                                var newDeltaY = deltaY * geoRatio;
+                                var diff = (newDeltaY - deltaY) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                            } else {
+                                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                            }
+                        } else {
+                            if (xmin > 0) {
+                                var deltaX = xmax - xmin;
+                                var newDeltaX = deltaX * geoRatio;
+                                var diff = (newDeltaX - deltaX) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                            } else if (xmax < 0) {
+                                var deltaX = Math.abs(xmin) - Math.abs(xmax);
+                                var newDeltaX = deltaX * geoRatio;
+                                var diff = (newDeltaX - deltaX) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                            } else {
+                                window["ggbApplet" + i].setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                            }
+                        }
+                        // X-akse er lengre enn y-akse ------ f.eks. 1:2
                     } else {
-                        window["ggbApplet" + i].setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                        var ratio = yratio;
+                        var geoRatio = ratio / window["ggbApplet" + i].getValue("matistikk_ratio");
+                        if (geoRatio < 1) {
+                            geoRatio = 1 / geoRatio;
+                            if (xmin > 0) {
+                                var deltaX = xmax - xmin;
+                                var newDeltaX = deltaX * geoRatio;
+                                var diff = (newDeltaX - deltaX) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                            } else if (xmax < 0) {
+                                var deltaX = Math.abs(xmin) - Math.abs(xmax);
+                                var newDeltaX = deltaX * geoRatio;
+                                var diff = (newDeltaX - deltaX) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                            } else {
+                                window["ggbApplet" + i].setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                            }
+                        } else {
+                            if (ymin > 0) {
+                                var deltaY = ymax - ymin;
+                                var newDeltaY = deltaY * geoRatio;
+                                var diff = (newDeltaY - deltaY) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                            } else if (ymax < 0) {
+                                var deltaY = Math.abs(ymin) - Math.abs(ymax);
+                                var newDeltaY = deltaY * geoRatio;
+                                var diff = (newDeltaY - deltaY) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                            } else {
+                                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                            }
+                        }
                     }
+                    window["ggbApplet" + i].deleteObject("matistikk_c2");
+                    window["ggbApplet" + i].deleteObject("matistikk_c5");
+                    window["ggbApplet" + i].deleteObject("matistikk_ratio");
+                    window["ggbApplet" + i].setAxisSteps(1, xstep, ystep, 1);
                 } else {
-                    var ratio = yratio;
-                    var appletRatio = window["ggbApplet" + i].getValue("matistikk_ratio");
-                    var geoRatio = ratio / appletRatio;
-                    window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                    // Gammel skalering
+                    if (window.innerWidth > window.innerHeight) {
+                        var scaledWidth = (window.innerWidth * 0.5) / width;
+                        var scaledHeight = (window.innerHeight * 0.93) / height;
+                    } else {
+                        var scaledWidth = (window.innerWidth * 0.49) / width;
+                        var scaledHeight = (window.innerHeight * 0.50) / height;
+                    }
+                    if (scaledWidth < scaledHeight) {
+                        scaledHeight = scaledWidth;
+                    } else {
+                        scaledWidth = scaledHeight;
+                    }
+                    var appletContainerScaler = $('#applet_container' + i + ' .applet_scaler');
+                    appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                    appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                    appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                    document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
+                    document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
                 }
-                window["ggbApplet" + i].deleteObject("matistikk_c2");
-                window["ggbApplet" + i].deleteObject("matistikk_c5");
-                window["ggbApplet" + i].deleteObject("matistikk_ratio");
-                window["ggbApplet" + i].setAxisSteps(1, xstep, ystep, 1);
             }
         }
     }
