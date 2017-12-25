@@ -56,6 +56,7 @@ class CreateTaskForm(forms.ModelForm):
     enableLabelDrags = forms.BooleanField(initial=True, required=False)
     enableShiftDragZoom = forms.BooleanField(initial=True, required=False)
     enableRightClick = forms.BooleanField(initial=True, required=False)
+    algebraInputField = forms.BooleanField(initial=False, required=False)
     radioOrCheck = forms.CharField(max_length=500, required=False)
 
     class Meta:

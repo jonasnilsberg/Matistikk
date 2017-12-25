@@ -183,6 +183,7 @@ class GeogebraTask(models.Model):
     enableLabelDrags = models.BooleanField(default=True)
     enableShiftDragZoom = models.BooleanField(default=True)
     enableRightClick = models.BooleanField(default=True)
+    algebraInputField = models.BooleanField(default=False)
     base64 = models.TextField(null=True)
     preview = models.TextField(null=True)
 

@@ -149,7 +149,7 @@
                                data-enableShiftDragZoom="{{ geogebratask.enableShiftDragZoom }}"
                                data-enableRightClick="{{ geogebratask.enableRightClick }}"
                                data-xstep="{{ geogebratask.xstep }}"
-                               data-ystep="{{ geogebratask.ystep }}"
+                               data-ystep="{{ geogebratask.ystep }}" data-algebraInputField="{{ geogebratask.algebraInputField }}"
                                value="{{ geogebratask.base64 }}" hidden>
                         <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
                             <div class="panel panel-default">
@@ -802,6 +802,7 @@
             var enableLabelDrags = false;
             var enableShiftDragZoom = false;
             var enableRightClick = false;
+            var algebraInputField = false;
             if (geoInfo.data('showmenubar') == 'True') {
                 showMenuBar = true;
             }
@@ -813,6 +814,9 @@
             }
             if (geoInfo.data('enablerightclick') == 'True') {
                 enableRightClick = true;
+            }
+            if (geoInfo.data('algebrainputfield') == 'True') {
+                algebraInputField = true;
             }
             if (height && width) {
                 viewPortHeight = height;
@@ -830,6 +834,7 @@
             } else {
                 scaledWidth = scaledHeight;
             }
+            alert(algebraInputField);
             parameters = {
                 "id": "ggbApplet" + (i + 1),
                 "width": (window.innerWidth * 0.5) - 30,
@@ -838,7 +843,7 @@
                 "showToolBar": true,
                 "borderColor": null,
                 "showMenuBar": showMenuBar,
-                "showAlgebraInput": false,
+                "showAlgebraInput": algebraInputField,
                 "allowStyleBar": false,
                 "enableLabelDrags": enableLabelDrags,
                 "enableShiftDragZoom": enableLabelDrags,

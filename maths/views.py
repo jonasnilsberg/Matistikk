@@ -282,11 +282,12 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
             enable_label_drags = form.cleaned_data['enableLabelDrags']
             enable_shift_drag_zoom = form.cleaned_data['enableShiftDragZoom']
             enable_right_click = form.cleaned_data['enableRightClick']
+            algebra_input_field = form.cleaned_data['algebraInputField']
             geogebratask = GeogebraTask(base64=base64, preview=preview, task=task, height=height, width=width,
                                         showMenuBar=show_menu_bar, enableLabelDrags=enable_label_drags,
                                         enableShiftDragZoom=enable_shift_drag_zoom, enableRightClick=enable_right_click,
                                         xmax=xmax, xmin=xmin, ymax=ymax, ymin=ymin, yratio=yratio, xstep=xstep,
-                                        ystep=ystep)
+                                        ystep=ystep, algebraInputField=algebra_input_field)
             geogebratask.save()
         return super(TaskCreateView, self).form_valid(form)
 
@@ -593,6 +594,7 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
             enableLabelDrags = form.cleaned_data['enableLabelDrags']
             enableShiftDragZoom = form.cleaned_data['enableShiftDragZoom']
             enableRightClick = form.cleaned_data['enableRightClick']
+            algebraInputField = form.cleaned_data['algebraInputField']
             xmin = form.cleaned_data['xmin']
             xmax = form.cleaned_data['xmax']
             ymin = form.cleaned_data['ymin']
@@ -609,6 +611,7 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
                 geogebratask.enableLabelDrags = enableLabelDrags
                 geogebratask.enableShiftDragZoom = enableShiftDragZoom
                 geogebratask.enableRightClick = enableRightClick
+                geogebratask.algebraInputField = algebraInputField
                 geogebratask.xmin = xmin
                 geogebratask.xmax = xmax
                 geogebratask.ymin = ymin
@@ -623,7 +626,8 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
                 geogebratask = GeogebraTask(task=task, base64=base64, preview=preview, height=height, width=width,
                                             xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, yratio=yratio, xstep=xstep,
                                             ystep=ystep,showMenuBar=showMenuBar, enableLabelDrags=enableLabelDrags,
-                                            enableShiftDragZoom=enableShiftDragZoom, enableRightClick=enableRightClick)
+                                            enableShiftDragZoom=enableShiftDragZoom, enableRightClick=enableRightClick,
+                                            algebraInputField=algebraInputField)
                 geogebratask.save()
         if task.answertype == 2:
             taskoptions = MultipleChoiceTask.objects.filter(task=task)
