@@ -612,3 +612,8 @@ ul.scrollbar::-webkit-scrollbar {
     border-width: 1px;
     margin-bottom: 15px;
 }
+
+.geogebraHeader {
+    margin-top: 7px;
+    margin-bottom: 7px;
+}

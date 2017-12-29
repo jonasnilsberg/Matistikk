@@ -11,6 +11,9 @@
 <!--Display django.contrib.messages as Bootstrap alerts-->
 {% bootstrap_messages %}
 {% block head %}
+    <link href="{% static 'maths/css/fileinput.min.css' %}" media="all"
+          rel="stylesheet" type="text/css"/>
+
     <!--Imports bootbox-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <!--Imports geogebra-->
@@ -39,20 +42,16 @@
             menubar: false,
             autoresize_bottom_margin: 0
         });
-
-
     </script>
+
+    <script src="{% static 'maths/js/fileinput/fileinput.min.js' %}"></script>
+    <script src="{% static 'maths/js/fileinput/no.js' %}"></script>
+
+
+
 {% endblock %}
 
 {% block body %}
-    <form class="form-horizontal form-margin hidden" action="" method="POST"
-          enctype="multipart/form-data">
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        <button type="submit" id="submitbutton" class="btn btn-success">
-            {% bootstrap_icon "check" %} Lagre
-        </button>
-    </form>
     <div id="infoDiv" class="col-sm-6 col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading" id="tasktextdiv">
@@ -148,9 +147,7 @@
                         </div>
                     </div>
                 </div>
-
-
-                <ul class="list-group">
+                <ul class="list-group" style="margin-bottom: 10px;">
                     <li class="list-group-item">
                         Felt for begrunnelse
                         <div class="material-switch pull-right">
@@ -158,14 +155,34 @@
                             <label for="reason" class="label-success"></label>
                         </div>
                     </li>
-                    <li class="list-group-item">
-                        Bruk tillegg (Geogebra, puslespill, rekkefølge etc..)
-                        <div class="material-switch pull-right" id="extraField">
-                            <input id="extra" name="extra1" type="checkbox"/>
-                            <label for="extra" class="label-success"></label>
-                        </div>
-                    </li>
                 </ul>
+                <form class="" action="" method="POST"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="hidden">
+                        {% bootstrap_form form exclude="directory, imageFile" %}
+                    </div>
+                    <label for="extralist">Bruk av tillegg</label>
+                    <div class="input-group" style="margin-bottom: 10px;">
+                        <span class="input-group-addon"><i class="fa fa-puzzle-piece" aria-hidden="true"></i></span>
+                        <select id="extralist" class="form-control">
+                            <option value="1" {% if task.extra == 1 %}selected{% endif %}>GeoGebra</option>
+                            <option value="2" {% if task.extra == 2 %}selected{% endif %}>Bildeopplastning</option>
+                            <option value="3" {% if task.extra == 3 %}selected{% endif %}>Filopplastning</option>
+                            <option value="4" {% if task.extra == 4 %}selected{% endif %}>Ingen tillegg</option>
+                        </select>
+                    </div>
+                    <div id="imageUploadInput" class="hidden">
+                        {{ form.imageFile }}
+                    </div>
+                    <div id="jsUploadInput" class="hidden">
+                        {{ form.jsFile }}
+                    </div>
+                    {% bootstrap_field form.directory addon_before='<i class="fa fa-folder" aria-hidden="true"></i>' label_class='' form_group_class='form-group' %}
+                    <button type="submit" id="submitbutton" class="btn btn-success hidden">
+                        {% bootstrap_icon "check" %} Lagre
+                    </button>
+                </form>
             </div> <!-- #inner panel-body -->
             <div class="panel-footer" id="taskFooter">
                 <div class="btn-group" role="group" aria-label="...">
@@ -200,6 +217,9 @@
                data-yratio="{{ geogebra.yratio }}" data-xstep="{{ geogebra.xstep }}" data-ystep="{{ geogebra.ystep }}"
                value="{{ geogebra.base64 }}">
         <div id="applet_container"></div>
+    </div>
+    <div class="col-sm-6 col-md-6 hidden" id="extraImageUpload" style="padding: 15px;">
+        <img id="img_id" src="#" alt="Last opp et bilde" width="100%" height="100%" style="object-fit: contain"/>
     </div>
 
     <script>
@@ -253,14 +273,27 @@
          * @param param - The id of the applet that called the function
          */
         parameters.appletOnLoad = function () {
-            if (geobase64 == null || geobase64 == "") {
+            var extra = $('#id_extra').val();
+            if (extra === "4") {
                 $('#extradiv').hide();
                 $('#infoDiv').addClass('col-centered');
                 $('#infoDiv').removeClass('col-sm-6 col-md-6');
                 $('#infoDiv').addClass('col-sm-8 col-md-8');
+                $('#imageUploadInput').addClass('hidden');
+                $('#extraImageUpload').addClass('hidden');
+            } else if (extra === "3") {
+                $('#extradiv').hide();
+                $('#imageUploadInput').addClass('hidden');
+                $('#extraImageUpload').addClass('hidden');
             }
-            else {
+            else if (extra === "2") {
+                $('#extradiv').hide();
+                $('#imageUploadInput').removeClass('hidden');
+                $('#extraImageUpload').removeClass('hidden');
+            } else {
                 if (xmin) {
+                    $('#imageUploadInput').addClass('hidden');
+                    $('#extraImageUpload').addClass('hidden');
                     var geo = $('#hiddenbase64');
                     var yratio = parseFloat(geo.data('yratio').replace(",", "."));
                     var xstep = parseFloat(geo.data('xstep').replace(",", "."));
@@ -396,9 +429,32 @@
 
     </script>
     <script>
-        if (document.getElementById('hiddenbase64')) {
-            var geobase64 = document.getElementById('hiddenbase64').value;
-        }
+        $("#id_imageFile").fileinput({
+            language: "no",
+            showPreview: false,
+            showUpload: false,
+            dropZoneEnabled: true,
+            maxFileCount: 1,
+            allowedFileTypes: ['image']
+        });
+        $('#id_imageFile').on('change', function () {
+            var input = document.getElementById('id_imageFile');
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#img_id').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+        $('#id_imageFile').on('fileclear', function (event) {
+            $('#img_id').attr('src', '#');
+        });
+        $('#id_imageFile').on('fileerror', function (event, data, msg) {
+            $('#img_id').attr('src', '#');
+            swal("Oops  ", msg, "error");
+        });
         /**
          * This function opens a modal that lets the user change the title of the task.
          */
@@ -509,8 +565,7 @@
             var answertype2 = document.getElementById('id_answertype');
             var reasoning = document.getElementById('reason');
             var reasoning2 = document.getElementById('id_reasoning');
-            var extra = document.getElementById('extra');
-            var extra2 = document.getElementById('id_extra');
+            var extra = $('#id_extra').val()
             var base64 = document.getElementById('id_base64');
             var preview = document.getElementById('id_preview');
             var categories = document.getElementById('id_category');
@@ -530,8 +585,7 @@
                 reasoning2.checked = false;
             }
 
-            if (extra.checked) {
-                extra2.checked = true;
+            if (extra === "1") {
                 base64.value = ggbApplet.getBase64();
                 preview.value = ggbApplet.getPNGBase64(1, false);
                 var width = document.getElementById('id_width');
@@ -564,10 +618,6 @@
                 ggbApplet.deleteObject("matistikk_ratio");
                 ggbApplet.deleteObject("matistikk_xstep");
                 ggbApplet.deleteObject("matistikk_ystep");
-            }
-            else {
-                extra2.checked = false;
-                base64.value = null;
             }
 
             if (tasktext == "") {
@@ -708,15 +758,9 @@
             if (numQuestions >= 2) {
                 $('#removeQuestionBtn').prop('disabled', false);
             }
-
             if (document.getElementById('id_reasoning').checked) {
                 $('#reason').prop('checked', true);
             }
-
-            if (document.getElementById('id_extra').checked) {
-                $('#extra').prop('checked', true);
-            }
-
             if (document.getElementById('id_answertype').value == 1) {
                 var textanswer = $('#textanswer');
                 textanswer.addClass('panel-success');
@@ -747,6 +791,7 @@
             $('.taskBody').css('height', height + 'px');
             //$('.col-md-6').css('height', (windowHeight - 50) + 'px');
             $('body').css('overflow', 'hidden');
+            $('#extraImageUpload').css('height', windowHeight - header);
 
         });
 
@@ -765,26 +810,45 @@
             }
         });
 
-        /**
-         * This function changes the visibility of the extra-div when the user
-         * changes the boolean value of the "Use extra"-switch.
-         */
-        $('#extra').change(function () {
+        $('#extralist').change(function () {
+            var extra = $('#extralist :selected').val();
             var infoDiv = $('#infoDiv');
-            if (document.getElementById('extra').checked) {
+            $('#id_extra').val(extra);
+            if (extra === "1") {
                 $('#extradiv').show();
                 infoDiv.removeClass('col-centered');
                 infoDiv.removeClass('col-sm-8 col-md-8');
                 infoDiv.addClass('col-sm-6 col-md-6');
+                $('#imageUploadInput').addClass('hidden');
+                $('#extraImageUpload').addClass('hidden');
                 $('#geogebraSettingsBtn').removeClass('hidden')
             }
-            else {
+            else if (extra === "2") {
+                $('#extradiv').hide();
+                infoDiv.removeClass('col-centered');
+                infoDiv.removeClass('col-sm-8 col-md-8');
+                infoDiv.addClass('col-sm-6 col-md-6');
+                $('#geogebraSettingsBtn').addClass('hidden');
+                $('#imageUploadInput').removeClass('hidden');
+                $('#extraImageUpload').removeClass('hidden');
+            }
+            else if (extra === "3") {
+                $('#extradiv').hide();
+                infoDiv.removeClass('col-centered');
+                infoDiv.removeClass('col-sm-8 col-md-8');
+                infoDiv.addClass('col-sm-6 col-md-6');
+                $('#geogebraSettingsBtn').addClass('hidden');
+                $('#imageUploadInput').addClass('hidden');
+                $('#extraImageUpload').addClass('hidden');
+            }
+            else if (extra === "4") {
                 $('#extradiv').hide();
                 infoDiv.addClass('col-centered');
                 infoDiv.removeClass('col-sm-6 col-md-6');
                 infoDiv.addClass('col-sm-8 col-md-8');
-                $('#geogebraSettingsBtn').addClass('hidden')
-
+                $('#geogebraSettingsBtn').addClass('hidden');
+                $('#imageUploadInput').addClass('hidden');
+                $('#extraImageUpload').addClass('hidden');
             }
         });
         function AddQuestion() {

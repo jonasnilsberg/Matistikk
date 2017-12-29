@@ -45,6 +45,8 @@ class CreateTaskForm(forms.ModelForm):
     inputScore = forms.CharField(max_length=500, required=False)
     height = forms.CharField(max_length=100, required=False)
     width = forms.CharField(max_length=100, required=False)
+    imageFile = forms.FileField(required=False)
+    jsFile = forms.FileField(required=False)
     xmin = forms.FloatField(required=False)
     xmax = forms.FloatField(required=False)
     ymin = forms.FloatField(required=False)

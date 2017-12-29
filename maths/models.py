@@ -75,13 +75,12 @@ class Task(models.Model):
         (3, 'Filopplastning'),
         (4, 'Ingen tillegg'),
     ]
-    extra = models.BooleanField()
-    extraNew = models.IntegerField(choices=EXTRA, default=1)
+    extra = models.IntegerField(choices=EXTRA, default=1, verbose_name='Bruk av tillegg')
     variableTask = models.BooleanField(default=False)
     variableDescription = models.CharField(max_length=10000, null=True, blank=True)
     author = models.ForeignKey(Person)
     category = models.ManyToManyField(Category)
-    directory = models.ForeignKey(Directory)
+    directory = models.ForeignKey(Directory, verbose_name='Plassering')
     approved = models.BooleanField(default=False)
 
     class Meta:

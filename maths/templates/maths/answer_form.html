@@ -138,7 +138,7 @@
                         <span id="geocount" hidden>{% get_geogebra_count test %}</span>
                         <span id="taskcount" hidden>{{ test.task_collection.items.all.count }}</span>
                     {% endif %}
-                    {% if item.task.extra %}
+                    {% if item.task.extra == 1 %}
                         {% get_geogebra_task item.task as geogebratask %}
                         <input id="base64{{ forloop.counter }}" type="text" data-height="{{ geogebratask.height }}" data-width="{{ geogebratask.width }}"
                                data-variables="{{ item.variables }}"
@@ -834,7 +834,6 @@
             } else {
                 scaledWidth = scaledHeight;
             }
-            alert(algebraInputField);
             parameters = {
                 "id": "ggbApplet" + (i + 1),
                 "width": (window.innerWidth * 0.5) - 30,

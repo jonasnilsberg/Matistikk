@@ -15,12 +15,17 @@
     <!--Imports bootstrap select css-->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+    <link href="{% static 'maths/css/fileinput.min.css' %}" media="all"
+          rel="stylesheet" type="text/css"/>
     <!--Imports bootstrap select-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
     <!--Imports bootbox-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'maths/css/sweetalert/sweetalert.css' %}">
     <script src="{% static 'maths/js/sweetalert/sweetalert.min.js' %}"></script>
+    <!--Imports fileinput -->
+    <script src="{% static 'maths/js/fileinput/fileinput.min.js' %}"></script>
+    <script src="{% static 'maths/js/fileinput/no.js' %}"></script>
     <!--Imports Tinymce-->
     <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
     <!--Imports mathquill-->
@@ -40,7 +45,8 @@
             statusbar: false,
             fontsize_formats: '8pt 10pt 12pt 14pt 18pt',
             menubar: false,
-            autoresize_bottom_margin: 0
+            autoresize_bottom_margin: 0,
+            autoresize_min_height: 100
 
         });
         tinymce.init({
@@ -70,6 +76,7 @@
         });
 
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.6.2/pixi.min.js"></script>
 
 {% endblock %}
 
@@ -103,7 +110,7 @@
 
                 </div>
                 <label for="accordion">Velg svartype</label>
-                <div id="accordion" class="panel-group" role="tablist">
+                <div id="accordion" class="panel-group" role="tablist" style="margin-bottom: 10px;">
                     <div class="panel panel-default panel-success" id="tekstRadio">
                         <div class=" panel-heading" role="tab">
                             <h4 class="panel-title">
@@ -174,7 +181,7 @@
                         </div>
                     </div>
                 </div>
-                <ul class="list-group">
+                <ul class="list-group" style="margin-bottom: 10px;">
                     <li class="list-group-item">
                         Felt for begrunnelse
                         <div class="material-switch pull-right">
@@ -182,29 +189,34 @@
                             <label for="reasoning" class="label-success"></label>
                         </div>
                     </li>
-                    <li class="list-group-item">
-                        Bruk tillegg (Geogebra, puslespill, rekkefølge etc..)
-                        <div class="material-switch pull-right" id="extraField">
-                            <input id="extra" name="extra1" type="checkbox" checked/>
-                            <label for="extra" class="label-success"></label>
-                        </div>
-                    </li>
                 </ul>
                 <form class="" action="" method="POST"
                       enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="hidden">
-                        {% bootstrap_form form exclude="directory" %}
+                        {% bootstrap_form form exclude="directory, imageFile, jsFile" %}
                     </div>
-                    <label for="id_directory">Plassering</label>
-                    {% bootstrap_field form.directory label_class='hidden' form_group_class='form-group' %}
+                    <label for="extralist">Bruk av tillegg</label>
+                    <div class="input-group" style="margin-bottom: 10px;">
+                        <span class="input-group-addon"><i class="fa fa-puzzle-piece" aria-hidden="true"></i></span>
+                        <select id="extralist" class="form-control">
+                            <option value="1">GeoGebra</option>
+                            <option value="2">Bildeopplastning</option>
+                            <option value="3">Filopplastning</option>
+                            <option value="4">Ingen tillegg</option>
+                        </select>
+                    </div>
+                    <div id="imageUploadInput" class="hidden">
+                        {{ form.imageFile }}
+                    </div>
+                    <div id="jsUploadInput" class="hidden">
+                        {{ form.jsFile }}
+                    </div>
+                    {% bootstrap_field form.directory addon_before='<i class="fa fa-folder" aria-hidden="true"></i>' label_class='' form_group_class='form-group' %}
                     <button type="submit" id="submitbutton" class="btn btn-success hidden">
                         {% bootstrap_icon "check" %} Lagre
                     </button>
                 </form>
-                <div id="feedback">
-
-                </div>
             </div>
             <div class="panel-footer" id="infoDivFooter">
                 <div class="btn-group hidden" role="group" aria-label="...">
@@ -247,12 +259,16 @@
         <div id="extradiv" class="col-md-6 pull-right">
             <div id="applet_container"></div>
         </div>
+        <div class="col-sm-6 col-md-6 hidden" id="extraImageUpload" style="padding: 15px;">
+            <img id="img_id" src="#" alt="Last opp et bilde" width="100%" height="100%" style="object-fit: contain"/>
+        </div>
+        <div class="col-sm-6 col-md-6" id="extraFileUpload" style="padding: 15px;">
+        </div>
     </div>
 
     </div>
 
     <script>
-
         var viewPortWidth = 1200;
         var viewPortHeight = 750;
         if (typeof window.innerWidth != 'undefined' && window.innerWidth > 1000) {
@@ -293,6 +309,64 @@
     </script>
 
     <script>
+    var script_src = "";
+        $("#id_imageFile").fileinput({
+            language: "no",
+            showPreview: false,
+            showUpload: false,
+            dropZoneEnabled: true,
+            maxFileCount: 1,
+            allowedFileTypes: ['image']
+        });
+        $('#id_imageFile').on('change', function () {
+            var input = document.getElementById('id_imageFile');
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#img_id').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+        $('#id_imageFile').on('fileclear', function (event) {
+            $('#img_id').attr('src', '#');
+        });
+        $('#id_imageFile').on('fileerror', function (event, data, msg) {
+            $('#img_id').attr('src', '#');
+            swal("Oops  ", msg, "error");
+        });
+        $("#id_jsFile").fileinput({
+            language: "no",
+            showPreview: false,
+            showUpload: false,
+            dropZoneEnabled: true,
+            maxFileCount: 1,
+            allowedFileExtensions: ['js']
+        });
+        $('#id_jsFile').on('change', function () {
+            $('#extraFileUpload').empty();
+            var input = document.getElementById('id_jsFile');
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var plug = document.createElement('script');
+                    plug.setAttribute("src", e.target.result);
+                    script_src = e.target.result;
+                    plug.setAttribute("name", input.files[0].name);
+                    document.getElementsByTagName("head")[0].appendChild(plug);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+        $('#id_jsFile').on('fileclear', function (event) {
+            $('#extraFileUpload').empty();
+            $('head').find('script[src="'+script_src+'"]').remove();
+        });
+        $('#id_jsFile').on('fileerror', function (event, data, msg) {
+            swal("Oops  ", msg, "error");
+            $('#extraFileUpload').empty();
+        });
         var variableCount;
         $('.selectpicker').selectpicker({
             noneSelectedText: 'Velg kategori'
@@ -302,9 +376,11 @@
          * This function changes the visibility of the extra-div when the user
          * changes the boolean value of the "Use extra"-switch.
          */
-        $('#extra').change(function () {
+        $('#extralist').change(function () {
+            var extra = $('#extralist :selected').val();
             var infoDiv = $('#infoDiv');
-            if (document.getElementById('extra').checked) {
+            $('#id_extra').val(extra);
+            if (extra === "1") {
                 $('#extradiv').show();
                 infoDiv.removeClass('col-centered');
                 infoDiv.removeClass('col-sm-8 col-md-8');
@@ -312,8 +388,37 @@
                 $('.variable').removeClass('hidden');
                 $('.geoSettings').removeClass('hidden');
                 $('#footer').removeClass('hidden');
+                $('#imageUploadInput').addClass('hidden');
+                $('#extraImageUpload').addClass('hidden');
+                $('#jsUploadInput').addClass('hidden');
+                $('#extraFileUpload').addClass('hidden');
             }
-            else {
+            else if (extra === "2") {
+                $('#extradiv').hide();
+                infoDiv.removeClass('col-centered');
+                infoDiv.removeClass('col-sm-8 col-md-8');
+                infoDiv.addClass('col-sm-6 col-md-6');
+                $('.variable').addClass('hidden');
+                $('.geoSettings').addClass('hidden');
+                $('#imageUploadInput').removeClass('hidden');
+                $('#extraImageUpload').removeClass('hidden');
+                $('#jsUploadInput').addClass('hidden');
+                $('#extraFileUpload').addClass('hidden');
+            }
+            else if (extra === "3") {
+                $('#extradiv').hide();
+                infoDiv.removeClass('col-centered');
+                infoDiv.removeClass('col-sm-8 col-md-8');
+                infoDiv.addClass('col-sm-6 col-md-6');
+                $('.variable').addClass('hidden');
+                $('.geoSettings').addClass('hidden');
+                $('#imageUploadInput').addClass('hidden');
+                $('#extraImageUpload').addClass('hidden');
+                $('#jsUploadInput').removeClass('hidden');
+                $('#extraFileUpload').removeClass('hidden');
+
+            }
+            else if (extra === "4") {
                 $('#extradiv').hide();
                 infoDiv.addClass('col-centered');
                 infoDiv.removeClass('col-sm-6 col-md-6');
@@ -321,6 +426,10 @@
                 $('.variable').addClass('hidden');
                 $('.geoSettings').addClass('hidden');
                 $('#footer').addClass('hidden');
+                $('#imageUploadInput').addClass('hidden');
+                $('#extraImageUpload').addClass('hidden');
+                $('#jsUploadInput').addClass('hidden');
+                $('#extraFileUpload').addClass('hidden');
             }
         });
 
@@ -509,8 +618,6 @@
             $('#id_variableDescription').val(variableDescription);
             var reasoning1 = document.getElementById('reasoning');
             var reasoning2 = document.getElementById('id_reasoning');
-            var extra1 = document.getElementById('extra');
-            var extra2 = document.getElementById('id_extra');
             var answertype1 = $("input[type='radio'][name='answer_type']:checked").val();
             var answertype2 = document.getElementById('id_answertype');
             var options = document.getElementById('id_options');
@@ -518,8 +625,7 @@
             var categoryselect2 = document.getElementById('id_category');
             var base64 = document.getElementById('id_base64');
             var preview = document.getElementById('id_preview');
-            var feedback = document.getElementById('feedback');
-
+            var extra = $('#id_extra').val();
             taskname2.value = taskname1.value;
             tasktext2.value = tasktext1;
             if (taskname1.value == null || taskname1.value == "") {
@@ -535,7 +641,7 @@
                 reasoning2.checked = false;
             }
 
-            if (extra1.checked) {
+            if (extra === 1) {
                 extra2.checked = true;
                 base64.value = ggbApplet.getBase64();
                 preview.value = ggbApplet.getPNGBase64(1, false);
@@ -562,9 +668,6 @@
                 ggbApplet.deleteObject("matistikk_xstep");
                 ggbApplet.deleteObject("matistikk_ystep");
 
-            }
-            else {
-                extra2.checked = false;
             }
 
             if (answertype1 == 2) {
@@ -795,6 +898,8 @@
             var height = windowHeight - footer - nav - 5;
             $('.taskBody').css('height', height + 'px');
             $('body').css('overflow', 'hidden');
+            $('#extraImageUpload').css('height', windowHeight - nav);
+            $('#extraFileUpload').css('height', windowHeight - nav);
         });
     </script>
 {% endblock %}

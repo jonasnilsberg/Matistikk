@@ -39,7 +39,7 @@ def get_geogebra_task(task):
 def get_geogebra_count(test):
     count = 0
     for item in test.task_collection.items.all():
-        if item.task.extra:
+        if item.task.extra == 1:
             count += 1
     return count
 

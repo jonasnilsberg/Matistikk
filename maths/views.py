@@ -73,11 +73,6 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        alterExtraTasks = Task.objects.all()
-        for alterTask in alterExtraTasks:
-            if not alterTask.extra:
-                alterTask.extraNew = 4
-                alterTask.save()
         if self.request.user.role == 2:
             user = Person.objects.get(username=self.request.user.username)
             tests = Test.objects.filter(person=user)
@@ -266,7 +261,7 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
                         input.fraction = True
                     input.save()
                     x += 1
-        if task.extra:
+        if task.extra == 1:
             base64 = self.request.POST['base64']
             preview = self.request.POST['preview']
             height = self.request.POST['height']
@@ -405,7 +400,7 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
             'options': multiplechoice,
             'inputfields': inputfield
         }
-        if task.extra:
+        if task.extra == 1:
             geogebra = GeogebraTask.objects.get(task_id=task_id)
             data['geogebra_preview'] = geogebra.preview
         if task.answertype == 2:
@@ -587,7 +582,7 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
             item.save()
         else:
             task.save()
-        if task.extra:
+        if task.extra == 1:
             base64 = self.request.POST['base64']
             preview = self.request.POST['preview']
             showMenuBar = form.cleaned_data['showMenuBar']
@@ -1187,7 +1182,7 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
             base64 = request.POST["task" + str(y) + "-base64answer"]
             geogebradata = request.POST["task" + str(y) + "-geogebradata"]
             matistikkAnswer = request.POST["task" + str(y) + "-matistikkAnswer"]
-            if item.task.extra:
+            if item.task.extra == 1:
                 geogebraanswer = GeogebraAnswer(answer=answer, base64=base64, data=geogebradata,
                                                 matistikkAnswer=matistikkAnswer)
                 geogebraanswer.save()

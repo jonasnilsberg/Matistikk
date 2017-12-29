@@ -165,7 +165,6 @@ Buttons = EquationEditor.Buttons, ButtonGroup = EquationEditor.ButtonGroupView, 
     }, n.prototype.enableMathMagic = function () {
         return this.$(".math-button a").mathquill(), this.input().mathquill("editable"), null != this.existingLatex && this.input().mathquill("latex", this.existingLatex), this.focus()
     }, n.prototype.input = function () {
-        alert('test');
         return this.$(".math")
     }, n.prototype.addButtonBar = function () {
         var t, n, o, e, i;
