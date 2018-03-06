@@ -86,7 +86,6 @@ class CreateCategoryForm(forms.ModelForm):
 
 
 class CreateTaskLog(forms.ModelForm):
-
     class Meta:
         model = TaskLog
         fields = ['text']
@@ -126,6 +125,7 @@ class CreateAnswerForm(forms.ModelForm):
     :text: The answer.
     :task: The task the answer matches to.
     """
+    testanswer = forms.CharField()
     base64answer = forms.CharField(max_length=500000, required=False)
     reasoning = forms.CharField(max_length=32700, required=False)
     text = forms.CharField(max_length=32700, required=False)
@@ -133,7 +133,12 @@ class CreateAnswerForm(forms.ModelForm):
     geogebradata = forms.CharField(max_length=500000, required=False)
     correct = forms.CharField(max_length=100, required=False)
     variables = forms.CharField(max_length=1000, required=False)
-    matistikkAnswer = forms.CharField(max_length=500, required=False)
+    matistikkanswer = forms.CharField(max_length=500, required=False)
+    xmin = forms.FloatField(required=False)
+    xmax = forms.FloatField(required=False)
+    ymin = forms.FloatField(required=False)
+    ymax = forms.FloatField(required=False)
+    yratio = forms.FloatField(required=False)
 
     class Meta:
         model = Answer

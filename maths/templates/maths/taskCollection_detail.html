@@ -61,7 +61,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" style="padding-right: 0; padding-bottom: 0px;">
             {% bootstrap_messages %}
             <ul class="nav nav-tabs">
                 <li class="nav active"><a href="#A" data-toggle="tab">Publiserte tester</a></li>
@@ -215,10 +215,17 @@
             }
         });
         $(document).ready(function () {
+            var navbarHeight = 55;
+            var headerHeight = $('.panel-heading').outerHeight();
+            var navtabsHeight = $('.nav-tabs').outerHeight();
+            var footerHeight = $('.panel-footer').outerHeight();
+            var padding = 15;
+            var tabHeight = window.innerHeight - navbarHeight - headerHeight - navtabsHeight - padding - footerHeight;
+            $('.tab-content').css('height', tabHeight + "px");
+            $('.tab-content').css('max-height', tabHeight + "px");
             /**
              * Sets up the multiselect widget for the category filtering.
              */
-
             $('#selectCategory').multiselect({
                 buttonClass: 'form-control',
                 onChange: function (option, checked, select) {

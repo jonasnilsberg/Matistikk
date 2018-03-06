@@ -1,6 +1,6 @@
 from django import template
 from maths.models import Answer, GeogebraAnswer, MultipleChoiceTask, GeogebraTask, MultipleChoiceOption, \
-    InputFieldTask, Directory
+    InputFieldTask, Directory, ImageTask
 from administration.models import Gruppe, Person, Grade
 
 register = template.Library()
@@ -32,7 +32,8 @@ def get_geogebra(answer):
 
 @register.simple_tag
 def get_geogebra_task(task):
-    return GeogebraTask.objects.get(task=task)
+    geogebratask = GeogebraTask.objects.get(task=task)
+    return geogebratask
 
 
 @register.simple_tag
@@ -160,4 +161,10 @@ def get_margin(fraction):
 def get_directory_path(directory_id):
     directory = Directory.objects.get(id=directory_id)
     return directory.__str__()
+
+
+@register.simple_tag
+def get_task_image(task_id):
+    return ImageTask.objects.get(task_id=task_id)
+
 

@@ -108,7 +108,10 @@
                                                  id="answer{{ forloop.parentloop.counter }}">
                                                 {% if answer.item.task.answertype == 1 %}
                                                     <div id="textanswerdiv">
-                                                        <label for="taxtanswer{{ answer.item.id }}">{% if item.task.answerText %}{{ item.task.answerText }}{% else %}Tekstsvar{% endif %}</label>
+                                                        <label for="taxtanswer{{ answer.item.id }}">
+                                                            {% if item.task.answerText %}
+                                                                {{ item.task.answerText }}{% else %}
+                                                                Tekstsvar{% endif %}</label>
                                                         <textarea readonly class="form-control"
                                                                   id="textanswer{{ answer.item.id }}"
                                                                   rows="6"
@@ -279,7 +282,11 @@
                             <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6 geogebra">
                                 <input id="base64{{ forloop.parentloop.counter }}" type="text"
                                        value="{{ geo.base64 }}" hidden data-variables="{{ answer.item.variables }}"
-                                       data-height="{{ geoTask.height }}" data-width="{{ geoTask.width }}">
+                                       data-height="{{ geoTask.height }}" data-width="{{ geoTask.width }}"
+                                       data-xmin="{{ geo.xmin }}" data-xmax="{{ geo.xmax }}"
+                                       data-ymin="{{ geo.ymin }}" data-ymax="{{ geo.ymax }}"
+                                       data-yratio="{{ geo.yratio }}" data-xstep="{{ geoTask.xstep }}"
+                                       data-ystep="{{ geoTask.ystep }}">
                                 <div id="applet_container{{ forloop.parentloop.counter }}"></div>
                             </div>
                         {% endfor %}
@@ -294,7 +301,9 @@
                                 <div class="panel-body answerbody">
                                     {% if answer.item.task.answertype == 1 %}
                                         <div id="textanswerdiv">
-                                            <label for="textanswer{{ answer.item.id }}">{% if item.task.answerText %}{{ item.task.answerText }}{% else %}Tekstsvar{% endif %}</label>
+                                            <label for="textanswer{{ answer.item.id }}">
+                                                {% if item.task.answerText %}{{ item.task.answerText }}{% else %}
+                                                    Tekstsvar{% endif %}</label>
                                             <textarea readonly class="form-control"
                                                       id="textanswer{{ answer.item.id }}"
                                                       rows="6"
@@ -612,24 +621,112 @@
             if (document.getElementById('base64' + i)) {
                 width = geo.data('width');
                 height = geo.data('height');
-                if (window.innerWidth > window.innerHeight) {
-                    var scaledWidth = (window.innerWidth * 0.5) / width;
-                    var scaledHeight = (window.innerHeight * 0.93) / height;
+                var xmin = parseFloat(geo.data('xmin').replace(",", "."));
+                var xmax = parseFloat(geo.data('xmax').replace(",", "."));
+                var ymin = parseFloat(geo.data('ymin').replace(",", "."));
+                var ymax = parseFloat(geo.data('ymax').replace(",", "."));
+                var yratio = parseFloat(geo.data('yratio').replace(",", "."));
+                var xstep = parseFloat(geo.data('xstep').replace(",", "."));
+                var ystep = parseFloat(geo.data('ystep').replace(",", "."));
+                if (xmin) {
+                    window["ggbApplet" + i].evalCommand("matistikk_c1 = Corner(1)");
+                    window["ggbApplet" + i].evalCommand("matistikk_c2 = Corner(2)");
+                    window["ggbApplet" + i].evalCommand("matistikk_c3 = Corner(3)");
+                    window["ggbApplet" + i].evalCommand("matistikk_c5 = Corner(5)");
+                    window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin, ymax);
+                    window["ggbApplet" + i].evalCommand("matistikk_ratio =  (x(matistikk_c5)/(Distance[matistikk_c1,matistikk_c2])) / (y(matistikk_c5)/(Distance[matistikk_c2,matistikk_c3]))");
+                    if (yratio < 1) {
+                        var ratio = 1 / yratio;
+                        var geoRatio = window["ggbApplet" + i].getValue("matistikk_ratio") * ratio;
+                        if (geoRatio < 1) {
+                            geoRatio = 1 / geoRatio;
+                            if (ymin > 0) {
+                                var deltaY = ymax - ymin;
+                                var newDeltaY = deltaY * geoRatio;
+                                var diff = (newDeltaY - deltaY) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                            } else if (ymax < 0) {
+                                var deltaY = Math.abs(ymin) - Math.abs(ymax);
+                                var newDeltaY = deltaY * geoRatio;
+                                var diff = (newDeltaY - deltaY) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                            } else {
+                                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                            }
+                        } else {
+                            if (xmin > 0) {
+                                var deltaX = xmax - xmin;
+                                var newDeltaX = deltaX * geoRatio;
+                                var diff = (newDeltaX - deltaX) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                            } else if (xmax < 0) {
+                                var deltaX = Math.abs(xmin) - Math.abs(xmax);
+                                var newDeltaX = deltaX * geoRatio;
+                                var diff = (newDeltaX - deltaX) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                            } else {
+                                window["ggbApplet" + i].setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                            }
+                        }
+                        // X-akse er lengre enn y-akse ------ f.eks. 1:2
+                    } else {
+                        var ratio = yratio;
+                        var geoRatio = ratio / window["ggbApplet" + i].getValue("matistikk_ratio");
+                        if (geoRatio < 1) {
+                            geoRatio = 1 / geoRatio;
+                            if (xmin > 0) {
+                                var deltaX = xmax - xmin;
+                                var newDeltaX = deltaX * geoRatio;
+                                var diff = (newDeltaX - deltaX) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                            } else if (xmax < 0) {
+                                var deltaX = Math.abs(xmin) - Math.abs(xmax);
+                                var newDeltaX = deltaX * geoRatio;
+                                var diff = (newDeltaX - deltaX) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                            } else {
+                                window["ggbApplet" + i].setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                            }
+                        } else {
+                            if (ymin > 0) {
+                                var deltaY = ymax - ymin;
+                                var newDeltaY = deltaY * geoRatio;
+                                var diff = (newDeltaY - deltaY) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                            } else if (ymax < 0) {
+                                var deltaY = Math.abs(ymin) - Math.abs(ymax);
+                                var newDeltaY = deltaY * geoRatio;
+                                var diff = (newDeltaY - deltaY) / 2;
+                                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                            } else {
+                                window["ggbApplet" + i].setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                            }
+                        }
+                    }
+                    window["ggbApplet" + i].deleteObject("matistikk_c2");
+                    window["ggbApplet" + i].deleteObject("matistikk_c5");
+                    window["ggbApplet" + i].deleteObject("matistikk_ratio");
+                    window["ggbApplet" + i].setAxisSteps(1, xstep, ystep, 1);
                 } else {
-                    var scaledWidth = (window.innerWidth * 0.5) / width;
-                    var scaledHeight = (window.innerHeight * 0.50) / height;
+                    if (window.innerWidth > window.innerHeight) {
+                        var scaledWidth = (window.innerWidth * 0.5) / width;
+                        var scaledHeight = (window.innerHeight * 0.93) / height;
+                    } else {
+                        var scaledWidth = (window.innerWidth * 0.5) / width;
+                        var scaledHeight = (window.innerHeight * 0.50) / height;
+                    }
+                    if (scaledWidth < scaledHeight) {
+                        scaledHeight = scaledWidth;
+                    } else {
+                        scaledWidth = scaledHeight;
+                    }
+                    var appletContainerScaler = $('#applet_container' + i + ' .applet_scaler');
+                    appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                    appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                    appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
+                    document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
+                    document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
                 }
-                if (scaledWidth < scaledHeight) {
-                    scaledHeight = scaledWidth;
-                } else {
-                    scaledWidth = scaledHeight;
-                }
-                var appletContainerScaler = $('#applet_container' + i + ' .applet_scaler');
-                appletContainerScaler.css('transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                appletContainerScaler.css('-webkit-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                appletContainerScaler.css('-ms-transform', 'scale(' + scaledWidth + ',' + scaledHeight + ')');
-                document.getElementById('ggbApplet' + i).setAttribute('data-scalex', scaledWidth);
-                document.getElementById('ggbApplet' + i).setAttribute('data-scaley', scaledHeight);
             }
         }
     }

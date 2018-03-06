@@ -219,12 +219,11 @@
         <div id="applet_container"></div>
     </div>
     <div class="col-sm-6 col-md-6 hidden" id="extraImageUpload" style="padding: 15px;">
-        <img id="img_id" src="#" alt="Last opp et bilde" width="100%" height="100%" style="object-fit: contain"/>
+        <img id="img_id" {% if image %}src="{{ image.image.url }}"{% else %}src=""{% endif %} alt="Last opp et bilde"
+             width="100%" height="100%" style="object-fit: contain"/>
     </div>
 
     <script>
-        var viewPortWidth = 1200;
-        var viewPortHeight = 750;
         var base64 = document.getElementById('hiddenbase64').value;
         if (!base64) {
             base64 = "UEsDBBQACAgIAOBc8UoAAAAAAAAAAAAAAAAXAAAAZ2VvZ2VicmFfZGVmYXVsdHMyZC54bWztWktv2zgQPm9/BaFT9xBbki3bCeIUaYHFBkjTYBMUvdLSWOaGIrUiFcv+9UuRsiTHjzpymrqpczA11PD1fcOZoZjzD1lE0SMkgnA2tJyWbSFgPg8IC4dWKscnA+vDxbvzEHgIowSjMU8iLIeWl2uW7ZTU6vT6eR3KBDlj/AZHIGLsw50/gQhfcx9LrTqRMj5rt6fTaWvRaYsnYTsMZSsTgYXUhJgYWsXDmepuqdG0o9Vd23ba3z5fm+5PCBMSMx8spCYbwBinVAr1CBQiYBLJWQxDK+aESQtRPAI6tG5zCb0fJwB/WqhopDCwrYt3f5yLCZ8iPvoXfFUnkxTKdlpo5zrq9SdOeYKSoaWWHurf0dByPc9CmMYTnNdoVYpnkKBHTMsanEru69a6doypgIWuGuczD8C86Rb6jEQaQyQkxGqeFhIxQKCfzPrUQ6wG0tzV+iPiboJjWBnH5zwJBMqG1g2+sdCsKOem1CoasTsyLxp79Vo5o1Bb0Xm7AHs32AOIgQVKaQl7pxH2vYEGPy9GpniL4HdeCvwvrA652whyx/U05ro8mvwOqF+xfyBUa6lj3zli/yrYL1t89+jgS8S1isFW5L9Dy+dRTCF7QUIoYRW411ooyXD3j7b2T6HCfnEqcpgMqHJC/AcGQuROvxovf/ibBCpo5vPQbeA/tkQeUdwRn8jthAgIc6nE+G4hV7Q0C8RHWgpMUknzOVwxqVJkhZ6as1gZ/AEgvleNv7D7BDORp9ZGZwHuZgYTPNvGnndk75DZG6dMd3rzFSclJ6nKhsdqtkGdyGYJwsZQ1XK9Q2Xz+2htR2r/oP5LmPzz7fkFzLDXzJ+4dnc9vK3+L2iGj2rZvMLpayGWIHWOmcw+TndNIooTCYJg9r10n87Cmne4XcglM33DTJNZPfto5nU0n56zYvOObf6c7qntOD117j5QirdDvZTM35YVFdjOq4F9oFtnM34+Z8QvF/XJSCVy3d/EgTQ655AQmPHAAqHM1qPPbK0+t4sP15mj5Zmj384dU63bqyUkJEOXpsWlUbx0TdExRdcUXglVs8OVJjlWvquWoD8JFd1mp6u34FzeCP2vcEhgaQRJzV3cLOTSjDzjMFR/KSyRvIN72GQxm+1DUBIoY4qIouVEnSkinOUfhBAeCU5TCXd+AsCqix5j0FMSyEmeCqqxxyTLDce8mPCEzDmTJRgo3w6XVN8I1XfAWntxt9vLU6tVy93beWMW0mqHXhqp4sJ8RtdKT7+MraOojqZdgNlruYOOM/A6dt/pn3qD3o7gOoPG4C65IAPCLtHGsXc2qP1d0LMcxsKME792cWJvsgp70Hd7vW7P9U5P+06v29/bSlYOq3+VFdVx6mcE+tqGWouytp+nqq9xCqXcT0X1edhIJVaD3yQpwmlGKMHJ7IdiLSGr0pJ7LdTuvQ8Q6s1LUQSE1dSujFS7SDaLGROFG8ORalDg" +
@@ -234,29 +233,26 @@
         }
         var geo = $('#hiddenbase64');
         var width = geo.data('width');
+        var reset = false;
         var height = geo.data('height');
         var xmin = parseFloat(geo.data('xmin').replace(",", "."));
         var xmax = parseFloat(geo.data('xmax').replace(",", "."));
         var ymin = parseFloat(geo.data('ymin').replace(",", "."));
         var ymax = parseFloat(geo.data('ymax').replace(",", "."));
-        if (typeof window.innerWidth != 'undefined') {
-            viewPortWidth = (window.innerWidth * 0.5) - 30;
-            viewPortHeight = window.innerHeight - 55;
+        if (xmin) {
+            height = window.innerHeight - 50;
+            width = (window.innerWidth * 0.5) - 30;
         }
-        /*if (height && width) {
-         viewPortHeight = height;
-         viewPortWidth = width;
-         }*/
         var parameters = {
             "id": "ggbApplet",
-            "width": viewPortWidth,
-            "height": viewPortHeight,
             "showToolBar": true,
             "borderColor": null,
+            "height": height,
+            "width": width,
             "showMenuBar": true,
             "allowStyleBar": true,
-            "showAlgebraInput": true,
             "enableLabelDrags": false,
+            "showAlgebraInput": false,
             "enableShiftDragZoom": true,
             "capturingThreshold": null,
             "showToolBarHelp": false,
@@ -273,8 +269,13 @@
          * @param param - The id of the applet that called the function
          */
         parameters.appletOnLoad = function () {
+            scaleGeoGebra();
+        };
+
+        function scaleGeoGebra() {
             var extra = $('#id_extra').val();
             if (extra === "4") {
+                ggbApplet.setSize((window.innerWidth * 0.5) - 30, window.innerHeight - 50);
                 $('#extradiv').hide();
                 $('#infoDiv').addClass('col-centered');
                 $('#infoDiv').removeClass('col-sm-6 col-md-6');
@@ -282,11 +283,13 @@
                 $('#imageUploadInput').addClass('hidden');
                 $('#extraImageUpload').addClass('hidden');
             } else if (extra === "3") {
+                ggbApplet.setSize((window.innerWidth * 0.5) - 30, window.innerHeight - 50);
                 $('#extradiv').hide();
                 $('#imageUploadInput').addClass('hidden');
                 $('#extraImageUpload').addClass('hidden');
             }
             else if (extra === "2") {
+                ggbApplet.setSize((window.innerWidth * 0.5) - 30, window.innerHeight - 50);
                 $('#extradiv').hide();
                 $('#imageUploadInput').removeClass('hidden');
                 $('#extraImageUpload').removeClass('hidden');
@@ -298,12 +301,8 @@
                     var yratio = parseFloat(geo.data('yratio').replace(",", "."));
                     var xstep = parseFloat(geo.data('xstep').replace(",", "."));
                     var ystep = parseFloat(geo.data('ystep').replace(",", "."));
-                    ggbApplet.evalCommand("matistikk_c1 = Corner(1)");
-                    ggbApplet.evalCommand("matistikk_c2 = Corner(2)");
-                    ggbApplet.evalCommand("matistikk_c3 = Corner(3)");
-                    ggbApplet.evalCommand("matistikk_c5 = Corner(5)");
                     ggbApplet.setCoordSystem(xmin, xmax, ymin, ymax);
-                    ggbApplet.evalCommand("matistikk_ratio =  (x(matistikk_c5)/(Distance[matistikk_c1,matistikk_c2])) / (y(matistikk_c5)/(Distance[matistikk_c2,matistikk_c3]))");
+                    ggbApplet.evalCommand("matistikk_ratio =  (x(Corner(5))/(Distance[Corner(1),Corner(2)])) / (y(Corner(5))/(Distance[Corner(2),Corner(3)]))");
                     // Y-akse er lengre enn x akse ------ f.eks. 1:0.5 = 2:1
                     if (yratio < 1) {
                         var ratio = 1 / yratio;
@@ -373,12 +372,9 @@
                             }
                         }
                     }
-                    ggbApplet.deleteObject("matistikk_c2");
-                    ggbApplet.deleteObject("matistikk_c5");
                     ggbApplet.deleteObject("matistikk_ratio");
                     ggbApplet.setAxisSteps(1, xstep, ystep, 1);
                 } else {
-                    alert('old');
                     if (window.innerWidth > window.innerHeight) {
                         var scaledWidth = (window.innerWidth * 0.50) / width;
                         var scaledHeight = (window.innerHeight * 0.93) / height;
@@ -400,8 +396,7 @@
                     document.getElementById('ggbApplet').setAttribute('data-scaley', scaledHeight);
                 }
             }
-
-        };
+        }
 
         // Applet som inneholder GeoGebra-vinduet som lastes inn i createfunctiontask.jsp
         var applet = new GGBApplet(parameters, '5.0', 'applet_container');
@@ -565,7 +560,7 @@
             var answertype2 = document.getElementById('id_answertype');
             var reasoning = document.getElementById('reason');
             var reasoning2 = document.getElementById('id_reasoning');
-            var extra = $('#id_extra').val()
+            var extra = $('#id_extra').val();
             var base64 = document.getElementById('id_base64');
             var preview = document.getElementById('id_preview');
             var categories = document.getElementById('id_category');

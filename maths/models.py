@@ -90,6 +90,12 @@ class Task(models.Model):
         return str(self.id) + " - " + self.title
 
 
+class ImageTask(models.Model):
+    task = models.ForeignKey(Task)
+    image = models.FileField()
+    author = models.ForeignKey(Person)
+
+
 class TaskLog(models.Model):
     text = models.TextField(max_length=1000, verbose_name='Kommentar...')
     task = models.ForeignKey(Task)
@@ -259,6 +265,21 @@ class TaskOrder(models.Model):
             self.id)
 
 
+class TestAnswer(models.Model):
+    test = models.ForeignKey(Test)
+    user = models.ForeignKey(Person, null=True)
+    anonymous_user = models.IntegerField(null=True)
+    STATUS = [
+        (1, 'Påbegynt'),
+        (2,'Avsluttet'),
+        (3, 'Fullført')
+    ]
+    status = models.IntegerField(choices=STATUS, default=1)
+
+    def __str__(self):
+        return self.test.task_collection.test_name + " - " + self.user.get_full_name()
+
+
 class Answer(models.Model):
     """
     The answer of a task in a test.
@@ -270,6 +291,7 @@ class Answer(models.Model):
     :text: The answer.
     """
     item = models.ForeignKey(Item)
+    testAnswer = models.ForeignKey(TestAnswer, null=True)
     test = models.ForeignKey(Test)
     user = models.ForeignKey(Person, null=True)
     anonymous_user = models.IntegerField(null=True)
@@ -299,6 +321,11 @@ class GeogebraAnswer(models.Model):
     matistikkAnswer = models.CharField(max_length=500, null=True)
     base64 = models.TextField()
     data = models.TextField(null=True)
+    xmin = models.FloatField(null=True)
+    xmax = models.FloatField(null=True)
+    ymin = models.FloatField(null=True)
+    ymax = models.FloatField(null=True)
+    yratio = models.FloatField(default=1)
 
     def __str__(self):
         if self.answer.user:

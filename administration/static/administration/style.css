@@ -617,3 +617,61 @@ ul.scrollbar::-webkit-scrollbar {
     margin-top: 7px;
     margin-bottom: 7px;
 }
+
+.extraBorder {
+    border-left-style: solid;
+    border-left-width: 1px;
+}
+
+.noExtraBorder {
+    border-right-style: solid;
+    border-left-style: solid;
+    border-right-width: 1px;
+    border-left-width: 1px;
+}
+
+.startingdiv {
+    position: fixed;
+    z-index: 99;
+    background: rgba(0, 0, 0, 0.95);
+}
+
+.startingbtn {
+    position: fixed;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.startingtext {
+    position: absolute;
+    text-align: center;
+    color: whitesmoke;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.startscroll::-webkit-scrollbar-track {
+    border: 1px solid black;
+    background-color: #F5F5F5;
+}
+
+.startscroll::-webkit-scrollbar {
+    width: 10px;
+    background-color: #F5F5F5;
+}
+
+.startscroll::-webkit-scrollbar-thumb {
+    background-color: #000000;
+}
+
+.exitTest {
+    z-index: 89;
+    position: absolute;
+}

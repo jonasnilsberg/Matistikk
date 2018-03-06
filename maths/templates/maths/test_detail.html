@@ -72,7 +72,7 @@
             </div>
 
         </div>
-        <div class="panel-body">
+        <div class="panel-body" style="padding-bottom: 0px; padding-right: 0px;">
             <ul class="nav nav-tabs">
                 {% if not students and not teachers and not grades and not groups %}
                     <li id="studentTab" class="nav active"><a href="#notPublished" data-toggle="tab">Besvarelser</a>
@@ -90,7 +90,7 @@
                     <li id="anonymousTab" class="nav"><a href="#F" data-toggle="tab">Anonyme besvarelser</a></li>
                 {% endif %}
                 <li class="nav"><a href="#E" data-toggle="tab">Oppgaver</a></li>
-                <div class="col-sm-4" style="float: right">
+                <div class="col-sm-4" style="float: right; padding-right: 15px;">
 
                     <div {% if test.public %}style="background-color: lightgreen" class="well well-sm"
                          {% else %}style="background-color: #FF7A7A" class="well well-sm disabledLink"{% endif %}>
@@ -407,6 +407,14 @@
          * class to all users that have answered the test.
          */
         $(document).ready(function () {
+            var navbarHeight = 55;
+            var headingHeight = $('.panel-heading').outerHeight();
+            var navtabHeight = $('.nav-tabs').outerHeight();
+            var footerHeight = $('.panel-footer').outerHeight();
+            var padding = 15;
+            var tabHeight = window.innerHeight - navbarHeight - headingHeight - navtabHeight - footerHeight - padding;
+            $('.tab-content').css('height', tabHeight + 'px');
+            $('.tab-content').css('max-height', tabHeight + 'px');
             var date = "{{ test.dueDate.isoformat }}";
             var dueDate = new Date(date);
             var now = new Date();
@@ -1047,7 +1055,9 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger deleteTest"><i class="fa fa-trash" aria-hidden="true"></i> Slett</button>
+                    <button type="button" class="btn btn-danger deleteTest"><i class="fa fa-trash"
+                                                                               aria-hidden="true"></i> Slett
+                    </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
                 </div>
             </div>
@@ -1111,7 +1121,7 @@
         });
 
         $('.deleteTest').click(function () {
-           $('#deleteTestBtn').click();
+            $('#deleteTestBtn').click();
         });
         /**
          * Function that shows only the users matching the input in the search field.

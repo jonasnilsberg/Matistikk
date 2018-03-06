@@ -570,7 +570,7 @@
                     });
                     tbody.append(task_arr.join(''));
                     $('#id_items option:selected').each(function () {
-                        var itemID = $(this).val()
+                        var itemID = $(this).val();
                         var taskID = $('.table > tbody > tr[data-id="' + itemID + '"]').find(':checkbox').val();
                         $('.task' + taskID).addClass('success').find(':checkbox').prop('checked', true);
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, TaskCollection, Test, TaskOrder, Answer, \
-    GeogebraAnswer, Item, MultipleChoiceOption, InputField, InputFieldTask, Directory, TaskLog
+    GeogebraAnswer, Item, MultipleChoiceOption, InputField, InputFieldTask, Directory, TaskLog, ImageTask, TestAnswer
 
 # Register your models here.
 admin.site.register(Task)
@@ -18,4 +18,5 @@ admin.site.register(InputFieldTask)
 admin.site.register(InputField)
 admin.site.register(Directory)
 admin.site.register(TaskLog)
-
+admin.site.register(ImageTask)
+admin.site.register(TestAnswer)

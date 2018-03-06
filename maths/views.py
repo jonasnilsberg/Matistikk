@@ -4,7 +4,7 @@ from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm, CreateTaskLog
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, \
-    GeogebraAnswer, Item, MultipleChoiceOption, InputFieldTask, InputField, Directory, TaskLog
+    GeogebraAnswer, Item, MultipleChoiceOption, InputFieldTask, InputField, Directory, TaskLog, ImageTask, TestAnswer
 from braces import views
 from django.http import JsonResponse
 from administration.models import Grade, Person, Gruppe, School
@@ -284,6 +284,10 @@ class TaskCreateView(AdministratorCheck, generic.CreateView):
                                         xmax=xmax, xmin=xmin, ymax=ymax, ymin=ymin, yratio=yratio, xstep=xstep,
                                         ystep=ystep, algebraInputField=algebra_input_field)
             geogebratask.save()
+        elif task.extra == 2:
+            image = form.cleaned_data['imageFile']
+            image_task = ImageTask(task=task, image=image, author=self.request.user)
+            image_task.save()
         return super(TaskCreateView, self).form_valid(form)
 
 
@@ -403,6 +407,10 @@ class TaskListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
         if task.extra == 1:
             geogebra = GeogebraTask.objects.get(task_id=task_id)
             data['geogebra_preview'] = geogebra.preview
+        elif task.extra == 2:
+            image_task = ImageTask.objects.get(task_id=task_id)
+            path = image_task.image.url
+            data['path'] = path
         if task.answertype == 2:
             multiplechoice_task = MultipleChoiceTask.objects.filter(task_id=task_id)
             for choices in multiplechoice_task:
@@ -559,6 +567,8 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
             context['geogebra'] = GeogebraTask.objects.get(task=self.kwargs.get("task_pk"))
         if MultipleChoiceTask.objects.filter(task=self.kwargs.get("task_pk")):
             context['options'] = MultipleChoiceTask.objects.filter(task=self.kwargs.get("task_pk"))
+        if ImageTask.objects.filter(task_id=self.kwargs.get('task_pk')).exists():
+            context['image'] = ImageTask.objects.get(task_id=self.kwargs.get('task_pk'))
 
         context['categories'] = Category.objects.all()
         return context
@@ -620,7 +630,7 @@ class TaskUpdateView(AdministratorCheck, generic.UpdateView):
                 width = form.cleaned_data['width']
                 geogebratask = GeogebraTask(task=task, base64=base64, preview=preview, height=height, width=width,
                                             xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax, yratio=yratio, xstep=xstep,
-                                            ystep=ystep,showMenuBar=showMenuBar, enableLabelDrags=enableLabelDrags,
+                                            ystep=ystep, showMenuBar=showMenuBar, enableLabelDrags=enableLabelDrags,
                                             enableShiftDragZoom=enableShiftDragZoom, enableRightClick=enableRightClick,
                                             algebraInputField=algebraInputField)
                 geogebratask.save()
@@ -1054,7 +1064,146 @@ class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
         return context
 
 
-class AnswerCreateView(AnswerCheck, generic.FormView):
+class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.CreateView):
+    template_name = 'maths/answer_form2.html'
+    form_class = CreateAnswerForm
+
+    def form_valid(self, form):
+        if self.request.is_ajax():
+            print('asdkajldajdkjakd')
+            data = form.cleaned_data
+            if Answer.objects.filter(testAnswer__id=data['testanswer'], item_id=data['item']).exists():
+                answer = Answer.objects.get(testAnswer__id=data['testanswer'], item_id=data['item'])
+                print("Finnes fra før")
+            else:
+                answer = Answer(text=data['text'], item_id=data['item'].id, reasoning=data['reasoning'])
+                answer.item_id = data['item'].id
+                # Fjern dette ved oppdatering
+                test_answer = TestAnswer.objects.get(id=data['testanswer'])
+                answer.test = test_answer.test
+                answer.user = test_answer.user
+                # -------------------------------------------------
+                answer.save()
+                print(answer)
+            data = {
+                'test': 'test'
+            }
+            return JsonResponse(data)
+
+    def form_invalid(self, form):
+        if self.request.is_ajax:
+            print('testasd')
+            data = {
+                'test': 'test'
+            }
+            return JsonResponse(data)
+
+    def get_context_data(self, **kwargs):
+        context = super(AnswerCreateView2, self).get_context_data(**kwargs)
+        test = Test.objects.get(id=self.kwargs.get('test_pk'))
+        if self.request.user.role == 1:
+            if TestAnswer.objects.filter(test=test, user=self.request.user).exists():
+                context['testanswer'] = TestAnswer.objects.get(test=test, user=self.request.user).id
+            else:
+                test_answer = TestAnswer(test=test)
+                if self.request.user:
+                    test_answer.user = self.request.user
+                else:
+                    last_answer = Answer.objects.filter(user__isnull=True).last()
+                    if last_answer:
+                        test_answer.anonymous_user = int(last_answer.anonymous_user + 1)
+                    else:
+                        test_answer.anonymous_user = 0
+                test_answer.save()
+                context['testanswer'] = test_answer.id
+        context['test_id'] = test.id
+        context['test_name'] = test.task_collection.test_name
+        context['test_strict'] = test.strictOrder
+        geogebra = False
+        for item in test.task_collection.items.all():
+            if GeogebraTask.objects.filter(task=item.task).exists():
+                geogebra = True
+        context['geogebra'] = geogebra
+        if test.randomOrder:
+            randomtest = sorted(test.task_collection.items.only('id').all(), key=lambda x: random.random())
+            context['items'] = randomtest
+            context['item'] = Item.objects.get(id=randomtest[0].id)
+        else:
+            taskorder = TaskOrder.objects.filter(test=test)
+            context['items'] = Item.objects.filter(taskorder__in=taskorder).only('id')
+            context['item'] = Item.objects.get(id=context['items'][0].id)
+        return context
+
+    def get_ajax(self, request, *args, **kwargs):
+        item_id = request.GET.get('itemid')
+        item = Item.objects.get(id=item_id)
+        data = {
+            'tasktext': item.task.text,
+            'extra': item.task.extra,
+            'answertype': item.task.answertype,
+            'reasoning': item.task.reasoning,
+            "reasoningtext": item.task.reasoningText
+        }
+        if item.task.answertype == 1:
+            data['answertext'] = item.task.answerText
+        elif item.task.answertype == 2:
+            multiplechoicetasks = MultipleChoiceTask.objects.filter(task=item.task)
+            multiplechoicedata = []
+            for multiplechoicetask in multiplechoicetasks:
+                options = ""
+                multiplechoicetaskdata = {
+                    "question": multiplechoicetask.question,
+                    "checkbox": multiplechoicetask.checkbox
+                }
+                length = 0
+                for option in multiplechoicetask.multiplechoiceoption_set.all():
+                    options += option.option + "|||||"
+                    length += len(option.option)
+                options = options[:-5]
+                multiplechoicetaskdata['options'] = options
+                multiplechoicetaskdata['length'] = length
+                multiplechoicedata.append(multiplechoicetaskdata)
+            data['multiplechoice'] = multiplechoicedata
+        elif item.task.answertype == 4:
+            inputfielddata = []
+            inputfieldtasks = InputFieldTask.objects.filter(task=item.task)
+            for inputfieldtask in inputfieldtasks:
+                inputfieldtaskdata = {
+                    'question': inputfieldtask.question
+                }
+                fields = []
+                for field in inputfieldtask.inputfield_set.all():
+                    fielddata = {
+                        "inputtitle": field.title,
+                        "inputlength": field.inputlength,
+                        "inputnr": field.inputnr
+                    }
+                    fields.append(fielddata)
+                inputfieldtaskdata['inputfields'] = fields
+                inputfielddata.append(inputfieldtaskdata)
+            data['inputfields'] = inputfielddata
+        if item.task.extra == 1:
+            geogebra_task = GeogebraTask.objects.get(task=item.task)
+            data['base64'] = geogebra_task.base64
+            data['xmin'] = geogebra_task.xmin
+            data['xmax'] = geogebra_task.xmax
+            data['ymin'] = geogebra_task.ymin
+            data['ymax'] = geogebra_task.ymax
+            data['yratio'] = geogebra_task.yratio
+            data['xstep'] = geogebra_task.xstep
+            data['ystep'] = geogebra_task.ystep
+            data['showMenuBar'] = geogebra_task.showMenuBar
+            data['algebraInputField'] = geogebra_task.algebraInputField
+            data['enableLabelDrags'] = geogebra_task.enableLabelDrags
+            data['enableShiftDragZoom'] = geogebra_task.enableShiftDragZoom
+            data['enableRightClick'] = geogebra_task.enableRightClick
+        elif item.task.extra == 2:
+            image_task = ImageTask.objects.get(task=item.task)
+            data['image'] = image_task.image.url
+        return JsonResponse(data)
+
+
+class AnswerCreateView(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
     """
    Class for creating answers for all the tasks in a test.
 
@@ -1065,6 +1214,89 @@ class AnswerCreateView(AnswerCheck, generic.FormView):
     """
     form_class = CreateAnswerForm
     template_name = 'maths/answer_form.html'
+
+    def post_ajax(self, request, *args, **kwargs):
+        test_id = self.kwargs.get('test_pk')
+        item_id = request.POST["itemid"]
+        answer_text = request.POST['answer']
+        reasoning = request.POST['reasoning']
+        correct = request.POST['correct']
+        timespent = request.POST['timespent']
+        anonymous_user_id = request.POST['anonymous_user_id']
+        answer = Answer(test_id=test_id, text=answer_text, reasoning=reasoning, timespent=timespent)
+        item = Item.objects.get(id=item_id)
+        if item.random_variables:
+            variables = request.POST['variables']
+            obj, created = Item.objects.get_or_create(task=item.task, variables=variables, random_variables=False)
+            answer.item = obj
+        else:
+            answer.item = item
+        if correct:
+            answer.correct = correct
+        elif answer.item.task.answertype == 4:
+            input_answers = answer_text.split('|||||')
+            inputfield_tasks = InputFieldTask.objects.filter(task=answer.item.task)
+            x = 0
+            score = 0
+            score_tasks = False
+            for inputfield_task in inputfield_tasks:
+                inputfields = InputField.objects.filter(inputFieldTask=inputfield_task)
+                for inputfield in inputfields:
+                    if inputfield.correct:
+                        input_answer = input_answers[x].strip()
+                        score_tasks = True
+                        if input_answer:
+                            if float(input_answer) == float(inputfield.correct):
+                                score += 1
+                    x += 1
+            if score_tasks:
+                answer.correct = score
+        if answer.item.task.answertype == 2:
+            score = 0
+            multiplechoice_answer = answer_text.split('<--|-->')
+            count = 0
+            for multiplechoicetask in answer.item.task.multiplechoicetask_set.all():
+                correct_string = ""
+                for option in multiplechoicetask.multiplechoiceoption_set.all():
+                    if option.correct:
+                        correct_string += option.option + '|||||'
+                correct_string = correct_string[:-5]
+                if multiplechoice_answer[count] == correct_string:
+                    score += 1
+                count += 1
+            answer.correct = score
+        answer.date_answered = timezone.now()
+        if Person.objects.filter(id=self.request.user.id).exists():
+            answer.user = self.request.user
+        else:
+            answer.user = None
+            if not anonymous_user_id:
+                answerList = Answer.objects.filter(user__isnull=True).last()
+                if answerList:
+                    anonymous_user_id = int(answerList.anonymous_user + 1)
+                    answer.anonymous_user = anonymous_user_id
+                else:
+                    answer.anonymous_user = 0
+            else:
+                answer.anonymous_user = anonymous_user_id
+        answer.save()
+        if item.task.extra == 1:
+            base64 = request.POST["base64"]
+            matistikkAnswer = request.POST['matistikkAnswer']
+            xmin = request.POST['xmin']
+            xmax = request.POST['xmax']
+            ymin = request.POST['ymin']
+            ymax = request.POST['ymax']
+            ratio = request.POST['ratio']
+            # geogebra_data = request.POST["task" + str(y) + "-geogebradata"]
+            geogebra_answer = GeogebraAnswer(answer=answer, base64=base64,
+                                             matistikkAnswer=matistikkAnswer, yratio=ratio, xmin=xmin, xmax=xmax,
+                                             ymin=ymin, ymax=ymax)
+            # geogebra_answer.save()
+        data = {
+            'anonymous_user_id': anonymous_user_id
+        }
+        return JsonResponse(data)
 
     def get_success_url(self):
         """
@@ -1396,7 +1628,8 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered),
                                                             "SHORT_DATETIME_FORMAT")
                         answer_tab = [user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer, date_answered, geogebra_data]
+                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer,
+                                      date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_grades:
                 grade_table = rq_grades.split(',')
@@ -1435,7 +1668,8 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                         date_answered = formats.date_format(timezone.localtime(answer.date_answered),
                                                             "SHORT_DATETIME_FORMAT")
                         answer_tab = [answer.user.username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer,  date_answered, geogebra_data]
+                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer,
+                                      date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_tests:
                 test_table = rq_tests.split(',')
@@ -1457,7 +1691,8 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                         else:
                             username = "Anonym  - " + str(answer.anonymous_user)
                         answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer, date_answered, geogebra_data]
+                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer,
+                                      date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_tasks:
                 task_table = rq_tasks.split(',')
@@ -1479,7 +1714,8 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                         else:
                             username = "Anonym  - " + str(answer.anonymous_user)
                         answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer, date_answered, geogebra_data]
+                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer,
+                                      date_answered, geogebra_data]
                         data.append(answer_tab)
             if rq_items:
                 item_table = rq_items.split(',')
@@ -1501,7 +1737,8 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
                         else:
                             username = "Anonym  - " + str(answer.anonymous_user)
                         answer_tab = [username, answer.test.__str__(), answer.item.__str__(), answer.text,
-                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer, date_answered, geogebra_data]
+                                      answer.reasoning, answer.timespent, answer.correct, matistikk_answer,
+                                      date_answered, geogebra_data]
                         data.append(answer_tab)
         elif info_js == 'true' and rq_students or rq_grades or rq_groups:
             if rq_students:

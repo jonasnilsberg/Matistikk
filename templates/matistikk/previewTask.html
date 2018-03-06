@@ -50,6 +50,9 @@
                     <div class="col-md-6" id="geogebradiv" style="padding-right: 10px;">
                         <img id='previewbilde' alt='' width="100%" style="border:1px solid #021a40;"/>
                     </div>
+                    <div class="col-md-6" id="imagediv" style="padding-right: 10px;">
+                        <img id='imagepreview' alt='' width="100%" style="border:1px solid #021a40;"/>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -112,12 +115,17 @@
             success: function (json) {
                 var notGeoDiv = $('#notgeogebradiv');
                 var task = (json);
-                if (task.geogebra_preview != undefined) {
+                if (json.task_extra == 1) {
                     $("#previewbilde").attr("src", 'data:image/png;base64,' + (task.geogebra_preview));
                     $('#geogebradiv').show();
                     if (!notGeoDiv.hasClass('hidden')) {
                         notGeoDiv.addClass('hidden');
                     }
+                } else if (json.task_extra == 2) {
+                    var src = json.path;
+                    $('#imagepreview').attr('src', src);
+                } else if (json.task_extra == 3) {
+
                 } else {
                     if (notGeoDiv.hasClass('hidden')) {
                         notGeoDiv.removeClass('hidden');
