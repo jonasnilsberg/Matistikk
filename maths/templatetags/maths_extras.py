@@ -35,6 +35,10 @@ def get_geogebra_task(task):
     geogebratask = GeogebraTask.objects.get(task=task)
     return geogebratask
 
+@register.simple_tag
+def get_geogebra_answer(answer_id):
+    geogebraanswer = GeogebraAnswer.objects.get(answer_id=answer_id)
+    return geogebraanswer
 
 @register.simple_tag
 def get_geogebra_count(test):

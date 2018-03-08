@@ -268,16 +268,19 @@ class TaskOrder(models.Model):
 class TestAnswer(models.Model):
     test = models.ForeignKey(Test)
     user = models.ForeignKey(Person, null=True)
-    anonymous_user = models.IntegerField(null=True)
+    anonymous_user = models.CharField(null=True, max_length=20)
     STATUS = [
         (1, 'Påbegynt'),
-        (2,'Avsluttet'),
+        (2, 'Avsluttet'),
         (3, 'Fullført')
     ]
     status = models.IntegerField(choices=STATUS, default=1)
 
     def __str__(self):
-        return self.test.task_collection.test_name + " - " + self.user.get_full_name()
+        if self.user:
+            return self.test.task_collection.test_name + " - " + self.user.get_full_name()
+        else:
+            return self.test.task_collection.test_name + " - " + self.anonymous_user
 
 
 class Answer(models.Model):
@@ -298,15 +301,17 @@ class Answer(models.Model):
     reasoning = models.CharField(max_length=6000, null=True)
     text = models.CharField(max_length=6000, null=True)
     date_answered = models.DateTimeField(null=True)
-    timespent = models.FloatField(null=True)
+    timespent = models.CharField(null=True, max_length=200)
     correct = models.CharField(max_length=100, null=True, default=None)
 
     def __str__(self):
-        if self.user:
-            return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - " + self.user.get_full_name()
-        else:
-            return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - Anonym bruker: " + str(
-                self.anonymous_user)
+        if self.testAnswer:
+            if self.testAnswer.user:
+                return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + " - " + \
+                       self.testAnswer.user.get_full_name()
+            else:
+                return "Svar: " + self.test.task_collection.test_name + " - " + self.item.task.title + \
+                       " - Anonym bruker: " + self.testAnswer.anonymous_user
 
 
 class GeogebraAnswer(models.Model):

@@ -143,3 +143,8 @@ class CreateAnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
         fields = ['reasoning', 'text', 'timespent', 'item']
+
+
+class CreateTestAnswerForm(forms.Form):
+    testAnswer_id = forms.CharField()
+

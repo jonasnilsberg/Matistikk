@@ -2,7 +2,8 @@ from django.views import generic
 from django.contrib import messages
 from braces.views import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
-from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm, CreateTaskLog
+from .forms import CreateTaskForm, CreateCategoryForm, CreateTestForm, CreateAnswerForm, CreateTaskLog, \
+    CreateTestAnswerForm
 from .models import Task, MultipleChoiceTask, Category, GeogebraTask, Test, TaskOrder, TaskCollection, Answer, \
     GeogebraAnswer, Item, MultipleChoiceOption, InputFieldTask, InputField, Directory, TaskLog, ImageTask, TestAnswer
 from braces import views
@@ -15,7 +16,7 @@ from administration.views import AdministratorCheck, RoleCheck
 import random
 from django.http import HttpResponseRedirect
 from django.conf import settings
-
+import re
 from django.utils import formats
 from django.utils import timezone
 
@@ -44,8 +45,6 @@ class AnswerCheck(views.UserPassesTestMixin):
                     if answer_user == user.username:
                         return True
                 else:
-                    if Answer.objects.filter(test_id=test_id, user=user).exists():
-                        return False
                     if Person.objects.filter(id=user.id, tests__id=test_id).exists():
                         return True
                     elif Grade.objects.filter(person=user, tests__id=test_id).exists():
@@ -1064,58 +1063,30 @@ class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
         return context
 
 
-class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.CreateView):
+class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
     template_name = 'maths/answer_form2.html'
-    form_class = CreateAnswerForm
+    form_class = CreateTestAnswerForm
+
+    def get_success_url(self):
+        """
+            Function that returns the success url.
+            :return: success url.
+        """
+        if Person.objects.filter(id=self.request.user.id).exists():
+            return reverse_lazy('maths:index')
+        else:
+            return reverse_lazy('maths:answerFinished')
 
     def form_valid(self, form):
-        if self.request.is_ajax():
-            print('asdkajldajdkjakd')
-            data = form.cleaned_data
-            if Answer.objects.filter(testAnswer__id=data['testanswer'], item_id=data['item']).exists():
-                answer = Answer.objects.get(testAnswer__id=data['testanswer'], item_id=data['item'])
-                print("Finnes fra før")
-            else:
-                answer = Answer(text=data['text'], item_id=data['item'].id, reasoning=data['reasoning'])
-                answer.item_id = data['item'].id
-                # Fjern dette ved oppdatering
-                test_answer = TestAnswer.objects.get(id=data['testanswer'])
-                answer.test = test_answer.test
-                answer.user = test_answer.user
-                # -------------------------------------------------
-                answer.save()
-                print(answer)
-            data = {
-                'test': 'test'
-            }
-            return JsonResponse(data)
-
-    def form_invalid(self, form):
-        if self.request.is_ajax:
-            print('testasd')
-            data = {
-                'test': 'test'
-            }
-            return JsonResponse(data)
+        data = form.cleaned_data
+        test_answer = TestAnswer.objects.get(id=data['testAnswer_id'])
+        test_answer.status = 3
+        test_answer.save()
+        return super(AnswerCreateView2, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super(AnswerCreateView2, self).get_context_data(**kwargs)
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
-        if self.request.user.role == 1:
-            if TestAnswer.objects.filter(test=test, user=self.request.user).exists():
-                context['testanswer'] = TestAnswer.objects.get(test=test, user=self.request.user).id
-            else:
-                test_answer = TestAnswer(test=test)
-                if self.request.user:
-                    test_answer.user = self.request.user
-                else:
-                    last_answer = Answer.objects.filter(user__isnull=True).last()
-                    if last_answer:
-                        test_answer.anonymous_user = int(last_answer.anonymous_user + 1)
-                    else:
-                        test_answer.anonymous_user = 0
-                test_answer.save()
-                context['testanswer'] = test_answer.id
         context['test_id'] = test.id
         context['test_name'] = test.task_collection.test_name
         context['test_strict'] = test.strictOrder
@@ -1127,79 +1098,279 @@ class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.CreateView
         if test.randomOrder:
             randomtest = sorted(test.task_collection.items.only('id').all(), key=lambda x: random.random())
             context['items'] = randomtest
-            context['item'] = Item.objects.get(id=randomtest[0].id)
+            item = Item.objects.get(id=randomtest[0].id)
+            context['item'] = item
         else:
             taskorder = TaskOrder.objects.filter(test=test)
             context['items'] = Item.objects.filter(taskorder__in=taskorder).only('id')
-            context['item'] = Item.objects.get(id=context['items'][0].id)
+            item = Item.objects.get(id=context['items'][0].id)
+            context['item'] = item
+        if not self.request.user.is_anonymous():
+            if self.request.user.role == 1:
+                if TestAnswer.objects.filter(test=test, user=self.request.user).exists():
+                    test_answer_id = TestAnswer.objects.get(test=test, user=self.request.user).id
+                else:
+                    test_answer = TestAnswer(test=test, user=self.request.user)
+                    test_answer.save()
+                    test_answer_id = test_answer.id
+                context['testanswer'] = test_answer_id
+                if Answer.objects.filter(item=item, testAnswer_id=test_answer_id).exists():
+                    answer = Answer.objects.get(item=item, testAnswer_id=test_answer_id)
+                    context['answer_id'] = answer.id
+                    context['answer_text'] = answer.text
+                    context['answer_reasoning'] = answer.reasoning
+        else:
+            test_answer = TestAnswer(test=test)
+            s = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
+            passlen = 12
+            anonymous_user_string_found = False
+            while not anonymous_user_string_found:
+                anonymous_user_string = "".join(random.sample(s, passlen))
+                if not TestAnswer.objects.filter(anonymous_user=anonymous_user_string).exists():
+                    anonymous_user_string_found = True
+            print(anonymous_user_string)
+            test_answer.anonymous_user = anonymous_user_string
+            test_answer.save()
+            test_answer_id = test_answer.id
+        if test_answer_id:
+            context['testanswer'] = test_answer_id
+        else:
+            context['testanswer'] = -1
         return context
+
+    def post_ajax(self, request, *args, **kwargs):
+        testanswer_id = request.POST.get('testanswer')
+        item_id = request.POST.get('item')
+        answer_text = request.POST.get('text')
+        reasoning = request.POST.get('reasoning')
+        timespent = request.POST.get('timespent')
+        correct = request.POST.get('correct')
+        data = {}
+        if Answer.objects.filter(testAnswer_id=testanswer_id, item_id=item_id).exists():
+            answer = Answer.objects.get(testAnswer__id=testanswer_id, item_id=item_id)
+            data['answer_id'] = answer.id
+            answer.timespent = answer.timespent + "|||||" + timespent
+            if answer_text:
+                if answer_text == "-":
+                    answer.text = ""
+                else:
+                    answer.text = answer_text
+                if answer.item.task.answertype == 4:
+                    input_answers = answer_text.split('|||||')
+                    inputfield_tasks = InputFieldTask.objects.filter(task=answer.item.task)
+                    x = 0
+                    score = 0
+                    score_tasks = False
+                    for inputfield_task in inputfield_tasks:
+                        inputfields = InputField.objects.filter(inputFieldTask=inputfield_task)
+                        for inputfield in inputfields:
+                            if inputfield.correct:
+                                input_answer = input_answers[x].strip()
+                                score_tasks = True
+                                if input_answer:
+                                    if float(input_answer) == float(inputfield.correct):
+                                        score += 1
+                            x += 1
+                    if score_tasks:
+                        answer.correct = score
+                elif answer.item.task.answertype == 2:
+                    score = 0
+                    multiplechoice_answer = answer_text.split('<--|-->')
+                    count = 0
+                    for multiplechoicetask in answer.item.task.multiplechoicetask_set.all():
+                        correct_string = ""
+                        for option in multiplechoicetask.multiplechoiceoption_set.all():
+                            if option.correct:
+                                correct_string += option.option + '|||||'
+                        correct_string = correct_string[:-5]
+                        if multiplechoice_answer[count] == correct_string:
+                            score += 1
+                        count += 1
+                    answer.correct = score
+            if correct:
+                answer.correct = correct
+            if reasoning:
+                answer.reasoning = reasoning
+            base64 = request.POST.get("base64answer")
+            answer.date_answered = timezone.now()
+            answer.save()
+            if base64:
+                geogebra_answer = GeogebraAnswer.objects.get(answer=answer)
+                geogebra_answer.base64 = base64
+                geogebra_answer.matistikkAnswer = request.POST.get('matistikkAnswer')
+                geogebra_answer.xmin = request.POST.get('xmin')
+                geogebra_answer.xmax = request.POST.get('xmax')
+                geogebra_answer.ymin = request.POST.get('ymin')
+                geogebra_answer.ymax = request.POST.get('ymax')
+                geogebra_answer.ratio = request.POST.get('yratio')
+                geogebra_answer.save()
+        else:
+            answer = Answer(text=answer_text, reasoning=reasoning, testAnswer_id=testanswer_id,
+                            timespent=timespent)
+            answer.date_answered = timezone.now()
+            # Fjern dette ved oppdatering
+            answer.test_id = self.kwargs.get('test_pk')
+            # -------------------------------------------------
+            item = Item.objects.get(id=item_id)
+            if item.random_variables:
+                variables = request.POST['variables']
+                obj, created = Item.objects.get_or_create(task=item.task, variables=variables, random_variables=False)
+                answer.item = obj
+            else:
+                answer.item = item
+            if correct:
+                answer.correct = correct
+            elif answer.item.task.answertype == 4:
+                input_answers = answer_text.split('|||||')
+                inputfield_tasks = InputFieldTask.objects.filter(task=answer.item.task)
+                x = 0
+                score = 0
+                score_tasks = False
+                for inputfield_task in inputfield_tasks:
+                    inputfields = InputField.objects.filter(inputFieldTask=inputfield_task)
+                    for inputfield in inputfields:
+                        if inputfield.correct:
+                            input_answer = input_answers[x].strip()
+                            score_tasks = True
+                            if input_answer:
+                                if float(input_answer) == float(inputfield.correct):
+                                    score += 1
+                        x += 1
+                if score_tasks:
+                    answer.correct = score
+            elif answer.item.task.answertype == 2:
+                score = 0
+                multiplechoice_answer = answer_text.split('<--|-->')
+                count = 0
+                for multiplechoicetask in answer.item.task.multiplechoicetask_set.all():
+                    correct_string = ""
+                    for option in multiplechoicetask.multiplechoiceoption_set.all():
+                        if option.correct:
+                            correct_string += option.option + '|||||'
+                    correct_string = correct_string[:-5]
+                    if multiplechoice_answer[count] == correct_string:
+                        score += 1
+                    count += 1
+                answer.correct = score
+            answer.date_answered = timezone.now()
+            answer.save()
+            if item.task.extra == 1:
+                base64 = request.POST.get("base64answer")
+                matistikkAnswer = request.POST.get('matistikkAnswer')
+                xmin = request.POST.get('xmin')
+                xmax = request.POST.get('xmax')
+                ymin = request.POST.get('ymin')
+                ymax = request.POST.get('ymax')
+                ratio = request.POST.get('yratio')
+                # geogebra_data = request.POST["task" + str(y) + "-geogebradata"]
+                geogebra_answer = GeogebraAnswer(answer=answer, base64=base64,
+                                                 matistikkAnswer=matistikkAnswer, yratio=ratio, xmin=xmin, xmax=xmax,
+                                                 ymin=ymin, ymax=ymax)
+                geogebra_answer.save()
+            data['answer_id'] = answer.id
+        return JsonResponse(data=data)
 
     def get_ajax(self, request, *args, **kwargs):
         item_id = request.GET.get('itemid')
-        item = Item.objects.get(id=item_id)
-        data = {
-            'tasktext': item.task.text,
-            'extra': item.task.extra,
-            'answertype': item.task.answertype,
-            'reasoning': item.task.reasoning,
-            "reasoningtext": item.task.reasoningText
-        }
-        if item.task.answertype == 1:
-            data['answertext'] = item.task.answerText
-        elif item.task.answertype == 2:
-            multiplechoicetasks = MultipleChoiceTask.objects.filter(task=item.task)
-            multiplechoicedata = []
-            for multiplechoicetask in multiplechoicetasks:
-                options = ""
-                multiplechoicetaskdata = {
-                    "question": multiplechoicetask.question,
-                    "checkbox": multiplechoicetask.checkbox
+        testAnswer_id = request.GET.get('testAnswer')
+        data = {}
+        if item_id == "0":
+            answers = Answer.objects.filter(testAnswer_id=testAnswer_id)
+            answer_tab = []
+            for answer in answers:
+                answer_data = {
+                    'id': answer.item.id
                 }
-                length = 0
-                for option in multiplechoicetask.multiplechoiceoption_set.all():
-                    options += option.option + "|||||"
-                    length += len(option.option)
-                options = options[:-5]
-                multiplechoicetaskdata['options'] = options
-                multiplechoicetaskdata['length'] = length
-                multiplechoicedata.append(multiplechoicetaskdata)
-            data['multiplechoice'] = multiplechoicedata
-        elif item.task.answertype == 4:
-            inputfielddata = []
-            inputfieldtasks = InputFieldTask.objects.filter(task=item.task)
-            for inputfieldtask in inputfieldtasks:
-                inputfieldtaskdata = {
-                    'question': inputfieldtask.question
-                }
-                fields = []
-                for field in inputfieldtask.inputfield_set.all():
-                    fielddata = {
-                        "inputtitle": field.title,
-                        "inputlength": field.inputlength,
-                        "inputnr": field.inputnr
+                answer_text = answer.text.strip("|").strip('<--|-->')
+                print(answer_text)
+                if answer.item.task.answertype == 3 or answer_text:
+                    answer_data['status'] = 'Besvart'
+                else:
+                    answer_data['status'] = 'Tom besvarelse'
+                if answer.item.task.reasoning:
+                    if not answer.reasoning:
+                        answer_data['status'] += " | Tom begrunnelse"
+                        print('tomt')
+                answer_tab.append(answer_data)
+            data['states'] = answer_tab
+        else:
+            item = Item.objects.get(id=item_id)
+            data['tasktext'] = item.task.text
+            data['extra'] = item.task.extra
+            data['answertype'] = item.task.answertype
+            data['reasoning'] = item.task.reasoning
+            data['reasoningtext'] = item.task.reasoningText
+            if item.task.answertype == 1:
+                data['answertext'] = item.task.answerText
+            elif item.task.answertype == 2:
+                multiplechoicetasks = MultipleChoiceTask.objects.filter(task=item.task)
+                multiplechoicedata = []
+                for multiplechoicetask in multiplechoicetasks:
+                    options = ""
+                    multiplechoicetaskdata = {
+                        "question": multiplechoicetask.question,
+                        "checkbox": multiplechoicetask.checkbox
                     }
-                    fields.append(fielddata)
-                inputfieldtaskdata['inputfields'] = fields
-                inputfielddata.append(inputfieldtaskdata)
-            data['inputfields'] = inputfielddata
-        if item.task.extra == 1:
-            geogebra_task = GeogebraTask.objects.get(task=item.task)
-            data['base64'] = geogebra_task.base64
-            data['xmin'] = geogebra_task.xmin
-            data['xmax'] = geogebra_task.xmax
-            data['ymin'] = geogebra_task.ymin
-            data['ymax'] = geogebra_task.ymax
-            data['yratio'] = geogebra_task.yratio
-            data['xstep'] = geogebra_task.xstep
-            data['ystep'] = geogebra_task.ystep
-            data['showMenuBar'] = geogebra_task.showMenuBar
-            data['algebraInputField'] = geogebra_task.algebraInputField
-            data['enableLabelDrags'] = geogebra_task.enableLabelDrags
-            data['enableShiftDragZoom'] = geogebra_task.enableShiftDragZoom
-            data['enableRightClick'] = geogebra_task.enableRightClick
-        elif item.task.extra == 2:
-            image_task = ImageTask.objects.get(task=item.task)
-            data['image'] = image_task.image.url
+                    length = 0
+                    for option in multiplechoicetask.multiplechoiceoption_set.all():
+                        options += option.option + "|||||"
+                        length += len(option.option)
+                    options = options[:-5]
+                    multiplechoicetaskdata['options'] = options
+                    multiplechoicetaskdata['length'] = length
+                    multiplechoicedata.append(multiplechoicetaskdata)
+                data['multiplechoice'] = multiplechoicedata
+            elif item.task.answertype == 4:
+                inputfielddata = []
+                inputfieldtasks = InputFieldTask.objects.filter(task=item.task)
+                for inputfieldtask in inputfieldtasks:
+                    inputfieldtaskdata = {
+                        'question': inputfieldtask.question
+                    }
+                    fields = []
+                    for field in inputfieldtask.inputfield_set.all():
+                        fielddata = {
+                            "inputtitle": field.title,
+                            "inputlength": field.inputlength,
+                            "inputnr": field.inputnr
+                        }
+                        fields.append(fielddata)
+                    inputfieldtaskdata['inputfields'] = fields
+                    inputfielddata.append(inputfieldtaskdata)
+                data['inputfields'] = inputfielddata
+            if item.task.extra == 1:
+                geogebra_task = GeogebraTask.objects.get(task=item.task)
+                data['base64'] = geogebra_task.base64
+                data['xmin'] = geogebra_task.xmin
+                data['xmax'] = geogebra_task.xmax
+                data['ymin'] = geogebra_task.ymin
+                data['ymax'] = geogebra_task.ymax
+                data['yratio'] = geogebra_task.yratio
+                data['xstep'] = geogebra_task.xstep
+                data['ystep'] = geogebra_task.ystep
+                data['showMenuBar'] = geogebra_task.showMenuBar
+                data['algebraInputField'] = geogebra_task.algebraInputField
+                data['enableLabelDrags'] = geogebra_task.enableLabelDrags
+                data['enableShiftDragZoom'] = geogebra_task.enableShiftDragZoom
+                data['enableRightClick'] = geogebra_task.enableRightClick
+            elif item.task.extra == 2:
+                image_task = ImageTask.objects.get(task=item.task)
+                data['image'] = image_task.image.url
+            if int(testAnswer_id) > 0:
+                if Answer.objects.filter(item_id=item_id, testAnswer_id=testAnswer_id).exists():
+                    answer = Answer.objects.get(item_id=item_id, testAnswer_id=testAnswer_id)
+                    data['answer_id'] = answer.id
+                    data['prev_answer'] = answer.text
+                    if answer.item.task.reasoning:
+                        data['prev_reasoning'] = answer.reasoning
+                    if answer.item.task.extra == 1:
+                        geogebra_answer = GeogebraAnswer.objects.get(answer=answer)
+                        data['base64'] = geogebra_answer.base64
+                        data['xmin'] = geogebra_answer.xmin
+                        data['xmax'] = geogebra_answer.xmax
+                        data['ymin'] = geogebra_answer.ymin
+                        data['ymax'] = geogebra_answer.ymax
+                        data['yratio'] = geogebra_answer.yratio
         return JsonResponse(data)
 
 
