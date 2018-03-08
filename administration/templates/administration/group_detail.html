@@ -107,7 +107,8 @@
             </div>
         </div>
         <div class="panel-footer">
-            <a class="btn btn-primary" href="{% url 'administration:groupUpdate' group_pk=gruppe.id %} "id="updateGruppeBtn"><span
+            <a class="btn btn-primary" href="{% url 'administration:groupUpdate' group_pk=gruppe.id %} "
+               id="updateGruppeBtn"><span
                     class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater gruppe</a>
         </div>
     </div>
@@ -117,6 +118,14 @@
          * This function makes the rows of the user-, student-, teacher- and admintable clickable
          */
         jQuery(document).ready(function ($) {
+            var navbarHeight = 55;
+            var headingHeight = $('.panel-heading').outerHeight();
+            var navtabHeight = $('.nav-tabs').outerHeight();
+            var footerHeight = $('.panel-footer').outerHeight();
+            var padding = 30;
+            var tabHeight = window.innerHeight - navbarHeight - headingHeight - navtabHeight - footerHeight - padding;
+            $('.tab-content').css('height', tabHeight + 'px');
+            $('.tab-content').css('max-height', tabHeight + 'px');
             $(".clickable-row").click(function () {
                 window.document.location = $(this).data("href");
             });

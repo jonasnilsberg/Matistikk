@@ -1,0 +1,1367 @@
+<!--Loads the tag library-->
+{% load bootstrap3 %}
+<!-- Loads staticfiles-->
+{% load staticfiles %}
+{% load maths_extras %}
+<!-- Loads CSS and javascript-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--Imports Jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <!--Display django.contrib.messages as Bootstrap alerts-->
+    {% bootstrap_messages %}
+    <!--Imports bootstrap-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--Imports bootstrap css-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'administration/style.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'administration/loader.css' %}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    {% if geogebra %}
+        <script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
+    {% endif %}
+    <!--Imports stylesheet-->
+    <link rel="stylesheet" type="text/css" href="{% static 'administration/style.css' %}"/>
+    <!--Imports bootbox-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <!--Imports tinymce-->
+    <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'maths/css/sweetalert/sweetalert.css' %}">
+    <script src="{% static 'maths/js/sweetalert/sweetalert.min.js' %}"></script>
+    <script src="{% static 'maths/js/jquery.scrollTo.min.js' %}"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <!--Imports mathquill-->
+    <script type="text/javascript"
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+    <script>
+        var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
+        tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
+    </script>
+    <script src="{% static 'maths/js/jquery.scrollTo.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/equation_editor.js' %}"></script>
+    <meta charset="UTF-8">
+    <!--Sets the favicon-->
+    <link rel="shortcut icon" href="{% static 'administration/images/favico.png' %}">
+    <title>{{ test_name }}</title>
+</head>
+<body>
+<span id="testID" class="hidden">{{ test_id }}</span>
+<span id="testAnswerID" class="hidden">{{ testanswer }}</span>
+<span id="userRole" class="hidden">{{ request.user.role }}</span>
+
+<!-- Starting div ---------------------------------------------------------------------------------->
+<div id="startingdiv" class="col-md-12 col-sm-12 col-lg-12 col-xs-12 startingdiv">
+    <div class="startingtext" style="height: 100%; width: 65%">
+        <h2 id="startingtestname" style="color: whitesmoke">{{ test_name }}</h2>
+        <h3 id="startingtaskcount" style="color: whitesmoke">Antall oppgaver: {{ items.count }}</h3>
+        <h3 id="startingdesc" style="color: whitesmoke">Beskrivelse: </h3>
+        <div style=" overflow: auto;" id="startdivbody" class="startscroll">
+            {% autoescape off %}
+                {{ answer_text }}
+            {% endautoescape %}
+        </div>
+        <button id="starttestbtn" class="btn btn-success btn-lg" disabled style="min-width: 50%; margin-top: 10px;"><i
+                class="fas fa-hourglass-start"></i>
+
+            Vennligst vent mens testen lastes inn...
+        </button>
+    </div>
+</div>
+<!--Loading div ------------------------------------------------------------------------------------>
+<div id="loadingdiv" class="dimmed hidden">
+    <div class="lds-css ng-scope">
+        <div style="width:100%;height:100%" class="lds-double-ring">
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+<!-- Item body -------------------------------------------------------------------------------------->
+
+<div id="itembody" class="col-xs-12 col-md-12 col-sm-12" style="overflow: hidden">
+    <div class="row">
+        <div id="itemdiv" class="col-md-6 col-xs-6 col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="padding-top: 1px; padding-bottom: 1px;">
+                    <div class="row">
+                        <div class="col-md-1" style="height: inherit; margin-top: 12px;">
+                            <button class="btn btn-sm btn-warning exitTest"><i class="fa fa-arrow-left"
+                                                                               aria-hidden="true"></i>
+                                Avbryt test
+                            </button>
+                        </div>
+                        <h4 class="text-center tasktitle">Oppgave <span id="tasktitlenr">1</span></h4>
+                    </div>
+                </div>
+                <div class="panel-body" style="padding: 10px">
+                    <div id="tasktextdiv">
+                        <textarea id="tasktext" style="cursor:pointer;">
+                            {% if item.task.variableTask %}
+                                {% insert_params item.task.text item.variables as text %}
+                                {{ text }}
+                            {% else %}
+                                {{ item.task.text }}
+                            {% endif %}
+                        </textarea>
+                        <span id="tasktext{{ item.id }}" class="hidden">
+                            {% autoescape off %}
+                                {{ item.task.text }}
+                            {% endautoescape %}</span>
+                    </div>
+                    <div id="itemanswer" style="overflow: auto;">
+                        <div id="answertype">
+                            <div id="textanswerdiv" style="padding-top: 10px;" {% if not item.task.answertype == 1 %}
+                                 class="hidden" {% else %}class="task{{ item.id }}"{% endif %}>
+                                <label for="textanswer">
+                                    {% if item.task.answerText %}{{ item.task.answerText }}{% else %}
+                                        Tekstsvar{% endif %}</label>
+                                <textarea class="form-control" id="textanswer"
+                                          rows="6"
+                                          style="resize:vertical"
+                                          placeholder="Skriv svaret ditt her...">{{ answer_text }}</textarea>
+                                {% if item.task.answertype == 1 %}
+                                    <span id="answerdiv{{ item.id }}"
+                                          {% if item.task.answerText %}data-answertext="{{ item.task.answerText }}"
+                                          {% else %}data-answertext="Tekstsvar"{% endif %} class="hidden"></span>
+                                {% endif %}
+                            </div>
+                            {% if item.task.answertype == 2 %}
+                                <div id="answerdiv{{ item.id }}" style="padding-top: 10px;"
+                                     class="task task{{ item.id }}" data-answertype="{{ item.task.answertype }}"
+                                     data-changed="false" data-answer="{{ answer_text }}">
+                                    {% get_mutiplechoice item.task as multiplechoicetasks %}
+                                    {% for multiplechoicetask in multiplechoicetasks %}
+                                        <div id="{{ item.id }}multipleChoiceAlt{{ forloop.counter }}"
+                                             class="multipleChoiceAlt{{ item.id }}">
+                                            {% if multiplechoicetask.question %}
+                                                <label for=multipleChoice>{{ multiplechoicetask.question }}</label>
+                                            {% else %}
+                                                <label for=multipleChoice>Svaralternativer:</label>
+                                            {% endif %}
+                                            <br>
+                                            {% get_multiplechoice_options_length multiplechoicetask as length %}
+                                            {% for option in multiplechoicetask.multiplechoiceoption_set.all %}
+                                                {% if length > 50 %}
+                                                    {% if multiplechoicetask.checkbox %}
+                                                        <div class="checkbox">
+                                                            <label><input
+                                                                    type="checkbox"
+                                                                    class="checkbox{{ item.id }}"
+                                                                    value="{{ option.option }}">{{ option.option }}
+                                                            </label>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="radio">
+                                                            <label><input type="radio"
+                                                                          value="{{ option.option }}"
+                                                                          class="checkbox{{ item.id }}"
+                                                                          name="{{ forloop.parentloop.counter }}choices{{ item.id }}">{{ option.option }}
+                                                        </div>
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if multiplechoicetask.checkbox %}
+                                                        <label class="checkbox-inline"><input
+                                                                type="checkbox"
+                                                                class="checkbox{{ item.id }}"
+                                                                value="{{ option.option }}">{{ option.option }}
+                                                        </label>
+                                                    {% else %}
+                                                        <label class="radio-inline"><input type="radio"
+                                                                                           value="{{ option.option }}"
+                                                                                           class="checkbox{{ item.id }}"
+                                                                                           name="{{ forloop.parentloop.counter }}choices{{ item.id }}">{{ option.option }}
+                                                        </label>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+
+                                        <hr>
+                                    {% endfor %}
+                                </div>
+                            {% elif item.task.answertype == 4 %}
+                                <div id="answerdiv{{ item.id }}" class="task task{{ item.id }}"
+                                     style="padding-top: 10px;" data-answertype="{{ item.task.answertype }}"
+                                     data-changed="false" data-answer="{{ answer_text }}">
+                                    {% get_inputfields item.task as inputfields %}
+                                    {% for inputfield in inputfields %}
+                                        <h4>{{ inputfield.question }}</h4>
+                                        <form class="form-horizontal">
+                                            {% for inputs in inputfield.inputfield_set.all %}
+                                                <div class="form-group"
+                                                     style="margin-bottom: {% get_margin inputs.fraction %}px; margin-right: 0px; margin-left: 0px;">
+                                                    <label
+                                                            style="text-align: left; padding-left: 15px; height: auto"
+                                                            class="control-label col-md-2">{{ inputs.title }}:</label>
+                                                    <div class="col-md-{{ inputs.inputlength }}"
+                                                         style="padding-right: 15px; height: auto"><input
+                                                            type="number"
+                                                            data-inputnr="{{ inputs.inputnr }}"
+                                                            data-counter="{{ forloop.parentloop.parentloop.counter }}"
+                                                            class="form-control inputs">
+                                                        {% if inputs.fraction %}
+                                                            <hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black;">
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </form>
+                                        {% if not forloop.last or item.task.reasoning %}
+                                            <hr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div id="reasoningdiv" {% if not item.task.reasoning %} class="task hidden"
+                             {% else %}class="task task{{ item.id }}"{% endif %} style="padding-bottom: 10px">
+                            <label for="reasoning">
+                                {% if item.task.reasoningText %}
+                                    {{ item.task.reasoningText }}{% else %}
+                                    Begrunnelse{% endif %}</label>
+                            <textarea class="form-control" id="reasoning"
+                                      rows="6"
+                                      style="resize:vertical"
+                                      placeholder="Begrunn svaret ditt...">{{ answer_reasoning }}</textarea>
+                            {% if item.task.reasoning %}
+                                <span id="reasoningdiv{{ item.id }}"
+                                      {% if item.task.reasoningText %}data-reasoningtext="{{ item.task.reasoningText }}"
+                                      {% else %}data-reasoningtext="Begrunnelse"{% endif %} class="hidden"></span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="extradiv" class="col-md-6 col-xs-6 col-sm-6 extraBorder">
+            {% if geogebra %}
+                <div id="geogebradiv">
+                    {% if item.task.extra == 1 %}
+                        {% autoescape off %}
+                            <input id="geogebrainfo{{ item.id }}" type="text"
+                                    {% if answer_id %}
+                                        {% get_geogebra_answer answer_id as geogebraanswer %}
+                                        {% get_geogebra_task item.task as geogebratask %}
+                                   data-xmin="{{ geogebraanswer.xmin|stringformat:"f" }}"
+                                   data-xmax="{{ geogebraanswer.xmax|stringformat:"f" }}"
+                                   data-ymin="{{ geogebraanswer.ymin|stringformat:"f" }}"
+                                   data-ymax="{{ geogebraanswer.ymax|stringformat:"f" }}"
+                                   data-yratio="{{ geogebraanswer.yratio|stringformat:"f" }}"
+                                   value="{{ geogebraanswer.base64 }}"
+                                    {% else %}
+                                        {% get_geogebra_task item.task as geogebratask %}
+                                   data-xmin="{{ geogebratask.xmin|stringformat:"f" }}"
+                                   data-xmax="{{ geogebratask.xmax|stringformat:"f" }}"
+                                   data-ymin="{{ geogebratask.ymin|stringformat:"f" }}"
+                                   data-ymax="{{ geogebratask.ymax|stringformat:"f" }}"
+                                   data-yratio="{{ geogebratask.yratio|stringformat:"f" }}"
+                                   value="{{ geogebratask.base64 }}"
+                                    {% endif %}
+                                   data-variables="{{ item.variables }}"
+                                   data-showMenuBar="{{ geogebratask.showMenuBar }}"
+                                   data-enableLabelDrags="{{ geogebratask.enableLabelDrags }}"
+                                   data-enableShiftDragZoom="{{ geogebratask.enableShiftDragZoom }}"
+                                   data-enableRightClick="{{ geogebratask.enableRightClick }}"
+                                   data-xstep="{{ geogebratask.xstep|stringformat:"f" }}"
+                                   data-ystep="{{ geogebratask.ystep|stringformat:"f" }}"
+                                   data-algebraInputField="{{ geogebratask.algebraInputField }}" data-changed="false"
+                                   data-scaled="false" hidden>
+                        {% endautoescape %}
+                    {% endif %}
+                </div>
+                <div id="applet_container"></div>
+            {% endif %}
+            <div id="imagediv" style="padding: 15px;" {% if not item.task.extra == 2 %}class="hidden"{% endif %}>
+                {% if item.task.extra == 2 %}
+                    {% get_task_image item.task.id as imagetask %}
+                    <img id="img_id{{ item.id }}" src="{{ imagetask.image.url }}" alt="Last opp et bilde" width="100%"
+                         height="100%"
+                         style="object-fit: contain" class="imagetask"/>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-----------------------------------Summary------------------------------------------->
+<div id="summary" class="col-xs-12 col-md-12 container-fluid">
+    <div class="panel panel-info">
+        <div class="panel-heading" style="padding-top: 1px">
+            <div class="row">
+                <div class="col-md-1" style="height: inherit; margin-top: 16px;">
+                    <button class="btn btn-warning exitTest"><i class="fa fa-arrow-left"
+                                                                aria-hidden="true"></i> Avbryt
+                        test
+                    </button>
+                </div>
+                <h3 class="text-center">Oppsummering</h3>
+            </div>
+        </div>
+        <div class="panel-body" style="padding-bottom: 0; padding-right: 0px; overflow: auto">
+            <table class="table table-hover table-striped table-responsive" id="summarytable">
+                <thead>
+                <tr>
+                    <th class="col-xs-2">Oppgave</th>
+                    <th class="col-xs-8">Status</th>
+                    <th class="col-xs-2">Gå til</th>
+                </tr>
+                </thead>
+                <tbody class="tableBody">
+                {% for item_summary in items %}
+                    <tr id="summarytask{{ item_summary.id }}" class="danger">
+                        <td>Oppgave {{ forloop.counter }}</td>
+                        <td id="status{{ item_summary.id }}">Ikke besvart</td>
+                        <td><a class="btn btn-default" onclick="goToTask({{ item_summary.id }})"
+                               {% if test_strict %}style="cursor: not-allowed";
+                               {% endif %}><i
+                                class="fa fa-arrow-right" aria-hidden="true"></i> Gå til
+                            oppgave</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-------------------------------------Navbar------------------------------------------------------>
+<nav id="tasknav" class="navbar navbar-default navbar-fixed-bottom hidden">
+    <ul id="taskBtnList" class="nav navbar-nav scrollbar"
+        style="white-space: nowrap; overflow-x: auto;">
+        {% for item in items %}
+            <li id="liOppgave{{ item.id }}" style="display: inline-block; float: none;"
+                {% if forloop.first %}class="active" {% endif %}>
+                <a type="button" onclick="goToTask({{ item.id }})" data-itemid="{{ item.id }}"
+                   data-tasknr="{{ forloop.counter0 }}"
+                   style="cursor: pointer">Oppgave {{ forloop.counter }} </a>
+            </li>
+            {% if forloop.last %}
+                <li style="display: inline-block; float: none;" id="liSummary">
+                    <a type="button" onclick="goToTask(0)" data-tasknr="{{ forloop.counter }}" data-itemid="0"
+                       style="cursor:pointer;">Oppsummering</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    <ul id="endTestNav" class="nav navbar-nav navbar-right" style="margin-right: 5px;">
+        <button id="prevTaskBtn" class="btn btn-primary btn-lg border-radius"
+                type="button"><i class="fa fa-arrow-left" aria-hidden="true"></i>
+            Forrige Oppgave
+        </button>
+        <button id="nextTaskBtn" class="btn btn-primary btn-lg border-radius" type="button"><span
+                id="nextTaskBtnText">Neste Oppgave</span> <i
+                class="fa fa-arrow-right"
+                aria-hidden="true"></i></button>
+    </ul>
+</nav>
+<!-------------------------------------Form------------------------------------------------------>
+<form class="hidden" id="answerForm" method="post">
+    {{ form }}
+    {% csrf_token %}
+</form>
+</body>
+<!-------------------------------------ExitModal------------------------------------------------------>
+<div class="modal fade" id="exitTestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Er du sikker på at du vil avslutte testen? Dine svar vil bli lagret og testen
+                    settes som ikke ikke ferdig. Du kan når som helst gå inn å fullføre testen.</h4>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-success" data-dismiss="modal" style="width: 49%; height: 10em">
+                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"
+                              style="font-size: 5em"></span><br>
+                    Ta meg tilbake til testen
+                </button>
+                <button type="button" class="btn btn-danger" onclick="leavetest()"
+                        style="width: 49%; height: 10em"><br><span
+                        class="glyphicon glyphicon-remove" aria-hidden="true" style="font-size: 5em"></span><br>
+                    Avslutt test
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* Document on ready ---------------------------------------------------------------------------------------------*/
+    var testanswerID = $('#testAnswerID').text();
+    var userRole = $('#userRole').text();
+    var taskheaderheight = $('.panel-heading').outerHeight();
+    var tasknavHeight;
+    var panelbodypaddingheight = 10;
+    var summaryPanelHeight;
+    var taskcounter = 0;
+    var testID = $('#testID').text();
+    var tasktimer = 0;
+    var geogebraLoaded = false;
+    var nextItemID;
+    $(document).ready(function () {
+        summaryPanelHeight = $('#summary .panel-heading').outerHeight();
+        $('#summary').addClass('hidden');
+        $('#startdivbody').css('max-height', startdivbodyHeight + "px");
+        $('#id_testAnswer_id').val(testanswerID);
+        var itemid = ($('#taskBtnList .active').find('a').data('itemid'));
+        var answerdiv = $('#answerdiv' + itemid);
+        var answer = answerdiv.data('answer');
+        var answertype = answerdiv.data('answertype');
+        if (answertype == "2") {
+            var prev_answers = answer.split('<--|-->');
+            $.each(prev_answers, function (index, val) {
+                var answerTab = val.split('|||||');
+                $.each(answerTab, function (answernr, answer) {
+                    var multiplechoiceName = "radio" + index + "item" + itemid;
+                    var multiplechoicediv = answerdiv.find("[name='" + multiplechoiceName + "']");
+                    $.each(multiplechoicediv, function () {
+                        if ($(this).val() === answer) {
+                            $(this).attr('checked', true);
+                        }
+                    });
+                });
+            });
+        } else if (answertype == "4") {
+            var prevAnswers = answer.split('|||||');
+            $.each(prevAnswers, function (index, val) {
+                var inputnr = index + 1;
+                answerdiv.find("[data-inputnr='" + inputnr + "']").val(val);
+            });
+        }
+    });
+    /* Start test button ---------------------------------------------------------------------------------------------*/
+    $('#starttestbtn').click(function () {
+        $('#tasknav').removeClass('hidden');
+        var navbar = $('#taskBtnList');
+        var taskBtnListWidth = window.innerWidth - $('#endTestNav').outerWidth() - 20;
+        navbar.css('max-width', taskBtnListWidth + 'px');
+        tasknavHeight = $('#tasknav').outerHeight();
+        var imagedivHeight = window.innerHeight - navbar.outerHeight();
+        $('#imagediv').css('height', imagedivHeight + 'px');
+        var summaryHeight = window.innerHeight - tasknavHeight - summaryPanelHeight;
+        $('#summary .panel-body').css('height', summaryHeight + 'px');
+        var itemid = ($('#taskBtnList .active').find('a').data('itemid'));
+        var tasktextdivheight = $('#tasktextdiv').outerHeight();
+        var answerdivheight = window.innerHeight - tasktextdivheight - tasknavHeight - taskheaderheight - panelbodypaddingheight;
+        $('#itemanswer').css('height', answerdivheight + "px");
+        $('#answerdiv' + itemid).data('height', answerdivheight);
+        $('#startingdiv').addClass('hidden');
+        tasktimer = Date.now();
+    });
+    /* Go to next task ---------------------------------------------------------------------------------------------- */
+    function goToTask(itemid) {
+        if (nextItemID != itemid) {
+            $('#loadingdiv').removeClass('hidden');
+            nextItemID = itemid;
+            saveTask();
+        }
+    }
+
+    /* Saves the answers from the answered task --------------------------------------------------------------------- */
+    function saveTask() {
+        if (testanswerID > 0) {
+            var itemid = ($('#taskBtnList .active').find('a').data('itemid'));
+            if (itemid !== 0) {
+                var changed = false;
+                var answerdiv = $('#answerdiv' + itemid);
+                var timespent = (Date.now() - tasktimer) / 1000;
+                var answer = "";
+                var reasoning = "";
+                var base64 = "";
+                var correct;
+                var matistikkAnswer = "";
+                var xmin = 0;
+                var xmax = 0;
+                var ymin = 0;
+                var ymax = 0;
+                var yratio = 1;
+                var variables = "";
+                if (answerdiv.data('answerid')) {
+                    if ($("#textanswerdiv").hasClass("task" + itemid)) {
+                        if (answerdiv.data('changed')) {
+                            answer = tinyMCE.get('textanswer').getContent();
+                            if (answer.length == "0") {
+                                answer = "-"
+                            }
+                            answerdiv.html(answer);
+                        }
+                    } else if (document.getElementById("answerdiv" + itemid)) {
+                        if (answerdiv.data('changed')) {
+                            if (answerdiv.data('answertype') === 2) {
+                                answer = getMultipleChoiceAnswer(itemid);
+                            } else if (answerdiv.data("answertype") === 4) {
+                                answer = getInputFieldAnswer(itemid);
+                            }
+                        }
+                    }
+                    answerdiv.data('changed', false);
+                    if ($('#reasoningdiv').hasClass("task" + itemid)) {
+                        var reasoningdiv = $("#reasoningdiv" + itemid);
+                        if (reasoningdiv.data('changed')) {
+                            reasoning = tinyMCE.get('reasoning').getContent();
+                            reasoningdiv.html(reasoning);
+                        }
+                    }
+                    if (document.getElementById("geogebrainfo" + itemid) !== null) {
+                        var geogebrainfo = $('#geogebrainfo' + itemid);
+                        var geogebraChanged = geogebrainfo.data('changed');
+                        if (geogebraChanged) {
+                            changed = true;
+                            base64 = ggbApplet.getBase64();
+                            geogebrainfo.data('changed', false);
+                            variables = geogebrainfo.data('variables');
+                            var autoCorrect = ggbApplet.getValue('matistikkAutoretting');
+                            if (autoCorrect == 1) {
+                                correct = ggbApplet.getValue('matistikkScore');
+                            }
+                            var matistikkAnswerCount = ggbApplet.getValue('matistikkAntallSvar');
+                            for (var x = 1; x <= matistikkAnswerCount; x++) {
+                                matistikkAnswer += ggbApplet.getValue('matistikkSvar' + x) + "||||";
+                            }
+                            matistikkAnswer = matistikkAnswer.slice(0, -4);
+                            ggbApplet.evalCommand("matistikk_ratio =  (x(Corner(5))/(Distance[Corner(1),Corner(2)])) / (y(Corner(5))/(Distance[Corner(2),Corner(3)]))");
+                            yratio = ggbApplet.getValue("matistikk_ratio");
+                            ggbApplet.deleteObject("matistikk_ratio");
+                            if (!ggbApplet.exists('matistikk_c1')) {
+                                ggbApplet.evalCommand("matistikk_c1 = Corner(1)");
+                            }
+                            if (!ggbApplet.exists('matistikk_c3')) {
+                                ggbApplet.evalCommand("matistikk_c3 = Corner(3)");
+                            }
+                            xmin = ggbApplet.getXcoord("matistikk_c1");
+                            xmax = ggbApplet.getXcoord("matistikk_c3");
+                            ymin = ggbApplet.getYcoord("matistikk_c1");
+                            ymax = ggbApplet.getYcoord("matistikk_c3");
+                            geogebrainfo.val(ggbApplet.getBase64());
+                            ggbApplet.setPerspective('1');
+                        }
+                    }
+                } else {
+                    if ($("#textanswerdiv").hasClass("task" + itemid)) {
+                        answer = tinyMCE.get('textanswer').getContent();
+                        answerdiv.html(answer);
+                        answerdiv.data('changed', false);
+                    } else if (document.getElementById("answerdiv" + itemid)) {
+                        if (answerdiv.data('answertype') === 2) {
+                            answer = getMultipleChoiceAnswer(itemid);
+                        } else if (answerdiv.data("answertype") === 4) {
+                            answer = getInputFieldAnswer(itemid);
+                        }
+                        answerdiv.data('changed', false);
+                    }
+                    if ($('#reasoningdiv').hasClass("task" + itemid)) {
+                        reasoning = tinyMCE.get('reasoning').getContent();
+                        $("#reasoningdiv" + itemid).html(reasoning);
+                    }
+                    if (document.getElementById("geogebrainfo" + itemid) !== null) {
+                        var geogebrainfo = $('#geogebrainfo' + itemid);
+                        base64 = ggbApplet.getBase64();
+                        variables = geogebrainfo.data('variables');
+                        var autoCorrect = ggbApplet.getValue('matistikkAutoretting');
+                        if (autoCorrect == 1) {
+                            correct = ggbApplet.getValue('matistikkScore');
+                        }
+                        var matistikkAnswerCount = ggbApplet.getValue('matistikkAntallSvar');
+                        for (var x = 1; x <= matistikkAnswerCount; x++) {
+                            matistikkAnswer += ggbApplet.getValue('matistikkSvar' + x) + "||||";
+                        }
+                        matistikkAnswer = matistikkAnswer.slice(0, -4);
+                        ggbApplet.evalCommand("matistikk_ratio =  (x(Corner(5))/(Distance[Corner(1),Corner(2)])) / (y(Corner(5))/(Distance[Corner(2),Corner(3)]))");
+                        yratio = ggbApplet.getValue("matistikk_ratio");
+                        ggbApplet.deleteObject("matistikk_ratio");
+                        if (!ggbApplet.exists('matistikk_c1')) {
+                            ggbApplet.evalCommand("matistikk_c1 = Corner(1)");
+                        }
+                        if (!ggbApplet.exists('matistikk_c3')) {
+                            ggbApplet.evalCommand("matistikk_c3 = Corner(3)");
+                        }
+                        xmin = ggbApplet.getXcoord("matistikk_c1");
+                        xmax = ggbApplet.getXcoord("matistikk_c3");
+                        ymin = ggbApplet.getYcoord("matistikk_c1");
+                        ymax = ggbApplet.getYcoord("matistikk_c3");
+                        geogebrainfo.val(base64);
+                        ggbApplet.setPerspective('1');
+                        geogebrainfo.data('changed', false);
+                    }
+                }
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url 'maths:answerCreate' test_pk=1234 %}'.replace(/1234/, testID),
+                    data: {
+                        'testanswer': testanswerID,
+                        'text': answer,
+                        'item': itemid,
+                        'reasoning': reasoning,
+                        'timespent': timespent,
+                        'base64answer': base64,
+                        'geogebradata': $('#id_geogebradata').val(),
+                        'correct': correct,
+                        'variables': $('#id_variables').val(),
+                        'matistikkanswer': matistikkAnswer,
+                        'xmin': xmin,
+                        'xmax': xmax,
+                        'ymin': ymin,
+                        'ymax': ymax,
+                        'yratio': yratio,
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    dataType: 'json',
+                    success: function success(data) {
+                        answerdiv.data('answerid', data.answer_id);
+                        if (nextItemID == "0") {
+                            nextTask();
+                        }
+                    },
+                    error: function error(xhr) {
+                        if (xhr.readyState != "0") {
+                            alert(xhr.readyState);
+                        }
+                    }
+                });
+            }
+        }
+        if (nextItemID != "0" || testanswerID < 0) {
+            nextTask();
+        }
+    }
+
+    function nextTask() {
+        var itemid = nextItemID;
+        if (itemid < 0) {
+            return false;
+        }
+        var nexttaskbtn = $('#nextTaskBtn');
+        var loadingdiv = $('#loadingdiv');
+        $('#taskBtnList .active').removeClass('active');
+        if (itemid === 0) {
+            nexttaskbtn.removeClass('btn-primary').addClass('btn-success');
+            nexttaskbtn.find('span').text('Lever besvarelse');
+            $('#itembody').addClass('hidden');
+            $('#summary').removeClass('hidden');
+            $('#liSummary').addClass('active');
+            taskcounter = $('#liSummary').find('a').data('tasknr');
+            $.ajax({
+                type: 'GET',
+                data: {
+                    'itemid': itemid,
+                    'testAnswer': testanswerID
+                },
+                url: '{% url 'maths:answerCreate' test_pk=1234 %}'.replace(/1234/, testID),
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data.states, function (index, val) {
+                        $('#status' + val.id).text(val.status);
+                        var summarytask = $('#summarytask' + val.id);
+                        summarytask.removeClass('danger warning success');
+                        if (val.status === 'Besvart') {
+                            summarytask.addClass('success');
+                        } else {
+                            summarytask.addClass('warning');
+                        }
+
+                    });
+                    loadingdiv.addClass('hidden');
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        } else {
+            if (nexttaskbtn.hasClass('btn-success')) {
+                nexttaskbtn.removeClass('btn-success').addClass('btn-primary');
+                nexttaskbtn.find('span').text('Neste oppgave');
+            }
+            if (document.getElementById("tasktext" + itemid)) {
+                tinymce.get('tasktext').setContent($('#tasktext' + itemid).html());
+                var textanswerdiv = $('#textanswerdiv');
+                var reasoningdiv = $('#reasoningdiv');
+                $('.task').addClass('hidden');
+                if (textanswerdiv.hasClass('task' + itemid)) {
+                    var answerdiv = $('#answerdiv' + itemid);
+                    tinymce.get('textanswer').setContent(answerdiv.html());
+                    textanswerdiv.find('label[for=textanswer]').text(answerdiv.data('answertext'));
+                    textanswerdiv.removeClass('hidden');
+                } else if (document.getElementById("answerdiv" + itemid) !== null) {
+                    textanswerdiv.addClass('hidden');
+                    $('#answerdiv' + itemid).removeClass('hidden');
+                }
+                if (reasoningdiv.hasClass('task' + itemid)) {
+                    reasoningdiv.removeClass('hidden');
+                    var itemreasoningdiv = $('#reasoningdiv' + itemid);
+                    tinymce.get('reasoning').setContent(itemreasoningdiv.html());
+                    reasoningdiv.find('label[for=reasoning]').text(itemreasoningdiv.data('reasoningtext'));
+                }
+                if (document.getElementById("geogebrainfo" + itemid) !== null) {
+                    var geogebrainfo = $('#geogebrainfo' + itemid);
+                    var base64 = geogebrainfo.val();
+                    $('#itemdiv').addClass("col-md-6 col-xs-6 col-sm-6").removeClass("col-centered noExtraBorder");
+                    $('#applet_container').removeClass('hidden');
+                    $('#imagediv').addClass('hidden');
+                    $('#extradiv').removeClass('hidden');
+                    ggbApplet.unregisterObjectUpdateListener("updateCorner", geogebraOnchange);
+                    ggbApplet.unregisterAddListener(geogebraOnchange);
+                    ggbApplet.unregisterUpdateListener(geogebraOnchange);
+                    ggbApplet.unregisterRemoveListener(geogebraOnchange);
+                    ggbApplet.setBase64(base64, function () {
+                        loadingdiv.addClass('hidden');
+                        ggbApplet.registerObjectUpdateListener("updateCorner", geogebraOnchange);
+                        ggbApplet.registerAddListener(geogebraOnchange);
+                        ggbApplet.registerUpdateListener(geogebraOnchange);
+                        ggbApplet.registerRemoveListener(geogebraOnchange);
+                        geogebrainfo.data('changed', false);
+                    });
+                }
+                else if (document.getElementById("img_id" + itemid)) {
+                    $('#applet_container').addClass('hidden');
+                    $('#imagediv').removeClass('hidden');
+                    $('.imagetask').addClass('hidden');
+                    $('#img_id' + itemid).removeClass('hidden');
+                    $('#extradiv').removeClass('hidden');
+                    $('#itemdiv').addClass("col-md-6 col-xs-6 col-sm-6").removeClass("col-centered noExtraBorder");
+                    loadingdiv.addClass('hidden');
+                } else {
+                    $('#extradiv').addClass('hidden');
+                    $('#itemdiv').removeClass("col-md-6 col-xs-6 col-sm-6").addClass("col-centered noExtraBorder");
+                    loadingdiv.addClass('hidden');
+                }
+                $('#itemanswer').css('height', $('#answerdiv' + itemid).data('height') + 'px');
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    data: {
+                        'itemid': itemid,
+                        'testAnswer': testanswerID
+                    },
+                    url: '{% url 'maths:answerCreate' test_pk=1234 %}'.replace(/1234/, testID),
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#tasktextdiv').append('<span id="tasktext' + itemid + '" class="hidden">' + data.tasktext + '</span>');
+                        tinymce.get('tasktext').setContent(data.tasktext);
+                        var itemdiv = $('#itemdiv');
+                        $('.task').addClass('hidden');
+                        if (data.answertype === 1) {
+                            var textanswerdiv = $('#textanswerdiv');
+                            textanswerdiv.addClass('task' + itemid).removeClass('hidden');
+                            var answertext = "";
+                            if (data.answertext !== "") {
+                                answertext = data.answertext;
+                            } else {
+                                answertext = "Tekstsvar";
+                            }
+                            textanswerdiv.find('label[for=textanswer]').text(answertext);
+                            textanswerdiv.append('<span id="answerdiv' + itemid + '" class="hidden" data-answertext="' + answertext + '"></span>');
+                            if (data.answer_id) {
+                                $('#answerdiv' + itemid).data('answerid', data.answer_id);
+                                tinymce.get('textanswer').setContent(data.prev_answer);
+                            } else {
+                                tinymce.get('textanswer').setContent("");
+                            }
+                        } else if (data.answertype === 2) {
+                            $('#answertype').append('<div id="answerdiv' + itemid + '" class="task" data-answertype="' + data.answertype + '" style="padding-top:10px;" data-changed="false"></div>');
+                            $('#textanswerdiv').addClass('hidden');
+                            var answerdiv = $('#answerdiv' + itemid);
+                            $.each(data.multiplechoice, function (topindex, value) {
+                                var divArr = [];
+                                divArr.push('<div class="multiplechoice">');
+                                if (value.question) {
+                                    divArr.push('<label for=multipleChoice>');
+                                    divArr.push(value.question);
+                                    divArr.push('</label>')
+                                } else {
+                                    divArr.push('<label for="multiplechoice">Svaralternativer:</label>');
+                                }
+                                divArr.push('<br>');
+                                var optionTab = value.options.split('|||||');
+                                var multiplechoiceclass = "radio";
+                                if (value.checkbox) {
+                                    multiplechoiceclass = "checkbox";
+                                }
+                                if (value.length > 50) {
+                                    $.each(optionTab, function (index, value) {
+                                        divArr.push('<div class="');
+                                        divArr.push(multiplechoiceclass);
+                                        divArr.push('"><label><input type="');
+                                        divArr.push(multiplechoiceclass);
+                                        divArr.push('" value="');
+                                        divArr.push(value);
+                                        divArr.push('" name="radio');
+                                        divArr.push(topindex);
+                                        divArr.push("item");
+                                        divArr.push(itemid);
+                                        divArr.push('">');
+                                        divArr.push(value);
+                                        divArr.push('</label></div>');
+                                    });
+                                } else {
+                                    $.each(optionTab, function (index, value) {
+                                        divArr.push('<label class="');
+                                        divArr.push(multiplechoiceclass);
+                                        divArr.push('-inline"><input type="');
+                                        divArr.push(multiplechoiceclass);
+                                        divArr.push('" value="');
+                                        divArr.push(value);
+                                        divArr.push('" name="radio');
+                                        divArr.push(topindex);
+                                        divArr.push("item");
+                                        divArr.push(itemid);
+                                        divArr.push('">');
+                                        divArr.push(value);
+                                        divArr.push('</label>');
+                                    });
+                                }
+                                if (data.multiplechoice.length - 1 !== topindex || data.reasoning) {
+                                    divArr.push('<hr>');
+                                }
+                                answerdiv.append(divArr.join(''));
+                            });
+                            if (data.answer_id) {
+                                answerdiv.data('answerid', data.answer_id);
+                                var prev_answers = data.prev_answer.split('<--|-->');
+                                $.each(prev_answers, function (index, val) {
+                                    var answerTab = val.split('|||||');
+                                    $.each(answerTab, function (answernr, answer) {
+                                        var multiplechoiceName = "radio" + index + "item" + itemid;
+                                        var multiplechoicediv = answerdiv.find("[name='" + multiplechoiceName + "']");
+                                        $.each(multiplechoicediv, function () {
+                                            if ($(this).val() === answer) {
+                                                $(this).attr('checked', true);
+                                            }
+                                        });
+                                    });
+                                });
+                            }
+                        } else if (data.answertype === 4) {
+                            $('#answertype').append('<div id="answerdiv' + itemid + '" class="task" data-answertype="' + data.answertype + '" data-changed="false" style="padding-top:10px;"></div>');
+                            var answerdiv = $('#answerdiv' + itemid);
+                            $.each(data.inputfields, function (index, val) {
+                                var divArr = [];
+                                divArr.push('<h4>');
+                                divArr.push(val.question);
+                                divArr.push('</h4>');
+                                divArr.push('<form class="form-horizontal">');
+                                $.each(val.inputfields, function (index, val) {
+                                    divArr.push('<div class="form-group" style="margin-right: 0px; margin-left: 0px;">');
+                                    divArr.push('<label style="text-align: left; padding-left: 15px; height: auto" class="control-label col-md-2">');
+                                    divArr.push(val.inputtitle);
+                                    divArr.push(':</label>');
+                                    divArr.push('<div class="col-md-');
+                                    divArr.push(val.inputlength);
+                                    divArr.push('" style="padding-right: 15px; height: auto"><input type="number" data-inputnr="');
+                                    divArr.push(val.inputnr);
+                                    divArr.push('" class="form-control"></div></div>');
+
+                                });
+                                divArr.push('</div>');
+                                if (data.inputfields.length - 1 !== index || data.reasoning) {
+                                    divArr.push('<hr>');
+                                }
+                                answerdiv.append(divArr.join(''));
+                            });
+                            if (data.answer_id) {
+                                answerdiv.data('answerid', data.answer_id);
+                                var prevAnswers = data.prev_answer.split('|||||');
+                                $.each(prevAnswers, function (index, val) {
+                                    var inputnr = index + 1;
+                                    answerdiv.find("[data-inputnr='" + inputnr + "']").val(val);
+                                });
+                            }
+                            $('#textanswerdiv').addClass('hidden');
+                        }
+                        if (data.reasoning) {
+                            var reasoningdiv = $('#reasoningdiv');
+                            reasoningdiv.removeClass('hidden').addClass('task' + itemid);
+                            var reasoningtext = "";
+                            if (data.reasoningtext !== "") {
+                                reasoningtext = data.reasoningtext;
+                            } else {
+                                reasoningtext = "Begrunnelse";
+                            }
+                            if (data.prev_reasoning) {
+                                tinymce.get('reasoning').setContent(data.prev_reasoning);
+                            } else {
+                                tinymce.get('reasoning').setContent("");
+                            }
+                            reasoningdiv.find('label[for=reasoning]').text(reasoningtext);
+                            reasoningdiv.append('<span id="reasoningdiv' + itemid + '" class="hidden" data-reasoningtext="' + reasoningtext + '"></span>');
+                        }
+                        if (data.extra === 1) {
+                            if (itemdiv.hasClass("col-centered")) {
+                                $('#itemdiv').addClass("col-md-6 col-xs-6 col-sm-6").removeClass("col-centered noExtraBorder");
+                                $('#extradiv').removeClass('hidden');
+                            }
+                            $('#applet_container').removeClass('hidden');
+                            $('#imagediv').addClass('hidden');
+                            $('#geogebradiv').append('<input id="geogebrainfo' + itemid + '" hidden>');
+                            var geogebrainfo = $('#geogebrainfo' + itemid);
+                            geogebrainfo.val(data.base64);
+                            geogebrainfo.data('xmin', data.xmin);
+                            geogebrainfo.data('xmax', data.xmax);
+                            geogebrainfo.data('ymin', data.ymin);
+                            geogebrainfo.data('ymax', data.ymax);
+                            geogebrainfo.data('yratio', data.yratio);
+                            geogebrainfo.data('xstep', data.xstep);
+                            geogebrainfo.data('ystep', data.ystep);
+                            geogebrainfo.data('changed', false);
+                            geogebrainfo.data('scaled', false);
+                            geogebrainfo.data('showmenubar', data.showMenuBar);
+                            geogebrainfo.data('algebrainputfield', data.algebraInputField);
+                            geogebrainfo.data('enablelabeldrags', data.enableLabelDrags);
+                            geogebrainfo.data('enableshiftdragzoom', data.enableShiftDragZoom);
+                            geogebrainfo.data('enablerightclick', data.enableRightClick);
+                            ggbApplet.unregisterObjectUpdateListener("updateCorner", geogebraOnchange);
+                            ggbApplet.unregisterAddListener(geogebraOnchange);
+                            ggbApplet.unregisterUpdateListener(geogebraOnchange);
+                            ggbApplet.unregisterRemoveListener(geogebraOnchange);
+                            ggbApplet.setBase64(data.base64, function () {
+                                scaleGeoGebra(itemid);
+                            });
+                        } else if (data.extra == 2) {
+                            if (itemdiv.hasClass("col-centered")) {
+                                $('#itemdiv').addClass("col-md-6 col-xs-6 col-sm-6").removeClass("col-centered noExtraBorder");
+                                $('#extradiv').removeClass('hidden');
+                            }
+                            $('#applet_container').addClass('hidden');
+                            $('#imagediv').removeClass('hidden');
+                            $('.imagetask').addClass('hidden');
+                            $('#imagediv').append('<img id="img_id' + itemid + '" src="' + data.image + '" width="100%" height="100%" style="object-fit: contain" class="imagetask" />');
+                            loadingdiv.addClass('hidden');
+                        } else if (data.extra == 4) {
+                            $('#extradiv').addClass('hidden');
+                            $('#itemdiv').removeClass("col-md-6 col-xs-6 col-sm-6").addClass("col-centered noExtraBorder");
+                            loadingdiv.addClass('hidden');
+                        } else {
+                            loadingdiv.addClass('hidden');
+                        }
+                        var tasktextdivheight = $('#tasktextdiv').outerHeight();
+                        var answerdivheight = window.innerHeight - tasktextdivheight - tasknavHeight - taskheaderheight - panelbodypaddingheight;
+                        $('#itemanswer').css('height', answerdivheight + "px");
+                        $('#answerdiv' + itemid).data('height', answerdivheight);
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseText);
+                    }
+                });
+            }
+            tasktimer = Date.now();
+            $('#itembody').removeClass('hidden');
+            $('#summary').addClass('hidden');
+            $('#liOppgave' + itemid).addClass('active');
+            taskcounter = $('#liOppgave' + itemid).find('a').data('tasknr');
+            var scrollCounter = 0;
+            if (taskcounter > 2) {
+                scrollCounter = parseInt(taskcounter) - 3;
+            } else {
+                scrollCounter = parseInt(taskcounter) - 2;
+            }
+            var scrollToId = $("#taskBtnList").find("[data-tasknr='" + scrollCounter + "']").data('itemid');
+            $('#taskBtnList').scrollTo(document.getElementById("liOppgave" + scrollToId));
+
+        }
+        $('#tasktitlenr').text(taskcounter + 1);
+    }
+
+    $('#nextTaskBtn').on('click', function () {
+        var nextTask = taskcounter + 1;
+        var nextTaskID = $("#taskBtnList").find("[data-tasknr='" + nextTask + "']").data('itemid');
+        if ($('#loadingdiv').hasClass('hidden')) {
+            if (nextTaskID) {
+                goToTask(nextTaskID);
+            } else {
+                if ($('#nextTaskBtn').hasClass('btn-success')) {
+                    if ($('.bootbox').is(':visible')) {
+                        return false;
+                    } else {
+                        bootbox.confirm({
+                            size: 'large',
+                            title: "Lever Besvarelse",
+                            message: "Er du sikker på at du vil levere inn din besvarelse?",
+                            buttons: {
+                                cancel: {
+                                    label: '<i class="fa fa-times"></i> Avbryt'
+                                },
+                                confirm: {
+                                    label: '<i class="fa fa-check"></i> Lever inn',
+                                    className: 'btn-success'
+                                }
+                            },
+                            callback: function (result) {
+                                if (result) {
+                                    $('#answerForm').submit();
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    goToTask(0);
+                }
+            }
+        } else {
+            return false;
+        }
+
+    });
+
+    $('#prevTaskBtn').on('click', function () {
+        if ($('.bootbox').is(':visible')) {
+            bootbox.hideAll();
+        }
+        var nextTask = taskcounter - 1;
+        if (nextTask < 0 || !$('#loadingdiv').hasClass('hidden')) {
+            return false;
+        }
+        var nextTaskID = $("#taskBtnList").find("[data-tasknr='" + nextTask + "']").data('itemid');
+        if (nextTaskID) {
+            goToTask(nextTaskID);
+        } else {
+            goToTask(0);
+        }
+    });
+    $(document).keyup(function (e) {
+        if (e.keyCode == 37) {
+            $('#prevTaskBtn').click();
+            return false;
+        } else if (e.keyCode == 39) {
+            $('#nextTaskBtn').click();
+            return false;
+        }
+    });
+    /* On window leave - save the answer ---------------------------------------------------------------------------- */
+    window.addEventListener("beforeunload", function (e) {
+        nextItemID = -1;
+        saveTask();
+        console.log('LEVER SISTE OPPDATERING');
+    });
+
+    function leavetest() {
+        nextItemID = -1;
+        window.history.back();
+    }
+
+    /* Function to get the answers multiplechoice or inputdivs------------------------------------------------------- */
+
+    function getMultipleChoiceAnswer(itemid) {
+        var answer = "";
+        var answerdiv = $('#answerdiv' + itemid);
+        $.each(answerdiv.find('.multiplechoice'), function (index, val) {
+            var answered = false;
+            $.each($(val).find(':input:checked'), function (x, checked) {
+                answer += $(checked).val() + "|||||";
+                answered = true;
+            });
+            if (answered) {
+                answer = answer.slice(0, -5);
+            }
+            answer += '<--|-->';
+        });
+        return answer.slice(0, -7);
+    }
+
+    function getInputFieldAnswer(itemid) {
+        var answer = "";
+        var answerdiv = $('#answerdiv' + itemid);
+        $.each(answerdiv.find(':input'), function (index, val) {
+            answer += $(val).val() + '|||||';
+        });
+        return answer.slice(0, -5);
+    }
+
+    /* Sets the data('change') to true for multiplechoice and input divs if a changes is made */
+    $(document).on('change', '#itemanswer', function () {
+        var itemid = ($('#taskBtnList .active').find('a').data('itemid'));
+        $('#answerdiv' + itemid).data('changed', true);
+    });
+    /* Open exit modal ----------------------------------------------------------------------------------------- */
+    $('.exitTest').click(function () {
+        $('#exitTestModal').modal('show');
+    });
+
+    /* Load GeoGebra applet ----------------------------------------------------------------------------------------- */
+    if (document.getElementById("applet_container") !== null) {
+        var itemid = ($('#taskBtnList .active').find('a').data('itemid'));
+        if (document.getElementById("geogebrainfo" + itemid) !== null) {
+            var geoInfo = $('#geogebrainfo' + itemid);
+            var base64 = geoInfo.val();
+            var height = geoInfo.data('height');
+            var width = geoInfo.data('width');
+            var showMenuBar = false;
+            var enableLabelDrags = false;
+            var enableShiftDragZoom = false;
+            var enableRightClick = false;
+            var algebraInputField = false;
+            if (geoInfo.data('showmenubar') == 'True') {
+                showMenuBar = true;
+            }
+            if (geoInfo.data('enablelabeldrags') == 'True') {
+                enableLabelDrags = true;
+            }
+            if (geoInfo.data('enableshiftdragzoom') == 'True') {
+                enableShiftDragZoom = true;
+            }
+            if (geoInfo.data('enablerightclick') == 'True') {
+                enableRightClick = true;
+            }
+            if (geoInfo.data('algebrainputfield') == 'True') {
+                algebraInputField = true;
+            }
+            if (geoInfo.data('xmin') !== 'None') {
+                height = window.innerHeight - 55;
+                width = (window.innerWidth * 0.5) - 30;
+            }
+            parameters = {
+                "id": "ggbApplet",
+                "width": width,
+                "height": height,
+                "language": "nb",
+                "showToolBar": true,
+                "showMenuBar": true,
+                "allowStyleBar": false,
+                "enableLabelDrags": enableLabelDrags,
+                "enableShiftDragZoom": enableShiftDragZoom,
+                "enableRightClick": enableRightClick,
+                "enable3d": false,
+                "borderColor": "#FFFFFF",
+                "enableCAS": false,
+                "capturingThreshold": null,
+                "showToolBarHelp": false,
+                "errorDialogsActive": true,
+                "showTutorialLink": false,
+                "showStartTooltip": false,
+                "showLogging": false,
+                "preventFocus": true,
+                "useBrowserForJS": false,
+                "ggbBase64": base64
+            };
+        } else {
+            parameters = {
+                "id": "ggbApplet",
+                "width": (window.innerWidth * 0.5) - 30,
+                "height": window.innerHeight - 52,
+                "language": "nb",
+                "showToolBar": true,
+                "showMenuBar": false,
+                "borderColor": "#FFFFFF",
+                "perspective": "G"
+            };
+        }
+
+        parameters.appletOnLoad = function () {
+            var itemid = ($('#taskBtnList .active').find('a').data('itemid'));
+            if (!geogebraLoaded) {
+                ggbApplet.setSize((window.innerWidth / 2) - 5, window.innerHeight - 52);
+                ggbApplet.showMenuBar(showMenuBar);
+                ggbApplet.showAlgebraInput(algebraInputField);
+                if (document.getElementById("geogebrainfo" + itemid) !== null) {
+                    scaleGeoGebra(itemid);
+                } else {
+                    $('#applet_container').addClass('hidden');
+                }
+                var starttestbtn = $('#starttestbtn');
+                starttestbtn.html('<i class="far fa-play-circle"></i> Start test ');
+                starttestbtn.attr('disabled', false);
+                starttestbtn.focus();
+                geogebraLoaded = true;
+            } else {
+                var geogebradiv = $('#geogebrainfo' + itemid);
+                if (geogebradiv.data('showmenubar') && geogebradiv.data('showmenubar') !== "False") {
+                    showMenuBar = true;
+                } else {
+                    showMenuBar = false;
+                }
+                if (geogebradiv.data('algebrainputfield') && geogebradiv.data('algebrainputfield') !== "False") {
+                    algebraInputField = true;
+                } else {
+                    algebraInputField = false;
+                }
+                ggbApplet.showMenuBar(showMenuBar);
+                ggbApplet.showAlgebraInput(algebraInputField);
+            }
+        };
+
+        var applet = new GGBApplet(parameters, '5.0', 'applet_container');
+        applet.setPreviewImage('http://bildr.no/image/cEtUd3R6.jpeg', 'https://www.geogebra.org/images/GeoGebra_loading.png?v=1490705653', 'https://www.geogebra.org/images/applet_play.png?v=1490705653');
+        window.onload = function () {
+            applet.inject('applet_container', 'preferhtml5');
+        };
+    } else {
+        var starttestbtn = $('#starttestbtn');
+        starttestbtn.html('<i class="far fa-play-circle"></i> Start test ');
+        $('#starttestbtn').attr('disabled', false);
+    }
+    /* Function that sets the correct view in geogebra  */
+    function scaleGeoGebra(itemid) {
+        var geogebraInfo = $('#geogebrainfo' + itemid);
+        var xmin = parseFloat(geogebraInfo.data('xmin'));
+        var xmax = parseFloat(geogebraInfo.data('xmax'));
+        var ymin = parseFloat(geogebraInfo.data('ymin'));
+        var ymax = parseFloat(geogebraInfo.data('ymax'));
+        var yratio = parseFloat(geogebraInfo.data('yratio'));
+        var xstep = parseFloat(geogebraInfo.data('xstep'));
+        var ystep = parseFloat(geogebraInfo.data('ystep'));
+        ggbApplet.setCoordSystem(xmin, xmax, ymin, ymax);
+        ggbApplet.evalCommand("matistikk_ratio = (x(Corner(5))/(Distance[Corner(1),Corner(2)])) / (y(Corner(5))/(Distance[Corner(2),Corner(3)]))");
+        if (yratio < 1) {
+            var ratio = 1 / yratio;
+            var geoRatio = ggbApplet.getValue("matistikk_ratio") * ratio;
+            if (geoRatio < 1) {
+                geoRatio = 1 / geoRatio;
+                if (ymin > 0) {
+                    var deltaY = ymax - ymin;
+                    var newDeltaY = deltaY * geoRatio;
+                    var diff = (newDeltaY - deltaY) / 2;
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                } else if (ymax < 0) {
+                    var deltaY = Math.abs(ymin) - Math.abs(ymax);
+                    var newDeltaY = deltaY * geoRatio;
+                    var diff = (newDeltaY - deltaY) / 2;
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                } else {
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                }
+            } else {
+                if (xmin > 0) {
+                    var deltaX = xmax - xmin;
+                    var newDeltaX = deltaX * geoRatio;
+                    var diff = (newDeltaX - deltaX) / 2;
+                    ggbApplet.setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                } else if (xmax < 0) {
+                    var deltaX = Math.abs(xmin) - Math.abs(xmax);
+                    var newDeltaX = deltaX * geoRatio;
+                    var diff = (newDeltaX - deltaX) / 2;
+                    ggbApplet.setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                } else {
+                    ggbApplet.setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                }
+            }
+            // X-akse er lengre enn y-akse ------ f.eks. 1:2
+        } else {
+            var ratio = yratio;
+            var geoRatio = ratio / ggbApplet.getValue("matistikk_ratio");
+            if (geoRatio < 1) {
+                geoRatio = 1 / geoRatio;
+                if (xmin > 0) {
+                    var deltaX = xmax - xmin;
+                    var newDeltaX = deltaX * geoRatio;
+                    var diff = (newDeltaX - deltaX) / 2;
+                    ggbApplet.setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                } else if (xmax < 0) {
+                    var deltaX = Math.abs(xmin) - Math.abs(xmax);
+                    var newDeltaX = deltaX * geoRatio;
+                    var diff = (newDeltaX - deltaX) / 2;
+                    ggbApplet.setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                } else {
+                    ggbApplet.setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                }
+            } else {
+                if (ymin > 0) {
+                    var deltaY = ymax - ymin;
+                    var newDeltaY = deltaY * geoRatio;
+                    var diff = (newDeltaY - deltaY) / 2;
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                } else if (ymax < 0) {
+                    var deltaY = Math.abs(ymin) - Math.abs(ymax);
+                    var newDeltaY = deltaY * geoRatio;
+                    var diff = (newDeltaY - deltaY) / 2;
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                } else {
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                }
+            }
+        }
+        ggbApplet.deleteObject("matistikk_ratio");
+        ggbApplet.setAxisSteps(1, xstep, ystep, 1);
+        geogebraInfo.data('scaled', true);
+        geogebraInfo.data('changed', true);
+        ggbApplet.evalCommand("updateCorner = Corner(1)");
+        ggbApplet.registerObjectUpdateListener("updateCorner", geogebraOnchange);
+        ggbApplet.registerAddListener(geogebraOnchange);
+        ggbApplet.registerUpdateListener(geogebraOnchange);
+        ggbApplet.registerRemoveListener(geogebraOnchange);
+        $('#loadingdiv').addClass('hidden');
+    }
+
+    /* onchangefunction for GeoGebra----------------------------------------------------------------------------------*/
+    function geogebraOnchange() {
+        var itemid = ($('#taskBtnList .active').find('a').data('itemid'));
+        var geogebrainfo = $('#geogebrainfo' + itemid);
+        geogebrainfo.data('changed', true);
+    }
+
+
+    /* Loads tinymce editor ------------------------------------------------------------------------------------------*/
+    var panelheight = $('.panel-heading').outerHeight();
+    var navheight = $('#tasknav').outerHeight();
+    var maxTaskHeight = (window.innerHeight - panelheight - navheight );
+    var startdivbodyHeight = window.innerHeight - $('#startingtestname').outerHeight(true) - $('#startingtestname').outerHeight(true) - $('#startingtaskcount').outerHeight(true) - $('#startingdesc').outerHeight() - $('#starttestbtn').outerHeight(true);
+    var tasktextPercent = 0.35;
+    tinymce.init({
+        selector: '#startdivbody',
+        plugins: 'placeholder',
+        content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+        toolbar: false,
+        menubar: false,
+        statusbar: false,
+        height: startdivbodyHeight,
+        readonly: 1,
+        body_id: 'testdescID'
+    });
+    tinymce.init({
+        selector: '#tasktext',
+        plugins: 'placeholder autoresize',
+        content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+        toolbar: false,
+        menubar: false,
+        statusbar: false,
+        autoresize_max_height: maxTaskHeight * tasktextPercent,
+        autoresize_bottom_margin: 0,
+        readonly: 1,
+        body_id: 'tasktextID'
+    });
+    tinymce.init({
+        selector: '#textanswer',
+        resize: true,
+        plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table placeholder tabfocus autoresize',
+        content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+        toolbar: [
+            'bold italic underline fontsizeselect | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen '
+        ],
+        statusbar: false,
+        fontsize_formats: '8pt 10pt 12pt 14pt 18pt',
+        tabfocus_elements: "#nextTaskBtn",
+        menubar: false,
+        autoresize_bottom_margin: 0,
+        autoresize_min_height: 150,
+        setup: function (ed) {
+            ed.on('change', function (e) {
+                var itemid = ($('#taskBtnList .active').find('a').data('itemid'));
+                $('#answerdiv' + itemid).data('changed', true);
+            });
+        }
+    });
+    tinymce.init({
+        selector: '#reasoning',
+        plugins: 'equationeditor  textcolor lists fullscreen autolink link tabfocus table placeholder tabfocus autoresize',
+        content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+        toolbar: [
+            'bold italic underline fontsizeselect | forecolor bullist numlist | subscript superscript equationeditor link table | fullscreen '
+        ],
+        statusbar: false,
+        fontsize_formats: '8pt 10pt 12pt 14pt 1 8pt',
+        tabfocus_elements: "nextTaskBtn",
+        menubar: false,
+        autoresize_bottom_margin: 0,
+        autoresize_min_height: 150,
+        setup: function (ed) {
+            ed.on('change', function (e) {
+                var itemid = ($('#taskBtnList .active').find('a').data('itemid'));
+                $('#reasoningdiv' + itemid).data('changed', true);
+            });
+        }
+    });
+
+</script>
+</html>

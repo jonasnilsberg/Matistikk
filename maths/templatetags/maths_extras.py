@@ -1,6 +1,6 @@
 from django import template
 from maths.models import Answer, GeogebraAnswer, MultipleChoiceTask, GeogebraTask, MultipleChoiceOption, \
-    InputFieldTask, Directory, ImageTask
+    InputFieldTask, Directory, ImageTask, TestAnswer
 from administration.models import Gruppe, Person, Grade
 
 register = template.Library()
@@ -14,10 +14,10 @@ def answered(person, test):
     :param test: The test
     :return: The answer if found, or an empty string if not
     """
-    for answer in person.answer_set.all():
-        if answer.test_id == test.id:
-            return answer
-    return ""
+    if TestAnswer.objects.filter(test=test, user=person, status=3).exists():
+        return TestAnswer.objects.get(test=test, user=person, status=3)
+    else:
+        return ""
 
 
 @register.simple_tag

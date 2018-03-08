@@ -103,7 +103,8 @@
                                 <th>Gruppenavn</th>
                                 <th>Ansvarlig</th>
                                 <th>Klassetilhørighet</th>
-                                {% if request.user.role == 4 or request.user.role == 3 %}<th>Gruppeinformasjon</th>{% endif %}
+                                {% if request.user.role == 4 or request.user.role == 3 %}
+                                    <th>Gruppeinformasjon</th>{% endif %}
                                 <th>Se medlemmer</th>
                             </tr>
                             </thead>
@@ -115,7 +116,8 @@
                                     <td>{% if group.grade %}{{ group.grade }}{% else %}-{% endif %}</td>
                                     {% if request.user.role == 4 or request.user.role == 3 %}
                                         <td>
-                                            <button class="btn btn-info goToGroup" value="{{ group.id }}" disabled="disabled"
+                                            <button class="btn btn-info goToGroup" value="{{ group.id }}"
+                                                    disabled="disabled"
                                                     data-available="{% group_check group request.user %}"><i
                                                     class="fa fa-users"
                                                     aria-hidden="true"></i>
@@ -157,7 +159,7 @@
                                     <td>{{ test.task_collection.test_name }}</td>
                                     <td>{{ test.published }}</td>
                                     <td>{% if test.dueDate %}{{ test.dueDate }}{% else %}Ingen svarfrist{% endif %}</td>
-                                    <td>{% if answer %}{{ answer.date_answered }}{% else %}-{% endif %}</td>
+                                    <td>{% if answer %}{{ answer.delivered }}{% else %}-{% endif %}</td>
                                     <td>
                                         <button class='btn btn-info goToAnswer' disabled="disabled"
                                                 {% if answer %}value="{{ answer.id }}"{% else %}value=""{% endif %}
@@ -221,6 +223,14 @@
          * has permissions to go to the grades detail view.
          */
         $(document).ready(function () {
+            var navbarHeight = 55;
+            var headingHeight = $('.panel-heading').outerHeight();
+            var navtabHeight = $('.nav-tabs').outerHeight();
+            var footerHeight = $('.panel-footer').outerHeight();
+            var padding = 30;
+            var tabHeight = window.innerHeight - navbarHeight - headingHeight - navtabHeight - footerHeight - padding;
+            $('.tab-content').css('height', tabHeight + 'px');
+            $('.tab-content').css('max-height', tabHeight + 'px');
 
             var grades = $('#gradetable tr').not(':first');
             grades.each(function () {
@@ -292,8 +302,8 @@
         });
 
         $('.goToGroup').click(function () {
-           var url = "{% url 'administration:groupDetail' group_pk=1234 %}".replace(/1234/, $(this).val());
-           window.location.replace(url);
+            var url = "{% url 'administration:groupDetail' group_pk=1234 %}".replace(/1234/, $(this).val());
+            window.location.replace(url);
         });
         /**
          * Functions that redirects to the grades detailView.

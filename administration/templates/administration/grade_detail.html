@@ -11,356 +11,466 @@
 {% bootstrap_messages %}
 
 {% block body %}
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h2>Klasse: {{ grade.grade_name }}</h2>
-        {% if request.user.role == 3  or request.user.role == 4 %}
-            <h5>Skole: <a href="{% url 'administration:schoolDetail' grade.school_id %}">{{ grade.school }}</a></h5>
-        {% else %}
-            <h5>Skole: {{ grade.school }}</h5>
-        {% endif %}
-        <h5>Kontaktperson: {{ grade.school.school_administrator.get_full_name }}</h5>
-        <div class="input-group">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2>Klasse: {{ grade.grade_name }}</h2>
+            {% if request.user.role == 3  or request.user.role == 4 %}
+                <h5>Skole: <a href="{% url 'administration:schoolDetail' grade.school_id %}">{{ grade.school }}</a></h5>
+            {% else %}
+                <h5>Skole: {{ grade.school }}</h5>
+            {% endif %}
+            <h5>Kontaktperson: {{ grade.school.school_administrator.get_full_name }}</h5>
+            <div class="input-group">
                 <span class="input-group-addon">
                         <i class="fa fa-search"></i>
                     </span>
-            <input type="text" class="form-control" id="search"
-                   onkeyup="allSearch('alltable'); allSearch('studenttable'); allSearch('teachertable'); groupSearch('grouptable'); allSearch('testtable')"
-                   placeholder="Søk etter bruker...">
+                <input type="text" class="form-control" id="search"
+                       onkeyup="allSearch('alltable'); allSearch('studenttable'); allSearch('teachertable'); groupSearch('grouptable'); allSearch('testtable')"
+                       placeholder="Søk etter bruker...">
+            </div>
         </div>
-    </div>
-    <div class="panel-body">
-        {% bootstrap_messages %}
-        <ul class="nav nav-tabs">
-            <li class="nav active"><a href="#A" data-toggle="tab">Brukere</a></li>
-            <li class="nav"><a href="#B" data-toggle="tab">Elever</a></li>
-            <li class="nav"><a href="#C" data-toggle="tab">Lærere</a></li>
-            <li class="nav"><a href="#D" data-toggle="tab">Grupper</a></li>
-            <li class="nav"><a href="#E" data-toggle="tab">Tester</a></li>
-        </ul>
-        <div class="tab-content">
-            <!-- All Users Tab -->
-            <div class="tab-pane fade in active" id="A">
-                <table class="table table-hover table-striped table-responsive" id="alltable">
-                    <thead>
-                    <tr>
-                        <th>Fornavn</th>
-                        <th>Etternavn</th>
-                        <th>Brukernavn</th>
-                        <th>Brukertype</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for person in persons %}
-                        {% if person.is_active %}
-                            <tr class="clickable-row"
-                                data-href="{% url 'administration:PersonDetailFromGrade' school_pk=grade.school_id grade_pk=grade.id slug=person.username %}"
-                                style="cursor: pointer">
-                                <td>{{ person.first_name }}</td>
-                                <td>{{ person.last_name }}</td>
-                                <td>{{ person.username }}</td>
-                                <td>
-                                    {% if person.role == 2 %}
-                                        Lærer
-                                    {% elif person.role == 3 %}
-                                        Skoleadministrator
-                                    {% elif person.role == 4 %}
-                                        Administrator
-                                    {% else %}
-                                        Elev
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <!-- Student Users Tab -->
-            <div class="tab-pane fade" id="B">
-                <table class="table table-hover table-striped table-responsive" id="studenttable">
-                    <thead>
-                    <tr>
-                        <th>Fornavn</th>
-                        <th>Etternavn</th>
-                        <th>Brukernavn</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for person in persons %}
-                        {% if person.role == 1 %}
-                            <tr class="clickable-row"
-                                data-href="{% url 'administration:PersonDetailFromGrade' grade.school_id grade.id person.username %}"
-                                style="cursor: pointer">
-                                <td>{{ person.first_name }}</td>
-                                <td>{{ person.last_name }}</td>
-                                <td>{{ person.username }}</td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <!-- Teacher Users Tab -->
-            <div class="tab-pane fade" id="C">
-                <table class="table table-hover table-striped table-responsive" id="teachertable">
-                    <thead>
-                    <tr>
-                        <th>Fornavn</th>
-                        <th>Etternavn</th>
-                        <th>Brukernavn</th>
-                        <th>Brukertype</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for person in persons %}
-                        {% if person.role == 2  and person.is_active or person.role == 3 and person.is_active or person.role == 4 and person.is_active %}
-                            <tr class="clickable-row"
-                                data-href="{% url 'administration:PersonDetailFromGrade' school_pk=grade.school_id grade_pk=grade.id slug=person.username %}"
-                                style="cursor: pointer">
-                                <td>{{ person.first_name }}</td>
-                                <td>{{ person.last_name }}</td>
-                                <td>{{ person.username }}</td>
-                                <td>
-                                    {% if person.role == 2 %}
-                                        Lærer
-                                    {% elif person.role == 3 %}
-                                        Skoleadministrator
-                                    {% elif person.role == 4 %}
-                                        Superbruker
-                                    {% else %}
-                                        Elev
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="tab-pane fade" id="D">
-                <table class="table table-hover table-striped table-responsive" id="grouptable">
-                    <thead>
-                    <tr>
-                        <th>Gruppenavn</th>
-                        <th>Ansvarlig</th>
-                        {% if request.user.role == 4 or request.user.role == 3 %}
-                            <th>Gruppeinfo</th>
-                        {% endif %}
-                        <th>Medlemmer</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for group in groups %}
-                    <tr>
-                        <td>{{ group.group_name }}</td>
-                        <td>{{ group.creator.get_full_name }}</td>
-                        {% if request.user.role == 4 or request.user.role == 3 %}
-                            <td><a class="btn btn-info"
-                                   href="{% url 'administration:groupDetail' group.id %}"><i class="fa fa-users"
-                                                                                             aria-hidden="true"></i>
-                                Se gruppeinfo</a></td>
-                        {% endif %}
-                        <td>
-                            <button id="{{ group.id }}" value="{{ group.group_name }}" class='btn btn-info'
-                                    data-toggle='modal'
-                                    data-target='#groupMemberModal' onclick="memberBtn(this)">
-                                <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
-                                Medlemmer
-                            </button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="tab-pane fade" id="E">
-                <table class="table table-hover table-striped table-responsive" id="testtable">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Navn</th>
-                        <th>Publisert</th>
-                        <th>Laget av</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for test in grade.tests.all %}
-                        <tr data-href="{% url 'maths:testGradeDetail' test.id grade.id %}"
-                            style="cursor: pointer">
-                            <td>{{ test.id }}</td>
-                            <td>{{ test.task_collection.test_name }}</td>
-                            <td>{{ test.published }}</td>
-                            <td>{{ test.task_collection.author.get_full_name }}</td>
-                            <td>
-                                <a href="{% url 'maths:answerCreate' test.id %}" class="btn btn-info"
-                                   type="button" value="{{ test.id }}"><i
-                                        class="fa fa-tasks" aria-hidden="true"></i> Se gjennom test
-                                </a>
-                            </td>
+        <div class="panel-body">
+            {% bootstrap_messages %}
+            <ul class="nav nav-tabs">
+                <li class="nav active"><a href="#A" data-toggle="tab">Brukere</a></li>
+                <li class="nav"><a href="#B" data-toggle="tab">Elever</a></li>
+                <li class="nav"><a href="#C" data-toggle="tab">Lærere</a></li>
+                <li class="nav"><a href="#D" data-toggle="tab">Grupper</a></li>
+                <li class="nav"><a href="#E" data-toggle="tab">Tester</a></li>
+            </ul>
+            <div class="tab-content">
+                <!-- All Users Tab -->
+                <div class="tab-pane fade in active" id="A">
+                    <table class="table table-hover table-striped table-responsive" id="alltable">
+                        <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Brukernavn</th>
+                            <th>Brukertype</th>
                         </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {% for person in persons %}
+                            {% if person.is_active %}
+                                <tr class="clickable-row"
+                                    data-href="{% url 'administration:PersonDetailFromGrade' school_pk=grade.school_id grade_pk=grade.id slug=person.username %}"
+                                    style="cursor: pointer">
+                                    <td>{{ person.first_name }}</td>
+                                    <td>{{ person.last_name }}</td>
+                                    <td>{{ person.username }}</td>
+                                    <td>
+                                        {% if person.role == 2 %}
+                                            Lærer
+                                        {% elif person.role == 3 %}
+                                            Skoleadministrator
+                                        {% elif person.role == 4 %}
+                                            Administrator
+                                        {% else %}
+                                            Elev
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Student Users Tab -->
+                <div class="tab-pane fade" id="B">
+                    <table class="table table-hover table-striped table-responsive" id="studenttable">
+                        <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Brukernavn</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for person in persons %}
+                            {% if person.role == 1 %}
+                                <tr class="clickable-row"
+                                    data-href="{% url 'administration:PersonDetailFromGrade' grade.school_id grade.id person.username %}"
+                                    style="cursor: pointer">
+                                    <td>{{ person.first_name }}</td>
+                                    <td>{{ person.last_name }}</td>
+                                    <td>{{ person.username }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Teacher Users Tab -->
+                <div class="tab-pane fade" id="C">
+                    <table class="table table-hover table-striped table-responsive" id="teachertable">
+                        <thead>
+                        <tr>
+                            <th>Fornavn</th>
+                            <th>Etternavn</th>
+                            <th>Brukernavn</th>
+                            <th>Brukertype</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for person in persons %}
+                            {% if person.role == 2  and person.is_active or person.role == 3 and person.is_active or person.role == 4 and person.is_active %}
+                                <tr class="clickable-row"
+                                    data-href="{% url 'administration:PersonDetailFromGrade' school_pk=grade.school_id grade_pk=grade.id slug=person.username %}"
+                                    style="cursor: pointer">
+                                    <td>{{ person.first_name }}</td>
+                                    <td>{{ person.last_name }}</td>
+                                    <td>{{ person.username }}</td>
+                                    <td>
+                                        {% if person.role == 2 %}
+                                            Lærer
+                                        {% elif person.role == 3 %}
+                                            Skoleadministrator
+                                        {% elif person.role == 4 %}
+                                            Superbruker
+                                        {% else %}
+                                            Elev
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="D">
+                    <table class="table table-hover table-striped table-responsive" id="grouptable">
+                        <thead>
+                        <tr>
+                            <th>Gruppenavn</th>
+                            <th>Ansvarlig</th>
+                            {% if request.user.role == 4 or request.user.role == 3 %}
+                                <th>Gruppeinfo</th>
+                            {% endif %}
+                            <th>Medlemmer</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for group in groups %}
+                            <tr>
+                                <td>{{ group.group_name }}</td>
+                                <td>{{ group.creator.get_full_name }}</td>
+                                {% if request.user.role == 4 or request.user.role == 3 %}
+                                    <td><a class="btn btn-info"
+                                           href="{% url 'administration:groupDetail' group.id %}"><i class="fa fa-users"
+                                                                                                     aria-hidden="true"></i>
+                                        Se gruppeinfo</a></td>
+                                {% endif %}
+                                <td>
+                                    <button id="{{ group.id }}" value="{{ group.group_name }}" class='btn btn-info'
+                                            data-toggle='modal'
+                                            data-target='#groupMemberModal' onclick="memberBtn(this)">
+                                        <span class='glyphicon glyphicon-user' aria-hidden='true'></span>
+                                        Medlemmer
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="E">
+                    <table class="table table-hover table-striped table-responsive" id="testtable">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Navn</th>
+                            <th>Publisert</th>
+                            <th>Laget av</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for test in grade.tests.all %}
+                            <tr data-href="{% url 'maths:testGradeDetail' test.id grade.id %}"
+                                style="cursor: pointer">
+                                <td>{{ test.id }}</td>
+                                <td>{{ test.task_collection.test_name }}</td>
+                                <td>{{ test.published }}</td>
+                                <td>{{ test.task_collection.author.get_full_name }}</td>
+                                <td>
+                                    <a href="{% url 'maths:answerCreate' test.id %}" class="btn btn-info"
+                                       type="button" value="{{ test.id }}"><i
+                                            class="fa fa-tasks" aria-hidden="true"></i> Se gjennom test
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="panel-footer">
-    {% if request.user.role == 4 or request.user.role == 3 %}
-        <a class="btn btn-primary"
-           href="{% url 'administration:gradeUpdate' grade.school_id grade.id %}"><span
-                class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
-    {% endif %}
-    <div class="btn-group dropup">
-        <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false" id="addStudentDropdown"><span
-                class="glyphicon glyphicon-plus"
-                aria-hidden="true"></span>
-            Legg til elev <span class="caret"></span></button>
-        <ul class="dropdown-menu">
-            <li><a href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}" id="addNewStudentBtn">Opprett
-                ny
-                elev</a></li>
-            <li><a data-toggle='modal' href='#AddStudentModal' id="addExistingStudent">Legg til eksisterende
-                elev</a></li>
-            <li><a data-toggle='modal' href='#masseregModal'>Masseregistrering av elever</a></li>
-        </ul>
-    </div>
-    {% if request.user.role == 4 or request.user.role == 3 %}
+    <div class="panel-footer">
+        {% if request.user.role == 4 or request.user.role == 3 %}
+            <a class="btn btn-primary"
+               href="{% url 'administration:gradeUpdate' grade.school_id grade.id %}"><span
+                    class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Oppdater klasse</a>
+        {% endif %}
         <div class="btn-group dropup">
             <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false" id="addTeacherDropdown"><span
+                    aria-haspopup="true" aria-expanded="false" id="addStudentDropdown"><span
                     class="glyphicon glyphicon-plus"
                     aria-hidden="true"></span>
-                Legg til lærer <span class="caret"></span></button>
+                Legg til elev <span class="caret"></span></button>
             <ul class="dropdown-menu">
-                <li><a href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"
-                       id="addNewTeacherBtn">Opprett ny
-                    lærer</a></li>
-                <li><a data-toggle='modal' href='#AddTeacherModal' id="addExistingTeacherBtn">Legg til eksisterende
-                    lærer</a></li>
+                <li><a href="{% url 'administration:gradeAddStudent' grade.school_id grade.id %}" id="addNewStudentBtn">Opprett
+                    ny
+                    elev</a></li>
+                <li><a data-toggle='modal' href='#AddStudentModal' id="addExistingStudent">Legg til eksisterende
+                    elev</a></li>
+                <li><a data-toggle='modal' href='#masseregModal'>Masseregistrering av elever</a></li>
             </ul>
         </div>
+        {% if request.user.role == 4 or request.user.role == 3 %}
+            <div class="btn-group dropup">
+                <button type="button" class="btn btn-primary  dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false" id="addTeacherDropdown"><span
+                        class="glyphicon glyphicon-plus"
+                        aria-hidden="true"></span>
+                    Legg til lærer <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'administration:gradeAddTeacher' grade.school_id grade.id %}"
+                           id="addNewTeacherBtn">Opprett ny
+                        lærer</a></li>
+                    <li><a data-toggle='modal' href='#AddTeacherModal' id="addExistingTeacherBtn">Legg til eksisterende
+                        lærer</a></li>
+                </ul>
+            </div>
 
-        <a class="btn btn-primary"
-           href="{% url 'administration:gradeGroupCreate' grade.school_id grade.id %}"><span
-                class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til gruppe</a>
-    {% endif %}
-</div>
-</div>
+            <a class="btn btn-primary"
+               href="{% url 'administration:gradeGroupCreate' grade.school_id grade.id %}"><span
+                    class="glyphicon glyphicon-plus" aria-hidden="true"></span> Legg til gruppe</a>
+        {% endif %}
+    </div>
+    </div>
 
-<script>
-    /**
-     * This function makes the rows of the user-, student-, teacher- and admintable clickable, hides different fields
-     * and buttons and reloads when some modals close
-     */
-    $(document).ready(function ($) {
-        $("#filterStudents").hide();
-        $("#filterTeachers").hide();
-        $("#successMessageStudent").hide();
-        $("#successMessageTeacher").hide();
+    <script>
         /**
-         * This function alters the placeholder for the searchfield depending on which tab is selected.
+         * This function makes the rows of the user-, student-, teacher- and admintable clickable, hides different fields
+         * and buttons and reloads when some modals close
          */
-        $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
-            var tab = $(e.target).attr('href');
-            if (tab == '#A') {
-                $('#search').attr("placeholder", "Søk etter brukere...");
-            } else if (tab == '#B') {
-                $('#search').attr("placeholder", "Søk etter elever...");
-            } else if (tab == '#C') {
-                $('#search').attr("placeholder", "Søk etter lærere...");
-            } else if (tab == '#D') {
-                $('#search').attr("placeholder", "Søk etter grupper...");
-            } else if (tab == '#E') {
-                $('#search').attr("placeholder", "Søk etter tester...");
-            }
+        $(document).ready(function ($) {
+            var navbarHeight = 55;
+            var headingHeight = $('.panel-heading').outerHeight();
+            var navtabHeight = $('.nav-tabs').outerHeight();
+            var footerHeight = $('.panel-footer').outerHeight();
+            var padding = 30;
+            var tabHeight = window.innerHeight - navbarHeight - headingHeight - navtabHeight - footerHeight - padding;
+            $('.tab-content').css('height', tabHeight + 'px');
+            $('.tab-content').css('max-height', tabHeight + 'px');
+            $("#filterStudents").hide();
+            $("#filterTeachers").hide();
+            $("#successMessageStudent").hide();
+            $("#successMessageTeacher").hide();
+            /**
+             * This function alters the placeholder for the searchfield depending on which tab is selected.
+             */
+            $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+                var tab = $(e.target).attr('href');
+                if (tab == '#A') {
+                    $('#search').attr("placeholder", "Søk etter brukere...");
+                } else if (tab == '#B') {
+                    $('#search').attr("placeholder", "Søk etter elever...");
+                } else if (tab == '#C') {
+                    $('#search').attr("placeholder", "Søk etter lærere...");
+                } else if (tab == '#D') {
+                    $('#search').attr("placeholder", "Søk etter grupper...");
+                } else if (tab == '#E') {
+                    $('#search').attr("placeholder", "Søk etter tester...");
+                }
 
+            });
+            /**
+             * This function makes the rows of the Allusers-, student-, teacher- and inactivetable clickable
+             */
+            $(".clickable-row").click(function () {
+                window.document.location = $(this).data("href");
+            });
+            /**
+             * This function reloads the page when the AddStudentModal closes
+             */
+            $('#AddStudentModal').on('hidden.bs.modal', function () {
+                if ($('#successMessageStudent').css('display') != 'none') {
+                    location.reload();
+                }
+
+            });
+            /**
+             * This function reloads the page when the AddTeacherModal closes
+             */
+            $('#AddTeacherModal').on('hidden.bs.modal', function () {
+                if ($('#successMessageTeacher').css('display') != 'none') {
+                    location.reload();
+                }
+            });
+            /**
+             * This function shows or hides the students that has a connection to the school selected in the
+             * SchoolDropList in the student modal
+             */
+            $("#schoolDropStudent").change(function () {
+                $("#gradeDropStudent").val('');
+                var school_id = $(this).val();
+                var school_name = $("#schoolDropStudent :selected").text();
+                updateExistingStudents(school_id);
+                var gradeList = $("#gradeDropStudent option");
+                gradeList.each(function () {
+                    var grade_id = $(this).val();
+                    var grade = $(this).text();
+                    if (school_id == "") {
+                        $(this).show();
+                    }
+                    else if (grade.indexOf(school_name) >= 0 || grade_id == "") {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+            /**
+             * This function shows or hides the teachers that has a connection to the school selected in the
+             * SchoolDropList in the teacher modal.
+             */
+            $("#schoolDropTeacher").change(function () {
+                $("#gradeDropTeacher").val('');
+                var school_id = $(this).val();
+                var school_name = $("#schoolDropTeacher :selected").text();
+                updateExistingTeacher(school_id);
+                var gradeList = $("#gradeDropTeacher option");
+                gradeList.each(function () {
+                    var grade_id = $(this).val();
+                    var grade = $(this).text();
+                    if (school_id == "") {
+                        $(this).show();
+                    }
+                    else if (grade.indexOf(school_name) >= 0 || grade_id == "") {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+            /**
+             * This function shows or hides the students that has a connection to the grade selected in the
+             * GradeDropList in the student modal.
+             */
+            $("#gradeDropStudent").change(function () {
+                var grade_id = $(this).val();
+                if (grade_id != "") {
+                    $.ajax({
+                        type: 'GET',
+                        url: '{% url 'administration:groupCreate' %}',
+                        data: {
+                            'type': 'grade',
+                            'grade_id': grade_id,
+                            'role': 1,
+                            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                        },
+                        dataType: 'json',
+                        success: function (json) {
+                            var students = (json.persons);
+                            $("#existingStudentTable tr").hide();
+                            if (grade_id == "") {
+                                $("#existingStudentTable tr").show();
+                            }
+                            $.each(students, function (index, value) {
+                                $("#" + value.username).show();
+                            })
+                        },
+                        error: function (xhr) {
+                            alert('error');
+                            alert(xhr.responseText);
+                        }
+                    });
+                } else {
+                    var school_id = $("#schoolDropStudent :selected").val();
+                    updateExistingStudents(school_id);
+                }
+            });
+            /**
+             * This function shows or hides the teachers that has a connection to the grade selected in the
+             * GradeDropList in the teacher modal.
+             */
+            $("#gradeDropTeacher").change(function () {
+                var grade_id = $(this).val();
+                if (grade_id != "") {
+                    $.ajax({
+                        type: 'GET',
+                        url: '{% url 'administration:groupCreate' %}',
+                        data: {
+                            'type': 'grade',
+                            'grade_id': grade_id,
+                            'role': 2,
+                            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                        },
+                        dataType: 'json',
+                        success: function (json) {
+                            var teachers = (json.persons);
+                            $("#existingTeacherTable tr").hide();
+                            $.each(teachers, function (index, value) {
+                                $("#" + value.username).show();
+                            })
+                        },
+                        error: function (xhr) {
+                            alert('error');
+                            alert(xhr.responseText);
+                        }
+                    });
+                } else {
+                    var school_id = $("#schoolDropTeacher :selected").val();
+                    updateExistingTeacher(school_id);
+                }
+            });
         });
-        /**
-         * This function makes the rows of the Allusers-, student-, teacher- and inactivetable clickable
-         */
-        $(".clickable-row").click(function () {
+
+        $("#testtable tbody tr").click(function (e) {
             window.document.location = $(this).data("href");
         });
-        /**
-         * This function reloads the page when the AddStudentModal closes
-         */
-        $('#AddStudentModal').on('hidden.bs.modal', function () {
-            if ($('#successMessageStudent').css('display') != 'none') {
-                location.reload();
-            }
 
-        });
+    </script>
+    <script>
         /**
-         * This function reloads the page when the AddTeacherModal closes
+         * This functions shows or hides the div containing the school- and gradeDropList in the student modal.
          */
-        $('#AddTeacherModal').on('hidden.bs.modal', function () {
-            if ($('#successMessageTeacher').css('display') != 'none') {
-                location.reload();
+        function filterButtonStudent() {
+            var field = $("#filterStudents");
+            if (field.is(":visible")) {
+                field.hide();
+                $("#existingStudentTable tr").show();
+            } else {
+                field.show();
             }
-        });
+        }
         /**
-         * This function shows or hides the students that has a connection to the school selected in the
-         * SchoolDropList in the student modal
+         * This functions shows or hides the div containing the school- and gradeDropList in the teacher modal.
          */
-        $("#schoolDropStudent").change(function () {
-            $("#gradeDropStudent").val('');
-            var school_id = $(this).val();
-            var school_name = $("#schoolDropStudent :selected").text();
-            updateExistingStudents(school_id);
-            var gradeList = $("#gradeDropStudent option");
-            gradeList.each(function () {
-                var grade_id = $(this).val();
-                var grade = $(this).text();
-                if (school_id == "") {
-                    $(this).show();
-                }
-                else if (grade.indexOf(school_name) >= 0 || grade_id == "") {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        });
+        function filterButtonTeacher() {
+            var field = $("#filterTeachers");
+            if (field.is(":visible")) {
+                field.hide();
+                $("#existingTeacherTable tr").show();
+            } else {
+                field.show();
+            }
+        }
         /**
-         * This function shows or hides the teachers that has a connection to the school selected in the
-         * SchoolDropList in the teacher modal.
+         * This function contains the ajax call that gets the students connected to the school.
          */
-        $("#schoolDropTeacher").change(function () {
-            $("#gradeDropTeacher").val('');
-            var school_id = $(this).val();
-            var school_name = $("#schoolDropTeacher :selected").text();
-            updateExistingTeacher(school_id);
-            var gradeList = $("#gradeDropTeacher option");
-            gradeList.each(function () {
-                var grade_id = $(this).val();
-                var grade = $(this).text();
-                if (school_id == "") {
-                    $(this).show();
-                }
-                else if (grade.indexOf(school_name) >= 0 || grade_id == "") {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        });
-        /**
-         * This function shows or hides the students that has a connection to the grade selected in the
-         * GradeDropList in the student modal.
-         */
-        $("#gradeDropStudent").change(function () {
-            var grade_id = $(this).val();
-            if (grade_id != "") {
+        function updateExistingStudents(school) {
+            var school_id = school;
+            if (school_id != "") {
                 $.ajax({
                     type: 'GET',
                     url: '{% url 'administration:groupCreate' %}',
                     data: {
-                        'type': 'grade',
-                        'grade_id': grade_id,
+                        'type': 'school',
+                        'school_id': school_id,
                         'role': 1,
                         'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
                     },
@@ -368,292 +478,190 @@
                     success: function (json) {
                         var students = (json.persons);
                         $("#existingStudentTable tr").hide();
-                        if (grade_id == "") {
-                            $("#existingStudentTable tr").show();
-                        }
                         $.each(students, function (index, value) {
                             $("#" + value.username).show();
                         })
                     },
                     error: function (xhr) {
-                        alert('error');
                         alert(xhr.responseText);
                     }
                 });
             } else {
-                var school_id = $("#schoolDropStudent :selected").val();
-                updateExistingStudents(school_id);
+                $("#existingStudentTable tr").show();
             }
-        });
+        }
         /**
-         * This function shows or hides the teachers that has a connection to the grade selected in the
-         * GradeDropList in the teacher modal.
+         * This function contains the ajax call that gets the teachers connected to the school.
          */
-        $("#gradeDropTeacher").change(function () {
-            var grade_id = $(this).val();
-            if (grade_id != "") {
+        function updateExistingTeacher(school) {
+            var school_id = school;
+            var teacherTable = $("#existingTeacherTable tr");
+            if (school_id != "") {
                 $.ajax({
                     type: 'GET',
                     url: '{% url 'administration:groupCreate' %}',
                     data: {
-                        'type': 'grade',
-                        'grade_id': grade_id,
+                        'type': 'school',
+                        'school_id': school_id,
                         'role': 2,
                         'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
                     },
                     dataType: 'json',
                     success: function (json) {
                         var teachers = (json.persons);
-                        $("#existingTeacherTable tr").hide();
+                        teacherTable.hide();
+                        if (school_id == "") {
+                            teacherTable.show();
+                        }
                         $.each(teachers, function (index, value) {
                             $("#" + value.username).show();
                         })
                     },
                     error: function (xhr) {
-                        alert('error');
                         alert(xhr.responseText);
                     }
                 });
             } else {
-                var school_id = $("#schoolDropTeacher :selected").val();
-                updateExistingTeacher(school_id);
+                teacherTable.show();
             }
-        });
-    });
+        }
 
-    $("#testtable tbody tr").click(function (e) {
-        window.document.location = $(this).data("href");
-    });
+        /**
+         * This function matches the text in the search field with the content in the table with all users, students,
+         * teachers and inactives. Displays them in the suited table.
+         */
+        function allSearch(inputTable) {
+            var input, filter, table, tr, td, i, td1, td2;
+            input = document.getElementById('search');
+            filter = input.value.toUpperCase();
+            table = document.getElementById(inputTable);
+            tr = table.getElementsByTagName("tr");
 
-</script>
-<script>
-    /**
-     * This functions shows or hides the div containing the school- and gradeDropList in the student modal.
-     */
-    function filterButtonStudent() {
-        var field = $("#filterStudents");
-        if (field.is(":visible")) {
-            field.hide();
-            $("#existingStudentTable tr").show();
-        } else {
-            field.show();
-        }
-    }
-    /**
-     * This functions shows or hides the div containing the school- and gradeDropList in the teacher modal.
-     */
-    function filterButtonTeacher() {
-        var field = $("#filterTeachers");
-        if (field.is(":visible")) {
-            field.hide();
-            $("#existingTeacherTable tr").show();
-        } else {
-            field.show();
-        }
-    }
-    /**
-     * This function contains the ajax call that gets the students connected to the school.
-     */
-    function updateExistingStudents(school) {
-        var school_id = school;
-        if (school_id != "") {
-            $.ajax({
-                type: 'GET',
-                url: '{% url 'administration:groupCreate' %}',
-                data: {
-                    'type': 'school',
-                    'school_id': school_id,
-                    'role': 1,
-                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
-                },
-                dataType: 'json',
-                success: function (json) {
-                    var students = (json.persons);
-                    $("#existingStudentTable tr").hide();
-                    $.each(students, function (index, value) {
-                        $("#" + value.username).show();
-                    })
-                },
-                error: function (xhr) {
-                    alert(xhr.responseText);
-                }
-            });
-        } else {
-            $("#existingStudentTable tr").show();
-        }
-    }
-    /**
-     * This function contains the ajax call that gets the teachers connected to the school.
-     */
-    function updateExistingTeacher(school) {
-        var school_id = school;
-        var teacherTable = $("#existingTeacherTable tr");
-        if (school_id != "") {
-            $.ajax({
-                type: 'GET',
-                url: '{% url 'administration:groupCreate' %}',
-                data: {
-                    'type': 'school',
-                    'school_id': school_id,
-                    'role': 2,
-                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
-                },
-                dataType: 'json',
-                success: function (json) {
-                    var teachers = (json.persons);
-                    teacherTable.hide();
-                    if (school_id == "") {
-                        teacherTable.show();
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                td2 = tr[i].getElementsByTagName("td")[2];
+
+                if (td) {
+                    if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
                     }
-                    $.each(teachers, function (index, value) {
-                        $("#" + value.username).show();
+                    else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        /**
+         * This function matches the text in the search fields in the teachermodal and studentmodal with the content
+         * in the table given.
+         */
+        function userSearch(searchInput, tableInput) {
+            var input, filter, table, tr, td, i;
+            input = document.getElementById(searchInput);
+            filter = input.value.toUpperCase();
+            table = document.getElementById(tableInput);
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        /**
+         * This function matches the text in the search fields in the teachermodal and studentmodal with the content
+         * in the table given.
+         */
+        function groupSearch(tableInput) {
+            var input, filter, table, tr, td, td1, i;
+            input = document.getElementById('search');
+            filter = input.value.toUpperCase();
+            table = document.getElementById(tableInput);
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        /**
+         * This function adds an existing person to the grade.
+         */
+        function addExistingPerson(elem) {
+            var username = elem.id;
+            var url = "{% url 'administration:personUpdate' slug=12345 %}".replace(/12345/, username.toString());
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'grade': {{ grade.id }},
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                },
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                dataType: 'json',
+                success: searchSuccess,
+                error: searchError
+            });
+        }
+        /**
+         * This function displays a successmessage if addExistingPerson() was successful.
+         */
+        function searchSuccess(data) {
+            $('#' + data.username).remove();
+            if (data.role == 1) {
+                $("#successMessageStudent").show();
+                $('#successListStudent').append("<li>" + data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username + "</li>")
+            } else {
+                $("#successMessageTeacher").show();
+                $('#successListTeacher').append("<li>" + data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username + "</li>")
+            }
+        }
+        /**
+         * This function displays an errormessage if something goes wrong under addExistingPerson().
+         */
+        function searchError(xhr) {
+            alert(xhr.responseText);
+        }
+        /**
+         * This function displays the members of the selected group in the group Modal.
+         */
+        function memberBtn(btn) {
+            var group_id = btn.id;
+            var group_name = btn.value;
+            $('#memberHeader').text("Medlemmer - " + group_name);
+            $("#memberTable tr").remove();
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'administration:groupDetail' group_pk=12345 %}".replace(/12345/, group_id),
+                dataType: 'json',
+                success: function (data) {
+                    var students = (data.persons);
+                    $.each(students, function (index, value) {
+                        $('#memberTable').append('<tr><td>' + value.first_name + '</td><td>' + value.last_name + '</td><td>' + value.username + '</td></tr>');
                     })
                 },
                 error: function (xhr) {
+                    alert('error');
                     alert(xhr.responseText);
                 }
             });
-        } else {
-            teacherTable.show();
         }
-    }
-
-    /**
-     * This function matches the text in the search field with the content in the table with all users, students,
-     * teachers and inactives. Displays them in the suited table.
-     */
-    function allSearch(inputTable) {
-        var input, filter, table, tr, td, i, td1, td2;
-        input = document.getElementById('search');
-        filter = input.value.toUpperCase();
-        table = document.getElementById(inputTable);
-        tr = table.getElementsByTagName("tr");
-
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            td1 = tr[i].getElementsByTagName("td")[1];
-            td2 = tr[i].getElementsByTagName("td")[2];
-
-            if (td) {
-                if ((td.innerHTML.toUpperCase() + " " + td1.innerHTML.toUpperCase()).indexOf(filter) > -1 || td2.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                }
-                else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
-    /**
-     * This function matches the text in the search fields in the teachermodal and studentmodal with the content
-     * in the table given.
-     */
-    function userSearch(searchInput, tableInput) {
-        var input, filter, table, tr, td, i;
-        input = document.getElementById(searchInput);
-        filter = input.value.toUpperCase();
-        table = document.getElementById(tableInput);
-        tr = table.getElementsByTagName("tr");
-
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
-    /**
-     * This function matches the text in the search fields in the teachermodal and studentmodal with the content
-     * in the table given.
-     */
-    function groupSearch(tableInput) {
-        var input, filter, table, tr, td, td1, i;
-        input = document.getElementById('search');
-        filter = input.value.toUpperCase();
-        table = document.getElementById(tableInput);
-        tr = table.getElementsByTagName("tr");
-
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            td1 = tr[i].getElementsByTagName("td")[1];
-            if (td) {
-                if (td.innerHTML.toUpperCase().indexOf(filter) > -1 || td1.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
-    /**
-     * This function adds an existing person to the grade.
-     */
-    function addExistingPerson(elem) {
-        var username = elem.id;
-        var url = "{% url 'administration:personUpdate' slug=12345 %}".replace(/12345/, username.toString());
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: {
-                'grade': {{ grade.id }},
-                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
-            },
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            dataType: 'json',
-            success: searchSuccess,
-            error: searchError
-        });
-    }
-    /**
-     * This function displays a successmessage if addExistingPerson() was successful.
-     */
-    function searchSuccess(data) {
-        $('#' + data.username).remove();
-        if (data.role == 1) {
-            $("#successMessageStudent").show();
-            $('#successListStudent').append("<li>" + data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username + "</li>")
-        } else {
-            $("#successMessageTeacher").show();
-            $('#successListTeacher').append("<li>" + data.first_name + " " + data.last_name + " ble lagt til med brukernavnet " + data.username + "</li>")
-        }
-    }
-    /**
-     * This function displays an errormessage if something goes wrong under addExistingPerson().
-     */
-    function searchError(xhr) {
-        alert(xhr.responseText);
-    }
-    /**
-     * This function displays the members of the selected group in the group Modal.
-     */
-    function memberBtn(btn) {
-        var group_id = btn.id;
-        var group_name = btn.value;
-        $('#memberHeader').text("Medlemmer - " + group_name);
-        $("#memberTable tr").remove();
-        $.ajax({
-            type: 'GET',
-            url: "{% url 'administration:groupDetail' group_pk=12345 %}".replace(/12345/, group_id),
-            dataType: 'json',
-            success: function (data) {
-                var students = (data.persons);
-                $.each(students, function (index, value) {
-                    $('#memberTable').append('<tr><td>' + value.first_name + '</td><td>' + value.last_name + '</td><td>' + value.username + '</td></tr>');
-                })
-            },
-            error: function (xhr) {
-                alert('error');
-                alert(xhr.responseText);
-            }
-        });
-    }
-</script>
+    </script>
 
 {% endblock %}
 

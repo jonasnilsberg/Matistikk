@@ -128,7 +128,7 @@
                                     <td>{{ student.last_name }}</td>
                                     <td>{{ student.username }}</td>
                                     <td>{% answered student test as answer %}{% if answer %}
-                                        {{ answer.date_answered }}{% else %}-{% endif %}
+                                        {{ answer.delivered }}{% else %}-{% endif %}
                                     </td>
                                     <td>
                                         <button type="button" disabled='disabled' id="{{ student.username }}"
@@ -175,7 +175,6 @@
                     </div>
                 {% endif %}
                 {% if grades %}
-
                     <div class="tab-pane fade" id="C">
                         <div id="menu" style="padding-top: 10px">
                             <div class="panel list-group">
@@ -198,7 +197,7 @@
                                                         class="glyphicon glyphicon-user"></span>
                                                     {{ student }}
                                                     {% if answer %}
-                                                        <p class="pull-right">Besvart: {{ answer.date_answered }}</p>
+                                                        <p class="pull-right">Besvart: {{ answer.delivered }}</p>
                                                     {% else %}
                                                         <p class="pull-right">Ikke besvart</p>
                                                     {% endif %}
@@ -235,7 +234,7 @@
                                                         class="glyphicon glyphicon-user"></span>
                                                     {{ student }}
                                                     {% if answer %}
-                                                        <p class="pull-right">Besvart: {{ answer.date_answered }}</p>
+                                                        <p class="pull-right">Besvart: {{ answer.delivered }}</p>
                                                     {% else %}
                                                         <p class="pull-right">Ikke besvart</p>
                                                     {% endif %}
@@ -263,7 +262,7 @@
                             {% endif %}
                             <tr>
                                 <td>
-                                    {{ answer.date_answered }}
+                                    {{ answer.delivered }}
                                 </td>
                                 <td>
                                     <button type="button" value="{{ answer.anonymous_user }}"

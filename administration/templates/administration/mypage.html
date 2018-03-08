@@ -204,6 +204,14 @@
             if ($("#passwordChangeError").length) {
                 $('#updatePasswordModal').modal('show');
             }
+            var navbarHeight = 55;
+            var headingHeight = $('.panel-heading').outerHeight();
+            var navtabHeight = $('.nav-tabs').outerHeight();
+            var footerHeight = $('.panel-footer').outerHeight();
+            var padding = 30;
+            var tabHeight = window.innerHeight - navbarHeight - headingHeight - navtabHeight - footerHeight - padding;
+            $('.tab-content').css('height', tabHeight + 'px');
+            $('.tab-content').css('max-height', tabHeight + 'px');
             /**
              * Functions that cancels the normal submit and does a ajax post call instead to change the email
              * to the user.

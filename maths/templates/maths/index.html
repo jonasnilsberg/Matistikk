@@ -75,7 +75,7 @@
                                     class="fa fa-pencil fa-fw fa-3x"></i></div>
                         </a>
                         <div class="circle-tile-content dark-blue">
-                            <div class="circle-tile-description text-faded"> Antall Svar</div>
+                            <div class="circle-tile-description text-faded"> Antall besvarelser</div>
                             <div class="circle-tile-number text-faded ">{{ answers }}</div>
                         </div>
                     </div>
@@ -271,11 +271,15 @@
                                 <tbody>
                                 {% for answer in lastanswers %}
                                     <tr class="clickable-answer"
+                                            {% if answer.user %}
                                         data-href="{% url 'maths:answerDetail' test_pk=answer.test.id slug=answer.user.username %}"
+                                            {% else %}
+                                        data-href="{% url 'maths:answerDetailAnonymous' test_pk=answer.test.id user_id=answer.anonymous_user %}"
+                                            {% endif %}
                                         style="cursor: pointer">
-                                        <td>{{ answer.date_answered }}</td>
+                                        <td>{{ answer.delivered }}</td>
                                         <td>{{ answer.test }}</td>
-                                        <td>{{ answer.user }}</td>
+                                        <td>{% if answer.user %}{{ answer.user }}{% else %}Anonym bruker{% endif %}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

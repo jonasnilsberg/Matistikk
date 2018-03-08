@@ -34,7 +34,7 @@ urlpatterns = [
         name='testGroupDetail'),
     url(r'tester/(?P<taskCollection_pk>[0-9]+)/publiser/$', views.TestCreateView.as_view(), name='testCreate'),
     url(r'test/(?P<test_pk>[0-9]+)/besvarelse/(?P<slug>[\w-]+)/$', views.AnswerListView.as_view(), name='answerDetail'),
-    url(r'test/(?P<test_pk>[0-9]+)/besvarelse/public/(?P<user_id>[0-9]+)/$', views.AnswerListView.as_view(),
+    url(r'test/(?P<test_pk>[0-9]+)/besvarelse/public/(?P<user_id>[\w-]+)/$', views.AnswerListView.as_view(),
         name='answerDetailAnonymous'),
     url(r'test/(?P<test_pk>[0-9]+)/svar/$', views.AnswerCreateView2.as_view(), name='answerCreate'),
     url(r'test/(?P<test_pk>[0-9]+)/eksporter/$', views.export_data, name='answerExport'),

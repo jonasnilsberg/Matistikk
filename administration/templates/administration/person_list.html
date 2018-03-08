@@ -246,6 +246,14 @@
          * This function makes the rows of the user-, student-, teacher- and admintable clickable
          */
         jQuery(document).ready(function ($) {
+            var navbarHeight = 55;
+            var headingHeight = $('.panel-heading').outerHeight();
+            var navtabHeight = $('.nav-tabs').outerHeight();
+            var footerHeight = $('.panel-footer').outerHeight();
+            var padding = 30;
+            var tabHeight = window.innerHeight - navbarHeight - headingHeight - navtabHeight - footerHeight - padding;
+            $('.tab-content').css('height', tabHeight + 'px');
+            $('.tab-content').css('max-height', tabHeight + 'px');
             $(".alert-success").fadeTo(5000, 500).slideUp(500, function () {
                 $('.alert-success').slideUp(500);
             });

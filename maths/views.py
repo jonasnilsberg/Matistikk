@@ -72,36 +72,47 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
+        # Fjern dette etter oppdatering -----------------------------------------------------------------------------
+        # all_answers = Answer.objects.all()
+        # for answer in all_answers:
+        #    print(Answer.objects.filter(user__isnull=True, anonymous_user__isnull=True))
+        #    if not answer.testAnswer:
+        #        if answer.anonymous_user is not None:
+        #            print("if - " + str(answer.user))
+        #            if TestAnswer.objects.filter(test=answer.test, anonymous_user=answer.anonymous_user).exists():
+        #                test_answer = TestAnswer.objects.get(test=answer.test, anonymous_user=answer.anonymous_user)
+        #                answer.testAnswer = test_answer
+        #                answer.save()
+        #            else:
+        #                test_answer = TestAnswer(test=answer.test, anonymous_user=answer.anonymous_user, status=3)
+        #                test_answer.save()
+        #                answer.testAnswer = test_answer
+        #                answer.save()
+        #        else:
+        #           if TestAnswer.objects.filter(test=answer.test, user=answer.user).exists():
+        #            test_answer = TestAnswer.objects.get(test=answer.test, user=answer.user)
+        #            answer.testAnswer = test_answer
+        #            answer.save()
+        #        else:
+        #            test_answer = TestAnswer(test=answer.test, user=answer.user, status=3)
+        #            test_answer.save()
+        #            answer.testAnswer = test_answer
+        #            answer.save()
+        # -----------------------------------------------------------------------------------------------------------
         if self.request.user.role == 2:
             user = Person.objects.get(username=self.request.user.username)
             tests = Test.objects.filter(person=user)
             context['tests'] = tests
-            tabTwo = []
-            ans = Answer.objects.filter(test__in=tests, user__isnull=False).order_by('-id')
-            task_count = 0
-            for a in ans:
-                if task_count == 0:
-                    tabTwo.append(a)
-                    task_count = a.test.task_collection.items.count()
-                task_count -= 1
-            context['lastanswers'] = tabTwo[:15]
+            context['lastanswers'] = TestAnswer.objects.filter(test__in=tests, user__isnull=False, status=3).order_by('-id')
         if self.request.user.role == 4:
-            context['answers'] = Answer.objects.count()
+            context['answers'] = TestAnswer.objects.filter(status=3).count()
             context['users'] = Person.objects.count()
             context['tests'] = TaskCollection.objects.count()
             context['schools'] = School.objects.count()
             context['grades'] = Grade.objects.count()
             context['groups'] = Gruppe.objects.count()
             context['lasttests'] = Test.objects.all().order_by('-id')[:15]
-            tabTwo = []
-            ans = Answer.objects.filter(user__isnull=False).order_by('-id')
-            task_count = 0
-            for a in ans:
-                if task_count == 0:
-                    tabTwo.append(a)
-                    task_count = a.test.task_collection.items.count()
-                task_count -= 1
-            context['lastanswers'] = tabTwo[:15]
+            context['lastanswers'] = TestAnswer.objects.filter(status=3).order_by('-id')[:15]
 
         if self.request.user.role == 3:
             schools = School.objects.filter(school_administrator=self.request.user.id)
@@ -113,11 +124,12 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
         if self.request.user.role == 1:
             answeredTests = []
-            answers = Answer.objects.filter(user=self.request.user)
+            test_answers = TestAnswer.objects.filter(user=self.request.user, status=3)
             tests = Test.objects.filter(
                 Q(person=self.request.user) | Q(grade__in=self.request.user.grades.all()) | Q(
                     gruppe__in=self.request.user.gruppe_set.all())).distinct()
-            answered = tests.filter(answer__in=answers).distinct().order_by('-answer__date_answered')
+            print(tests)
+            answered = tests.filter(testanswer__in=test_answers).distinct().order_by('-answer__date_answered')
             for test in answered:
                 if test not in answeredTests:
                     answeredTests.append(test)
@@ -1051,15 +1063,7 @@ class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
             context['allgrades'] = Grade.objects.all().exclude(tests__exact=test)
             context['allgroups'] = Gruppe.objects.all().exclude(tests__exact=test)
             context['allschools'] = School.objects.all()
-            tabTwo = []
-            ans = Answer.objects.filter(test=test, user__isnull=True).order_by('-id')
-            task_count = 0
-            for a in ans:
-                if task_count == 0:
-                    tabTwo.append(a)
-                    task_count = a.test.task_collection.items.count()
-                task_count -= 1
-            context['anonymous_answers'] = tabTwo
+            context['anonymous_answers'] = TestAnswer.objects.filter(test=test, user__isnull=True, status=3).order_by('-id')
         return context
 
 

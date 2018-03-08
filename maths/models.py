@@ -275,12 +275,13 @@ class TestAnswer(models.Model):
         (3, 'Fullført')
     ]
     status = models.IntegerField(choices=STATUS, default=1)
+    delivered = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
         if self.user:
             return self.test.task_collection.test_name + " - " + self.user.get_full_name()
         else:
-            return self.test.task_collection.test_name + " - " + self.anonymous_user
+            return self.test.task_collection.test_name + " - " + str(self.anonymous_user)
 
 
 class Answer(models.Model):
