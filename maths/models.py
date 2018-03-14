@@ -275,7 +275,7 @@ class TestAnswer(models.Model):
         (3, 'Fullført')
     ]
     status = models.IntegerField(choices=STATUS, default=1)
-    delivered = models.DateTimeField(default=datetime.now())
+    delivered = models.DateTimeField(default=datetime)
 
     def __str__(self):
         if self.user:

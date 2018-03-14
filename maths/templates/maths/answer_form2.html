@@ -61,7 +61,7 @@
         <h3 id="startingdesc" style="color: whitesmoke">Beskrivelse: </h3>
         <div style=" overflow: auto;" id="startdivbody" class="startscroll">
             {% autoescape off %}
-                {{ answer_text }}
+                Ingen beskrivelse (Ikke implementert)
             {% endautoescape %}
         </div>
         <button id="starttestbtn" class="btn btn-success btn-lg" disabled style="min-width: 50%; margin-top: 10px;"><i
@@ -115,7 +115,7 @@
                     <div id="itemanswer" style="overflow: auto;">
                         <div id="answertype">
                             <div id="textanswerdiv" style="padding-top: 10px;" {% if not item.task.answertype == 1 %}
-                                 class="hidden" {% else %}class="task{{ item.id }}"{% endif %}>
+                                 class="task hidden" {% else %}class="task task{{ item.id }}"{% endif %}>
                                 <label for="textanswer">
                                     {% if item.task.answerText %}{{ item.task.answerText }}{% else %}
                                         Tekstsvar{% endif %}</label>
@@ -135,8 +135,7 @@
                                      data-changed="false" data-answer="{{ answer_text }}">
                                     {% get_mutiplechoice item.task as multiplechoicetasks %}
                                     {% for multiplechoicetask in multiplechoicetasks %}
-                                        <div id="{{ item.id }}multipleChoiceAlt{{ forloop.counter }}"
-                                             class="multipleChoiceAlt{{ item.id }}">
+                                        <div class="multiplechoice">
                                             {% if multiplechoicetask.question %}
                                                 <label for=multipleChoice>{{ multiplechoicetask.question }}</label>
                                             {% else %}
@@ -150,30 +149,29 @@
                                                         <div class="checkbox">
                                                             <label><input
                                                                     type="checkbox"
-                                                                    class="checkbox{{ item.id }}"
-                                                                    value="{{ option.option }}">{{ option.option }}
+                                                                    value="{{ option.option }}"
+                                                                    name="radio{{ forloop.parentloop.counter }}item{{ item.id }}">{{ option.option }}
+
                                                             </label>
                                                         </div>
                                                     {% else %}
                                                         <div class="radio">
                                                             <label><input type="radio"
                                                                           value="{{ option.option }}"
-                                                                          class="checkbox{{ item.id }}"
-                                                                          name="{{ forloop.parentloop.counter }}choices{{ item.id }}">{{ option.option }}
+                                                                          name="radio{{ forloop.parentloop.counter }}item{{ item.id }}">{{ option.option }}
                                                         </div>
                                                     {% endif %}
                                                 {% else %}
                                                     {% if multiplechoicetask.checkbox %}
                                                         <label class="checkbox-inline"><input
                                                                 type="checkbox"
-                                                                class="checkbox{{ item.id }}"
-                                                                value="{{ option.option }}">{{ option.option }}
+                                                                value="{{ option.option }}"
+                                                                name="radio{{ forloop.parentloop.counter }}item{{ item.id }}">{{ option.option }}
                                                         </label>
                                                     {% else %}
                                                         <label class="radio-inline"><input type="radio"
                                                                                            value="{{ option.option }}"
-                                                                                           class="checkbox{{ item.id }}"
-                                                                                           name="{{ forloop.parentloop.counter }}choices{{ item.id }}">{{ option.option }}
+                                                                                           name="radio{{ forloop.parentloop.counter }}item{{ item.id }}">{{ option.option }}
                                                         </label>
                                                     {% endif %}
                                                 {% endif %}
@@ -403,6 +401,8 @@
     var tasktimer = 0;
     var geogebraLoaded = false;
     var nextItemID;
+    var leaving = false;
+    var deliver = false;
     $(document).ready(function () {
         summaryPanelHeight = $('#summary .panel-heading').outerHeight();
         $('#summary').addClass('hidden');
@@ -416,6 +416,7 @@
             var prev_answers = answer.split('<--|-->');
             $.each(prev_answers, function (index, val) {
                 var answerTab = val.split('|||||');
+                index = index + 1;
                 $.each(answerTab, function (answernr, answer) {
                     var multiplechoiceName = "radio" + index + "item" + itemid;
                     var multiplechoicediv = answerdiv.find("[name='" + multiplechoiceName + "']");
@@ -537,7 +538,8 @@
                             xmax = ggbApplet.getXcoord("matistikk_c3");
                             ymin = ggbApplet.getYcoord("matistikk_c1");
                             ymax = ggbApplet.getYcoord("matistikk_c3");
-                            geogebrainfo.val(ggbApplet.getBase64());
+                            alert('lagre1');
+                            geogebrainfo.val(base64);
                             ggbApplet.setPerspective('1');
                         }
                     }
@@ -584,6 +586,7 @@
                         xmax = ggbApplet.getXcoord("matistikk_c3");
                         ymin = ggbApplet.getYcoord("matistikk_c1");
                         ymax = ggbApplet.getYcoord("matistikk_c3");
+                        alert('lagre');
                         geogebrainfo.val(base64);
                         ggbApplet.setPerspective('1');
                         geogebrainfo.data('changed', false);
@@ -608,24 +611,25 @@
                         'ymin': ymin,
                         'ymax': ymax,
                         'yratio': yratio,
+                        'leaving': leaving,
                         'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
                     },
                     dataType: 'json',
                     success: function success(data) {
                         answerdiv.data('answerid', data.answer_id);
-                        if (nextItemID == "0") {
+                        if (nextItemID == "0" && !leaving) {
                             nextTask();
                         }
                     },
                     error: function error(xhr) {
                         if (xhr.readyState != "0") {
-                            alert(xhr.readyState);
+                            alert(xhr.responseText);
                         }
                     }
                 });
             }
         }
-        if (nextItemID != "0" || testanswerID < 0) {
+        if (nextItemID != "0" || !leaving) {
             nextTask();
         }
     }
@@ -654,6 +658,10 @@
                 url: '{% url 'maths:answerCreate' test_pk=1234 %}'.replace(/1234/, testID),
                 dataType: 'json',
                 success: function (data) {
+                    var rowCount = $('#summarytable tr').length - 1;
+                    if (rowCount === data.states.length) {
+                        deliver = true;
+                    }
                     $.each(data.states, function (index, val) {
                         $('#status' + val.id).text(val.status);
                         var summarytask = $('#summarytask' + val.id);
@@ -976,25 +984,37 @@
                     if ($('.bootbox').is(':visible')) {
                         return false;
                     } else {
-                        bootbox.confirm({
-                            size: 'large',
-                            title: "Lever Besvarelse",
-                            message: "Er du sikker på at du vil levere inn din besvarelse?",
-                            buttons: {
-                                cancel: {
-                                    label: '<i class="fa fa-times"></i> Avbryt'
+                        if (deliver) {
+                            bootbox.confirm({
+                                size: 'large',
+                                title: "Lever Besvarelse",
+                                message: "Er du sikker på at du vil levere inn din besvarelse?",
+                                buttons: {
+                                    cancel: {
+                                        label: '<i class="fa fa-times"></i> Avbryt'
+                                    },
+                                    confirm: {
+                                        label: '<i class="fa fa-check"></i> Lever inn',
+                                        className: 'btn-success'
+                                    }
                                 },
-                                confirm: {
-                                    label: '<i class="fa fa-check"></i> Lever inn',
-                                    className: 'btn-success'
+                                callback: function (result) {
+                                    if (result) {
+                                        if (testanswerID === "-1") {
+                                            window.history.back();
+                                        } else {
+                                            $('#answerForm').submit();
+                                        }
+                                    }
                                 }
-                            },
-                            callback: function (result) {
-                                if (result) {
-                                    $('#answerForm').submit();
-                                }
-                            }
-                        });
+                            });
+                        } else {
+                            bootbox.alert({
+                                title: "Ikke alle oppgaver er besvart.",
+                                message: "Alle oppgaver må være besvart for å kunne levere.",
+                                size: 'large'
+                            });
+                        }
                     }
                 } else {
                     goToTask(0);
@@ -1033,12 +1053,13 @@
     /* On window leave - save the answer ---------------------------------------------------------------------------- */
     window.addEventListener("beforeunload", function (e) {
         nextItemID = -1;
+        leaving = true
         saveTask();
-        console.log('LEVER SISTE OPPDATERING');
     });
 
     function leavetest() {
         nextItemID = -1;
+        leaving = true;
         window.history.back();
     }
 

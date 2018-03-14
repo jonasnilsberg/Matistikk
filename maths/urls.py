@@ -47,5 +47,6 @@ urlpatterns = [
     url(r'oppgaver/mapper/flytt/$', views.DirectoryMove.as_view(), name='directoryMove'),
     url('r/oppgaver/logg/$', views.TaskLogView.as_view(), name='taskLog'),
     url('r/oppgaver/logg/slett/$', views.TaskLogDeleteView.as_view(), name='taskLogDelete'),
+    url(r'test/(?P<answer_id>[0-9]+)/besvarelse/$', views.AnswerDetailView.as_view(), name='answerGET'),
 
 ]

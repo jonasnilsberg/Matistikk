@@ -82,13 +82,14 @@
 
 
 {% block body %}
-    <div class="panel panel-info">
+    <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="col-md-6 col-sm-6 col-xs-6" id="infoDiv">
             <div class="panel-body taskBody" style="padding-bottom: 5px; padding-top: 5px; overflow: auto;">
                 <label for="taskname">Oppgavenavn</label>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-tasks"></i></span>
-                    <input type="text" class="form-control input-lg" id="taskname" placeholder="Oppgavenavn" autofocus>
+                    <input type="text" class="form-control input-lg" id="taskname" placeholder="Oppgavenavn"
+                           autofocus>
                 </div>
                 <label for="choosetype">Velg kategori</label><br>
                 <div class="input-group">
@@ -116,7 +117,8 @@
                             <h4 class="panel-title">
                                 <label style="cursor: pointer"><input type="radio" name="answer_type" value="1"
                                                                       data-toggle="collapse"
-                                                                      data-parent="#accordion" data-target="#collapse5"
+                                                                      data-parent="#accordion"
+                                                                      data-target="#collapse5"
                                                                       onclick="radioClick(this)" required
                                                                       id="textAnswerRadio" checked>
                                     Tekstsvar</label>
@@ -136,7 +138,8 @@
                         <div class=" panel-heading" role="tab">
                             <h4 class="panel-title">
                                 <label style="cursor: pointer"><input type="radio" name="answer_type" value="2"
-                                                                      data-toggle="collapse" data-target="#collapse8"
+                                                                      data-toggle="collapse"
+                                                                      data-target="#collapse8"
                                                                       data-parent="#accordion"
                                                                       onclick="radioClick(this)" required
                                                                       id="textMutipleRadio">
@@ -170,8 +173,10 @@
                             <p class="panel-title">
                                 <label style="cursor: pointer"><input type="radio" name="answer_type" value="3"
                                                                       data-toggle="collapse"
-                                                                      data-parent="#accordion" data-target="#collapse7"
-                                                                      onclick="radioClick(this)"> Kun tillegg</label>
+                                                                      data-parent="#accordion"
+                                                                      data-target="#collapse7"
+                                                                      onclick="radioClick(this)"> Kun
+                                    tillegg</label>
                             </p>
                         </div>
                         <div id="collapse7" class="panel-collapse collapse">
@@ -256,16 +261,15 @@
             </div>
 
         </div>
-        <div id="extradiv" class="col-md-6 pull-right">
+        <div id="extradiv" class="col-md-6 col-sm-6 col-lg-6 extraBorder">
             <div id="applet_container"></div>
         </div>
         <div class="col-sm-6 col-md-6 hidden" id="extraImageUpload" style="padding: 15px;">
-            <img id="img_id" src="#" alt="Last opp et bilde" width="100%" height="100%" style="object-fit: contain"/>
+            <img id="img_id" src="#" alt="Last opp et bilde" width="100%" height="100%"
+                 style="object-fit: contain"/>
         </div>
         <div class="col-sm-6 col-md-6" id="extraFileUpload" style="padding: 15px;">
         </div>
-    </div>
-
     </div>
 
     <script>
@@ -282,7 +286,6 @@
             "preventFocus": true,
             "language": "nb",
             "showToolBar": true,
-            "borderColor": null,
             "showMenuBar": true,
             "allowStyleBar": false,
             "showAlgebraInput": true,
@@ -291,16 +294,16 @@
             "capturingThreshold": null,
             "showToolBarHelp": true,
             "errorDialogsActive": true,
-            "useBrowserForJS": false
-        };
+            "useBrowserForJS": false,
+            "borderColor": "#FFFFFF"
 
+        };
+        parameters.appletOnLoad = function () {
+            ggbApplet.setSize((window.innerWidth / 2) - 5, window.innerHeight - 55);
+        };
         // Applet som inneholder GeoGebra-vinduet som lastes inn i createfunctiontask.jsp
         var applet = new GGBApplet(parameters, '5.0', 'applet_container');
         applet.setPreviewImage('http://bildr.no/image/cEtUd3R6.jpeg', 'https://www.geogebra.org/images/GeoGebra_loading.png?v=1490705653', 'https://www.geogebra.org/images/applet_play.png?v=1490705653');
-        //  when used with Math Apps Bundle, uncomment this:
-        applet.setHTML5CodebaseVersion('5.0');
-        applet.setJNLPBaseDir('https://www.geogebra.org/webstart/');
-
         // Metoden benyttes til å legge GeoGebra med forhåndsvalgt konfigurasjon inn i en applet
         window.onload = function () {
             applet.inject('applet_container', 'preferhtml5');

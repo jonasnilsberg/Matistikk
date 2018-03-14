@@ -1,0 +1,856 @@
+<!--Loads the tag library-->
+{% load bootstrap3 %}
+<!-- Loads staticfiles-->
+{% load staticfiles %}
+{% load maths_extras %}
+<!-- Loads CSS and javascript-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--Imports Jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <!--Display django.contrib.messages as Bootstrap alerts-->
+    {% bootstrap_messages %}
+    <!--Imports bootstrap-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--Imports bootstrap css-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'administration/style.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'administration/loader.css' %}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    {% if geogebra %}
+        <script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
+    {% endif %}
+    <!--Imports stylesheet-->
+    <link rel="stylesheet" type="text/css" href="{% static 'administration/style.css' %}"/>
+    <!--Imports bootbox-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <!--Imports tinymce-->
+    <script type="text/javascript" src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'maths/css/sweetalert/sweetalert.css' %}">
+    <script src="{% static 'maths/js/sweetalert/sweetalert.min.js' %}"></script>
+    <script src="{% static 'maths/js/jquery.scrollTo.min.js' %}"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <!--Imports mathquill-->
+    <script type="text/javascript"
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.min.js' %}"></script>
+    <script>
+        var configurl = '{% static 'tinymce/js/tinymce/plugins/equationeditor/config.json' %}';
+        tinymce.PluginManager.load('equationeditor', "{% static 'tinymce/js/tinymce/plugins/equationeditor/plugin.min.js'%}");
+    </script>
+    <script src="{% static 'maths/js/jquery.scrollTo.min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'tinymce/js/tinymce/plugins/equationeditor/equation_editor.js' %}"></script>
+    <meta charset="UTF-8">
+    <!--Sets the favicon-->
+    <link rel="shortcut icon" href="{% static 'administration/images/favico.png' %}">
+    <title>{{ answer }}</title>
+</head>
+<body>
+<span id="testID" class="hidden">{{ test_id }}</span>
+<span id="testAnswerID" class="hidden">{{ testanswer }}</span>
+
+<!-- Starting div ---------------------------------------------------------------------------------->
+<div id="startingdiv" class="col-md-12 col-sm-12 col-lg-12 col-xs-12 startingdiv">
+    <div class="startingtext" style="height: 100%; width: 65%">
+        <h2 id="startingtestname" style="color: whitesmoke">{{ testanswer.test }}</h2>
+        {% if testanswer.user %}
+            <h3 id="startingtaskcount" style="color: whitesmoke">Bruker: {{ testanswer.user }}</h3>
+        {% else %}
+            <h3 id="startingtaskcount" style="color: whitesmoke">Bruker: anonym</h3>
+        {% endif %}
+        <h3 id="startingdelivered" style="color: whitesmoke">Levert: {{ testanswer.delivered }}</h3>
+        <div style=" overflow: auto;" id="startdivbody" class="">
+            <div class="container answertab startscroll">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Oppgave</th>
+                        <th>Score</th>
+                        <th>Tid (s)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for answer in answer_summary %}
+                        <tr>
+                            <td>{{ answer.item.task.title }}</td>
+                            {% if answer.correct %}
+                                <td> {{ answer.correct }}</td>
+                            {% else %}
+                                <td>Ingen retting</td>
+                            {% endif %}
+                            <td>{{ answer.timespent }}</td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <button id="starttestbtn" class="btn btn-success btn-lg" disabled style="min-width: 50%; margin-top: 10px;"><i
+                class="fas fa-hourglass-start"></i>
+
+            Vennligst vent mens testen lastes inn...
+        </button>
+    </div>
+</div>
+
+<!--Loading div ------------------------------------------------------------------------------------>
+<div id="loadingdiv" class="dimmed hidden">
+    <div class="lds-css ng-scope">
+        <div style="width:100%;height:100%" class="lds-double-ring">
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+
+<!-- Item body -------------------------------------------------------------------------------------->
+<div id="itembody" class="col-xs-12 col-md-12 col-sm-12" style="overflow: hidden">
+    <div class="row">
+        <div id="itemdiv" class="col-md-6 col-xs-6 col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="padding-top: 1px; padding-bottom: 1px;">
+                    <div class="row">
+                        <div class="col-md-1" style="height: inherit; margin-top: 12px;">
+                            <button class="btn btn-sm btn-warning exitTest" onclick="window.history.back();"><i
+                                    class="fa fa-arrow-left"
+                                    aria-hidden="true"></i>
+                                Avslutt fremvisning
+                            </button>
+                        </div>
+                        <h4 class="text-center tasktitle">Oppgave <span id="answertitlenr">1</span></h4>
+                    </div>
+                </div>
+                <div class="panel-body" style="padding: 10px">
+                    <div id="tasktextdiv">
+                        <textarea id="tasktext" style="cursor:pointer;">
+                            {% if answer.item.task.variableTask %}
+                                {% insert_params answer.item.task.text item.variables as text %}
+                                {{ text }}
+                            {% else %}
+                                {{ answer.item.task.text }}
+                            {% endif %}
+                        </textarea>
+                        <span id="tasktext{{ answer.id }}" class="hidden">
+                            {% autoescape off %}
+                                {{ answer.item.task.text }}
+                            {% endautoescape %}</span>
+                    </div>
+                    <div id="itemanswer" style="overflow: auto;">
+                        <div id="answertype">
+                            <div id="textanswerdiv" style="padding-top: 10px;"
+                                    {% if not answer.item.task.answertype == 1 %}
+                                 class="answer hidden" {% else %}class="answer answer{{ answer.item.id }}"{% endif %}>
+                                <label for="textanswer">
+                                    {% if answer.item.task.answerText %}{{ answer.item.task.answerText }}{% else %}
+                                        Tekstsvar{% endif %}</label>
+                                <textarea class="form-control" id="textanswer"
+                                          rows="6"
+                                          style="resize:vertical"
+                                          placeholder="Skriv svaret ditt her...">{{ answer.text }}</textarea>
+                                {% if answer.item.task.answertype == 1 %}
+                                    <span id="answerdiv{{ item.id }}"
+                                          {% if item.task.answerText %}data-answertext="{{ item.task.answerText }}"
+                                          {% else %}data-answertext="Tekstsvar"{% endif %} class="hidden"></span>
+                                {% endif %}
+                            </div>
+                            {% if answer.item.task.answertype == 2 %}
+                                <div id="answerdiv{{ answer.id }}" style="padding-top: 10px;"
+                                     class="answer answer{{ answer.id }}"
+                                     data-answertype="{{ answer.item.task.answertype }}"
+                                     data-answer="{{ answer.text }}">
+                                    {% get_mutiplechoice answer.item.task as multiplechoicetasks %}
+                                    {% for multiplechoicetask in multiplechoicetasks %}
+                                        <div class="multiplechoice">
+                                            {% if multiplechoicetask.question %}
+                                                <label for=multipleChoice>{{ multiplechoicetask.question }}</label>
+                                            {% else %}
+                                                <label for=multipleChoice>Svaralternativer:</label>
+                                            {% endif %}
+                                            <br>
+                                            {% get_multiplechoice_options_length multiplechoicetask as length %}
+                                            {% for option in multiplechoicetask.multiplechoiceoption_set.all %}
+                                                {% if length > 50 %}
+                                                    {% if multiplechoicetask.checkbox %}
+                                                        <div class="checkbox">
+                                                            <label><input
+                                                                    type="checkbox"
+                                                                    class="checkbox{{ item.id }}"
+                                                                    value="{{ option.option }}"
+                                                                    name="radio{{ forloop.parentloop.counter }}item{{ answer.id }}"
+                                                                    disabled>{{ option.option }}
+                                                            </label>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="radio">
+                                                            <label><input type="radio"
+                                                                          value="{{ option.option }}"
+                                                                          class="checkbox{{ item.id }}"
+                                                                          name="radio{{ forloop.parentloop.counter }}item{{ answer.id }}"
+                                                                          disabled>{{ option.option }}
+                                                        </div>
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% if multiplechoicetask.checkbox %}
+                                                        <label class="checkbox-inline"><input
+                                                                type="checkbox"
+                                                                class="checkbox{{ item.id }}"
+                                                                value="{{ option.option }}"
+                                                                name="radio{{ forloop.parentloop.counter }}item{{ answer.id }}"
+                                                                disabled>{{ option.option }}
+                                                        </label>
+                                                    {% else %}
+                                                        <label class="radio-inline"><input type="radio"
+                                                                                           value="{{ option.option }}"
+                                                                                           class="checkbox{{ item.id }}"
+                                                                                           name="radio{{ forloop.parentloop.counter }}item{{ answer.id }}"
+                                                                                           disabled>{{ option.option }}
+                                                        </label>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+
+                                        <hr>
+                                    {% endfor %}
+                                </div>
+                            {% elif answer.item.task.answertype == 4 %}
+                                <div id="answerdiv{{ answer.id }}" class="answer answer{{ answer.id }}"
+                                     style="padding-top: 10px;" data-answertype="{{ answer.item.task.answertype }}"
+                                     data-changed="false" data-answer="{{ answer.text }}">
+                                    {% get_inputfields answer.item.task as inputfields %}
+                                    {% for inputfield in inputfields %}
+                                        <h4>{{ inputfield.question }}</h4>
+                                        <form class="form-horizontal">
+                                            {% for inputs in inputfield.inputfield_set.all %}
+                                                <div class="form-group"
+                                                     style="margin-bottom: {% get_margin inputs.fraction %}px; margin-right: 0px; margin-left: 0px;">
+                                                    <label
+                                                            style="text-align: left; padding-left: 15px; height: auto"
+                                                            class="control-label col-md-2">{{ inputs.title }}:</label>
+                                                    <div class="col-md-{{ inputs.inputlength }}"
+                                                         style="padding-right: 15px; height: auto"><input
+                                                            type="number"
+                                                            data-inputnr="{{ inputs.inputnr }}"
+                                                            data-counter="{{ forloop.parentloop.parentloop.counter }}"
+                                                            class="form-control inputs" disabled>
+                                                        {% if inputs.fraction %}
+                                                            <hr style="margin-top: 5px; margin-bottom: 5px; border-top: 2px solid black;">
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </form>
+                                        {% if not forloop.last or item.task.reasoning %}
+                                            <hr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div id="reasoningdiv" {% if not answer.item.task.reasoning %} class="answer hidden"
+                             {% else %}class="answer answer{{ answer.id }}"{% endif %} style="padding-bottom: 10px">
+                            <label for="reasoning">
+                                {% if answer.item.task.reasoningText %}
+                                    {{ answer.item.task.reasoningText }}{% else %}
+                                    Begrunnelse{% endif %}</label>
+                            <textarea class="form-control" id="reasoning"
+                                      rows="6"
+                                      style="resize:vertical"
+                                      placeholder="Begrunn svaret ditt...">{{ answer.reasoning }}</textarea>
+                            {% if answer.item.task.reasoning %}
+                                <span id="reasoningdiv{{ answer.id }}"
+                                      {% if item.task.reasoningText %}data-reasoningtext="{{ item.task.reasoningText }}"
+                                      {% else %}data-reasoningtext="Begrunnelse"{% endif %}
+                                      class="hidden">{% autoescape off %}
+                                    {{ answer.reasoning }}{% endautoescape %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="extradiv" class="col-md-6 col-xs-6 col-sm-6 extraBorder">
+            {% if geogebra %}
+                <div id="geogebradiv">
+                    {% if answer.item.task.extra == 1 %}
+                        {% autoescape off %}
+                            <input id="geogebrainfo{{ answer.id }}" type="text"
+                                    {% get_geogebra answer as geogebraanswer %}
+                                   data-xmin="{{ geogebraanswer.xmin|stringformat:"f" }}"
+                                   data-xmax="{{ geogebraanswer.xmax|stringformat:"f" }}"
+                                   data-ymin="{{ geogebraanswer.ymin|stringformat:"f" }}"
+                                   data-ymax="{{ geogebraanswer.ymax|stringformat:"f" }}"
+                                   data-yratio="{{ geogebraanswer.yratio|stringformat:"f" }}"
+                                   value="{{ geogebraanswer.base64 }}"
+                                   data-scaled="false" hidden>
+                        {% endautoescape %}
+                    {% endif %}
+                </div>
+                <div id="applet_container"></div>
+            {% endif %}
+            <div id="imagediv" style="padding: 15px;" {% if not answer.item.task.extra == 2 %}class="hidden"{% endif %}>
+                {% if item.task.extra == 2 %}
+                    {% get_task_image answer.item.task.id as imagetask %}
+                    <img id="img_id{{ item.id }}" src="{{ imagetask.image.url }}" alt="Last opp et bilde" width="100%"
+                         height="100%"
+                         style="object-fit: contain" class="imagetask"/>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-------------------------------------Navbar------------------------------------------------------>
+<nav id="tasknav" class="navbar navbar-default navbar-fixed-bottom hidden">
+    <ul id="taskBtnList" class="nav navbar-nav scrollbar"
+        style="white-space: nowrap; overflow-x: auto;">
+        {% for answer in answers %}
+            <li id="liOppgave{{ answer.id }}" style="display: inline-block; float: none;"
+                {% if forloop.first %}class="active" {% endif %}>
+                <a type="button" onclick="goToTask({{ answer.id }})" data-answerid="{{ answer.id }}"
+                   data-answernr="{{ forloop.counter0 }}"
+                   style="cursor: pointer">Oppgave {{ forloop.counter }} </a>
+            </li>
+        {% endfor %}
+    </ul>
+    <ul id="endTestNav" class="nav navbar-nav navbar-right" style="margin-right: 5px;">
+        <button id="prevTaskBtn" class="btn btn-primary btn-lg border-radius"
+                type="button"><i class="fa fa-arrow-left" aria-hidden="true"></i>
+            Forrige Oppgave
+        </button>
+        <button id="nextTaskBtn" class="btn btn-primary btn-lg border-radius" type="button"><span
+                id="nextTaskBtnText">Neste Oppgave</span> <i
+                class="fa fa-arrow-right"
+                aria-hidden="true"></i></button>
+    </ul>
+</nav>
+</body>
+<script>
+    var geogebraLoaded = false;
+    var tasknavHeight;
+    var taskheaderheight = $('.panel-heading').outerHeight();
+    var panelbodypaddingheight = 10;
+    var answercounter = 0;
+    $(document).ready(function () {
+        var startdivbodyHeight = window.innerHeight - $('#startingdelivered').outerHeight(true) - $('#startingtestname').outerHeight(true) - $('#startingtestname').outerHeight(true) - $('#startingtaskcount').outerHeight(true) - $('#starttestbtn').outerHeight(true);
+        $('#startdivbody').css('height', startdivbodyHeight);
+        var answerid = ($('#taskBtnList .active').find('a').data('answerid'));
+        var answerdiv = $('#answerdiv' + answerid);
+        var answer = answerdiv.data('answer');
+        var answertype = answerdiv.data('answertype');
+        if (answertype == "2") {
+            var prev_answers = answer.split('<--|-->');
+            $.each(prev_answers, function (index, val) {
+                var answerTab = val.split('|||||');
+                index += 1;
+                $.each(answerTab, function (answernr, answer) {
+                    var multiplechoiceName = "radio" + index + "item" + answerid;
+                    var multiplechoicediv = answerdiv.find("[name='" + multiplechoiceName + "']");
+                    $.each(multiplechoicediv, function () {
+                        if ($(this).val() === answer) {
+                            $(this).attr('checked', true);
+                        }
+                    });
+                });
+            });
+        } else if (answertype == "4") {
+            var prevAnswers = answer.split('|||||');
+            $.each(prevAnswers, function (index, val) {
+                var inputnr = index + 1;
+                answerdiv.find("[data-inputnr='" + inputnr + "']").val(val);
+            });
+        }
+    });
+
+    $('#starttestbtn').click(function () {
+        $('#tasknav').removeClass('hidden');
+        var navbar = $('#taskBtnList');
+        var taskBtnListWidth = window.innerWidth - $('#endTestNav').outerWidth() - 20;
+        navbar.css('max-width', taskBtnListWidth + 'px');
+        tasknavHeight = $('#tasknav').outerHeight();
+        var imagedivHeight = window.innerHeight - navbar.outerHeight();
+        $('#imagediv').css('height', imagedivHeight + 'px');
+        var answerid = ($('#taskBtnList .active').find('a').data('answerid'));
+        var tasktextdivheight = $('#tasktextdiv').outerHeight();
+        var answerdivheight = window.innerHeight - tasktextdivheight - tasknavHeight - taskheaderheight - panelbodypaddingheight;
+        $('#itemanswer').css('height', answerdivheight + "px");
+        $('#answerdiv' + answerid).data('height', answerdivheight);
+        $('#startingdiv').addClass('hidden');
+    });
+
+    /* Go to next task ---------------------------------------------------------------------------------------------- */
+    function goToTask(answerid) {
+        var loadingdiv = $('#loadingdiv');
+        loadingdiv.removeClass('hidden');
+        $('#taskBtnList .active').removeClass('active');
+        if (document.getElementById("tasktext" + answerid)) {
+            tinymce.get('tasktext').setContent($('#tasktext' + answerid).html());
+            var textanswerdiv = $('#textanswerdiv');
+            var reasoningdiv = $('#reasoningdiv');
+            $('.answer').addClass('hidden');
+            if (textanswerdiv.hasClass('answer' + answerid)) {
+                var answerdiv = $('#answerdiv' + answerid);
+                tinymce.get('textanswer').setContent(answerdiv.html());
+                textanswerdiv.find('label[for=textanswer]').text(answerdiv.data('answertext'));
+                textanswerdiv.removeClass('hidden');
+            } else if (document.getElementById("answerdiv" + answerid) !== null) {
+                textanswerdiv.addClass('hidden');
+                $('#answerdiv' + answerid).removeClass('hidden');
+            }
+            if (reasoningdiv.hasClass('answer' + answerid)) {
+                reasoningdiv.removeClass('hidden');
+                var itemreasoningdiv = $('#reasoningdiv' + answerid);
+                tinymce.get('reasoning').setContent(itemreasoningdiv.html());
+                reasoningdiv.find('label[for=reasoning]').text(itemreasoningdiv.data('reasoningtext'));
+            }
+            if (document.getElementById("geogebrainfo" + answerid) !== null) {
+                var geogebrainfo = $('#geogebrainfo' + answerid);
+                var base64 = geogebrainfo.val();
+                $('#itemdiv').addClass("col-md-6 col-xs-6 col-sm-6").removeClass("col-centered noExtraBorder");
+                $('#applet_container').removeClass('hidden');
+                $('#imagediv').addClass('hidden');
+                $('#extradiv').removeClass('hidden');
+                ggbApplet.setBase64(base64, function () {
+                    loadingdiv.addClass('hidden');
+                });
+            } else if (document.getElementById("img_id" + answerid)) {
+                $('#applet_container').addClass('hidden');
+                $('#imagediv').removeClass('hidden');
+                $('.imagetask').addClass('hidden');
+                $('#img_id' + answerid).removeClass('hidden');
+                $('#extradiv').removeClass('hidden');
+                $('#itemdiv').addClass("col-md-6 col-xs-6 col-sm-6").removeClass("col-centered noExtraBorder");
+                loadingdiv.addClass('hidden');
+            } else {
+                $('#extradiv').addClass('hidden');
+                $('#itemdiv').removeClass("col-md-6 col-xs-6 col-sm-6").addClass("col-centered noExtraBorder");
+                loadingdiv.addClass('hidden');
+            }
+            $('#itemanswer').css('height', $('#answerdiv' + answerid).data('height') + 'px');
+        } else {
+            $.ajax({
+                type: 'GET',
+                data: {
+                    'answerid': answerid
+                },
+                url: '{% url 'maths:answerGET' answer_id=1234 %}'.replace(/1234/, answerid),
+                dataType: 'json',
+                success: function (data) {
+                    $('#tasktextdiv').append('<span id="tasktext' + answerid + '" class="hidden">' + data.tasktext + '</span>');
+                    tinymce.get('tasktext').setContent(data.tasktext);
+                    var itemdiv = $('#itemdiv');
+                    $('.answer').addClass('hidden');
+                    if (data.answertype === 1) {
+                        var textanswerdiv = $('#textanswerdiv');
+                        textanswerdiv.addClass('answer' + answerid).removeClass('hidden');
+                        var answertext = "";
+                        if (data.answertext !== "") {
+                            answertext = data.answertext;
+                        } else {
+                            answertext = "Tekstsvar";
+                        }
+                        textanswerdiv.find('label[for=textanswer]').text(answertext);
+                        textanswerdiv.append('<span id="answerdiv' + answerid + '" class="hidden" data-answertext="' + answertext + '">' + data.answer + '</span>');
+                        tinymce.get('textanswer').setContent(data.answer);
+                    } else if (data.answertype === 2) {
+                        $('#answertype').append('<div id="answerdiv' + answerid + '" class="answer" data-answertype="' + data.answertype + '" style="padding-top:10px;"></div>');
+                        $('#textanswerdiv').addClass('hidden');
+                        var answerdiv = $('#answerdiv' + answerid);
+                        $.each(data.multiplechoice, function (topindex, value) {
+                            var divArr = [];
+                            divArr.push('<div class="multiplechoice">');
+                            if (value.question) {
+                                divArr.push('<label for=multipleChoice>');
+                                divArr.push(value.question);
+                                divArr.push('</label>')
+                            } else {
+                                divArr.push('<label for="multiplechoice">Svaralternativer:</label>');
+                            }
+                            divArr.push('<br>');
+                            var optionTab = value.options.split('|||||');
+                            var multiplechoiceclass = "radio";
+                            if (value.checkbox) {
+                                multiplechoiceclass = "checkbox";
+                            }
+                            if (value.length > 50) {
+                                $.each(optionTab, function (index, value) {
+                                    divArr.push('<div class="');
+                                    divArr.push(multiplechoiceclass);
+                                    divArr.push('"><label><input type="');
+                                    divArr.push(multiplechoiceclass);
+                                    divArr.push('" value="');
+                                    divArr.push(value);
+                                    divArr.push('" name="radio');
+                                    divArr.push(topindex);
+                                    divArr.push("item");
+                                    divArr.push(answerid);
+                                    divArr.push('">');
+                                    divArr.push(value);
+                                    divArr.push('</label></div>');
+                                });
+                            } else {
+                                $.each(optionTab, function (index, value) {
+                                    divArr.push('<label class="');
+                                    divArr.push(multiplechoiceclass);
+                                    divArr.push('-inline"><input type="');
+                                    divArr.push(multiplechoiceclass);
+                                    divArr.push('" value="');
+                                    divArr.push(value);
+                                    divArr.push('" name="radio');
+                                    divArr.push(topindex);
+                                    divArr.push("item");
+                                    divArr.push(answerid);
+                                    divArr.push('">');
+                                    divArr.push(value);
+                                    divArr.push('</label>');
+                                });
+                            }
+                            if (data.multiplechoice.length - 1 !== topindex || data.reasoning) {
+                                divArr.push('<hr>');
+                            }
+                            answerdiv.append(divArr.join(''));
+                        });
+                        var answers = data.answer.split('<--|-->');
+                        $.each(answers, function (index, val) {
+                            var answerTab = val.split('|||||');
+                            $.each(answerTab, function (answernr, answer) {
+                                var multiplechoiceName = "radio" + index + "item" + answerid;
+                                var multiplechoicediv = answerdiv.find("[name='" + multiplechoiceName + "']");
+                                $.each(multiplechoicediv, function () {
+                                    $(this).attr('disabled', true);
+                                    if ($(this).val() === answer) {
+                                        $(this).attr('checked', true);
+                                    }
+                                });
+                            });
+                        });
+
+                    } else if (data.answertype === 4) {
+                        $('#textanswerdiv').addClass('hidden');
+                        $('#answertype').append('<div id="answerdiv' + answerid + '" class="answer" data-answertype="' + data.answertype + '" data-changed="false" style="padding-top:10px;"></div>');
+                        var answerdiv = $('#answerdiv' + answerid);
+                        $.each(data.inputfields, function (index, val) {
+                            var divArr = [];
+                            divArr.push('<h4>');
+                            divArr.push(val.question);
+                            divArr.push('</h4>');
+                            divArr.push('<form class="form-horizontal">');
+                            $.each(val.inputfields, function (index, val) {
+                                divArr.push('<div class="form-group" style="margin-right: 0px; margin-left: 0px;">');
+                                divArr.push('<label style="text-align: left; padding-left: 15px; height: auto" class="control-label col-md-2">');
+                                divArr.push(val.inputtitle);
+                                divArr.push(':</label>');
+                                divArr.push('<div class="col-md-');
+                                divArr.push(val.inputlength);
+                                divArr.push('" style="padding-right: 15px; height: auto"><input type="number" data-inputnr="');
+                                divArr.push(val.inputnr);
+                                divArr.push('" class="form-control" disabled></div></div>');
+
+                            });
+                            divArr.push('</div>');
+                            if (data.inputfields.length - 1 !== index || data.reasoning) {
+                                divArr.push('<hr>');
+                            }
+                            answerdiv.append(divArr.join(''));
+                        });
+                        var answers = data.answer.split('|||||');
+                        $.each(answers, function (index, val) {
+                            var inputnr = index + 1;
+                            answerdiv.find("[data-inputnr='" + inputnr + "']").val(val);
+                        });
+                    }
+                    if (data.reasoning) {
+                        var reasoningdiv = $('#reasoningdiv');
+                        reasoningdiv.removeClass('hidden').addClass('answer' + answerid);
+                        var reasoningtext = "";
+                        if (data.reasoningtext !== "") {
+                            reasoningtext = data.reasoningtext;
+                        } else {
+                            reasoningtext = "Begrunnelse";
+                        }
+                        tinymce.get('reasoning').setContent(data.reasoninganswer);
+                        reasoningdiv.find('label[for=reasoning]').text(reasoningtext);
+                        reasoningdiv.append('<span id="reasoningdiv' + answerid + '" class="hidden" data-reasoningtext="' + reasoningtext + '">' + data.reasoninganswer + '</span>');
+                    }
+                    if (data.extra === 1) {
+                        if (itemdiv.hasClass("col-centered")) {
+                            $('#itemdiv').addClass("col-md-6 col-xs-6 col-sm-6").removeClass("col-centered noExtraBorder");
+                            $('#extradiv').removeClass('hidden');
+                        }
+                        $('#applet_container').removeClass('hidden');
+                        $('#imagediv').addClass('hidden');
+                        $('#geogebradiv').append('<input id="geogebrainfo' + answerid + '" hidden>');
+                        var geogebrainfo = $('#geogebrainfo' + answerid);
+                        geogebrainfo.data('xmin', data.xmin);
+                        geogebrainfo.data('xmax', data.xmax);
+                        geogebrainfo.data('ymin', data.ymin);
+                        geogebrainfo.data('ymax', data.ymax);
+                        geogebrainfo.data('yratio', data.yratio);
+                        geogebrainfo.data('scaled', false);
+                        ggbApplet.setBase64(data.base64, function () {
+                            scaleGeoGebra(answerid);
+                        });
+                    } else if (data.extra == 2) {
+                        if (itemdiv.hasClass("col-centered")) {
+                            $('#itemdiv').addClass("col-md-6 col-xs-6 col-sm-6").removeClass("col-centered noExtraBorder");
+                            $('#extradiv').removeClass('hidden');
+                        }
+                        loadingdiv.addClass('hidden');
+                        $('#applet_container').addClass('hidden');
+                        $('#imagediv').removeClass('hidden');
+                        $('.imagetask').addClass('hidden');
+                        $('#imagediv').append('<img id="img_id' + answerid + '" src="' + data.image + '" width="100%" height="100%" style="object-fit: contain" class="imagetask" />');
+
+                    } else if (data.extra == 4) {
+                        $('#extradiv').addClass('hidden');
+                        $('#itemdiv').removeClass("col-md-6 col-xs-6 col-sm-6").addClass("col-centered noExtraBorder");
+                        loadingdiv.addClass('hidden');
+                    } else {
+                        loadingdiv.addClass('hidden');
+                    }
+                    var tasktextdivheight = $('#tasktextdiv').outerHeight();
+                    var answerdivheight = window.innerHeight - tasktextdivheight - tasknavHeight - taskheaderheight - panelbodypaddingheight;
+                    $('#itemanswer').css('height', answerdivheight + "px");
+                    $('#answerdiv' + answerid).data('height', answerdivheight);
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+        answercounter = $('#liOppgave' + answerid).find('a').data('answernr');
+        $('#answertitlenr').text(answercounter + 1);
+        $('#liOppgave' + answerid).addClass('active');
+        var scrollCounter = 0;
+        if (answercounter > 2) {
+            scrollCounter = parseInt(answercounter) - 3;
+        } else {
+            scrollCounter = parseInt(answercounter) - 2;
+        }
+        var scrollToId = $("#taskBtnList").find("[data-answernr='" + scrollCounter + "']").data('answerid');
+        $('#taskBtnList').scrollTo(document.getElementById("liOppgave" + scrollToId));
+
+    }
+
+    $('#prevTaskBtn').on('click', function () {
+        var nextAnswer = answercounter - 1;
+        if (nextAnswer < 0 || !$('#loadingdiv').hasClass('hidden')) {
+            return false;
+        }
+        var nextAnswerID = $("#taskBtnList").find("[data-answernr='" + nextAnswer + "']").data('answerid');
+        goToTask(nextAnswerID);
+    });
+    $('#nextTaskBtn').on('click', function () {
+        var nextAnswer = answercounter + 1;
+        var nextAnswerID = $("#taskBtnList").find("[data-answernr='" + nextAnswer + "']").data('answerid');
+        if ($('#loadingdiv').hasClass('hidden')) {
+            goToTask(nextAnswerID);
+        }
+    });
+    $(document).keyup(function (e) {
+        if (e.keyCode == 37) {
+            $('#prevTaskBtn').click();
+            return false;
+        } else if (e.keyCode == 39) {
+            $('#nextTaskBtn').click();
+            return false;
+        }
+    });
+
+    /* Load GeoGebra applet ----------------------------------------------------------------------------------------- */
+    if (document.getElementById("applet_container") !== null) {
+        var parameters;
+        var answerid = ($('#taskBtnList .active').find('a').data('answerid'));
+        if (document.getElementById("geogebrainfo" + answerid) !== null) {
+            var geoInfo = $('#geogebrainfo' + answerid);
+            var base64 = geoInfo.val();
+            var height = window.innerHeight - 55;
+            var width = (window.innerWidth * 0.5) - 30;
+            parameters = {
+                "id": "ggbApplet",
+                "width": width,
+                "height": height,
+                "language": "nb",
+                "showToolBar": true,
+                "showMenuBar": true,
+                "allowStyleBar": false,
+                "enableLabelDrags": true,
+                "enableShiftDragZoom": true,
+                "enableRightClick": true,
+                "enable3d": false,
+                "borderColor": "#FFFFFF",
+                "enableCAS": false,
+                "capturingThreshold": null,
+                "showToolBarHelp": false,
+                "errorDialogsActive": true,
+                "showTutorialLink": false,
+                "showStartTooltip": false,
+                "showLogging": false,
+                "preventFocus": true,
+                "useBrowserForJS": false,
+                "ggbBase64": base64
+            };
+        } else {
+            parameters = {
+                "id": "ggbApplet",
+                "width": (window.innerWidth * 0.5) - 30,
+                "height": window.innerHeight - 52,
+                "language": "nb",
+                "showToolBar": true,
+                "showMenuBar": true,
+                "borderColor": "#FFFFFF",
+                "perspective": "G"
+            };
+        }
+        parameters.appletOnLoad = function () {
+            if (!geogebraLoaded) {
+                ggbApplet.setSize((window.innerWidth / 2) - 5, window.innerHeight - 52);
+                var answerid = ($('#taskBtnList .active').find('a').data('answerid'));
+                geogebraLoaded = true;
+                if (document.getElementById("geogebrainfo" + answerid) !== null) {
+                    scaleGeoGebra(answerid);
+                } else {
+                    $('#applet_container').addClass('hidden');
+                }
+                var starttestbtn = $('#starttestbtn');
+                starttestbtn.html('<i class="far fa-play-circle"></i> Se igjennom test ');
+                starttestbtn.attr('disabled', false);
+                starttestbtn.focus();
+            }
+        };
+        var applet = new GGBApplet(parameters, '5.0', 'applet_container');
+        applet.setPreviewImage('http://bildr.no/image/cEtUd3R6.jpeg', 'https://www.geogebra.org/images/GeoGebra_loading.png?v=1490705653', 'https://www.geogebra.org/images/applet_play.png?v=1490705653');
+        window.onload = function () {
+            applet.inject('applet_container', 'preferhtml5');
+        };
+    }
+
+    function scaleGeoGebra(itemid) {
+        var geogebraInfo = $('#geogebrainfo' + itemid);
+        var xmin = parseFloat(geogebraInfo.data('xmin'));
+        var xmax = parseFloat(geogebraInfo.data('xmax'));
+        var ymin = parseFloat(geogebraInfo.data('ymin'));
+        var ymax = parseFloat(geogebraInfo.data('ymax'));
+        var yratio = parseFloat(geogebraInfo.data('yratio'));
+        var xstep = parseFloat(geogebraInfo.data('xstep'));
+        var ystep = parseFloat(geogebraInfo.data('ystep'));
+        ggbApplet.setCoordSystem(xmin, xmax, ymin, ymax);
+        ggbApplet.evalCommand("matistikk_ratio = (x(Corner(5))/(Distance[Corner(1),Corner(2)])) / (y(Corner(5))/(Distance[Corner(2),Corner(3)]))");
+        if (yratio < 1) {
+            var ratio = 1 / yratio;
+            var geoRatio = ggbApplet.getValue("matistikk_ratio") * ratio;
+            if (geoRatio < 1) {
+                geoRatio = 1 / geoRatio;
+                if (ymin > 0) {
+                    var deltaY = ymax - ymin;
+                    var newDeltaY = deltaY * geoRatio;
+                    var diff = (newDeltaY - deltaY) / 2;
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                } else if (ymax < 0) {
+                    var deltaY = Math.abs(ymin) - Math.abs(ymax);
+                    var newDeltaY = deltaY * geoRatio;
+                    var diff = (newDeltaY - deltaY) / 2;
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                } else {
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                }
+            } else {
+                if (xmin > 0) {
+                    var deltaX = xmax - xmin;
+                    var newDeltaX = deltaX * geoRatio;
+                    var diff = (newDeltaX - deltaX) / 2;
+                    ggbApplet.setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                } else if (xmax < 0) {
+                    var deltaX = Math.abs(xmin) - Math.abs(xmax);
+                    var newDeltaX = deltaX * geoRatio;
+                    var diff = (newDeltaX - deltaX) / 2;
+                    ggbApplet.setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                } else {
+                    ggbApplet.setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                }
+            }
+            // X-akse er lengre enn y-akse ------ f.eks. 1:2
+        } else {
+            var ratio = yratio;
+            var geoRatio = ratio / ggbApplet.getValue("matistikk_ratio");
+            if (geoRatio < 1) {
+                geoRatio = 1 / geoRatio;
+                if (xmin > 0) {
+                    var deltaX = xmax - xmin;
+                    var newDeltaX = deltaX * geoRatio;
+                    var diff = (newDeltaX - deltaX) / 2;
+                    ggbApplet.setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                } else if (xmax < 0) {
+                    var deltaX = Math.abs(xmin) - Math.abs(xmax);
+                    var newDeltaX = deltaX * geoRatio;
+                    var diff = (newDeltaX - deltaX) / 2;
+                    ggbApplet.setCoordSystem(xmin - diff, xmax + diff, ymin, ymax);
+                } else {
+                    ggbApplet.setCoordSystem(xmin * geoRatio, xmax * geoRatio, ymin, ymax);
+                }
+            } else {
+                if (ymin > 0) {
+                    var deltaY = ymax - ymin;
+                    var newDeltaY = deltaY * geoRatio;
+                    var diff = (newDeltaY - deltaY) / 2;
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                } else if (ymax < 0) {
+                    var deltaY = Math.abs(ymin) - Math.abs(ymax);
+                    var newDeltaY = deltaY * geoRatio;
+                    var diff = (newDeltaY - deltaY) / 2;
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin - diff, ymax + diff);
+                } else {
+                    ggbApplet.setCoordSystem(xmin, xmax, ymin * geoRatio, ymax * geoRatio);
+                }
+            }
+        }
+        ggbApplet.deleteObject("matistikk_ratio");
+        geogebraInfo.val(ggbApplet.getBase64());
+        $('#loadingdiv').addClass('hidden');
+    }
+
+    /* Loads tinymce editor ------------------------------------------------------------------------------------------*/
+    var panelheight = $('.panel-heading').outerHeight();
+    var navheight = $('#tasknav').outerHeight();
+    var maxTaskHeight = (window.innerHeight - panelheight - navheight );
+    var tasktextPercent = 0.35;
+    tinymce.init({
+        selector: '#tasktext',
+        plugins: 'placeholder autoresize',
+        content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+        toolbar: false,
+        menubar: false,
+        statusbar: false,
+        autoresize_max_height: maxTaskHeight * tasktextPercent,
+        autoresize_bottom_margin: 0,
+        readonly: 1,
+        body_id: 'tasktextID'
+    });
+    tinymce.init({
+        selector: '#textanswer',
+        plugins: 'placeholder autoresize',
+        content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+        toolbar: false,
+        menubar: false,
+        statusbar: false,
+        autoresize_min_height: 150,
+        autoresize_bottom_margin: 0,
+        readonly: 1
+    });
+    tinymce.init({
+        selector: '#reasoning',
+        plugins: 'placeholder autoresize',
+        content_css: '{% static 'tinymce/js/tinymce/plugins/equationeditor/mathquill.css'%}',
+        toolbar: false,
+        menubar: false,
+        statusbar: false,
+        autoresize_min_height: 150,
+        autoresize_bottom_margin: 0,
+        readonly: 1
+    });
+</script>
+</html>

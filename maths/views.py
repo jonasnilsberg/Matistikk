@@ -16,7 +16,6 @@ from administration.views import AdministratorCheck, RoleCheck
 import random
 from django.http import HttpResponseRedirect
 from django.conf import settings
-import re
 from django.utils import formats
 from django.utils import timezone
 
@@ -103,7 +102,8 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             user = Person.objects.get(username=self.request.user.username)
             tests = Test.objects.filter(person=user)
             context['tests'] = tests
-            context['lastanswers'] = TestAnswer.objects.filter(test__in=tests, user__isnull=False, status=3).order_by('-id')
+            context['lastanswers'] = TestAnswer.objects.filter(test__in=tests, user__isnull=False, status=3).order_by(
+                '-id')
         if self.request.user.role == 4:
             context['answers'] = TestAnswer.objects.filter(status=3).count()
             context['users'] = Person.objects.count()
@@ -1063,7 +1063,8 @@ class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
             context['allgrades'] = Grade.objects.all().exclude(tests__exact=test)
             context['allgroups'] = Gruppe.objects.all().exclude(tests__exact=test)
             context['allschools'] = School.objects.all()
-            context['anonymous_answers'] = TestAnswer.objects.filter(test=test, user__isnull=True, status=3).order_by('-id')
+            context['anonymous_answers'] = TestAnswer.objects.filter(test=test, user__isnull=True, status=3).order_by(
+                '-id')
         return context
 
 
@@ -1085,7 +1086,11 @@ class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
         data = form.cleaned_data
         test_answer = TestAnswer.objects.get(id=data['testAnswer_id'])
         test_answer.status = 3
+        test_answer.delivered = timezone.now()
         test_answer.save()
+        if test_answer.user:
+            success_message = 'Dine svar ble levert!'
+            messages.success(self.request, success_message)
         return super(AnswerCreateView2, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -1094,6 +1099,7 @@ class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
         context['test_id'] = test.id
         context['test_name'] = test.task_collection.test_name
         context['test_strict'] = test.strictOrder
+        test_answer_id = -1
         geogebra = False
         for item in test.task_collection.items.all():
             if GeogebraTask.objects.filter(task=item.task).exists():
@@ -1114,17 +1120,16 @@ class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
                 if TestAnswer.objects.filter(test=test, user=self.request.user).exists():
                     test_answer_id = TestAnswer.objects.get(test=test, user=self.request.user).id
                 else:
-                    test_answer = TestAnswer(test=test, user=self.request.user)
+                    test_answer = TestAnswer(test=test, user=self.request.user, delivered=timezone.now())
                     test_answer.save()
                     test_answer_id = test_answer.id
-                context['testanswer'] = test_answer_id
                 if Answer.objects.filter(item=item, testAnswer_id=test_answer_id).exists():
                     answer = Answer.objects.get(item=item, testAnswer_id=test_answer_id)
                     context['answer_id'] = answer.id
                     context['answer_text'] = answer.text
                     context['answer_reasoning'] = answer.reasoning
         else:
-            test_answer = TestAnswer(test=test)
+            test_answer = TestAnswer(test=test, delivered=timezone.now())
             s = "abcdefghijklmnopqrstuvwxyz01234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
             passlen = 12
             anonymous_user_string_found = False
@@ -1132,14 +1137,11 @@ class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
                 anonymous_user_string = "".join(random.sample(s, passlen))
                 if not TestAnswer.objects.filter(anonymous_user=anonymous_user_string).exists():
                     anonymous_user_string_found = True
-            print(anonymous_user_string)
             test_answer.anonymous_user = anonymous_user_string
             test_answer.save()
             test_answer_id = test_answer.id
-        if test_answer_id:
-            context['testanswer'] = test_answer_id
-        else:
-            context['testanswer'] = -1
+            print(test_answer_id)
+        context['testanswer'] = test_answer_id
         return context
 
     def post_ajax(self, request, *args, **kwargs):
@@ -1149,6 +1151,12 @@ class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
         reasoning = request.POST.get('reasoning')
         timespent = request.POST.get('timespent')
         correct = request.POST.get('correct')
+        leaving = request.POST.get('leaving')
+        if leaving == "true":
+            test_answer = TestAnswer.objects.get(id=testanswer_id)
+            test_answer.status = 2
+            test_answer.delivered = timezone.now()
+            test_answer.save()
         data = {}
         if Answer.objects.filter(testAnswer_id=testanswer_id, item_id=item_id).exists():
             answer = Answer.objects.get(testAnswer__id=testanswer_id, item_id=item_id)
@@ -1244,18 +1252,19 @@ class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
                     answer.correct = score
             elif answer.item.task.answertype == 2:
                 score = 0
-                multiplechoice_answer = answer_text.split('<--|-->')
-                count = 0
-                for multiplechoicetask in answer.item.task.multiplechoicetask_set.all():
-                    correct_string = ""
-                    for option in multiplechoicetask.multiplechoiceoption_set.all():
-                        if option.correct:
-                            correct_string += option.option + '|||||'
-                    correct_string = correct_string[:-5]
-                    if multiplechoice_answer[count] == correct_string:
-                        score += 1
-                    count += 1
-                answer.correct = score
+                if answer_text:
+                    multiplechoice_answer = answer_text.split('<--|-->')
+                    count = 0
+                    for multiplechoicetask in answer.item.task.multiplechoicetask_set.all():
+                        correct_string = ""
+                        for option in multiplechoicetask.multiplechoiceoption_set.all():
+                            if option.correct:
+                                correct_string += option.option + '|||||'
+                        correct_string = correct_string[:-5]
+                        if multiplechoice_answer[count] == correct_string:
+                            score += 1
+                        count += 1
+                    answer.correct = score
             answer.date_answered = timezone.now()
             answer.save()
             if item.task.extra == 1:
@@ -1285,8 +1294,8 @@ class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
                 answer_data = {
                     'id': answer.item.id
                 }
+                print(answer.text)
                 answer_text = answer.text.strip("|").strip('<--|-->')
-                print(answer_text)
                 if answer.item.task.answertype == 3 or answer_text:
                     answer_data['status'] = 'Besvart'
                 else:
@@ -1719,7 +1728,7 @@ class TestDeleteView(AdministratorCheck, generic.DeleteView):
         return super(TestDeleteView, self).delete(request, *args, **kwargs)
 
 
-class AnswerListView(AnswerCheck, generic.ListView):
+class AnswerListView(AnswerCheck, views.AjaxResponseMixin, generic.TemplateView):
     """
     Class that displays a list of answers for all the tasks in a specific test for a specific user.
 
@@ -1728,27 +1737,96 @@ class AnswerListView(AnswerCheck, generic.ListView):
     **ListView:**
         Inherits Django's ListView that makes a page representing a list of objects.
     """
-    template_name = 'maths/answer_list.html'
-
-    def get_queryset(self):
-        """
-            Function that sets the query for getting the object_list. 
-            
-            :return: List of answer objects.
-        """
-        test = Test.objects.get(id=self.kwargs.get('test_pk'))
-        if self.kwargs.get('slug'):
-            person = Person.objects.get(username=self.kwargs.get('slug'))
-            return Answer.objects.filter(test=test, user=person)
-        else:
-            anonymous_user = self.kwargs.get('user_id')
-            return Answer.objects.filter(test=test, anonymous_user=anonymous_user)
+    template_name = 'maths/answer_list2.html'
 
     def get_context_data(self, **kwargs):
         context = super(AnswerListView, self).get_context_data(**kwargs)
+        test = Test.objects.get(id=self.kwargs.get('test_pk'))
+        geogebra = False
+        if self.kwargs.get('slug'):
+            person = Person.objects.get(username=self.kwargs.get('slug'))
+            test_answer = TestAnswer.objects.get(test=test, user=person)
+            context['answer'] = Answer.objects.filter(testAnswer=test_answer).first()
+        else:
+            anonymous_user = self.kwargs.get('user_id')
+            test_answer = TestAnswer.objects.get(test=test, anonymous_user=anonymous_user)
+            context['answer'] = Answer.objects.filter(testAnswer=test_answer).first()
+        if GeogebraAnswer.objects.filter(answer__testAnswer=test_answer).exists():
+            geogebra = True
+        context['geogebra'] = geogebra
         if self.kwargs.get('grade_pk'):
             context['fromGrade'] = self.kwargs.get('grade_pk')
+        answers = Answer.objects.filter(testAnswer=test_answer)
+        context['answers'] = answers.only('id')
+        context['answer_summary'] = answers.only('item', 'correct', 'timespent')
+        context['testanswer'] = test_answer
         return context
+
+
+class AnswerDetailView(AnswerCheck, views.AjaxResponseMixin, generic.View):
+    def get_ajax(self, request, *args, **kwargs):
+        answer_id = request.GET.get('answerid')
+        answer = Answer.objects.get(id=answer_id)
+        item = answer.item
+        data = {}
+        data['tasktext'] = item.task.text
+        data['extra'] = item.task.extra
+        data['answertype'] = item.task.answertype
+        data['reasoning'] = item.task.reasoning
+        data['reasoningtext'] = item.task.reasoningText
+        data['answer'] = answer.text
+        data['reasoninganswer'] = answer.reasoning
+        if item.task.answertype == 1:
+            data['answertext'] = item.task.answerText
+        elif item.task.answertype == 2:
+            multiplechoicetasks = MultipleChoiceTask.objects.filter(task=item.task)
+            print(multiplechoicetasks)
+            multiplechoicedata = []
+            for multiplechoicetask in multiplechoicetasks:
+                options = ""
+                multiplechoicetaskdata = {
+                    "question": multiplechoicetask.question,
+                    "checkbox": multiplechoicetask.checkbox
+                }
+                length = 0
+                for option in multiplechoicetask.multiplechoiceoption_set.all():
+                    options += option.option + "|||||"
+                    length += len(option.option)
+                options = options[:-5]
+                multiplechoicetaskdata['options'] = options
+                multiplechoicetaskdata['length'] = length
+                multiplechoicedata.append(multiplechoicetaskdata)
+            data['multiplechoice'] = multiplechoicedata
+        elif item.task.answertype == 4:
+            inputfielddata = []
+            inputfieldtasks = InputFieldTask.objects.filter(task=item.task)
+            for inputfieldtask in inputfieldtasks:
+                inputfieldtaskdata = {
+                    'question': inputfieldtask.question
+                }
+                fields = []
+                for field in inputfieldtask.inputfield_set.all():
+                    fielddata = {
+                        "inputtitle": field.title,
+                        "inputlength": field.inputlength,
+                        "inputnr": field.inputnr
+                    }
+                    fields.append(fielddata)
+                inputfieldtaskdata['inputfields'] = fields
+                inputfielddata.append(inputfieldtaskdata)
+            data['inputfields'] = inputfielddata
+        if item.task.extra == 1:
+            geogebra_answer = GeogebraAnswer.objects.filter(answer=answer).first()
+            data['base64'] = geogebra_answer.base64
+            data['xmin'] = geogebra_answer.xmin
+            data['xmax'] = geogebra_answer.xmax
+            data['ymin'] = geogebra_answer.ymin
+            data['ymax'] = geogebra_answer.ymax
+            data['yratio'] = geogebra_answer.yratio
+        elif item.task.extra == 2:
+            image_task = ImageTask.objects.get(task=item.task)
+            data['image'] = image_task.image.url
+        return JsonResponse(data=data)
 
 
 def export_data(request, test_pk):

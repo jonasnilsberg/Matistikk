@@ -27,7 +27,7 @@ def get_geogebra(answer):
     :param answer: The answer
     :return: The geogebra answer.
     """
-    return GeogebraAnswer.objects.filter(answer=answer)
+    return GeogebraAnswer.objects.filter(answer=answer).first()
 
 
 @register.simple_tag
