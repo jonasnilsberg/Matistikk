@@ -71,33 +71,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        # Fjern dette etter oppdatering -----------------------------------------------------------------------------
-        # all_answers = Answer.objects.all()
-        # for answer in all_answers:
-        #    print(Answer.objects.filter(user__isnull=True, anonymous_user__isnull=True))
-        #    if not answer.testAnswer:
-        #        if answer.anonymous_user is not None:
-        #            print("if - " + str(answer.user))
-        #            if TestAnswer.objects.filter(test=answer.test, anonymous_user=answer.anonymous_user).exists():
-        #                test_answer = TestAnswer.objects.get(test=answer.test, anonymous_user=answer.anonymous_user)
-        #                answer.testAnswer = test_answer
-        #                answer.save()
-        #            else:
-        #                test_answer = TestAnswer(test=answer.test, anonymous_user=answer.anonymous_user, status=3)
-        #                test_answer.save()
-        #                answer.testAnswer = test_answer
-        #                answer.save()
-        #        else:
-        #           if TestAnswer.objects.filter(test=answer.test, user=answer.user).exists():
-        #            test_answer = TestAnswer.objects.get(test=answer.test, user=answer.user)
-        #            answer.testAnswer = test_answer
-        #            answer.save()
-        #        else:
-        #            test_answer = TestAnswer(test=answer.test, user=answer.user, status=3)
-        #            test_answer.save()
-        #            answer.testAnswer = test_answer
-        #            answer.save()
-        # -----------------------------------------------------------------------------------------------------------
+        tasks = Task.objects.all()
         if self.request.user.role == 2:
             user = Person.objects.get(username=self.request.user.username)
             tests = Test.objects.filter(person=user)
