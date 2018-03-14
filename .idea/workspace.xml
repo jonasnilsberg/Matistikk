@@ -9,16 +9,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a3dadf1e-2e4f-489f-9312-8d2daafdb0f5" name="IdeaFiles" comment="Testviewer update 2">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_list2.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_form2.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_form.html" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_list2.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_list.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mydatabase" afterPath="$PROJECT_DIR$/mydatabase" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/administration/static/administration/style.css" afterPath="$PROJECT_DIR$/administration/static/administration/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/models.py" afterPath="$PROJECT_DIR$/maths/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/answer_form2.html" afterPath="$PROJECT_DIR$/maths/templates/maths/answer_form2.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/index.html" afterPath="$PROJECT_DIR$/maths/templates/maths/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templates/maths/task_form.html" afterPath="$PROJECT_DIR$/maths/templates/maths/task_form.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/templatetags/maths_extras.py" afterPath="$PROJECT_DIR$/maths/templatetags/maths_extras.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/urls.py" afterPath="$PROJECT_DIR$/maths/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maths/views.py" afterPath="$PROJECT_DIR$/maths/views.py" />
     </list>
     <list id="de22f9bb-0d8d-43b9-a0ab-d5e54da7af91" name="Failed commit: IdeaFiles" comment="Endringer på personCreateView" />
@@ -69,8 +63,8 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="answer_form2.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form2.html">
+      <file leaf-file-name="answer_form.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="139">
               <caret line="468" column="0" lean-forward="false" selection-start-line="468" selection-start-column="0" selection-end-line="468" selection-end-column="0" />
@@ -79,8 +73,8 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="answer_list2.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list2.html">
+      <file leaf-file-name="answer_list.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="2288">
               <caret line="348" column="27" lean-forward="false" selection-start-line="348" selection-start-column="27" selection-end-line="348" selection-end-column="27" />
@@ -107,7 +101,7 @@
         <entry file="file://$PROJECT_DIR$/administration/static/administration/style.css">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="112">
-              <caret line="619" column="29" lean-forward="true" selection-start-line="619" selection-start-column="29" selection-end-line="619" selection-end-column="29" />
+              <caret line="619" column="29" lean-forward="false" selection-start-line="619" selection-start-column="29" selection-end-line="619" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -140,16 +134,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="3472">
               <caret line="217" column="12" lean-forward="false" selection-start-line="217" selection-start-column="12" selection-end-line="224" selection-end-column="66" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="answer_list.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1088">
-              <caret line="68" column="38" lean-forward="false" selection-start-line="68" selection-start-column="38" selection-end-line="68" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -889,13 +873,6 @@
       <option name="presentableId" value="Default" />
       <updated>1485778837143</updated>
     </task>
-    <task id="LOCAL-00100" summary="RefreshViews">
-      <created>1500622981079</created>
-      <option name="number" value="00100" />
-      <option name="presentableId" value="LOCAL-00100" />
-      <option name="project" value="LOCAL" />
-      <updated>1500622981079</updated>
-    </task>
     <task id="LOCAL-00101" summary="RefreshViews">
       <created>1500626860831</created>
       <option name="number" value="00101" />
@@ -1232,7 +1209,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520537653236</updated>
     </task>
-    <option name="localTasksCounter" value="149" />
+    <task id="LOCAL-00149" summary="Testviewer update 3">
+      <created>1521027179800</created>
+      <option name="number" value="00149" />
+      <option name="presentableId" value="LOCAL-00149" />
+      <option name="project" value="LOCAL" />
+      <updated>1521027179801</updated>
+    </task>
+    <option name="localTasksCounter" value="150" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1247,11 +1231,11 @@
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1922" height="1053" extended-state="6" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28388473" sideWeight="0.82608694" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28388473" sideWeight="0.82608694" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32832617" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18669528" sideWeight="0.5149413" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22103004" sideWeight="0.47812167" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22103004" sideWeight="0.47812167" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32725322" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21030043" sideWeight="0.4850587" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24958768" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1360,7 +1344,7 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/maths/templates/maths/answer_form2.html</url>
+          <url>file://$PROJECT_DIR$/maths/templates/maths/answer_form.html</url>
           <line>415</line>
           <properties />
           <option name="timeStamp" value="10" />
@@ -1685,7 +1669,7 @@
     <entry file="file://$PROJECT_DIR$/administration/static/administration/style.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="112">
-          <caret line="619" column="29" lean-forward="true" selection-start-line="619" selection-start-column="29" selection-end-line="619" selection-end-column="29" />
+          <caret line="619" column="29" lean-forward="false" selection-start-line="619" selection-start-column="29" selection-end-line="619" selection-end-column="29" />
           <folding />
         </state>
       </provider>
@@ -1710,7 +1694,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form2.html">
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_form.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="139">
           <caret line="468" column="0" lean-forward="false" selection-start-line="468" selection-start-column="0" selection-end-line="468" selection-end-column="0" />
@@ -1736,7 +1720,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list2.html">
+    <entry file="file://$PROJECT_DIR$/maths/templates/maths/answer_list.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2288">
           <caret line="348" column="27" lean-forward="false" selection-start-line="348" selection-start-column="27" selection-end-line="348" selection-end-column="27" />

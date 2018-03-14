@@ -1069,7 +1069,7 @@ class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
 
 
 class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
-    template_name = 'maths/answer_form2.html'
+    template_name = 'maths/answer_form.html'
     form_class = CreateTestAnswerForm
 
     def get_success_url(self):
@@ -1737,7 +1737,7 @@ class AnswerListView(AnswerCheck, views.AjaxResponseMixin, generic.TemplateView)
     **ListView:**
         Inherits Django's ListView that makes a page representing a list of objects.
     """
-    template_name = 'maths/answer_list2.html'
+    template_name = 'maths/answer_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(AnswerListView, self).get_context_data(**kwargs)
