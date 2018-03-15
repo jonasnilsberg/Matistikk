@@ -414,7 +414,9 @@
                 $('#applet_container').removeClass('hidden');
                 $('#imagediv').addClass('hidden');
                 $('#extradiv').removeClass('hidden');
+                alert(base64);
                 ggbApplet.setBase64(base64, function () {
+                    alert('ferdig');
                     loadingdiv.addClass('hidden');
                 });
             } else if (document.getElementById("img_id" + answerid)) {
@@ -591,7 +593,9 @@
                         geogebrainfo.data('ymax', data.ymax);
                         geogebrainfo.data('yratio', data.yratio);
                         geogebrainfo.data('scaled', false);
+                        alert(data.base64);
                         ggbApplet.setBase64(data.base64, function () {
+                            alert('feridg');
                             scaleGeoGebra(answerid);
                         });
                     } else if (data.extra == 2) {
