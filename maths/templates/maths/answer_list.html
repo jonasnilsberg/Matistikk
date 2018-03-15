@@ -707,6 +707,7 @@
             };
         }
         parameters.appletOnLoad = function () {
+            alert('load');
             if (!geogebraLoaded) {
                 ggbApplet.setSize((window.innerWidth / 2) - 5, window.innerHeight - 52);
                 var answerid = ($('#taskBtnList .active').find('a').data('answerid'));
