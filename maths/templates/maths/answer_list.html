@@ -416,7 +416,10 @@
                 $('#extradiv').removeClass('hidden');
                 alert(base64);
                 ggbApplet.setBase64(base64, function () {
-                    alert('ferdig');
+                    alert('ferdig1');
+                    if(!geogebrainfo.data('scaled')){
+                        scaleGeoGebra(answerid);
+                    }
                     loadingdiv.addClass('hidden');
                 });
             } else if (document.getElementById("img_id" + answerid)) {
@@ -593,9 +596,9 @@
                         geogebrainfo.data('ymax', data.ymax);
                         geogebrainfo.data('yratio', data.yratio);
                         geogebrainfo.data('scaled', false);
-                        alert(data.base64);
+                        geogebrainfo.val(data.base64);
                         ggbApplet.setBase64(data.base64, function () {
-                            alert('feridg');
+                            alert('ferdig2');
                             scaleGeoGebra(answerid);
                         });
                     } else if (data.extra == 2) {
@@ -696,7 +699,6 @@
                 "showLogging": false,
                 "preventFocus": true,
                 "useBrowserForJS": false,
-                "ggbBase64": base64
             };
         } else {
             parameters = {
@@ -711,13 +713,16 @@
             };
         }
         parameters.appletOnLoad = function () {
-            alert('load');
             if (!geogebraLoaded) {
                 ggbApplet.setSize((window.innerWidth / 2) - 5, window.innerHeight - 52);
                 var answerid = ($('#taskBtnList .active').find('a').data('answerid'));
                 geogebraLoaded = true;
                 if (document.getElementById("geogebrainfo" + answerid) !== null) {
-                    scaleGeoGebra(answerid);
+                    var base64 = $('#geogebrainfo' + answerid).val();
+                    ggbApplet.setBase64(base64, function () {
+                        alert('scale');
+                        scaleGeoGebra(answerid);
+                    });
                 } else {
                     $('#applet_container').addClass('hidden');
                 }
@@ -815,6 +820,7 @@
         }
         ggbApplet.deleteObject("matistikk_ratio");
         geogebraInfo.val(ggbApplet.getBase64());
+        geogebraInfo.data('scaled', true);
         $('#loadingdiv').addClass('hidden');
     }
 
