@@ -1184,6 +1184,9 @@
                 starttestbtn.attr('disabled', false);
                 starttestbtn.focus();
                 geogebraLoaded = true;
+                if (!$('#geogebrainfo' + itemid).length) {
+                    $('#itemdiv').removeClass("col-md-6 col-xs-6 col-sm-6").addClass("col-centered noExtraBorder");
+                }
             } else {
                 var geogebradiv = $('#geogebrainfo' + itemid);
                 if (geogebradiv.data('showmenubar') && geogebradiv.data('showmenubar') !== "False") {

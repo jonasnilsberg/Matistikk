@@ -101,7 +101,6 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
             tests = Test.objects.filter(
                 Q(person=self.request.user) | Q(grade__in=self.request.user.grades.all()) | Q(
                     gruppe__in=self.request.user.gruppe_set.all())).distinct()
-            print(tests)
             answered = tests.filter(testanswer__in=test_answers).distinct().order_by('-answer__date_answered')
             for test in answered:
                 if test not in answeredTests:
@@ -1041,7 +1040,15 @@ class TestDetailView(RoleCheck, views.AjaxResponseMixin, generic.DetailView):
         return context
 
 
-class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
+class AnswerCreateView(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
+    """
+       Class for creating answers for all the tasks in a test.
+
+        :func:`AnswerCheck`:
+            inherited permission check, checks if the logged in user can answer the test.
+        **FormView**
+           A view that displays a form.
+    """
     template_name = 'maths/answer_form.html'
     form_class = CreateTestAnswerForm
 
@@ -1064,10 +1071,10 @@ class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
         if test_answer.user:
             success_message = 'Dine svar ble levert!'
             messages.success(self.request, success_message)
-        return super(AnswerCreateView2, self).form_valid(form)
+        return super(AnswerCreateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
-        context = super(AnswerCreateView2, self).get_context_data(**kwargs)
+        context = super(AnswerCreateView, self).get_context_data(**kwargs)
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
         context['test_id'] = test.id
         context['test_name'] = test.task_collection.test_name
@@ -1113,7 +1120,6 @@ class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
             test_answer.anonymous_user = anonymous_user_string
             test_answer.save()
             test_answer_id = test_answer.id
-            print(test_answer_id)
         context['testanswer'] = test_answer_id
         return context
 
@@ -1267,7 +1273,6 @@ class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
                 answer_data = {
                     'id': answer.item.id
                 }
-                print(answer.text)
                 answer_text = answer.text.strip("|").strip('<--|-->')
                 if answer.item.task.answertype == 3 or answer_text:
                     answer_data['status'] = 'Besvart'
@@ -1276,7 +1281,6 @@ class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
                 if answer.item.task.reasoning:
                     if not answer.reasoning:
                         answer_data['status'] += " | Tom begrunnelse"
-                        print('tomt')
                 answer_tab.append(answer_data)
             data['states'] = answer_tab
         else:
@@ -1358,226 +1362,6 @@ class AnswerCreateView2(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
                         data['ymax'] = geogebra_answer.ymax
                         data['yratio'] = geogebra_answer.yratio
         return JsonResponse(data)
-
-
-class AnswerCreateView(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
-    """
-   Class for creating answers for all the tasks in a test.
-
-    :func:`AnswerCheck`:
-        inherited permission check, checks if the logged in user can answer the test.
-    **FormView**
-       A view that displays a form.
-    """
-    form_class = CreateAnswerForm
-    template_name = 'maths/answer_form.html'
-
-    def post_ajax(self, request, *args, **kwargs):
-        test_id = self.kwargs.get('test_pk')
-        item_id = request.POST["itemid"]
-        answer_text = request.POST['answer']
-        reasoning = request.POST['reasoning']
-        correct = request.POST['correct']
-        timespent = request.POST['timespent']
-        anonymous_user_id = request.POST['anonymous_user_id']
-        answer = Answer(test_id=test_id, text=answer_text, reasoning=reasoning, timespent=timespent)
-        item = Item.objects.get(id=item_id)
-        if item.random_variables:
-            variables = request.POST['variables']
-            obj, created = Item.objects.get_or_create(task=item.task, variables=variables, random_variables=False)
-            answer.item = obj
-        else:
-            answer.item = item
-        if correct:
-            answer.correct = correct
-        elif answer.item.task.answertype == 4:
-            input_answers = answer_text.split('|||||')
-            inputfield_tasks = InputFieldTask.objects.filter(task=answer.item.task)
-            x = 0
-            score = 0
-            score_tasks = False
-            for inputfield_task in inputfield_tasks:
-                inputfields = InputField.objects.filter(inputFieldTask=inputfield_task)
-                for inputfield in inputfields:
-                    if inputfield.correct:
-                        input_answer = input_answers[x].strip()
-                        score_tasks = True
-                        if input_answer:
-                            if float(input_answer) == float(inputfield.correct):
-                                score += 1
-                    x += 1
-            if score_tasks:
-                answer.correct = score
-        if answer.item.task.answertype == 2:
-            score = 0
-            multiplechoice_answer = answer_text.split('<--|-->')
-            count = 0
-            for multiplechoicetask in answer.item.task.multiplechoicetask_set.all():
-                correct_string = ""
-                for option in multiplechoicetask.multiplechoiceoption_set.all():
-                    if option.correct:
-                        correct_string += option.option + '|||||'
-                correct_string = correct_string[:-5]
-                if multiplechoice_answer[count] == correct_string:
-                    score += 1
-                count += 1
-            answer.correct = score
-        answer.date_answered = timezone.now()
-        if Person.objects.filter(id=self.request.user.id).exists():
-            answer.user = self.request.user
-        else:
-            answer.user = None
-            if not anonymous_user_id:
-                answerList = Answer.objects.filter(user__isnull=True).last()
-                if answerList:
-                    anonymous_user_id = int(answerList.anonymous_user + 1)
-                    answer.anonymous_user = anonymous_user_id
-                else:
-                    answer.anonymous_user = 0
-            else:
-                answer.anonymous_user = anonymous_user_id
-        answer.save()
-        if item.task.extra == 1:
-            base64 = request.POST["base64"]
-            matistikkAnswer = request.POST['matistikkAnswer']
-            xmin = request.POST['xmin']
-            xmax = request.POST['xmax']
-            ymin = request.POST['ymin']
-            ymax = request.POST['ymax']
-            ratio = request.POST['ratio']
-            # geogebra_data = request.POST["task" + str(y) + "-geogebradata"]
-            geogebra_answer = GeogebraAnswer(answer=answer, base64=base64,
-                                             matistikkAnswer=matistikkAnswer, yratio=ratio, xmin=xmin, xmax=xmax,
-                                             ymin=ymin, ymax=ymax)
-            # geogebra_answer.save()
-        data = {
-            'anonymous_user_id': anonymous_user_id
-        }
-        return JsonResponse(data)
-
-    def get_success_url(self):
-        """
-            Function that returns the success url.
-            :return: success url.
-        """
-        if Person.objects.filter(id=self.request.user.id).exists():
-            return reverse_lazy('maths:index')
-        else:
-            return reverse_lazy('maths:answerFinished')
-
-    def get_context_data(self, **kwargs):
-        """
-            Function that adds all information needed about a specific test and adds a form for each task in the test
-            without overriding it. 
-
-            :param kwargs: Keyword arguments
-            :return: Updated context
-        """
-        context = super(AnswerCreateView, self).get_context_data(**kwargs)
-        test = Test.objects.get(id=self.kwargs.get('test_pk'))
-        context['test'] = test
-        """
-        Henter ut tilfedlige variable fra en annen server.
-        data = {
-            'variables': 3,
-        }
-        r = requests.get('http://127.0.0.1:8005/', params=data)
-        json_data = json.loads(r.text)
-        """
-        if test.randomOrder:
-            randomtest = sorted(test.task_collection.items.all(), key=lambda x: random.random())
-            context['items'] = randomtest
-        else:
-            task_order = TaskOrder.objects.filter(test=test)
-            context['items'] = Item.objects.filter(taskorder__in=task_order)
-        forms = []
-        for z in range(0, len(test.task_collection.items.all())):
-            forms.append(CreateAnswerForm(prefix="task" + str(z)))
-        context['formlist'] = forms
-        return context
-
-    def post(self, request, *args, **kwargs):
-        """
-            Handles the HTTP POST methods and creates an answer for each task in the test.
-    
-            :param request: Request that was sent to AnswerCreateView.
-            :param args:  Arguments that were sent with the request.
-            :param kwargs: Keyword-arguments.
-            :return: HttpResponseRedirect to the index page.
-        """
-        test = Test.objects.get(id=self.kwargs.get('test_pk'))
-        answerList = Answer.objects.filter(user__isnull=True).last()
-        for y in range(0, len(test.task_collection.items.all())):
-            text = request.POST["task" + str(y) + "-text"]
-            reasoning = request.POST["task" + str(y) + "-reasoning"]
-            itemid = request.POST["task" + str(y) + "-item"]
-            timespent = request.POST["task" + str(y) + "-timespent"]
-            correct = request.POST["task" + str(y) + "-correct"]
-            answer = Answer(text=text, reasoning=reasoning, test=test,
-                            timespent=timespent)
-            if Person.objects.filter(id=self.request.user.id).exists():
-                answer.user = self.request.user
-                url = reverse('maths:index')
-            else:
-                url = reverse('maths:answerFinished')
-                answer.user = None
-                if answerList:
-                    answer.anonymous_user = int(answerList.anonymous_user + 1)
-                else:
-                    answer.anonymous_user = 0
-            item = Item.objects.get(id=itemid)
-            if item.random_variables:
-                variables = request.POST['task' + str(y) + "-variables"]
-                obj, created = Item.objects.get_or_create(task=item.task, variables=variables, random_variables=False)
-                answer.item = obj
-            else:
-                answer.item = item
-            if correct:
-                answer.correct = correct
-            elif answer.item.task.answertype == 4:
-                input_answers = text.split('|||||')
-                inputfield_tasks = InputFieldTask.objects.filter(task=answer.item.task)
-                x = 0
-                score = 0
-                score_tasks = False
-                for inputfield_task in inputfield_tasks:
-                    inputfields = InputField.objects.filter(inputFieldTask=inputfield_task)
-                    for inputfield in inputfields:
-                        if inputfield.correct:
-                            input_answer = input_answers[x].strip()
-                            score_tasks = True
-                            if input_answer:
-                                if float(input_answer) == float(inputfield.correct):
-                                    score += 1
-                        x += 1
-                if score_tasks:
-                    answer.correct = score
-            if answer.item.task.answertype == 2:
-                score = 0
-                multiplechoice_answer = text.split('<--|-->')
-                count = 0
-                for multiplechoicetask in answer.item.task.multiplechoicetask_set.all():
-                    correct_string = ""
-                    for option in multiplechoicetask.multiplechoiceoption_set.all():
-                        if option.correct:
-                            correct_string += option.option + '|||||'
-                    correct_string = correct_string[:-5]
-                    if multiplechoice_answer[count] == correct_string:
-                        score += 1
-                    count += 1
-                answer.correct = score
-            answer.date_answered = timezone.now()
-            answer.save()
-            base64 = request.POST["task" + str(y) + "-base64answer"]
-            geogebradata = request.POST["task" + str(y) + "-geogebradata"]
-            matistikkAnswer = request.POST["task" + str(y) + "-matistikkAnswer"]
-            if item.task.extra == 1:
-                geogebraanswer = GeogebraAnswer(answer=answer, base64=base64, data=geogebradata,
-                                                matistikkAnswer=matistikkAnswer)
-                geogebraanswer.save()
-        success_message = 'Dine svar ble levert!'
-        messages.success(self.request, success_message)
-        return HttpResponseRedirect(url)
 
 
 class TestListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
@@ -1753,7 +1537,6 @@ class AnswerDetailView(AnswerCheck, views.AjaxResponseMixin, generic.View):
             data['answertext'] = item.task.answerText
         elif item.task.answertype == 2:
             multiplechoicetasks = MultipleChoiceTask.objects.filter(task=item.task)
-            print(multiplechoicetasks)
             multiplechoicedata = []
             for multiplechoicetask in multiplechoicetasks:
                 options = ""

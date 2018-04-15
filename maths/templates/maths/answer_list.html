@@ -143,7 +143,7 @@
                         <div id="answertype">
                             <div id="textanswerdiv" style="padding-top: 10px;"
                                     {% if not answer.item.task.answertype == 1 %}
-                                 class="answer hidden" {% else %}class="answer answer{{ answer.item.id }}"{% endif %}>
+                                 class="answer hidden" {% else %}class="answer answer{{ answer.id }}"{% endif %}>
                                 <label for="textanswer">
                                     {% if answer.item.task.answerText %}{{ answer.item.task.answerText }}{% else %}
                                         Tekstsvar{% endif %}</label>
@@ -152,9 +152,12 @@
                                           style="resize:vertical"
                                           placeholder="Skriv svaret ditt her...">{{ answer.text }}</textarea>
                                 {% if answer.item.task.answertype == 1 %}
-                                    <span id="answerdiv{{ item.id }}"
+                                    <span id="answerdiv{{ answer.id }}"
                                           {% if item.task.answerText %}data-answertext="{{ item.task.answerText }}"
-                                          {% else %}data-answertext="Tekstsvar"{% endif %} class="hidden"></span>
+                                          {% else %}data-answertext="Tekstsvar"{% endif %}
+                                          class="hidden">{% autoescape off %}
+                                        {{ answer.text }}
+                                    {% endautoescape %}</span>
                                 {% endif %}
                             </div>
                             {% if answer.item.task.answertype == 2 %}
@@ -414,10 +417,20 @@
                 $('#applet_container').removeClass('hidden');
                 $('#imagediv').addClass('hidden');
                 $('#extradiv').removeClass('hidden');
-                alert(base64);
+                var geogebraTimer = setInterval(function () {
+                    base64 = geogebrainfo.val();
+                    ggbApplet.setBase64(base64, function () {
+                        clearInterval(geogebraTimer);
+                        if (!geogebrainfo.data('scaled')) {
+                            scaleGeoGebra(answerid);
+                        }
+                        loadingdiv.addClass('hidden');
+                    });
+                    console.log('timer');
+                }, 5000);
                 ggbApplet.setBase64(base64, function () {
-                    alert('ferdig1');
-                    if(!geogebrainfo.data('scaled')){
+                    clearInterval(geogebraTimer);
+                    if (!geogebrainfo.data('scaled')) {
                         scaleGeoGebra(answerid);
                     }
                     loadingdiv.addClass('hidden');
@@ -598,7 +611,6 @@
                         geogebrainfo.data('scaled', false);
                         geogebrainfo.val(data.base64);
                         ggbApplet.setBase64(data.base64, function () {
-                            alert('ferdig2');
                             scaleGeoGebra(answerid);
                         });
                     } else if (data.extra == 2) {
@@ -720,11 +732,13 @@
                 if (document.getElementById("geogebrainfo" + answerid) !== null) {
                     var base64 = $('#geogebrainfo' + answerid).val();
                     ggbApplet.setBase64(base64, function () {
-                        alert('scale');
                         scaleGeoGebra(answerid);
                     });
                 } else {
                     $('#applet_container').addClass('hidden');
+                }
+                if (!$('#geogebrainfo' + answerid).length) {
+                    $('#itemdiv').removeClass("col-md-6 col-xs-6 col-sm-6").addClass("col-centered noExtraBorder");
                 }
                 var starttestbtn = $('#starttestbtn');
                 starttestbtn.html('<i class="far fa-play-circle"></i> Se igjennom test ');

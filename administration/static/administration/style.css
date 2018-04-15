@@ -630,7 +630,7 @@ ul.scrollbar::-webkit-scrollbar {
 
 .startingdiv {
     position: fixed;
-    z-index: 99;
+    z-index: 999;
     background: rgba(0, 0, 0, 0.95);
 }
 

@@ -36,7 +36,7 @@ urlpatterns = [
     url(r'test/(?P<test_pk>[0-9]+)/besvarelse/(?P<slug>[\w-]+)/$', views.AnswerListView.as_view(), name='answerDetail'),
     url(r'test/(?P<test_pk>[0-9]+)/besvarelse/public/(?P<user_id>[\w-]+)/$', views.AnswerListView.as_view(),
         name='answerDetailAnonymous'),
-    url(r'test/(?P<test_pk>[0-9]+)/svar/$', views.AnswerCreateView2.as_view(), name='answerCreate'),
+    url(r'test/(?P<test_pk>[0-9]+)/svar/$', views.AnswerCreateView.as_view(), name='answerCreate'),
     url(r'test/(?P<test_pk>[0-9]+)/eksporter/$', views.export_data, name='answerExport'),
     url(r'test/fullført/$', views.LinkSuccess.as_view(), name='answerFinished'),
     url(r'eksportering/$', views.ExportData.as_view(), name='exportData'),
