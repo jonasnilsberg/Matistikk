@@ -1063,6 +1063,9 @@ class AnswerCreateView(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
             return reverse_lazy('maths:answerFinished')
 
     def form_valid(self, form):
+        """
+            Function that runs when the CreateTestAnswerForm is submitted. Sets the answer-status to complete.
+        """
         data = form.cleaned_data
         test_answer = TestAnswer.objects.get(id=data['testAnswer_id'])
         test_answer.status = 3
@@ -1074,6 +1077,10 @@ class AnswerCreateView(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
         return super(AnswerCreateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
+        """
+            Adds the first task to the context data.
+            :return: context data
+        """
         context = super(AnswerCreateView, self).get_context_data(**kwargs)
         test = Test.objects.get(id=self.kwargs.get('test_pk'))
         context['test_id'] = test.id
@@ -1124,6 +1131,9 @@ class AnswerCreateView(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
         return context
 
     def post_ajax(self, request, *args, **kwargs):
+        """
+           Ajax function that saves the answered task.
+        """
         testanswer_id = request.POST.get('testanswer')
         item_id = request.POST.get('item')
         answer_text = request.POST.get('text')
@@ -1263,6 +1273,9 @@ class AnswerCreateView(AnswerCheck, views.AjaxResponseMixin, generic.FormView):
         return JsonResponse(data=data)
 
     def get_ajax(self, request, *args, **kwargs):
+        """
+            Ajax function that returns a specific task based on the id.
+        """
         item_id = request.GET.get('itemid')
         testAnswer_id = request.GET.get('testAnswer')
         data = {}
@@ -1470,6 +1483,9 @@ class TestListView(RoleCheck, views.AjaxResponseMixin, generic.ListView):
 
 
 class TestDeleteView(AdministratorCheck, generic.DeleteView):
+    """
+        Class for deleting a published test.
+    """
     model = Test
     pk_url_kwarg = 'test_pk'
     success_message = "Den publiserte testen ble slettet."
@@ -1522,6 +1538,9 @@ class AnswerListView(AnswerCheck, views.AjaxResponseMixin, generic.TemplateView)
 
 class AnswerDetailView(AnswerCheck, views.AjaxResponseMixin, generic.View):
     def get_ajax(self, request, *args, **kwargs):
+        """
+           Ajax function that returns the a specific answer based on the answer_id
+        """
         answer_id = request.GET.get('answerid')
         answer = Answer.objects.get(id=answer_id)
         item = answer.item
@@ -1605,10 +1624,16 @@ def export_data(request, test_pk):
 
 
 class LinkSuccess(generic.TemplateView):
+    """
+       Class that returns the anonymous user to a success html page.
+    """
     template_name = 'maths/link_success.html'
 
 
 class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateView):
+    """
+       Class that returns the data to the export page. The returned result is dependent on the user input.
+    """
     template_name = 'maths/export_view.html'
 
     def get_ajax(self, request, *args, **kwargs):
@@ -1926,6 +1951,10 @@ class ExportData(AdministratorCheck, views.AjaxResponseMixin, generic.TemplateVi
 
 
 class DirectoryDetailView(views.AjaxResponseMixin, generic.TemplateView):
+    """
+       Class that returns the tasks in a the root directory. Post function is for creating new directories and the Get
+       function is for returning tasks in sub-directories.
+    """
     template_name = 'maths/directory_detail.html'
 
     def post_ajax(self, request, *args, **kwargs):
@@ -2015,6 +2044,9 @@ class DirectoryDetailView(views.AjaxResponseMixin, generic.TemplateView):
 
 
 class DirectoryDelete(views.AjaxResponseMixin, generic.View):
+    """
+       Class for deleting a directory.
+    """
     def post_ajax(self, request, *args, **kwargs):
         directory_id = request.POST['id']
         directory = Directory.objects.get(id=directory_id)
@@ -2035,6 +2067,9 @@ class DirectoryDelete(views.AjaxResponseMixin, generic.View):
 
 
 class DirectoryEdit(views.AjaxResponseMixin, generic.View):
+    """
+       Class for editing a directory
+    """
     def post_ajax(self, request, *args, **kwargs):
         directory_id = request.POST['id']
         new_name = request.POST['newName']
@@ -2047,6 +2082,9 @@ class DirectoryEdit(views.AjaxResponseMixin, generic.View):
 
 
 class DirectoryMove(views.AjaxResponseMixin, generic.View):
+    """
+       Class for moving a directory or task.
+    """
     def get_ajax(self, request, *args, **kwargs):
         get_root = request.GET.get('root')
         if get_root == "true":
@@ -2148,6 +2186,9 @@ class DirectoryMove(views.AjaxResponseMixin, generic.View):
 
 
 class TaskLogView(views.AjaxResponseMixin, generic.View):
+    """
+       Class for getting and altering a tasks log.
+    """
     def get_ajax(self, request, *args, **kwargs):
         task_id = request.GET.get('task_id')
         task = Task.objects.get(id=task_id)
@@ -2190,6 +2231,9 @@ class TaskLogView(views.AjaxResponseMixin, generic.View):
 
 
 class TaskLogDeleteView(views.AjaxResponseMixin, generic.View):
+    """
+       Class for deleting a comment in the tasklog
+    """
     def post_ajax(self, request, *args, **kwargs):
         log_id = request.POST.get('comment_id', False)
         log = TaskLog.objects.get(id=log_id)
@@ -2200,6 +2244,9 @@ class TaskLogDeleteView(views.AjaxResponseMixin, generic.View):
 
 
 class ItemDeleteView(AdministratorCheck, views.AjaxResponseMixin, generic.View):
+    """
+        Class for deleting an item.
+    """
     def post_ajax(self, request, *args, **kwargs):
         item_id = request.POST.get('id', False)
         item = Item.objects.get(id=item_id)
